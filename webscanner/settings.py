@@ -159,10 +159,10 @@ INSTALLED_APPS = (
     'django_tables2',
     'djangosecure',
 
-    'south',
-    'configstore',
-    'paypal.standard',
-    'paypal.standard.ipn',
+    #'south',
+    #'configstore',
+    #'paypal.standard',
+    #'paypal.standard.ipn',
 
 )
 

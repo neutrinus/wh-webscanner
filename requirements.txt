@@ -18,4 +18,4 @@ django-secure
 
 #niekonieczne przy produkcji?
 #pygraphviz #potrzebne do generowania wykresu modelu
-#django-configstore #instalowane lokalnie, z repo jest jakis problem
+django-configstore #instalowane lokalnie, z repo jest jakis problem

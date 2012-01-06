@@ -28,21 +28,19 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default':{
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'ram',
-        'TIMEOUT':60*5,
-        'OPTIONS':{
-            'MAX_ENTRIES':10000,
-        },
-        'KEY_PREFIX':'guardier',
-    }
-}
+#CACHES = {
+    #'default':{
+        #'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        #'LOCATION': 'ram',
+        #'TIMEOUT':60*5,
+        #'OPTIONS':{
+            #'MAX_ENTRIES':10000,
+        #},
+        #'KEY_PREFIX':'webscanner',
+    #}
+#}
 
 
-LANGUAGE_CODE = 'pl'
-SHOW_LANGUAGES = ('pl','en')
 
 #MIDDLEWARE_CLASSES += (
 #    'debug_toolbar.middleware.DebugToolbarMiddleware', # TEST
@@ -52,11 +50,9 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 )
 
 INSTALLED_APPS += (
-
     #debugging
     'debug_toolbar',
     'django_wsgiserver',
-
 )
 
 #django-debug-toolbar
