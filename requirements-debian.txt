@@ -1,0 +1,6 @@
+gettext
+python2.6
+python-virtualenv
+python-pip
+python-openssl
+swig
