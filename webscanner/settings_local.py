@@ -13,10 +13,6 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 INTERNAL_IPS = ('127.0.0.1',)
 
-
-LOGIN_REDIRECT_URL = '/user/account/'
-LOGIN_URL = '/user/login/'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -27,6 +23,12 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+
+#LOGIN_REDIRECT_URL = '/user/account/'
+#LOGIN_URL = '/user/login/'
+
+
 
 #CACHES = {
     #'default':{

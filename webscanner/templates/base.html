@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% load i18n %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+	<title>{% block title %}{% endblock %} &laquo; smakowo.com</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="content-language" content="pl" />
+	<meta name="description" content="smakowo.com {% block meta-desc %} Nowoczesny portal dla ludzi pasjonujących się sztuką kuchni. Miejsce na Twojego bloga, przepisy oraz recenzje knajp. {% endblock %}" />
+	<meta name="keywords" content="smakowo, {% block meta-keywords %}smak, jedzenie, kuchnia, blog, restauracja, bar, przepis, święta, recenzja, gdzie zjeść{% endblock %} {% block meta-keywords-add %}{% endblock %}" />
+	<meta name="author" content="smakowo.com team" />
+	<meta name="robots" content="index,follow" />
+	<meta name="revisit-after" content="1 day" />
+	<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="/static/main.css" />
+	{% block feeds %} {% endblock %}
+	{% block extrajs %} {% endblock %}
+
+
+</head>
+<body>
+{% block content %}	{% endblock %}
+</body>
+</html>

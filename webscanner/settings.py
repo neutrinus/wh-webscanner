@@ -31,8 +31,7 @@ LOGIN_URL = '/user/login/'
 
 AUTH_PROFILE_MODULE = 'scanner.Profile'
 AUTHENTICATION_BACKENDS = (
-        'gpanel.email_auth.EmailOrUsernameModelBackend',
-        'django.contrib.auth.backends.ModelBackend'
+        'django.contrib.auth.backends.ModelBackend',
 )
 
 DATABASES = {
@@ -116,7 +115,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware', # TEST
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'addons_app.middleware.SetLanguage', #after session, auth
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
@@ -126,7 +124,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
-    'scanner.context_processors.menu',
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.csrf',
     'django.core.context_processors.debug',
@@ -147,9 +144,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-
+    'django.contrib.humanize',
     #our apps
     'scanner',
+    'addonsapp',
     #'gpayments',
 
     #3rd party apps,

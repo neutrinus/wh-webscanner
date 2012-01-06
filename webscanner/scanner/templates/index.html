@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Free scan your website{% endblock %}
+
+
+{% block content %}
+<h1>Ultimate website scanner </h1>
+
+<form action="/results/" method="post">
+{% csrf_token %}
+<LABEL for="firstname">domain: </LABEL>
+<INPUT type="text" id="domain">
+
+</form>
+
+{% endblock %}
+

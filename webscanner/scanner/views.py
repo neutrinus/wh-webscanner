@@ -14,12 +14,22 @@ from django.contrib.sitemaps import ping_google
 from scanner.models import *
 
 def index(request):
-	recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
+	#recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
 
-	return render_to_response('recipe/index.html', {'recipe_list': recipe_list, 'recipes': recipes}, context_instance=RequestContext(request))
+	return render_to_response('index.html', {}, context_instance=RequestContext(request))
 
 
 
+def results(request):
+
+    a = TestQueue(domain="onet.pl")
+    a.save()
+    
+    
+    #recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
+    
+    return render_to_response('results.html', {}, context_instance=RequestContext(request))
+    
 
 #@login_required
 #def add_recipe(request):

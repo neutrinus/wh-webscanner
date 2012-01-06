@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('',
-        url(r'^/', 'scanner.views.index', name='index'),
-
+scannerpatterns = patterns('',
+        url(r'^/?$', 'scanner.views.index'),
+        url(r'^results/?$', 'scanner.views.results'),
+        
 )
 

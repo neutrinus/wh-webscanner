@@ -1,0 +1,8 @@
+*.pyc
+*.swp
+*~
+py_env
+*.sqlite3
+docs/_build/
+
+
