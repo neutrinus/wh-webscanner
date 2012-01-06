@@ -5,14 +5,10 @@ from django.contrib.admin import site
 from django.contrib import admin
 from django import forms
 
-
-from models import *
-
-class TestQueueAdmin(admin.ModelAdmin):
-    model = TestQueue
+from models import TestQueue
 
 #site.unregister(User)
 #site.register(User,UserWithProfile)
 
-#site.register(TestQueueAdmin)
+site.register(TestQueue)
 
