@@ -25,7 +25,7 @@ STATUS = Choices(
 )
 
 
-#from gworker.plugins.check_http_code import PluginCheckHTTPCode
+from scanner.plugins.check_http_code import PluginCheckHTTPCode
 #from gworker.plugins.check_w3c_valid import PluginCheckW3CValid
 #from gworker.plugins.check_domainexpdate import PluginDomainExpireDate
 #from gworker.plugins.check_kaspersky import PluginKaspersky
@@ -57,5 +57,5 @@ class TestQueue(models.Model):
     finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     
     def __unicode__(self):
-        return "%s on %s: date=%s : status=%s:"%(self.users_test.test_def.test_def,self.users_test.domain,self.run_date,self.status)
+        return "%s: status=%s:"%(self.domain,self.status)
         

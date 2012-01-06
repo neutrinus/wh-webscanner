@@ -22,13 +22,17 @@ def index(request):
 
 def results(request):
 
-    a = TestQueue(domain="onet.pl")
-    a.save()
+    orderlist = []
+    
+    for test in TESTDEF_PLUGINS:
+        a = TestQueue(domain="onet.pl", testname = test )
+        a.save()
+        orderlist += a
     
     
     #recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
     
-    return render_to_response('results.html', {}, context_instance=RequestContext(request))
+    return render_to_response('results.html', {'orderlist': orderlist}, context_instance=RequestContext(request))
     
 
 #@login_required
