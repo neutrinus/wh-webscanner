@@ -82,11 +82,6 @@ body {
     
 }
 
-#authbox div {
-    text-align: left;
-    padding: 10px;
-}
-
 #authbox div input {
     margin-left: 10px;
     width: 90%;
@@ -99,10 +94,14 @@ body {
 
 #authbox div {
     width: 40%;
-    height: 90%;
-/*    flow:left;*/
+    height: 60%;
+    padding: 10px;
+    text-align: left;
+    
+    
+
     padding-left: 10px;
-/*     margin:10px; */
+    margin:5px;
     display: inline-block;
 /*     background-color: white; */
 
