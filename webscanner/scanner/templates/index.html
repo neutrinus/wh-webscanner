@@ -4,15 +4,78 @@
 {% block title %}Free scan your website{% endblock %}
 
 
+
+
+
 {% block content %}
+
+
+<div id="floater">
+</div>
+<div id="content">
 <h1>Ultimate website scanner </h1>
 
-<form action="/results/" method="post">
+
+<div id="borderbox" >
+<form id="addtestform" action="/results/" method="post" style="width:100%">
 {% csrf_token %}
-<LABEL for="firstname">domain: </LABEL>
-<INPUT type="text" id="domain">
+<INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" />
+<input type="submit" value="Go" />
+<div id="authbox">
+
+    <div id="emailbox">
+        <INPUT id="email" type="text" title="email@example.org" value="" />
+        <input type="submit" value="Send email" />
+        
+    </div>
+or
+    <div id="loginbox">
+        <INPUT id="login" type="text" title="username" value="" />
+        <INPUT id="password" type="text" title="password" value="" />
+        <input type="submit" value="Scan now" />
+        
+    </div>
+
+</div>
 
 </form>
+
+</div>
+
+</div>
+
+
+<script>
+$('input[type="text"]').each(function(){
+ 
+    this.value = $(this).attr('title');
+    $(this).addClass('text-label');
+ 
+    $(this).focus(function(){
+        if(this.value == $(this).attr('title')) {
+            this.value = '';
+            $(this).removeClass('text-label');
+        }
+    });
+ 
+    $(this).blur(function(){
+        if(this.value == '') {
+            this.value = $(this).attr('title');
+            $(this).addClass('text-label');
+        }
+    });
+});
+
+
+$('#addtestform').submit(function() {
+    $('#authbox').fadeIn('slow', function() {
+        // Animation complete.
+        });
+    
+    return false;
+});
+
+</script>
 
 {% endblock %}
 
