@@ -17,10 +17,10 @@
 
 
 <div id="borderbox" >
-<form id="addtestform" action="/results/" method="post" style="width:100%">
+<form id="addtestform" action="#" method="post" style="width:100%">
 {% csrf_token %}
-<INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" />
-<input type="submit" value="Go" />
+<INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" alt="kk" />
+<!-- <input type="submit" value="Go" style="display" /> -->
 <div id="authbox">
 
     <div id="emailbox">
@@ -68,11 +68,11 @@ $('input[type="text"]').each(function(){
 
 
 $('#addtestform').submit(function() {
-    $('#authbox').fadeIn('slow', function() {
-        // Animation complete.
-        });
+    if ($('#authbox').css('display') == 'none'){
+        $('#authbox').slideDown('slow');   
+        return false;
+    }
     
-    return false;
 });
 
 </script>
