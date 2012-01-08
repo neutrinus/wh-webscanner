@@ -20,6 +20,14 @@ body {
     color: #cdcdcd;
 }
 
+input {
+    
+    border-style: solid;
+    border-radius: 4px;  
+    -moz-border-radius: 4px;  
+    -webkit-border-radius: 4px;  
+}
+
 #floater {
     float:left;
     height:50%;
@@ -39,9 +47,7 @@ body {
     padding: 5px;
     
     
-    border-radius: 4px;  
-    -moz-border-radius: 4px;  
-    -webkit-border-radius: 4px;  
+ 
 }
 
 
@@ -88,6 +94,7 @@ body {
     display: block;
     font-size: 22px;
     padding: 5px;
+    margin: 5px;
     
 }
 
