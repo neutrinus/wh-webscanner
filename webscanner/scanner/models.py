@@ -49,8 +49,6 @@ class Tests(models.Model):
 #   lang?    
    
     creation_date       =   models.DateTimeField(auto_now_add=True)
-    run_date            =   models.DateTimeField(auto_now=True)
-    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     
     def __unicode__(self):
         return "%s"%(self.domain)
@@ -60,6 +58,11 @@ class CommandQueue(models.Model):
     test                =   models.ForeignKey(Tests, related_name="command for test")    
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
+    
+    run_date            =   models.DateTimeField(auto_now=True)
+    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
+    
+    
     
     def __unicode__(self):
         return "%s: status=%s:"%(self.test.domain,self.status)
