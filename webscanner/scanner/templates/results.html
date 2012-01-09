@@ -35,15 +35,43 @@
 
 
 <script type="text/javascript">
-$("#progressbar").progressbar({ value: 27 });
+$("#progressbar").progressbar({ value: 0 });
 
+function update_progressbar(cdone, cordered) {
+    
+    
+}
 
+/*
+    
 $.ajax({
     url: "{% url scanner.views.check_new_results %}",
     data: testid,
     success: function(data) {},
-    dataType: "json"
-    });
+    error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},    
+    dataType: "jsonp"
+    });*/
+    
+
+function check_progress(){
+    $.ajax({
+        url: "{% url scanner.views.scan_progress %}",
+        data: "",
+        success: function(data) {
+            $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
+            if (data.done/data.ordered != 1) {
+                window.setTimeout(check_progress,5000);
+            } else {
+                $("#progressbar").fadeOut();
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        dataType: "jsonp"
+    });  
+}
+
+check_progress();
+    
     
 </script>
     
