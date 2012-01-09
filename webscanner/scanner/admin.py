@@ -5,10 +5,12 @@ from django.contrib.admin import site
 from django.contrib import admin
 from django import forms
 
-from models import TestQueue
+from models import *
 
 #site.unregister(User)
 #site.register(User,UserWithProfile)
 
-site.register(TestQueue)
+site.register(Tests)
+site.register(CommandQueue)
+site.register(Results)
 

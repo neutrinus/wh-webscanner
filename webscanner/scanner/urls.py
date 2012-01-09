@@ -4,6 +4,6 @@ from django.conf.urls.defaults import patterns, include, url
 scannerpatterns = patterns('',
         url(r'^/?$', 'scanner.views.index'),
         url(r'^results/?$', 'scanner.views.results'),
-        
+        url(r'^check_new_results/?$', 'scanner.views.check_new_results'),
 )
 

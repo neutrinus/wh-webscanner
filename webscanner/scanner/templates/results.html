@@ -4,23 +4,48 @@
 {% block title %}Free scan results{% endblock %}
 
 {% block extrahead %} 
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
+    <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    
+    
+    <script type="text/javascript">
+    testid = {{ test.pk }};
+    </script>
 {% endblock %}
 
 
 {% block content %}
-
+{{ test.pk }}
 <div id="content">
 <h1>SCAN Results </h1>
 
+<div id="progressbar"></div>
 
-<h3>Screenshots</h3>
-<h3>Basic</h3>
-<h3>SEO</h3>
-<h3>Security</h3>
-<h3>Optimalization</h3>
 
+<ul>
+<li>Screenshots</li>
+<li>Basic</li>
+<li>SEO</li>
+<li>Security</li>
+<li>Optimalization</li>
+</ul>
 
 </div>
-{% endblock %}
 
+
+<script type="text/javascript">
+$("#progressbar").progressbar({ value: 27 });
+
+
+$.ajax({
+    url: "{% url scanner.views.check_new_results %}",
+    data: testid,
+    success: function(data) {},
+    dataType: "json"
+    });
+    
+</script>
+    
+    
+{% endblock %}

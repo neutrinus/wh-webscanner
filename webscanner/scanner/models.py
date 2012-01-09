@@ -42,20 +42,37 @@ TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
         
-
-class TestQueue(models.Model):
+        
+class Tests(models.Model):
     domain              =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     priority            =   models.IntegerField(default=10)
 #   lang?    
-
-    status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
-    testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
-    output              =   models.CharField(max_length=1000,blank=1,null=1)  
-    
+   
     creation_date       =   models.DateTimeField(auto_now_add=True)
     run_date            =   models.DateTimeField(auto_now=True)
     finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     
     def __unicode__(self):
-        return "%s: status=%s:"%(self.domain,self.status)
+        return "%s"%(self.domain)
+
+
+class CommandQueue(models.Model):
+    test                =   models.ForeignKey(Tests, related_name="command for test")    
+    status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
+    testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
+    
+    def __unicode__(self):
+        return "%s: status=%s:"%(self.test.domain,self.status)
+
+
         
+class Results(models.Model):
+    test                =   models.ForeignKey(Tests, related_name="results for test")    
+    testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
+    output              =   models.CharField(max_length=1000,blank=1,null=1)  
+    
+    creation_date       =   models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return "%s: status=%s:"%(self.domain,self.status)
+
