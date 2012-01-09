@@ -8,6 +8,11 @@
     <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     
+    <style>
+    .ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif); }
+    </style>
+    
+    
     
     <script type="text/javascript">
     testid = {{ test.pk }};
@@ -35,7 +40,7 @@
 
 
 <script type="text/javascript">
-$("#progressbar").progressbar({ value: 0 });
+$("#progressbar").progressbar({ value: 20 });
 
 function update_progressbar(cdone, cordered) {
     
@@ -70,10 +75,11 @@ function check_progress(){
     });  
 }
 
-check_progress();
+// check_progress();
     
     
 </script>
+    
     
     
 {% endblock %}
