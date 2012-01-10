@@ -22,23 +22,22 @@
 <div id="borderbox" >
 <form id="addtestform" action="{% url scanner.views.results %}" method="post" style="width:100%">
 {% csrf_token %}
-<INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" alt="kk" />
+<INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" alt="kk" autocomplete = "off" />
 <input type="submit" value="GO!" style="height:3em; border-style:solid; border-width:3px; border-color: #74ef94;" />
+
 <div id="authbox">
 
     <div style="display:block; height:20%; border-color:red; width:95%">You are not logged in. Please login or provide your email to get <b>free</b> scan. </div>
 
     <div>
         <INPUT id="email" type="text" title="email@example.org" value="" />
-        <input type="submit" value="Send email" />
-        
+        <input type="submit" value="Send email" />        
     </div>
-or
+
     <div>
         <INPUT id="login" type="text" title="username" value="" />
-        <INPUT id="password" type="text" title="password" value="" />
+        <INPUT id="password" type="password" title="password" value="" />
         <input type="submit" value="Scan now" />
-        
     </div>
 
 </div>
@@ -54,7 +53,6 @@ or
 
 
 {% else %}
-
 <!-- in case when we are not logged in -->
 <script type="text/javascript">
     $('input[type="text"]').each(function(){
@@ -77,7 +75,6 @@ or
         });
     });
 
-
     $('#addtestform').submit(function() {
         if ($('#authbox').css('display') == 'none'){
             $('#authbox').slideDown('slow');   
@@ -85,7 +82,6 @@ or
         }
         
     });
-
 </script>
 {% endif %}
 
