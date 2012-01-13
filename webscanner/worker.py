@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from django.core.management import setup_environ
 import sys
-sys.path.append('../webscanner/')
 sys.path.append('../')
+sys.path.append('./')
 
 import settings
 setup_environ(settings)
@@ -20,8 +20,21 @@ from django.contrib.auth.models import User
 from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 from django.db import transaction
 
-from logging import getLogger
-log = getLogger('webscanner.worker_scanner')
+import logging
+log = logging.getLogger('worker_scanner')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+
+fh = logging.FileHandler('worker_scanner.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+sh = logging.StreamHandler()
+sh.setFormatter(formatter)
+sh.setLevel(logging.DEBUG)
+
+log.addHandler(fh) 
+log.addHandler(sh) 
+
 
 def main(argv=None):
     if argv is None:
@@ -32,13 +45,13 @@ def main(argv=None):
         log.debug('Try to fetch some fresh stuff')
         with transaction.commit_on_success():		
             try:
-                ctest = CommandQueue.objects.filter(status = STATUS.waiting).order_by('-run_date').select_related()[:1].get()
+                ctest = CommandQueue.objects.filter(status = STATUS.waiting).select_related()[:1].get()
                 ctest.status = STATUS.running
                 ctest.run_date =  datetime.now()
                 ctest.save()
                 log.debug('Processing %s'%ctest.test.domain)
                 
-            except CurrentTest.DoesNotExist:
+            except CommandQueue.DoesNotExist:
                 ctest = None
                 log.debug("No Commands in Queue to process, sleeping.")
                 

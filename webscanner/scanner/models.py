@@ -59,7 +59,7 @@ class CommandQueue(models.Model):
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
     
-    run_date            =   models.DateTimeField(auto_now=True)
+    run_date            =   models.DateTimeField(default=None,blank=1,null=1)
     finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     
     
