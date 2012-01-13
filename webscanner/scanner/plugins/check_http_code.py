@@ -38,35 +38,33 @@ class PluginCheckHTTPCode(PluginMixin):
             return (STATUS.exception,"Exception: " + str(e))
 
 
-    def results(self,current_test, notify_type, language_code):  
-        output = current_test.output
 
 
-        if not output:
-            return (STATUS.exception, _("Error: Empty output provided "))
+        #if not output:
+            #return (STATUS.exception, _("Error: Empty output provided "))
     
         
-        if not (output.isdigit()):
-            return (STATUS.unsuccess, _("Error: Non numerical output code ") + output)
+        #if not (output.isdigit()):
+            #return (STATUS.unsuccess, _("Error: Non numerical output code ") + output)
 
 
-        if (int(output) > 199) & (int(output) < 399) :
-            if notify_type == NOTIFY_TYPES.email:
-                return (STATUS.success,_("Server returned ") + unicode(output) + " code - it safe." )
+        #if (int(output) > 199) & (int(output) < 399) :
+            #if notify_type == NOTIFY_TYPES.email:
+                #return (STATUS.success,_("Server returned ") + unicode(output) + " code - it safe." )
             
-            #if notify_type == NOTIFY_TYPES.phone:
-                #return (STATUS.success,_("Server returned ") + unicode(output) + "." )
+            ##if notify_type == NOTIFY_TYPES.phone:
+                ##return (STATUS.success,_("Server returned ") + unicode(output) + "." )
             
 
-            return (STATUS.success,_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - it safe" )
-        else:
-            if notify_type == NOTIFY_TYPES.email:
-                return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + " code - please check it" )
+            #return (STATUS.success,_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - it safe" )
+        #else:
+            #if notify_type == NOTIFY_TYPES.email:
+                #return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + " code - please check it" )
                 
-            #if notify_type == NOTIFY_TYPES.phone:
-                #return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + "." )                  
+            ##if notify_type == NOTIFY_TYPES.phone:
+                ##return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + "." )                  
                 
-            return (STATUS.unsuccess, _("Server returned  unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - please check it" )
+            #return (STATUS.unsuccess, _("Server returned  unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - please check it" )
            
       
 	        	

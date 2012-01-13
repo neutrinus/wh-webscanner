@@ -33,7 +33,7 @@ def results(request):
     test.save()
     request.session['testid'] = test.pk;
     
-    for testname in TESTDEF_PLUGINS:
+    for testname,plugin in TESTDEF_PLUGINS:
         a = CommandQueue(test=test, testname = testname )
         a.save()
   

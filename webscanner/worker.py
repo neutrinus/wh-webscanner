@@ -40,50 +40,57 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
+    print PLUGINS;
     #main program loop
     while(True):
-        log.debug('Try to fetch some fresh stuff')
-        with transaction.commit_on_success():		
-            try:
-                ctest = CommandQueue.objects.filter(status = STATUS.waiting).select_related()[:1].get()
-                ctest.status = STATUS.running
-                ctest.run_date =  datetime.now()
-                ctest.save()
-                log.debug('Processing %s'%ctest.test.domain)
+        try:
+            log.debug('Try to fetch some fresh stuff')
+            with transaction.commit_on_success():		
+                try:
+                    ctest = CommandQueue.objects.filter(status = STATUS.waiting).select_related()[:1].get()
+                    ctest.status = STATUS.running
+                    ctest.run_date =  datetime.now()
+                    ctest.save()
+                    log.info('Processing %s'%ctest.test.domain)
+                    
+                except CommandQueue.DoesNotExist:
+                    ctest = None
+                    log.debug("No Commands in Queue to process, sleeping.")
+                    
+            if ctest:
+                try:
+                    # bierzemy plugina
+                    plugin = PLUGINS[ ctest.testname ]()
+                except KeyError as e:
+                    log.error('Could not find plugin: %s'%ctest.testname)
+                    break
+        
+                log.debug('Starting scanner process: %s'%plugin)
                 
-            except CommandQueue.DoesNotExist:
-                ctest = None
-                log.debug("No Commands in Queue to process, sleeping.")
+                try:
+                    # uruchamiamy i czekamy na status
+                    plugin.run(ctest)
+                    ctest.finish_date =  datetime.now()
+                    ctest.save()
+                    log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))
+                    
+                    
+                except  Exception,e:
+                    log.exception('Execution failed: %s'%(str(e)))
+                    stdout_value = None
+                    ctest.status = STATUS.exception
+                    ctest.save()
+                    
                 
-        if ctest:
-            try:
-                # bierzemy plugina
-                plugin = PLUGINS[ ctest.testname ]()
-            except KeyError as e:
-                log.debug(' ERROR: Could not find plugin: %s'%ctest.testname)
-                break
-    
-            log.debug('Starting scanner process: %s'%plugin)
+                log.debug('Notfication done')
+                
+            else:
+                sleep(random.uniform(1,5)) #there was nothing to do - we can sleep longer
+        except  Exception,e:
+            log.error('Command run ended with exception: %s'%e)
+            #give admins some time
+            sleep(30)
             
-            try:
-                # uruchamiamy i czekamy na status
-                plugin.run(ctest)
-
-                log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))
-                
-            except  Exception,e:
-                print >>sys.stderr, str(datetime.now()) + " Execution failed: " + str(e)
-                stdout_value = None
-                ctest.status = STATUS.exception
-                ctest.save()
-                
             
-            log.debug('DEBUG: notfication done')
-            
-            sleep(random.uniform(0,1)) #there was something to do - we can sleep a bit
-        else:
-            sleep(random.uniform(10,30)) #there was nothing to do - we can sleep longer
-
-
 if __name__ == '__main__':
     main()
