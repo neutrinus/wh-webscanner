@@ -7,64 +7,69 @@ import httplib
 from time import sleep
 from urlparse import urlparse
 from plugin import PluginMixin
-from scanner.models import STATUS
+from scanner.models import *
 #from scanner.models import UsersTest_Options
 
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
+
+
+import logging
+log = logging.getLogger('plugin')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+
+fh = logging.FileHandler('plugin.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh) 
 
 class PluginCheckHTTPCode(PluginMixin):
     name = unicode(_('Check HTTP site response'))
     description = unicode(_('Check http server http code response'))
 
     def run(self, test):
-        
-        
+       
         
         try:
-            conn = httplib.HTTPConnection(test.domain,80)
+            conn = httplib.HTTPConnection(test.test.domain,80)
             conn.request("HEAD", "/")        
             a = conn.getresponse()
             output =  str(a.status)
             
-            current_test.output = output
-            current_test.save()
             
-            (status,kaczka) = self.results(current_test,None , None)
-            return status,output
+            if not output:
+                log.exception(_("Error: Empty output provided "))
+                return STATUS.exception
+        
+            if not (output.isdigit()):
+                log.exception(_("Error: Non numerical output code "))
+                return STATUS.unsuccess
+            
+            res = Results()
+            
+            if (int(output) > 199) & (int(output) < 399) :
+                res(output=_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'> %s </a> code - it safe" )%unicode(output) )
+                res.status = STATUS.success
+            else:
+                res(output=_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'> %s </a> code - please check it" )%unicode(output) )
+                res.status = STATUS.unsuccess
+                
+            res.save()
+            return res.status
+                
             
         except Exception,e:
-            print _("No validation can be done: ") + str(e)
-            return (STATUS.exception,"Exception: " + str(e))
+            log.exception(_("No validation can be done: %s "%(e)))
+            return STATUS.exception
 
 
 
 
-        #if not output:
-            #return (STATUS.exception, _("Error: Empty output provided "))
     
         
-        #if not (output.isdigit()):
-            #return (STATUS.unsuccess, _("Error: Non numerical output code ") + output)
+        
 
-
-        #if (int(output) > 199) & (int(output) < 399) :
-            #if notify_type == NOTIFY_TYPES.email:
-                #return (STATUS.success,_("Server returned ") + unicode(output) + " code - it safe." )
-            
-            ##if notify_type == NOTIFY_TYPES.phone:
-                ##return (STATUS.success,_("Server returned ") + unicode(output) + "." )
-            
-
-            #return (STATUS.success,_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - it safe" )
-        #else:
-            #if notify_type == NOTIFY_TYPES.email:
-                #return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + " code - please check it" )
-                
-            ##if notify_type == NOTIFY_TYPES.phone:
-                ##return (STATUS.unsuccess,_("Server returned unsafe ") + unicode(output) + "." )                  
-                
-            #return (STATUS.unsuccess, _("Server returned  unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>") + unicode(output) + "</a> code - please check it" )
            
       
 	        	

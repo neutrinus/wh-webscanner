@@ -69,11 +69,14 @@ class CommandQueue(models.Model):
         
 class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="results for test")    
-    testname            =   models.CharField(_(u'testdef'),    max_length=50,    choices=TESTDEF_PLUGINS,db_index=True)
-    output              =   models.CharField(max_length=1000,blank=1,null=1)  
+    
+    status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
+    output_desc         =   models.CharField(max_length=1000)  
+    output_full         =   models.CharField(max_length=1000)  
+    
     
     creation_date       =   models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return "%s: status=%s:"%(self.domain,self.status)
+        return "%s: status=%s:"%(self.testname,self.output)
 

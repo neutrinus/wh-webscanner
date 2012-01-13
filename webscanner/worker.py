@@ -69,16 +69,16 @@ def main(argv=None):
                 
                 try:
                     # uruchamiamy i czekamy na status
-                    plugin.run(ctest)
+                    ctest.status = plugin.run(ctest)
                     ctest.finish_date =  datetime.now()
                     ctest.save()
-                    log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))
-                    
+                    log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))                    
                     
                 except  Exception,e:
                     log.exception('Execution failed: %s'%(str(e)))
                     stdout_value = None
                     ctest.status = STATUS.exception
+                    ctest.finish_date =  datetime.now()
                     ctest.save()
                     
                 
