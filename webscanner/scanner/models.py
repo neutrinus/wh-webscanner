@@ -74,9 +74,8 @@ class Results(models.Model):
     output_desc         =   models.CharField(max_length=1000)  
     output_full         =   models.CharField(max_length=1000)  
     
-    
     creation_date       =   models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return "%s: status=%s:"%(self.testname,self.output)
+        return "%s: status=%s:"%(self.test.domain,self.output_desc)
 

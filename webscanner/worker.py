@@ -5,6 +5,7 @@ import sys
 sys.path.append('../')
 sys.path.append('./')
 
+
 import settings
 setup_environ(settings)
 
@@ -40,7 +41,6 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    print PLUGINS;
     #main program loop
     while(True):
         try:
@@ -80,10 +80,7 @@ def main(argv=None):
                     ctest.status = STATUS.exception
                     ctest.finish_date =  datetime.now()
                     ctest.save()
-                    
-                
-                log.debug('Notfication done')
-                
+                                    
             else:
                 sleep(random.uniform(1,5)) #there was nothing to do - we can sleep longer
         except  Exception,e:

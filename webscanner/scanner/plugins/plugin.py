@@ -32,7 +32,7 @@ class PluginMixin(object):
     def __str__(self):
         return str(self.name)
 
-    def run(self, test):
+    def run(self, command):
         #return (**status**)
         
         raise NotImplemented
