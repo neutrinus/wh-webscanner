@@ -1,9 +1,17 @@
 #! /usr/bin/env python
+# -*- encoding: utf-8 -*-
 import sys
 import os
-#http://code.google.com/p/pywhois/ 
-# -*- encoding: utf-8 -*-
-import pywhois
+import random
+import httplib
+from time import sleep
+from urlparse import urlparse
+from plugin import PluginMixin
+#from scanner.models import UsersTest_Options
+from scanner.models import STATUS
+from django.utils.translation import get_language
+from django.utils.translation import ugettext_lazy as _
+from scanner import pywhois
 import random
 import HTMLParser
 import urllib
@@ -15,66 +23,61 @@ from time import mktime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-from plugin import PluginMixin
-from scanner.models import STATUS
-from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
+import logging
+log = logging.getLogger('plugin')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+
+fh = logging.FileHandler('plugin.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh) 
+
 
 class PluginDomainExpireDate(PluginMixin):
     name = unicode(_("Check domain expiration date"))
     description = unicode(_("Check domain expiration date using data from whois database"))
-
-    #dont do it to often - whois servers will ban you
-    frequencies = (
-        ('1440', _('once a day') ),
-        ('10080', _('once per week')),
-    )
-
     
+    def run(self, command):
+        domain = command.test.domain
 
-    def make_test(self, current_test, timeout=None):
-        domain = current_test.users_test.domain.url
-
+        time.sleep(10)
         try:
             data = pywhois.whois(domain)   
             
             if hasattr(data,'expiration_date'):
                 output = data.expiration_date[0]
-            
-                current_test.output = output
-                current_test.save()
                 
-                (status,kaczka) = self.results(current_test,None , None)
-                return status,output
+                try: 
+                    domainexp = self.cast_date(output)
+                    # convert time.struct_time object into a datetime.datetime
+                    dt = date.fromtimestamp(mktime(domainexp))
+                    
+                    from scanner.models import Results
+                    res = Results(test=command.test)
+                    
+                    if dt - date.today() > timedelta(days=29):
+                        res.output_desc = unicode(_("Your domain will be walid until %s"%(dt)) )
+                        res.status = STATUS.success
+                    else:
+                        res.output_desc = unicode(_("Better renew your domain!") )
+                        res.status = STATUS.unsuccess
+                        
+                    res.save()
+                except StandardError,e:
+                    log.exception("output:%s exception:%s "%(str(output),str(e)) )
+                    return STATUS.exception
+                 
+                    
+                return res.status
             else:  
-                return (STATUS.exception,unicode(_("Error: This gTLD doesnt provide valid domain expiration date in whois database")))
+                log.exception(_(unicode(_("Error: This gTLD doesnt provide valid domain expiration date in whois database"))))
+                return STATUS.exception
+
             
         except StandardError,e:
-            print "error: " + str(e)
-            return (STATUS.exception,"Exception: " + str(e))
-
-
-    def results(self,current_test, notify_type, language_code):
-        
-        if not current_test.output:
-            return (STATUS.exception,_("Error: This gTLD doesnt provide valid domain expiration date in whois database"))
-            
-        try: 
-            domainexp = self.cast_date(current_test.output)
-            # convert time.struct_time object into a datetime.datetime
-            dt = date.fromtimestamp(mktime(domainexp))
-            
-
-            if dt - date.today() > timedelta(days=29):
-                return (STATUS.success, _("Your domain will be walid for at least 20 days") )
-            else:
-                return (STATUS.unsuccess,_("Better renew your domain!") )
-        except StandardError,e:
-            return (STATUS.exception,str(current_test.output) + " " + str(e))
-            #print >>sys.stdout, str(datetime.now()) + " Error: " + str(e)
-            
-            
-        return None
+            log.exception("%s"%str(e))
+            return STATUS.exception
 
 
 

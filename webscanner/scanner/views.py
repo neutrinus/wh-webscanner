@@ -29,7 +29,7 @@ def index(request):
 
 def results(request):
     
-    test = Tests(domain="onet.pl")
+    test = Tests(domain="slashdot.com")
     test.save()
     request.session['testid'] = test.pk;
     

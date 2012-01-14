@@ -3,6 +3,7 @@
 import sys
 import os
 import random
+import time
 import httplib
 from time import sleep
 from urlparse import urlparse
@@ -29,7 +30,7 @@ class PluginCheckHTTPCode(PluginMixin):
     description = unicode(_('Check http server http code response'))
 
     def run(self, command):
-       
+        time.sleep(20)
         
        
         try:
