@@ -65,7 +65,7 @@ function check_progress(){
         success: function(data) {
             $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
             if (data.done/data.ordered != 1) {
-                window.setTimeout(check_progress,5000);
+                window.setTimeout(check_progress,2000);
             } else {
                 $("#progressbar").fadeOut();
             }

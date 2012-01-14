@@ -22,11 +22,11 @@ from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 from django.db import transaction
 
 import logging
-log = logging.getLogger('worker_scanner')
+log = logging.getLogger('worker')
 log.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
 
-fh = logging.FileHandler('worker_scanner.log')
+fh = logging.FileHandler('worker.log')
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 sh = logging.StreamHandler()
@@ -51,7 +51,7 @@ def main(argv=None):
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
-                    log.info('Processing %s'%ctest.test.domain)
+                    log.info('Processing command %s for %s '%(ctest.testname,ctest.test.domain))
                     
                 except CommandQueue.DoesNotExist:
                     ctest = None
