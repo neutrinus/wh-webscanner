@@ -30,7 +30,7 @@ class PluginCheckHTTPCode(PluginMixin):
     description = unicode(_('Check http server http code response'))
 
     def run(self, command):
-        time.sleep(20)
+        time.sleep(4)
         
        
         try:

@@ -16,7 +16,6 @@ import random
 import HTMLParser
 import urllib
 import sys
-import urlparse
 import time
 from time import sleep
 from time import mktime
@@ -41,7 +40,7 @@ class PluginDomainExpireDate(PluginMixin):
     def run(self, command):
         domain = command.test.domain
 
-        time.sleep(10)
+        time.sleep(4)
         try:
             data = pywhois.whois(domain)   
             
