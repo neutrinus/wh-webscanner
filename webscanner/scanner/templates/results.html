@@ -4,7 +4,7 @@
 {% block title %}Free scan results{% endblock %}
 
 {% block extrahead %} 
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
     <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     
@@ -30,22 +30,25 @@
 <div id="results"></div>
 
 
-<ul>
+<!--<ul>
 <li>Screenshots</li>
 <li>Basic</li>
 <li>SEO</li>
 <li>Security</li>
 <li>Optimalization</li>
-</ul>
+</ul>-->
 
 </div>
 
 
 <script type="text/javascript">
+finished = 0;
 $("#progressbar").progressbar({ value: 0 });
 
 
-    
+function add_result(status, output_desc, output_full) {
+    $("#results").append("<li>desc:" + output_desc + "</li>");   
+}
 
 function check_progress(){
     $.ajax({
@@ -72,10 +75,10 @@ function check_results(){
         data: "",
         success: function(data) {
             $.each(data, function(key, value) { 
-                $("#results").append("<li>desc:" + value.output_desc + "</li>");
-
+                add_result(value.status, value.output_desc, value.output_full)
             });
-            window.setTimeout(check_results,2000);          
+            if (finished == 0) window.setTimeout(check_results,2000);   
+            if ($("#progressbar").progressbar("value") == 100) finished = 1;
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
         dataType: "jsonp"

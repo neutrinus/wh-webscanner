@@ -61,83 +61,22 @@ def check_new_results(request,last_date=None):
     testid = request.session.get('testid', False)
     test = Tests(pk=testid)
 
-    results = Results.objects.filter(test=test)
+    lastresult = request.session.get('lastresult', False)
+    if not lastresult:
+        lastresult = 0;
+    
+    results = Results.objects.filter(test=test).filter(pk__gt = lastresult)
     
     foo = []
     for result in results:
         foo.append({'output_desc':result.output_desc,'output_full':result.output_full , 'status': result.status})
-        
-    print json.dumps(foo)
+        if result.pk > lastresult:
+            lastresult = result.pk
+    
+    request.session['lastresult'] = lastresult;
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(foo)), mimetype='application/json')
     
     
     
     
-    
-    
-#@login_required
-#def add_recipe(request):
-	#units_list = Unit.objects.all()
-
-
-	#if request.method == "POST":
-		#form = RecipeForm(request.user, request.POST)
-		#if form.is_valid():
-			#recipe = form.save(commit=False)
-			#recipe.author = request.user
-			#recipe.creator_ip = request.META['REMOTE_ADDR']
-			#recipe.permalink = slughifi.slughifi(form.cleaned_data['title'])
-			#recipe.tags = recipe.tags.lower()
-
-			#data = request.POST.copy()
-
-			#recipe.save()
-			#form.save_m2m()
-
-			#for i in range(0, int(data['ingredients_count'])):
-				#Food.objects.get_or_create(name= data['id_' + str(i) + '_namek'])
-
-			#for i in range(0, int(data['ingredients_count'])):
-				#foodk = Food.objects.get(name= data['id_' + str(i) + '_namek'])
-				#unit = Unit.objects.get(name= data['id_' + str(i) + '_unit'])
-
-				#if Ingredient.objects.filter(food=foodk, recipe=recipe, amount=float(data['id_' + str(i) + '_amount'].replace(",",".")) , unit=unit ).count() == 0:
-					#m1 = Ingredient(food=foodk, recipe=recipe, amount=float(data['id_' + str(i) + '_amount'].replace(",",".")) , unit=unit )
-					#m1.save()
-
-			##sygnal odpowiedni
-			#recipe_created.send(sender=Recipe, recipe=recipe)
-
-			#request.user.message_set.create(message=_("Successfully saved recipe '%s'") % recipe.title)
-			#return HttpResponseRedirect("/konto/przepisy/")
-		#else:
-
-			#return render_to_response("recipe/edit_recipe.html", {'form' : form, 'units_list': units_list}, context_instance=RequestContext(request))
-
-	#else:
-		#form = RecipeForm(initial={})
-
-		#return render_to_response("recipe/edit_recipe.html", {'form' : form, 'units_list': units_list}, context_instance=RequestContext(request))
-
-
-#@login_required
-#def delete_recipe(request, permalink):
-	#recipe = Recipe.objects.get(Q(permalink=permalink),Q(author=request.user))
-	#recipe.is_deleted = True
-	#recipe.save()
-
-	#request.user.message_set.create(message=_("Successfully deleted recipe '%s'") % recipe.title)
-	#return HttpResponseRedirect("/konto/przepisy/")
-
-#@login_required
-#def get_food(request, startswith):
-	#food_list = Food.objects.filter(name__startswith=startswith)
-	#return render_to_response('autocomplete_get_element.html', {'element_list': food_list},  mimetype="text/xml", context_instance=RequestContext(request))
-
-
-#@login_required
-#def rate_recipe(request, rate, user_name, permalink):
-	#recipe = Recipe.objects.get(Q(permalink=permalink),Q(author__username__iexact=user_name))
-	#recipe.rating.add(score=rate, user=request.user, ip_address=request.META['REMOTE_ADDR'])
-	#return True
 
