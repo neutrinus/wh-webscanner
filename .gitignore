@@ -2,6 +2,7 @@
 *.swp
 *.kate-swp
 *~
+*.log
 py_env
 *.sqlite3
 docs/_build/
