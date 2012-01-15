@@ -71,9 +71,11 @@ function check_results(){
         url: "{% url scanner.views.check_results %}",
         data: "",
         success: function(data) {
-            $("#results").value = data;
-            window.setTimeout(check_results,2000);
-           
+            $.each(data, function(key, value) { 
+                $("#results").append("<li>desc:" + value.output_desc + "</li>");
+
+            });
+            window.setTimeout(check_results,2000);          
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
         dataType: "jsonp"
