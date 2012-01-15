@@ -21,7 +21,6 @@
 
 
 {% block content %}
-{{ test.pk }}
 <div id="content">
 <h1>SCAN Results </h1>
 
@@ -45,9 +44,20 @@
 finished = 0;
 $("#progressbar").progressbar({ value: 0 });
 
-
 function add_result(status, output_desc, output_full) {
-    $("#results").append("<li>desc:" + output_desc + "</li>");   
+    var element = document.createElement('li');
+    
+    if (status == 0) {
+        element.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
+    } else {
+        element.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+    }
+    
+    element.innerHTML += output_desc;
+    
+    $("#results").append(element);   
+    $(element).fadeOut(0);
+    $(element).fadeIn("slow");
 }
 
 function check_progress(){
@@ -68,7 +78,6 @@ function check_progress(){
 }
 check_progress();
 
-
 function check_results(){
     $.ajax({
         url: "{% url scanner.views.check_results %}",
@@ -84,10 +93,7 @@ function check_results(){
         dataType: "jsonp"
     });  
 }
-check_results();
-
-
-    
+check_results();   
 </script>
     
     

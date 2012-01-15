@@ -57,7 +57,7 @@ def scan_progress(request):
         
     
     
-def check_new_results(request,last_date=None):
+def check_results(request,last_date=None):
     testid = request.session.get('testid', False)
     test = Tests(pk=testid)
 
