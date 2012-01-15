@@ -56,7 +56,7 @@ class PluginDomainExpireDate(PluginMixin):
                     res = Results(test=command.test)
                     
                     if dt - date.today() > timedelta(days=29):
-                        res.output_desc = unicode(_("Your domain will be walid until %s"%(dt)) )
+                        res.output_desc = unicode(_("Your domain will be valid till %s"%(dt)) )
                         res.status = STATUS.success
                     else:
                         res.output_desc = unicode(_("Better renew your domain!") )

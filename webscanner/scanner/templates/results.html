@@ -27,6 +27,8 @@
 
 <div id="progressbar"></div>
 
+<div id="results"></div>
+
 
 <ul>
 <li>Screenshots</li>
@@ -42,20 +44,7 @@
 <script type="text/javascript">
 $("#progressbar").progressbar({ value: 0 });
 
-function update_progressbar(cdone, cordered) {
-    
-    
-}
 
-/*
-    
-$.ajax({
-    url: "{% url scanner.views.check_new_results %}",
-    data: testid,
-    success: function(data) {},
-    error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},    
-    dataType: "jsonp"
-    });*/
     
 
 function check_progress(){
@@ -74,9 +63,25 @@ function check_progress(){
         dataType: "jsonp"
     });  
 }
-
 check_progress();
-    
+
+
+function check_results(){
+    $.ajax({
+        url: "{% url scanner.views.check_results %}",
+        data: "",
+        success: function(data) {
+            $("#results").value = data;
+            window.setTimeout(check_results,2000);
+           
+        },
+        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        dataType: "jsonp"
+    });  
+}
+check_results();
+
+
     
 </script>
     

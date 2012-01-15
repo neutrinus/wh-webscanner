@@ -57,10 +57,17 @@ def scan_progress(request):
         
     
     
-def check_new_results(request):
+def check_new_results(request,last_date=None):
+    testid = request.session.get('testid', False)
+    test = Tests(pk=testid)
+
+    results = Results.objects.filter(test=test)
     
-    #print req.GET, req.POST
-    foo = {'jakies dane':['a','b']}
+    foo = []
+    for result in results:
+        foo.append({'output_desc':result.output_desc,'output_full':result.output_full , 'status': result.status})
+        
+    print json.dumps(foo)
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(foo)), mimetype='application/json')
     
     
