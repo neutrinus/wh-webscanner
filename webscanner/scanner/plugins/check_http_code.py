@@ -29,44 +29,64 @@ class PluginCheckHTTPCode(PluginMixin):
     name = unicode(_('Check HTTP site response'))
     description = unicode(_('Check http server http code response'))
 
+    def check_encoding(domain, encoding):
+        conn = httplib.HTTPConnection(domain,80)
+        conn.request("HEAD", "/",body="",headers={'Accept-Encoding': encoding})
+        a = conn.getresponse()
+        httpstatus =  str(a.status)
+        
+    
+    
     def run(self, command):
         time.sleep(1)
         
        
         try:
             conn = httplib.HTTPConnection(command.test.domain,80)
-            conn.request("HEAD", "/")        
-            a = conn.getresponse()
-            output =  str(a.status)
+            conn.request("HEAD", "/",body="",headers={'Accept-Encoding': 'gzip,deflate,bzip2,exi'})  
+            response = conn.getresponse()
+            httpstatus =  str(response.status)
             
             
-            if not output:
-                log.exception(_("Error: Empty output provided "))
+            if not httpstatus:
+                log.exception(_("Error: Empty httpstatus provided "))
                 return STATUS.exception
         
-            if not (output.isdigit()):
-                log.exception(_("Error: Non numerical output code "))
+            if not (httpstatus.isdigit()):
+                log.exception(_("Error: Non numerical httpstatus code "))
                 return STATUS.unsuccess
 
+            #check http_status 200>X>300
             from scanner.models import Results
             res = Results(test=command.test)
-            res.status = STATUS.success
-            
-            print output
-            print 
-            
-            if (int(output) > 199) & (int(output) < 399) :
-                res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(output),httplib.responses[int(output)] ) ))
+           
+            if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
+                res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
                 res.status = STATUS.success
-                
             else:
-                res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(output),httplib.responses[int(output)]) ))
+                res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
                 res.status = STATUS.unsuccess
                 
             res.save()
-            return res.status
-                
             
+            
+            #check http encoding aceptation
+            encoding = response.getheader("Content-Encoding")
+
+            res = Results(test=command.test)
+            
+            
+            if encoding:
+                res.status = STATUS.success
+                res.output_desc = unicode(_("Server agreed to compress http data using %s method."%(unicode(encoding) ) ))
+            else:
+                res.status = STATUS.unsuccess
+                res.output_desc = unicode(_("Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading." ))                
+            res.save()
+            
+            
+            return STATUS.success
+
         except Exception,e:
             log.exception(_("No validation can be done: %s "%(e)))
             return STATUS.exception
