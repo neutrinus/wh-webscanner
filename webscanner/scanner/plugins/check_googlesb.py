@@ -27,6 +27,8 @@ fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh) 
 
+w3c_validator = 'https://sb-ssl.google.com/safebrowsing/api/lookup?'
+
 
 class PluginGoogleSafeBrowsing(PluginMixin):
     name = unicode(_("Google Safe Browsing Blacklist checker"))
