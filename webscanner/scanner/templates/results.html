@@ -45,19 +45,38 @@ finished = 0;
 $("#progressbar").progressbar({ value: 0 });
 
 function add_result(status, output_desc, output_full) {
-    var element = document.createElement('li');
+    var element = document.createElement('tr');
     
+    var a = document.createElement('td');
+    a.setAttribute('class','output_desc');
+    a.innerHTML = output_desc;
+    element.appendChild(a);
+    
+    var a = document.createElement('td');
+    a.setAttribute('class','status');
     if (status == 0) {
-        element.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
-    } else {
-        element.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
-    }
+        element.setAttribute('class','status_ok');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
+    } 
+    if (status == 1) {
+        element.setAttribute('class','status_error');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+    }  
     
-    element.innerHTML += output_desc;
-    
+    if (status == 2) {
+        element.setAttribute('class','status_warning');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+        }  
+    element.appendChild(a);
+
+    var a = document.createElement('td');
+    a.setAttribute('class','output_full');
+    a.innerHTML = output_full;
+    element.appendChild(a);
+       
     $("#results").append(element);   
-    $(element).fadeOut(0);
-    $(element).fadeIn("slow");
+//     $(element).fadeOut(0);
+//     $(element).fadeIn("slow");
 }
 
 function check_progress(){

@@ -45,13 +45,14 @@ class PluginCheckW3CValid(PluginMixin):
             
             from scanner.models import Results
             res = Results(test=command.test)
-
+            res.output_desc = unicode(_("W3C Validation"))
+            
             if result.info().getheader('x-w3c-validator-status') == 'Valid' :
                 res.status = RESULT_STATUS.success
-                res.output_desc = "W3C Validator marks your website as Valid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
+                res.output_full = "W3C Validator marks your website as Valid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_desc = "W3C Validator marks your website as Invalid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
+                res.output_full = "W3C Validator marks your website as Invalid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
             res.save()
             
             #there was no exception - test finished with success

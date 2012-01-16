@@ -59,12 +59,13 @@ class PluginCheckHTTPCode(PluginMixin):
             #check http_status 200>X>300
             from scanner.models import Results
             res = Results(test=command.test)
+            res.output_desc = unicode(_("http return code"))
            
             if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
-                res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
+                res.output_full = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
+                res.output_full = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
                 res.status = RESULT_STATUS.error
             res.save()
             
@@ -74,13 +75,13 @@ class PluginCheckHTTPCode(PluginMixin):
 
             res = Results(test=command.test)
             
-            
+            res.output_desc = unicode(_("http compresion"))
             if encoding:
                 res.status = RESULT_STATUS.success
-                res.output_desc = unicode(_("Server agreed to compress http data using %s method."%(unicode(encoding) ) ))
+                res.output_full = unicode(_("Server agreed to compress http data using %s method."%(unicode(encoding) ) ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_desc = unicode(_("Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading." ))                
+                res.output_full = unicode(_("Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading." ))                
             res.save()
             
             #there was no exception - test finished with success

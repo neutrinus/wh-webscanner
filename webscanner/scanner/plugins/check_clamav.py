@@ -32,8 +32,6 @@ class PluginClamav(PluginMixin):
 
     def make_test(self, command):
         
-
-        utest_opt = current_test.users_test.users_test_options
         domain = str(current_test.users_test.domain.url)
         tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(12))
         
