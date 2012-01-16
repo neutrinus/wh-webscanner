@@ -55,7 +55,7 @@ class PluginDomainExpireDate(PluginMixin):
                     from scanner.models import Results
                     res = Results(test=command.test)
                     
-                    res.output_desc = unicode(_("Domain exipiration date") )
+                    res.output_desc = unicode(_("Domain expiration date") )
                     if dt - date.today() > timedelta(days=29):
                         res.output_full = unicode(_("Your domain will be valid till %s"%(dt)) )
                         res.status = RESULT_STATUS.success
