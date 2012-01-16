@@ -84,7 +84,7 @@ class PluginCheckHTTPCode(PluginMixin):
                 res.output_desc = unicode(_("Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading." ))                
             res.save()
             
-            
+            #there was no exception - test finished with success
             return STATUS.success
 
         except Exception,e:

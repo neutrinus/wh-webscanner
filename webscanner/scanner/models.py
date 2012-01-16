@@ -26,13 +26,13 @@ STATUS = Choices(
 
 
 from scanner.plugins.check_http_code import PluginCheckHTTPCode
-#from gworker.plugins.check_w3c_valid import PluginCheckW3CValid
+from scanner.plugins.check_w3c_valid import PluginCheckW3CValid
 from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
 #from gworker.plugins.check_kaspersky import PluginKaspersky
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
-    #('w3c_valid', PluginCheckW3CValid ),
+    ('w3c_valid', PluginCheckW3CValid ),
     ('domainexpdate', PluginDomainExpireDate ),
     #('kaspersky', PluginKaspersky ),
 ))

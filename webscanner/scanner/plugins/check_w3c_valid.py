@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
 #based on http://maestric.com/doc/python/recursive_w3c_html_validator
-
 import sys
 import os
 import random
@@ -10,52 +9,63 @@ import urllib
 import sys
 import urlparse
 from time import sleep
-
-w3c_validator = 'http://validator.w3.org/'
-
 from plugin import PluginMixin
-from scanner.models import STATUS,NOTIFY_TYPES
-
+from scanner.models import STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
+w3c_validator = 'http://validator.w3.org/'
+
+import logging
+log = logging.getLogger('plugin')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+fh = logging.FileHandler('plugin.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh) 
+
+
 class PluginCheckW3CValid(PluginMixin):
     
-    frequencies = (
-        ('5',    _('every 5 minute') ),
-        ('60',   _('every hour')),
-        ('1440', _('once a day') ),
-        ('10080', _('once a week')),
-    )
     name = unicode(_('W3C Validator'))
     description = unicode(_('Check wheter site is in w3c code'))
 
-    def make_test(self, current_test, timeout=None):
-        domain = current_test.users_test.domain.url
-        utest_opt = current_test.users_test.users_test_options
-        url = domain + ":" + utest_opt.port + utest_opt.path
+    def run(self, command):
+        domain = command.test.domain
         
         try:
-            result = urllib.urlopen(w3c_validator + 'check?uri=' + domain)
+            checklink = w3c_validator + 'check?uri=' + domain
+            result = urllib.urlopen(checklink)
            
-            output = "status:" + str(result.info().getheader('x-w3c-validator-status')) + ", warnings: "  + str(result.info().getheader('x-w3c-validator-warnings')) + ", errors:" + str(result.info().getheader('x-w3c-validator-errors'))  
+            output = "status: %s, warnings: %s, errors: %s."%(
+                    str(result.info().getheader('x-w3c-validator-status')),
+                    str(result.info().getheader('x-w3c-validator-warnings')),
+                    str(result.info().getheader('x-w3c-validator-errors')))
             
-            if result.info().getheader('x-w3c-validator-status') == 'Valid' :
-                status = STATUS.success
-            else:
-                status = STATUS.unsuccess
-            
-            return(status,output)        
-        except StandardError,e:
-            print "No validation can be done: " + str(e)
-            return (STATUS.exception,str(e))
+            from scanner.models import Results
+            res = Results(test=command.test)
 
-    def results(self,current_test, notify_type, language_code):
+            if result.info().getheader('x-w3c-validator-status') == 'Valid' :
+                res.status = STATUS.success
+                res.output_desc = "W3C Validator marks your website as Valid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
+            else:
+                res.status = STATUS.unsuccess
+                res.output_desc = "W3C Validator marks your website as Invalid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
+            res.save()
+            
+            #there was no exception - test finished with success
+            return STATUS.success
+        except Exception,e:
+            log.exception(_("No validation can be done: %s "%(e)))
+            return STATUS.exception
+
+    #def results(self,current_test, notify_type, language_code):
         
-        if notify_type:
-            output = current_test.output + ".."
-        else:
-            output = '<a href="' + w3c_validator + 'check?uri=' + \
-            unicode(current_test.users_test.domain) + '">' + current_test.output + '</a>'
+        #if notify_type:
+            #output = current_test.output + ".."
+        #else:
+            #output = '<a href="' + w3c_validator + 'check?uri=' + \
+            #unicode(current_test.users_test.domain) + '">' + current_test.output + '</a>'
         
-        return current_test.status,output
+        #return current_test.status,output
