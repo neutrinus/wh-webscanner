@@ -30,7 +30,7 @@ class PluginCheckHTTPCode(PluginMixin):
     description = unicode(_('Check http server http code response'))
 
     def run(self, command):
-        time.sleep(4)
+        time.sleep(1)
         
        
         try:
@@ -52,13 +52,15 @@ class PluginCheckHTTPCode(PluginMixin):
             res = Results(test=command.test)
             res.status = STATUS.success
             
+            print output
+            print 
             
             if (int(output) > 199) & (int(output) < 399) :
-                res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'> %s </a> code - it safe"%unicode(output) ))
+                res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(output),httplib.responses[int(output)] ) ))
                 res.status = STATUS.success
                 
             else:
-                res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'> %s </a> code - please check it"%unicode(output) ))
+                res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(output),httplib.responses[int(output)]) ))
                 res.status = STATUS.unsuccess
                 
             res.save()
