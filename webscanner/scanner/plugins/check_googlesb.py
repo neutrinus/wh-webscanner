@@ -27,8 +27,8 @@ fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh) 
 
-w3c_validator = 'https://sb-ssl.google.com/safebrowsing/api/lookup?'
-
+sburl = '/safebrowsing/api/lookup?client=webscanner&apikey=ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw&appver=0.1&pver=3.0&url='
+# my key: ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw
 
 class PluginGoogleSafeBrowsing(PluginMixin):
     name = unicode(_("Google Safe Browsing Blacklist checker"))
@@ -39,8 +39,8 @@ class PluginGoogleSafeBrowsing(PluginMixin):
 
         time.sleep(1)
         try:
-            conn = httplib.HTTPConnection(command.test.domain,80)
-            conn.request("HEAD", "/",body="",headers={'Accept-Encoding': 'gzip,deflate,bzip2,exi'})  
+            conn = httplib.HTTPSConnection("sb-ssl.google.com")
+            conn.request("GET", sburl+domain)  
             response = conn.getresponse()
             httpstatus =  str(response.status)
             httpbody = str(response.read())
@@ -48,21 +48,24 @@ class PluginGoogleSafeBrowsing(PluginMixin):
             from scanner.models import Results
             res = Results(test=command.test)                    
             res.output_desc = unicode(_("Google Safe Browssing Blacklist") )
+
+            message = '<p>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></p>'
             
             if (int(httpstatus) == 204):
-                res.output_full = unicode(_('Your domain is not listed at Google Safe Browsing Blacklist <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>'%command.test.domain) )
+                res.output_full = unicode(_('Your domain is not listed at Google Safe Browsing Blacklist <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. It means that probably there is no malware or phishing. '%command.test.domain) + message) 
                 res.status = RESULT_STATUS.success
                 
-            else if (int(httpstatus) == 200):
-                res.output_full = unicode(_('Your domain is not listed at Google Safe Browsing Blacklist <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>'%command.test.domain) )
+            elif (int(httpstatus) == 200):
+                res.output_full = unicode(_('Your domain is listed at Google Safe Browsing Blacklist because of %s <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. Please check your website because its possible that there is %s.'%(command.test.domain,httpbody,httpbody) ) + message) 
                 res.status = RESULT_STATUS.error
             else:
                 log.exception("Google sent non expected http code:%s body:%s "%(httpcode,httpbody) )
                 return STATUS.exception
             
             res.save()
-             
-            
+
+            #there was no exception - test finished with success
+            return STATUS.success
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception

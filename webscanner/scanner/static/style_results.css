@@ -41,6 +41,11 @@ body {
 /*     background: yellow; */
 }
 
+td {
+    margin: 10px;
+    padding: 10px;
+    
+}
 
 tr.status_ok {
     background-color: #ccffd1;
