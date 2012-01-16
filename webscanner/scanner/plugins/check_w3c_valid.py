@@ -10,7 +10,7 @@ import sys
 import urlparse
 from time import sleep
 from plugin import PluginMixin
-from scanner.models import STATUS
+from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -47,10 +47,10 @@ class PluginCheckW3CValid(PluginMixin):
             res = Results(test=command.test)
 
             if result.info().getheader('x-w3c-validator-status') == 'Valid' :
-                res.status = STATUS.success
+                res.status = RESULT_STATUS.success
                 res.output_desc = "W3C Validator marks your website as Valid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
             else:
-                res.status = STATUS.unsuccess
+                res.status = RESULT_STATUS.warning
                 res.output_desc = "W3C Validator marks your website as Invalid. " + output + ' <a href="%s">Check details at W3C</a>'%checklink 
             res.save()
             

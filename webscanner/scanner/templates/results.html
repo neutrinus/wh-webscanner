@@ -67,7 +67,7 @@ function check_progress(){
         success: function(data) {
             $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
             if (data.done/data.ordered != 1) {
-                window.setTimeout(check_progress,2000);
+                window.setTimeout(check_progress,1500);
             } else {
                 $("#progressbar").fadeOut();
             }
@@ -86,7 +86,7 @@ function check_results(){
             $.each(data, function(key, value) { 
                 add_result(value.status, value.output_desc, value.output_full)
             });
-            if (finished == 0) window.setTimeout(check_results,2000);   
+            if (finished == 0) window.setTimeout(check_results,1000);   
             if ($("#progressbar").progressbar("value") == 100) finished = 1;
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},

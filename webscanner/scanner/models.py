@@ -24,6 +24,12 @@ STATUS = Choices(
     (2,  'other',    _(u'Unknown')),
 )
 
+RESULT_STATUS = Choices(
+    (0,  'success',  _(u'Success')),
+    (1,  'error',_(u'Error')),
+    (2,  'warning',    _(u'Warning')),
+)
+
 
 from scanner.plugins.check_http_code import PluginCheckHTTPCode
 from scanner.plugins.check_w3c_valid import PluginCheckW3CValid
@@ -70,7 +76,7 @@ class CommandQueue(models.Model):
 class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="results for test")    
     
-    status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
+    status              =   models.IntegerField(choices=RESULT_STATUS)
     output_desc         =   models.CharField(max_length=1000)  
     output_full         =   models.CharField(max_length=1000)  
     

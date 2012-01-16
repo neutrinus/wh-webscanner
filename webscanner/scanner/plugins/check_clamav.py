@@ -26,17 +26,11 @@ PATH_WGET = '/usr/bin/wget'
 PATH_TMPSCAN = '/tmp/'
 
 
-class PluginKaspersky(PluginMixin):
-    name = unicode(_('Virus Scanner'))
-    description = unicode(_('Check website for viruses and malware using kaspersky antivirus software'))
-    frequencies = (
-        ('5',    _('every 5 minutes') ),
-        ('60',   _('every hour')),
-        ('1440', _('once a day') ),
-        ('10080', _('once a week')),
-    )
+class PluginClamav(PluginMixin):
+    name = unicode(_('AntiVirus Scanner'))
+    description = unicode(_('Check website for viruses and malware using CLAMAV antivirus software'))
 
-    def make_test(self, current_test, timeout=None):
+    def make_test(self, command):
         
 
         utest_opt = current_test.users_test.users_test_options
@@ -71,18 +65,18 @@ class PluginKaspersky(PluginMixin):
 
 
 
-    def results(self,current_test, notify_type, language_code):
-        try:          
-            output = current_test.output
-            numberofthreats = int(re.search('Threats found:.+ (?P<kaczka>[0-9]*)',output).group('kaczka'))
+    #def results(self,current_test, notify_type, language_code):
+        #try:          
+            #output = current_test.output
+            #numberofthreats = int(re.search('Threats found:.+ (?P<kaczka>[0-9]*)',output).group('kaczka'))
             
-            if numberofthreats > 0:
-                return (STATUS.unsuccess,_('Some threats found on your website'))
-            else:
-                return (STATUS.success,_('Not threats found - website is clean'))
+            #if numberofthreats > 0:
+                #return (STATUS.unsuccess,_('Some threats found on your website'))
+            #else:
+                #return (STATUS.success,_('Not threats found - website is clean'))
 
-        except Exception,e:
-            return (STATUS.exception,"Exception: " + str(e))
+        #except Exception,e:
+            #return (STATUS.exception,"Exception: " + str(e))
 
 
 if __name__ == '__main__':

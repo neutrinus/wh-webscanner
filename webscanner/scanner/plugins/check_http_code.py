@@ -9,7 +9,7 @@ from time import sleep
 from urlparse import urlparse
 from plugin import PluginMixin
 #from scanner.models import UsersTest_Options
-from scanner.models import STATUS
+from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -62,11 +62,10 @@ class PluginCheckHTTPCode(PluginMixin):
            
             if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
                 res.output_desc = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
-                res.status = STATUS.success
+                res.status = RESULT_STATUS.success
             else:
                 res.output_desc = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
-                res.status = STATUS.unsuccess
-                
+                res.status = RESULT_STATUS.error
             res.save()
             
             
@@ -77,10 +76,10 @@ class PluginCheckHTTPCode(PluginMixin):
             
             
             if encoding:
-                res.status = STATUS.success
+                res.status = RESULT_STATUS.success
                 res.output_desc = unicode(_("Server agreed to compress http data using %s method."%(unicode(encoding) ) ))
             else:
-                res.status = STATUS.unsuccess
+                res.status = RESULT_STATUS.warning
                 res.output_desc = unicode(_("Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading." ))                
             res.save()
             
