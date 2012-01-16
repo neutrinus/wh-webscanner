@@ -19,9 +19,18 @@ from scanner.models import STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
+import logging
+log = logging.getLogger('plugin')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+fh = logging.FileHandler('plugin.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh) 
+
 
 #PATH_KASPERSKY = '/opt/kaspersky/kav4fs/bin/kav4fs-control'
-PATH_KASPERSKY = '/home/marek/projekty/guardier/guardier-scanner/tools/fake_kaspersky_clean.sh'
+PATH_CLAMSCAN = '/home/marek/projekty/guardier/guardier-scanner/tools/fake_kaspersky_clean.sh'
 PATH_WGET = '/usr/bin/wget'
 PATH_TMPSCAN = '/tmp/'
 
@@ -50,15 +59,24 @@ class PluginClamav(PluginMixin):
             p2 = subprocess.Popen(args, stdout=subprocess.PIPE)          
             (output, stderrdata2) = p2.communicate()
 
-            current_test.output = output
-            current_test.save()
+            #from scanner.models import Results
+            #res = Results(test=command.test)
+            #res.output_desc = unicode(_("http return code"))
+           
+            #if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
+                #res.output_full = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
+                #res.status = RESULT_STATUS.success
+            #else:
+                #res.output_full = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
+                #res.status = RESULT_STATUS.error
+            #res.save()
 
-            (status,kaczka) = self.results(current_test,None , None)
-            return status,output
-            #return (STATUS.success, str(stdoutdata2) )
-
+            
+            #as plugin finished - its success
+            return STATUS.success
         except Exception,e:
-            return (STATUS.exception,"Exception: " + str(e))
+            log.exception(_("No check can be done: %s "%(e)))
+            return STATUS.exception
     
 
 
