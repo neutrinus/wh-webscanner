@@ -99,6 +99,7 @@ class NICClient(object) :
         """
         #pdb.set_trace()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(100)
         s.connect((hostname, 43))
         if (hostname == NICClient.DENICHOST):
             s.send("-T dn,ace -C UTF-8 " + query + "\r\n")
