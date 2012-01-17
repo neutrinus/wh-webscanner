@@ -37,7 +37,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
     def run(self, command):
         domain = command.test.domain
 
-        time.sleep(1)
+        #time.sleep(1)
         try:
             conn = httplib.HTTPSConnection("sb-ssl.google.com")
             conn.request("GET", sburl+domain)  

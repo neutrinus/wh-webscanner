@@ -38,7 +38,7 @@ class PluginCheckHTTPCode(PluginMixin):
     
     
     def run(self, command):
-        time.sleep(1)
+        #time.sleep(1)
         
        
         try:

@@ -40,7 +40,7 @@ class PluginDomainExpireDate(PluginMixin):
     def run(self, command):
         domain = command.test.domain
 
-        time.sleep(1)
+        #time.sleep(1)
         try:
             data = pywhois.whois(domain)   
             
