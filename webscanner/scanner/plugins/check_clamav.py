@@ -15,7 +15,7 @@ import shlex, subprocess
 from time import sleep
 from datetime import date
 from plugin import PluginMixin
-from scanner.models import STATUS
+from scanner.models import STATUS,RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -29,48 +29,64 @@ fh.setFormatter(formatter)
 log.addHandler(fh) 
 
 
-#PATH_KASPERSKY = '/opt/kaspersky/kav4fs/bin/kav4fs-control'
-PATH_CLAMSCAN = '/home/marek/projekty/guardier/guardier-scanner/tools/fake_kaspersky_clean.sh'
-PATH_WGET = '/usr/bin/wget'
-PATH_TMPSCAN = '/tmp/'
+#PATH_KASPERSKY = '/'
+PATH_CLAMSCAN = '/usr/bin/clamscan'
+PATH_WGET = '/usr/bin/puf'
+PATH_TMPSCAN = '/tmp/clamdd/'
 
 
 class PluginClamav(PluginMixin):
     name = unicode(_('AntiVirus Scanner'))
     description = unicode(_('Check website for viruses and malware using CLAMAV antivirus software'))
 
-    def make_test(self, command):
-        
-        domain = str(current_test.users_test.domain.url)
+    def run(self, command):
+        domain = command.test.domain
+
         tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(12))
         
         
         try:
+            log.debug(unicode(_("Downloading webpage")))
             # Download webpage
             #command = PATH_WGET + " -P "+ tmppath + " -t 2 -T 15 -Q 30M -r -q -l 2 -np http://" + domain + ":" + utest_opt.port + utest_opt.path
-            command = PATH_WGET + " -P "+ tmppath + " -t 2 -T 15 -Q 30M -r -q -l 2 -np http://" + domain 
-            args = shlex.split(command)
+            #command = PATH_WGET + " -P %s -o wget.log -t 1 -T 10 -Q 30m -r -l 0 -np http://%s"%(str(tmppath),str(domain))
+            cmd = PATH_WGET + " -U wh-webscanner -xd -xg  -r+ -l 2 -P %s %s"%(str(tmppath),str(domain))
+            
+            args = shlex.split(cmd)
             p = subprocess.Popen(args,  stdout=subprocess.PIPE)
             (stdoutdata, stderrdata) = p.communicate()
+
+            log.debug(unicode(_("Webpage downloaded, run clamscan")))
             
             #scan website
-            command = PATH_KASPERSKY + " --scan-file "+ tmppath 
-            args = shlex.split(command)
+            cmd = PATH_CLAMSCAN + " "+ tmppath 
+            args = shlex.split(cmd)
             p2 = subprocess.Popen(args, stdout=subprocess.PIPE)          
             (output, stderrdata2) = p2.communicate()
 
-            #from scanner.models import Results
-            #res = Results(test=command.test)
-            #res.output_desc = unicode(_("http return code"))
-           
-            #if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
-                #res.output_full = unicode(_("Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - it safe"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
-                #res.status = RESULT_STATUS.success
-            #else:
-                #res.output_full = unicode(_("Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%s %s\"</a> code - please check it"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
-                #res.status = RESULT_STATUS.error
-            #res.save()
+            log.debug(unicode(_("Clamscan finished")))
 
+            numberofthreats = int(re.search('Infected files: (?P<kaczka>[0-9]*)',output).group('kaczka'))
+
+            
+            
+            from scanner.models import Results
+            res = Results(test=command.test)
+            res.output_desc = unicode(_("Antivirus check"))
+            
+            if numberofthreats > 0:
+                
+                res.status = RESULT_STATUS.error
+                res.output_full = unicode(_("Our antivirus found <b>%s</b> infected files on your website"%(numberofthreats)))
+
+            else:
+                res.status = RESULT_STATUS.success
+                res.output_full = unicode(_("Our antivirus claims that there is no infected files on your website."))
+            
+            res.save()
+            
+            
+          
             
             #as plugin finished - its success
             return STATUS.success
@@ -79,20 +95,6 @@ class PluginClamav(PluginMixin):
             return STATUS.exception
     
 
-
-
-    #def results(self,current_test, notify_type, language_code):
-        #try:          
-            #output = current_test.output
-            #numberofthreats = int(re.search('Threats found:.+ (?P<kaczka>[0-9]*)',output).group('kaczka'))
-            
-            #if numberofthreats > 0:
-                #return (STATUS.unsuccess,_('Some threats found on your website'))
-            #else:
-                #return (STATUS.success,_('Not threats found - website is clean'))
-
-        #except Exception,e:
-            #return (STATUS.exception,"Exception: " + str(e))
 
 
 if __name__ == '__main__':

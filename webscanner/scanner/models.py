@@ -35,17 +35,14 @@ from scanner.plugins.check_http_code import PluginCheckHTTPCode
 from scanner.plugins.check_w3c_valid import PluginCheckW3CValid
 from scanner.plugins.check_googlesb import PluginGoogleSafeBrowsing
 from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
-#from gworker.plugins.check_kaspersky import PluginKaspersky
-
-
-
+from scanner.plugins.check_clamav import PluginClamav
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
     ('w3c_valid', PluginCheckW3CValid ),
     ('googlesb', PluginGoogleSafeBrowsing ),
     ('domainexpdate', PluginDomainExpireDate ),
-    #('kaspersky', PluginKaspersky ),
+    ('clamav', PluginClamav ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
