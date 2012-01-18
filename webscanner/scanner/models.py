@@ -36,6 +36,8 @@ from scanner.plugins.check_w3c_valid import PluginCheckW3CValid
 from scanner.plugins.check_googlesb import PluginGoogleSafeBrowsing
 from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
 from scanner.plugins.check_clamav import PluginClamav
+from scanner.plugins.check_dns_mail import PluginDNSmail
+
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
@@ -43,6 +45,7 @@ PLUGINS = dict((
     ('googlesb', PluginGoogleSafeBrowsing ),
     ('domainexpdate', PluginDomainExpireDate ),
     ('clamav', PluginClamav ),
+    ('dns_mail', PluginDNSmail ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

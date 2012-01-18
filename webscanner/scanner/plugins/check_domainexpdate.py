@@ -60,10 +60,10 @@ class PluginDomainExpireDate(PluginMixin):
                         res.output_full = unicode(_("<p>Your domain will be valid till %s. There is still %s days to renew it.</p>"%(dt, (dt - date.today()).days )) )
                         res.status = RESULT_STATUS.success
                     else:
-                        res.output_full = unicode(_("<p>Better renew your domain!</p>") )
+                        res.output_full = unicode(_("<p>Better renew your domain, its valid till %s! There is only %s days left.</p>"%(dt, (dt - date.today()).days ) ))
                         res.status = RESULT_STATUS.error
                     
-                    res.output_full += unicode(_("<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to check domain expiration date. Depending on your domain registrar this date may be inaccurate or outdated</p> "))
+                    res.output_full += unicode(_("<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to check domain expiration date. Depending on your domain registrar this date may be inaccurate or outdated.</p> "))
                     
                     res.save()
                 except StandardError,e:
