@@ -7,7 +7,7 @@ from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
-
+from IPy import IP
 
 import logging
 log = logging.getLogger('plugin')
@@ -51,8 +51,25 @@ class PluginDNS(PluginMixin):
                     res.status = RESULT_STATUS.error         
                 res.save()
 
+                #check if all IP are public (non-private)
+                records = ""
+                for rdata in answers:
+                    if IP(rdata.address).iptype() == "PRIVATE":
+                        records += "%s <br"%rdate.address
+                
+                res = Results(test=command.test)                
+                res.output_desc = unicode(_("No private IP in A records ") )
+                if not records:
+                    res.output_full = unicode(_("<p>All your A records are public.</p>" ))
+                    res.status = RESULT_STATUS.success
+                else:
+                    res.output_full = unicode(_("<p>Following A records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
+                    res.status = RESULT_STATUS.error         
+                res.save()
+                
+                
             except StandardError,e:
-                log.exception("%s"%str(e))
+                log.exception("During check A record: %s"%str(e))
             
             try:
                 #AAA
@@ -76,7 +93,7 @@ class PluginDNS(PluginMixin):
                 res.save()
             
             except StandardError,e:
-                log.exception("%s"%str(e))
+                log.exception("During check AAA record: %s"%str(e))
                 
             
             return STATUS.success

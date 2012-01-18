@@ -7,6 +7,7 @@ from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
+from IPy import IP
 
 
 import logging
@@ -50,6 +51,26 @@ class PluginDNSmail(PluginMixin):
             res.save()
 
             
+            #check if all IP are public (non-private)
+            records = ""
+            for mxdata in answers:
+                mxips = dns.resolver.query(mxdata.exchange) 
+                #now we have IP
+                for ip in mxips:
+                    if IP(ip).iptype() == "PRIVATE":
+                        records += "%s %s <br>"%(mxdata.exchange,ip)
+                                              
+            
+            res = Results(test=command.test)                
+            res.output_desc = unicode(_("No private IP in MX records ") )
+            if not records:
+                res.output_full = unicode(_("<p>All your MX records are public.</p>" ))
+                res.status = RESULT_STATUS.success
+            else:
+                res.output_full = unicode(_("<p>Following MX records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
+                res.status = RESULT_STATUS.error         
+            res.save()
+
             
             return STATUS.success
         except StandardError,e:
