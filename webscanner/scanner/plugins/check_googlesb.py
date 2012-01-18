@@ -47,7 +47,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
                       
             from scanner.models import Results
             res = Results(test=command.test)                    
-            res.output_desc = unicode(_("Google Safe Browssing Blacklist") )
+            res.output_desc = unicode(_("Google Safe Browsing ") )
 
             message = '<p>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></p>'
             
@@ -60,8 +60,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
                 res.status = RESULT_STATUS.error
             else:
                 log.exception("Google sent non expected http code:%s body:%s "%(httpcode,httpbody) )
-                return STATUS.exception
-            
+                return STATUS.exception        
             res.save()
 
             #there was no exception - test finished with success
@@ -69,28 +68,6 @@ class PluginGoogleSafeBrowsing(PluginMixin):
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception
-
-
-
-    def cast_date(self,date_str):
-        """Convert any date string found in WHOIS to a time object.
-        """
-        known_formats = [
-            '%d-%b-%Y',                 # 02-jan-2000
-            '%Y-%m-%d',                 # 2000-01-02
-            '%d-%b-%Y %H:%M:%S %Z',     # 24-Jul-2009 13:20:03 UTC
-            '%a %b %d %H:%M:%S %Z %Y',  # Tue Jun 21 23:59:59 GMT 2011
-            '%Y-%m-%dT%H:%M:%SZ',       # 2007-01-26T19:10:31Z
-        ]
-
-        for format in known_formats:
-            try:
-                return time.strptime(date_str.strip(), format)
-            except ValueError, e:
-                pass # Wrong format, keep trying
-        
-        raise NameError("Unsupported date format: " + str(date_str))
-        return None
 
 
 if __name__ == '__main__':

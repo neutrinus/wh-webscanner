@@ -79,8 +79,8 @@ class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="results for test")    
     
     status              =   models.IntegerField(choices=RESULT_STATUS)
-    output_desc         =   models.CharField(max_length=1000)  
-    output_full         =   models.CharField(max_length=1000)  
+    output_desc         =   models.CharField(max_length=10000)  
+    output_full         =   models.CharField(max_length=10000)  
     
     creation_date       =   models.DateTimeField(auto_now_add=True)
     
