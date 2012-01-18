@@ -1,0 +1,90 @@
+#! /usr/bin/env python
+# -*- encoding: utf-8 -*-
+import sys
+import os
+from plugin import PluginMixin
+from scanner.models import STATUS, RESULT_STATUS
+from django.utils.translation import get_language
+from django.utils.translation import ugettext_lazy as _
+import dns.resolver
+
+
+import logging
+log = logging.getLogger('plugin')
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+
+fh = logging.FileHandler('plugin.log')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh) 
+
+
+class PluginDNS(PluginMixin):
+    name = unicode(_("Check dns"))
+    description = unicode(_("Check dns"))
+    
+    def run(self, command):
+        from scanner.models import Results
+        domain = command.test.domain
+
+        try:    
+        
+            try:
+                #A
+                records = ""
+                answers = dns.resolver.query(domain, 'A')
+                for rdata in answers:
+                    records += "A %s <br>"%(rdata.to_text() )
+                            
+                
+                res = Results(test=command.test)                
+                res.output_desc = unicode(_("A records (IPv4)") )
+                if len(answers) > 1:
+                    res.output_full = unicode(_("<p>Your nameserver returned %s A records: <code>%s</code></p>"%(len(answers),records ) ))
+                    res.status = RESULT_STATUS.success
+                elif len(answers) == 1:
+                    res.output_full = unicode(_("<p>Your nameserver returned %s A record: <code>%s</code></p> <p>Having multiple A records with different IP can load-balance traffic.</p>"%(len(answers),records ) ))
+                    res.status = RESULT_STATUS.success
+                else:
+                    res.output_full = unicode(_("<p>There are no A records for this domain! It means that nobody can reach your website.</p>" ))
+                    res.status = RESULT_STATUS.error         
+                res.save()
+
+            except StandardError,e:
+                log.exception("%s"%str(e))
+            
+            try:
+                #AAA
+                records = ""
+                answers = dns.resolver.query(domain, 'AAA')
+                for rdata in answers:
+                    records += "AAA %s <br>"%(rdata.to_text() )
+                            
+                
+                res = Results(test=command.test)                
+                res.output_desc = unicode(_("AAA records (IPv6)") )
+                if len(answers) > 1:
+                    res.output_full = unicode(_("<p>Your nameserver returned %s AAA records: <code>%s</code></p>"%(len(answers),records ) ))
+                    res.status = RESULT_STATUS.success
+                elif len(answers) == 1:
+                    res.output_full = unicode(_("<p>Your nameserver returned %s AAA record: <code>%s</code></p> <p>Having multiple AAA records with different IP can load-balance traffic.</p>"%(len(answers),records ) ))
+                    res.status = RESULT_STATUS.success
+                else:
+                    res.output_full = unicode(_("<p>There are no AAA records for this domain! It means that probably your site is not IPv6 compatibile.</p>" ))
+                    res.status = RESULT_STATUS.warning         
+                res.save()
+            
+            except StandardError,e:
+                log.exception("%s"%str(e))
+                
+            
+            return STATUS.success
+        except StandardError,e:
+            log.exception("%s"%str(e))
+            return STATUS.exception
+
+
+
+if __name__ == '__main__':
+    main()

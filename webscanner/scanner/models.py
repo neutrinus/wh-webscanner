@@ -37,7 +37,7 @@ from scanner.plugins.check_googlesb import PluginGoogleSafeBrowsing
 from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
 from scanner.plugins.check_clamav import PluginClamav
 from scanner.plugins.check_dns_mail import PluginDNSmail
-
+from scanner.plugins.check_dns import PluginDNS
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
@@ -45,6 +45,7 @@ PLUGINS = dict((
     ('googlesb', PluginGoogleSafeBrowsing ),
     ('domainexpdate', PluginDomainExpireDate ),
     ('clamav', PluginClamav ),
+    ('dns', PluginDNS ),
     ('dns_mail', PluginDNSmail ),
 ))
 

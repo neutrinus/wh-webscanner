@@ -21,8 +21,8 @@ log.addHandler(fh)
 
 
 class PluginDNSmail(PluginMixin):
-    name = unicode(_("Check dns"))
-    description = unicode(_("Check dns"))
+    name = unicode(_("Check dns MAIL"))
+    description = unicode(_("Check dns MAIL"))
     
     def run(self, command):
         from scanner.models import Results
