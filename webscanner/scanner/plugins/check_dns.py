@@ -71,29 +71,29 @@ class PluginDNS(PluginMixin):
             except StandardError,e:
                 log.exception("During check A record: %s"%str(e))
             
-            try:
-                #AAA
-                records = ""
-                answers = dns.resolver.query(domain, 'AAA')
-                for rdata in answers:
-                    records += "AAA %s <br>"%(rdata.to_text() )
+            #try:
+                ##AAA
+                #records = ""
+                #answers = dns.resolver.query(domain, 'AAA')
+                #for rdata in answers:
+                    #records += "AAA %s <br>"%(rdata.to_text() )
                             
                 
-                res = Results(test=command.test)                
-                res.output_desc = unicode(_("AAA records (IPv6)") )
-                if len(answers) > 1:
-                    res.output_full = unicode(_("<p>Your nameserver returned %s AAA records: <code>%s</code></p>"%(len(answers),records ) ))
-                    res.status = RESULT_STATUS.success
-                elif len(answers) == 1:
-                    res.output_full = unicode(_("<p>Your nameserver returned %s AAA record: <code>%s</code></p> <p>Having multiple AAA records with different IP can load-balance traffic.</p>"%(len(answers),records ) ))
-                    res.status = RESULT_STATUS.success
-                else:
-                    res.output_full = unicode(_("<p>There are no AAA records for this domain! It means that probably your site is not IPv6 compatibile.</p>" ))
-                    res.status = RESULT_STATUS.warning         
-                res.save()
+                #res = Results(test=command.test)                
+                #res.output_desc = unicode(_("AAA records (IPv6)") )
+                #if len(answers) > 1:
+                    #res.output_full = unicode(_("<p>Your nameserver returned %s AAA records: <code>%s</code></p>"%(len(answers),records ) ))
+                    #res.status = RESULT_STATUS.success
+                #elif len(answers) == 1:
+                    #res.output_full = unicode(_("<p>Your nameserver returned %s AAA record: <code>%s</code></p> <p>Having multiple AAA records with different IP can load-balance traffic.</p>"%(len(answers),records ) ))
+                    #res.status = RESULT_STATUS.success
+                #else:
+                    #res.output_full = unicode(_("<p>There are no AAA records for this domain! It means that probably your site is not IPv6 compatibile.</p>" ))
+                    #res.status = RESULT_STATUS.warning         
+                #res.save()
             
-            except StandardError,e:
-                log.exception("During check AAA record: %s"%str(e))
+            #except StandardError,e:
+                #log.exception("During check AAA record: %s"%str(e))
                 
             
             return STATUS.success

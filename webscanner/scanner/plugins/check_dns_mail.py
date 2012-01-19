@@ -50,14 +50,14 @@ class PluginDNSmail(PluginMixin):
                 res.status = RESULT_STATUS.error         
             res.save()
 
-            
+
             #check if all IP are public (non-private)
             records = ""
             for mxdata in answers:
                 mxips = dns.resolver.query(mxdata.exchange) 
                 #now we have IP
                 for ip in mxips:
-                    if IP(ip).iptype() == "PRIVATE":
+                    if IP(ip.address).iptype() == "PRIVATE":
                         records += "%s %s <br>"%(mxdata.exchange,ip)
                                               
             
