@@ -67,7 +67,7 @@ class PluginDNSmail(PluginMixin):
                     #check if ip resolves intro FQDN - needed for email
                     try:
                         mx_dnsname = dns.resolver.query(dns.reversename.from_address(ip.address),"PTR")
-                        reversemxes += "%s(%s): %s <br />"%(mxdata.exchange,ip.address,mx_dnsname)
+                        reversemxes += "%s(%s): %s <br />"%(mxdata.exchange,ip.address,mx_dnsname[0])
                     except dns.resolver.NXDOMAIN:
                         noreversemxes += "%s(%s)<br />"%(mxdata.exchange,ip.address)
                     
@@ -91,8 +91,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full = unicode(_("<p>Following MX records for dont have reverse entries: <code>%s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
                 res.status = RESULT_STATUS.error         
                 
-            res.output_full += unicode(_("All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. "))
-                
+            res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
             res.save()
             
             
