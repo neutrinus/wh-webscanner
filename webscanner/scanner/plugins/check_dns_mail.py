@@ -7,6 +7,7 @@ from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
+import dns.reversename
 from IPy import IP
 
 
@@ -53,14 +54,24 @@ class PluginDNSmail(PluginMixin):
 
             #check if all IP are public (non-private)
             records = ""
+            reversemxes = ""
+            noreversemxes = ""
             for mxdata in answers:
                 mxips = dns.resolver.query(mxdata.exchange) 
                 #now we have IP
                 for ip in mxips:
+                    #check if address is not private
                     if IP(ip.address).iptype() == "PRIVATE":
                         records += "%s %s <br>"%(mxdata.exchange,ip)
                                               
-            
+                    #check if ip resolves intro FQDN - needed for email
+                    try:
+                        mx_dnsname = dns.resolver.query(dns.reversename.from_address(ip.address),"PTR")
+                        reversemxes += "%s(%s): %s <br />"%(mxdata.exchange,ip.address,mx_dnsname)
+                    except dns.resolver.NXDOMAIN:
+                        noreversemxes += "%s(%s)<br />"%(mxdata.exchange,ip.address)
+                    
+                    
             res = Results(test=command.test)                
             res.output_desc = unicode(_("No private IP in MX records ") )
             if not records:
@@ -71,6 +82,20 @@ class PluginDNSmail(PluginMixin):
                 res.status = RESULT_STATUS.error         
             res.save()
 
+            res = Results(test=command.test)                
+            res.output_desc = unicode(_("Reverse Entries for MX records") )
+            if not noreversemxes:
+                res.output_full = unicode(_("<p>All your MX records have reverse records: <code>%s</code></p>"%(reversemxes) ))
+                res.status = RESULT_STATUS.success
+            else:
+                res.output_full = unicode(_("<p>Following MX records for dont have reverse entries: <code>%s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
+                res.status = RESULT_STATUS.error         
+                
+            res.output_full += unicode(_("All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. "))
+                
+            res.save()
+            
+            
             
             return STATUS.success
         except StandardError,e:
