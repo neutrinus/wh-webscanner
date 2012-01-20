@@ -60,13 +60,16 @@ tr.status_ok {
     
 }
 
-
 tr.status_error {
     background-color: #ffcccc;
 }
 
 tr.status_warning {
     background-color: #feffcc;
+}
+
+tr.status_info {
+    background-color: #bbd8ff;
 }
 
 
@@ -95,6 +98,10 @@ tr.status_error td.status {
 tr.status_warning td.status {
     background-color: yellow;
 }
+tr.status_info td.status {
+    background-color: blue;
+}
+
 
 
 

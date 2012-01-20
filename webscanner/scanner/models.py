@@ -40,6 +40,9 @@ from scanner.plugins.check_clamav import PluginClamav
 from scanner.plugins.check_dns_mail import PluginDNSmail
 from scanner.plugins.check_dns import PluginDNS
 from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
+from scanner.plugins.check_pagerank import PluginPagerank
+
+
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
@@ -50,6 +53,7 @@ PLUGINS = dict((
     ('dns', PluginDNS ),
     ('dns_mail', PluginDNSmail ),
     ('dns_mail_rbl', PluginDNSmailRBL ),
+    ('pagerank', PluginPagerank ),
     
 ))
 
