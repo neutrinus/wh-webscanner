@@ -46,33 +46,36 @@ class PluginDNSmailRBL(PluginMixin):
             for mxdata in answers:
                 mxips.append(dns.resolver.query(mxdata.exchange)[0].address)
                  
-            blacklisted = ""
-            notblacklisted = ""
+            results = ""
+            blacklisted = 0
             
-            for bl in blacklists:
-                for ip in mxips:
+                
+            for ip in mxips:
+                for bl in blacklists:
                     tmp = str(ip).split('.') 
                     tmp.reverse()
                     rev_ip = '.'.join(tmp) 
                     querydomain = ip + '.' + bl 
                     try:
                         answers = dns.resolver.query(querydomain)
-                        blacklisted += "%s listed on %s <br>"%(ip,bl)
+                        results += "%s <b>listed</b> on %s <br>"%(ip,bl)
+                        blacklisted = 1
                     except dns.resolver.NXDOMAIN:
-                        notblacklisted += "%s not listed on %s <br>"%(ip,bl)
+                        results += "%s not listed on %s <br>"%(ip,bl)
                     except dns.resolver.Timeout:
                         log.debug("RBL Timeout: %s while checking: %s"%(bl,ip) )
+                results += "<br />"
+                        
             
             res = Results(test=command.test)                
             res.output_desc = unicode(_("Mailservers on DNSBL blacklists (RBL)") )
-            if not blacklisted:
-                res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. We have checked those pairs: <code>%s</code></p>"%(notblacklisted) ))
+            if blacklisted == 0:
+                res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. Details: <code>%s</code></p>"%(results) ))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>Those mailservers are listed on : <code>%s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
+                res.output_full = unicode(_("<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</code></p> <p> Beeing listed on those lists may cause that your reciptiens will have your mail in SPAM folder</p>"%(results) ))
                 res.status = RESULT_STATUS.error         
                 
-            #res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
             res.save()
             
             
