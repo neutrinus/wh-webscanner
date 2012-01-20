@@ -12,11 +12,14 @@
 
 import sys
 import os
+import re
+import urllib2
+import urllib
+
 from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-import urllib
 
 import logging
 log = logging.getLogger('plugin')
@@ -99,6 +102,27 @@ def check_hash(hash_int):
  
  
 
+def get_alexa_rank(url):
+    try:
+        data = urllib2.urlopen('http://data.alexa.com/data?cli=10&dat=snbamz&url=%s' % (url)).read()
+
+        reach_rank = re.findall("REACH[^\d]*(\d+)", data)
+        if reach_rank: reach_rank = reach_rank[0]
+        else: reach_rank = -1
+
+        popularity_rank = re.findall("POPULARITY[^\d]*(\d+)", data)
+        if popularity_rank: popularity_rank = popularity_rank[0]
+        else: popularity_rank = -1
+
+        return int(popularity_rank), int(reach_rank)
+
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except:
+        return None
+ 
+ 
+
 class PluginPagerank(PluginMixin):
     name = unicode(_("Check pagerank"))
     description = unicode(_("Check pagerank"))
@@ -109,8 +133,7 @@ class PluginPagerank(PluginMixin):
 
         
         try:    
-        
-            rank = get_pagerank('www.google.com')
+            rank = get_pagerank(domain)
             
             res = Results(test=command.test)                
             res.output_desc = unicode(_("google pagerank") )
@@ -118,6 +141,14 @@ class PluginPagerank(PluginMixin):
             res.status = RESULT_STATUS.info
             res.save()
 
+            
+            (popularity_rank,reach_rank) = get_alexa_rank(domain)           
+            res = Results(test=command.test)                
+            res.output_desc = unicode(_("alexa pagerank") )
+            res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <p>Ranking for your site:</p> <li>popularity rank: %s</li> <li>reachability rank: %s</li>"%(popularity_rank,reach_rank ) ))
+            res.status = RESULT_STATUS.info
+            res.save()
+            
             
                 
             

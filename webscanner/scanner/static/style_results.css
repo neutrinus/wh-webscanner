@@ -69,7 +69,7 @@ tr.status_warning {
 }
 
 tr.status_info {
-    background-color: #bbd8ff;
+    background-color: #c6deff;
 }
 
 
@@ -99,7 +99,7 @@ tr.status_warning td.status {
     background-color: yellow;
 }
 tr.status_info td.status {
-    background-color: blue;
+    background-color: #69a9ff;
 }
 
 
