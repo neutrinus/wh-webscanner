@@ -98,6 +98,9 @@ class PluginDNSmail(PluginMixin):
             
             #check DNSBL
             
+            blacklisted = ""
+            notblacklisted = ""
+            
             # list of blacklists to check
             blacklists      = [
                 'sbl-xbl.spamhaus.org',
@@ -109,17 +112,30 @@ class PluginDNSmail(PluginMixin):
                 ] 
                 
             for bl in blacklists:
-                for ipk in mxips:
-                    tmp = ipk
+                for ip in mxips:
+                    tmp = ip
                     tmp.split('.') 
                     tmp.reverse()
                     rev_ip = '.'.join(tmp) 
                     querydomain = ip + '.' + bl 
                     try:
-                        answers = dns.resolver.query(domain, 'MX')
-                        
+                        answers = dns.resolver.query(querydomain)
+                        blacklisted += "%s listed on %s <br>"%(ip,bl)
                     except dns.resolver.NXDOMAIN:
-                        
+                        notblacklisted += "%s not listed on %s <br>"%(ip,bl)
+            
+            res = Results(test=command.test)                
+            res.output_desc = unicode(_("Mailservers on DNSBL blacklists (RBL)") )
+            if not blacklisted:
+                res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. We have checked those pairs: <code>%s</code></p>"%(notblacklisted) ))
+                res.status = RESULT_STATUS.success
+            else:
+                res.output_full = unicode(_("<p>Those mailservers are listed on : <code>%s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
+                res.status = RESULT_STATUS.error         
+                
+            #res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
+            res.save()
+            
             
             return STATUS.success
         except StandardError,e:
