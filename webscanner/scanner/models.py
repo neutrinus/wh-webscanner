@@ -28,6 +28,7 @@ RESULT_STATUS = Choices(
     (0,  'success',  _(u'Success')),
     (1,  'error',_(u'Error')),
     (2,  'warning',    _(u'Warning')),
+    (3,  'info',    _(u'info'))
 )
 
 

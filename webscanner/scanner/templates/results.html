@@ -65,7 +65,12 @@ function add_result(status, output_desc, output_full) {
     
     if (status == 2) {
         element.setAttribute('class','status_warning');
-        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> '
+        }  
+        
+    if (status == 3) {
+        element.setAttribute('class','status_info');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
         }  
     element.appendChild(a);
 
