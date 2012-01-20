@@ -64,10 +64,15 @@ class PluginDNS(PluginMixin):
                     res.status = RESULT_STATUS.success
                 else:
                     res.output_full = unicode(_("<p>Following A records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
-                    res.status = RESULT_STATUS.error         
+                    res.status = RESULT_STATUS.error    
                 res.save()
                 
-                
+            except dns.resolver.NXDOMAIN:
+                res = Results(test=command.test)                
+                res.output_desc = unicode(_("A records (IPv4)") )
+                res.output_full = unicode(_("<p>Domain not found!.</p>" ))
+                res.status = RESULT_STATUS.error
+                res.save()
             except StandardError,e:
                 log.exception("During check A record: %s"%str(e))
             

@@ -96,6 +96,31 @@ class PluginDNSmail(PluginMixin):
             
             
             
+            #check DNSBL
+            
+            # list of blacklists to check
+            blacklists      = [
+                'sbl-xbl.spamhaus.org',
+                'list.dsbl.org',
+                'bl.spamcop.net',
+                'dnsbl1.dnsbl.borderware.com',
+                'dnsbl2.dnsbl.borderware.com',
+                'dnsbl.sorbs.net',
+                ] 
+                
+            for bl in blacklists:
+                for ipk in mxips:
+                    tmp = ipk
+                    tmp.split('.') 
+                    tmp.reverse()
+                    rev_ip = '.'.join(tmp) 
+                    querydomain = ip + '.' + bl 
+                    try:
+                        answers = dns.resolver.query(domain, 'MX')
+                        
+                    except dns.resolver.NXDOMAIN:
+                        
+            
             return STATUS.success
         except StandardError,e:
             log.exception("%s"%str(e))
