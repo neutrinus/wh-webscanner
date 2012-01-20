@@ -38,6 +38,7 @@ from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
 from scanner.plugins.check_clamav import PluginClamav
 from scanner.plugins.check_dns_mail import PluginDNSmail
 from scanner.plugins.check_dns import PluginDNS
+from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
 
 PLUGINS = dict((
     ('http_code', PluginCheckHTTPCode ),
@@ -47,6 +48,8 @@ PLUGINS = dict((
     ('clamav', PluginClamav ),
     ('dns', PluginDNS ),
     ('dns_mail', PluginDNSmail ),
+    ('dns_mail_rbl', PluginDNSmailRBL ),
+    
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

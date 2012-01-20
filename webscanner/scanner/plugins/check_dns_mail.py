@@ -36,21 +36,6 @@ class PluginDNSmail(PluginMixin):
             for rdata in answers:
                 mxes += "MX %s <br>"%(rdata.to_text() )
                 #print 'Host', rdata.exchange, 'has preference', rdata.preference
-                           
-            
-            res = Results(test=command.test)                
-            res.output_desc = unicode(_("MX Records") )
-            if len(answers) > 1:
-                res.output_full = unicode(_("<p>Your nameserver returned %s MX records: <code>%s</code></p>"%(len(answers),mxes ) ))
-                res.status = RESULT_STATUS.success
-            elif len(answers) == 1:
-                res.output_full = unicode(_("<p>Your nameserver returned %s MX record: <code>%s</code></p> <p> Domains should have at least 2 mailservers, if the primary mailserver is unreachable the secondary will continue to receive domain's e-mails. Although many mailservers will retry to send e-mails up to 3 days, there is a chance that server administrators lowered this interval to a few hours and you may end up loosing your e-mails. </p>"%(len(answers),mxes ) ))
-                res.status = RESULT_STATUS.warning
-            else:
-                res.output_full = unicode(_("<p>There are no MX records for this domain! It means that there is no working email solution.</p>" ))
-                res.status = RESULT_STATUS.error         
-            res.save()
-
 
             #check if all IP are public (non-private)
             records = ""
@@ -95,46 +80,6 @@ class PluginDNSmail(PluginMixin):
             res.save()
             
             
-            
-            #check DNSBL
-            
-            blacklisted = ""
-            notblacklisted = ""
-            
-            # list of blacklists to check
-            blacklists      = [
-                'sbl-xbl.spamhaus.org',
-                'list.dsbl.org',
-                'bl.spamcop.net',
-                'dnsbl1.dnsbl.borderware.com',
-                'dnsbl2.dnsbl.borderware.com',
-                'dnsbl.sorbs.net',
-                ] 
-                
-            for bl in blacklists:
-                for ip in mxips:
-                    tmp = ip
-                    tmp.split('.') 
-                    tmp.reverse()
-                    rev_ip = '.'.join(tmp) 
-                    querydomain = ip + '.' + bl 
-                    try:
-                        answers = dns.resolver.query(querydomain)
-                        blacklisted += "%s listed on %s <br>"%(ip,bl)
-                    except dns.resolver.NXDOMAIN:
-                        notblacklisted += "%s not listed on %s <br>"%(ip,bl)
-            
-            res = Results(test=command.test)                
-            res.output_desc = unicode(_("Mailservers on DNSBL blacklists (RBL)") )
-            if not blacklisted:
-                res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. We have checked those pairs: <code>%s</code></p>"%(notblacklisted) ))
-                res.status = RESULT_STATUS.success
-            else:
-                res.output_full = unicode(_("<p>Those mailservers are listed on : <code>%s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
-                res.status = RESULT_STATUS.error         
-                
-            #res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
-            res.save()
             
             
             return STATUS.success
