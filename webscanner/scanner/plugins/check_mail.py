@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 import dns.resolver
 import dns.reversename
 from IPy import IP
-
+import smtplib
 
 import logging
 log = logging.getLogger('plugin')
@@ -23,6 +23,7 @@ log.addHandler(fh)
 
 
 class PluginMail(PluginMixin):
+    name = unicode(_('Check mailservers'))
     
     def run(self, command):
         from scanner.models import Results
@@ -40,8 +41,33 @@ class PluginMail(PluginMixin):
                         
 
         try:
-            
-            
+            postmaster = ""
+            for mx in mxes:
+                try:
+                    print str(mx)
+                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    #if here - connection succesfull
+                    foo.set_debuglevel(True)
+                    foo.ehlo()
+                    (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
+                    print code
+                    print msg
+                    (code,msg) = foo.docmd("RCPT","TO: <postmaster@%s>"%(domain))
+                    postmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s <br /><br />"%(mx,domain,msg)
+                    
+                    print code
+                    print msg
+                    
+                    foo.quit()
+                except smtplib.socket.error:
+                    pass    
+                
+            res = Results(test=command.test)
+           
+            res.output_desc = unicode(_("mailservers accept postmaster address"))
+            res.status = RESULT_STATUS.success
+            res.output_full = unicode(_("<p>Details <code>%s</code></p>"%(postmaster ) ))
+            res.save()
             
             
             return STATUS.success

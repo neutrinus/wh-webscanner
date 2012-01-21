@@ -6,7 +6,6 @@ import os
 import random
 import HTMLParser
 import urllib
-import sys
 import urlparse
 import random
 import string
