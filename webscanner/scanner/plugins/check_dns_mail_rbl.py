@@ -32,7 +32,7 @@ class PluginDNSmailRBL(PluginMixin):
 
         # list of blacklists to check
         blacklists      = [
-            'dsn.rfc-ignorant.org'
+            'dsn.rfc-ignorant.org',
             'bl.spamcop.net',
             'zen.spamhaus.org',
             'dnsbl.sorbs.net',

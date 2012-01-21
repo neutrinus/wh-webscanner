@@ -69,6 +69,3 @@ class PluginGoogleSafeBrowsing(PluginMixin):
             log.exception("%s"%str(e))
             return STATUS.exception
 
-
-if __name__ == '__main__':
-    main()

@@ -36,8 +36,6 @@ PATH_TMPSCAN = '/tmp/clamdd/'
 
 
 class PluginClamav(PluginMixin):
-    name = unicode(_('AntiVirus Scanner'))
-    description = unicode(_('Check website for viruses and malware using CLAMAV antivirus software'))
 
     def run(self, command):
         domain = command.test.domain
