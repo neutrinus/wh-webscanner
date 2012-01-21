@@ -36,7 +36,8 @@ PATH_TMPSCAN = '/tmp/clamdd/'
 
 
 class PluginClamav(PluginMixin):
-
+    name = unicode(_('Clamscan'))
+    
     def run(self, command):
         domain = command.test.domain
 
