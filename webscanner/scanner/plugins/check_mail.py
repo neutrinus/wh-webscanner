@@ -52,6 +52,8 @@ class PluginMail(PluginMixin):
             for mx in mxes:
                 try:
                     log.debug("Checking mail for MX: %s"%str(mx))
+                    
+                    #postmaster
                     foo = smtplib.SMTP(str(mx),timeout=5)
                     #if here - connection succesfull
                     foo.set_debuglevel(True)
@@ -64,6 +66,7 @@ class PluginMail(PluginMixin):
                         nopostmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
                     foo.quit()
                     
+                    #abuse
                     foo = smtplib.SMTP(str(mx),timeout=5)
                     #if here - connection succesfull
                     foo.ehlo()
@@ -74,6 +77,8 @@ class PluginMail(PluginMixin):
                     else:
                         noabuse +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: abuse@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
                     foo.quit()
+                    
+                    #openrelay
                     
                     
                 except smtplib.socket.error:
