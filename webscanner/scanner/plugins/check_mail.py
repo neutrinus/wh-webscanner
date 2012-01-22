@@ -41,33 +41,92 @@ class PluginMail(PluginMixin):
                         
 
         try:
+            nopostmaster = ""
             postmaster = ""
+            
+            noabuse = ""
+            abuse = ""
+            noconnect = ""
+            noconnect_count = 0
+            
             for mx in mxes:
                 try:
-                    print str(mx)
+                    log.debug("Checking mail for MX: %s"%str(mx))
                     foo = smtplib.SMTP(str(mx),timeout=5)
                     #if here - connection succesfull
                     foo.set_debuglevel(True)
                     foo.ehlo()
                     (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
-                    print code
-                    print msg
                     (code,msg) = foo.docmd("RCPT","TO: <postmaster@%s>"%(domain))
-                    postmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s <br /><br />"%(mx,domain,msg)
-                    
-                    print code
-                    print msg
-                    
+                    if code == 250:
+                        postmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
+                    else:
+                        nopostmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
                     foo.quit()
+                    
+                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    #if here - connection succesfull
+                    foo.ehlo()
+                    (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
+                    (code,msg) = foo.docmd("RCPT","TO: <abuse@%s>"%(domain))
+                    if code == 250:
+                        abuse +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: abuse@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
+                    else:
+                        noabuse +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: abuse@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
+                    foo.quit()
+                    
+                    
                 except smtplib.socket.error:
+                    noconnect +=   "%s<br />"%(mx)
+                    noconnect_count +=1
                     pass    
                 
             res = Results(test=command.test)
-           
-            res.output_desc = unicode(_("mailservers accept postmaster address"))
-            res.status = RESULT_STATUS.success
-            res.output_full = unicode(_("<p>Details <code>%s</code></p>"%(postmaster ) ))
+            res.output_desc = unicode(_("accept mail to postmaster@"))
+            res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to postmaster.</p> "))
+            if not nopostmaster:
+                res.status = RESULT_STATUS.success
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to postmaster@%s: <code>%s</code></p>"%(domain,postmaster ) ))
+            else:
+                res.status = RESULT_STATUS.warning
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%s:<code>%s</code> </p>"%(domain,nopostmaster ) ))
+                if postmaster:
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%s:<code>%s</code> </p>"%(domain,postmaster ) ))    
             res.save()
+
+
+            res = Results(test=command.test)
+            res.output_desc = unicode(_("accept mail to abuse@"))
+            res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to abuse.</p> "))
+            if not noabuse:
+                res.status = RESULT_STATUS.success
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to abuse@%s: <code>%s</code></p>"%(domain,abuse ) ))
+            else:
+                res.status = RESULT_STATUS.warning
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%s:<code>%s</code> </p>"%(domain,noabuse ) ))
+                if abuse:
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%s:<code>%s</code> </p>"%(domain,abuse ) ))    
+            res.save()
+
+            
+            res = Results(test=command.test)
+            res.output_desc = unicode(_("connect to mailservers"))
+            res.output_full = unicode(_("<p>Mailservers should accept TCP connections on port 25. Its needed to accept emails from other servers</p> "))
+            if not noconnect:                    
+                #all servers responds
+                res.status = RESULT_STATUS.success
+                res.output_full += unicode(_("<p>All of your %s accepted connections</p>"%(len(mxes) ) ))
+            elif (noconnect_count< len(mxes)):    
+                #some servers didnt respond
+                res.status = RESULT_STATUS.warning
+                res.output_full += unicode(_("<p>Some(%s) of your %s mailservers didnt accept connection from our check, details:<code>%s</code></p>"%(noconnect_count,len(mxes),noconnect ) ))
+            else:
+                #none server responded
+                res.status = RESULT_STATUS.error
+                res.output_full += unicode(_("<p>None of your %s mailservers accepted connection, details: <code>%s</code></p>"%(len(mxes),noconnect ) ))
+                
+            res.save()
+            
             
             
             return STATUS.success
