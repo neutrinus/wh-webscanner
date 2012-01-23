@@ -75,7 +75,6 @@ class PluginDNSmailRBL(PluginMixin):
             else:
                 res.output_full = unicode(_("<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</code></p> <p> Beeing listed on those lists may cause that your reciptiens will have your mail in SPAM folder</p>"%(results) ))
                 res.status = RESULT_STATUS.error         
-                
             res.save()
             
             

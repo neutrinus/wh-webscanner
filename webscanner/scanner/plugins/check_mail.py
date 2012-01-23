@@ -49,6 +49,9 @@ class PluginMail(PluginMixin):
             noconnect = ""
             noconnect_count = 0
             
+            openrelay = ""
+            noopenrelay = ""
+            
             for mx in mxes:
                 try:
                     log.debug("Checking mail for MX: %s"%str(mx))
@@ -56,7 +59,7 @@ class PluginMail(PluginMixin):
                     #postmaster
                     foo = smtplib.SMTP(str(mx),timeout=5)
                     #if here - connection succesfull
-                    foo.set_debuglevel(True)
+                    #foo.set_debuglevel(True)
                     foo.ehlo()
                     (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
                     (code,msg) = foo.docmd("RCPT","TO: <postmaster@%s>"%(domain))
@@ -79,7 +82,16 @@ class PluginMail(PluginMixin):
                     foo.quit()
                     
                     #openrelay
-                    
+                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    #if here - connection succesfull
+                    foo.ehlo()
+                    (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
+                    (code,msg) = foo.docmd("RCPT","TO: <openrelaytest-webscanner@neutrinus.com>")
+                    if code == 250:
+                        openrelay +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: openrelaytest-webscanner@neutrinus.com <br />&nbsp; %s %s <br /><br />"%(mx,code,msg)
+                    else:
+                        noopenrelay +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: openrelaytest-webscanner@neutrinus.com <br />&nbsp; %s %s <br /><br />"%(mx,code,msg)
+                    foo.quit()
                     
                 except smtplib.socket.error:
                     noconnect +=   "%s<br />"%(mx)
@@ -128,8 +140,22 @@ class PluginMail(PluginMixin):
             else:
                 #none server responded
                 res.status = RESULT_STATUS.error
-                res.output_full += unicode(_("<p>None of your %s mailservers accepted connection, details: <code>%s</code></p>"%(len(mxes),noconnect ) ))
-                
+                res.output_full += unicode(_("<p>None of your %s mailservers accepted connection, details: <code>%s</code></p>"%(len(mxes),noconnect ) ))               
+            res.save()
+            
+            res = Results(test=command.test)
+            res.output_desc = unicode(_("open-relay check "))
+            if not openrelay:
+                res.status = RESULT_STATUS.success
+                res.output_full += unicode(_("<p>None of your mailservers are open-relays: <code>%s</code></p>"%(noopenrelay ) ))
+            else:
+                res.status = RESULT_STATUS.error
+                res.output_full += unicode(_("<p>Mailservers that are open-relays:<code>%s</code> </p>"%(openrelay ) ))
+                if noopenrelay:
+                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%s</code> </p>"%(noopenrelay ) ))    
+                    
+            res.output_full += unicode(_("<p>Mailservers should not allow relaying, except for authenticated users and trusted IPs.  </p>" ))    
+                    
             res.save()
             
             
