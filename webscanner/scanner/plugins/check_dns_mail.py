@@ -79,8 +79,24 @@ class PluginDNSmail(PluginMixin):
             res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
             res.save()
             
-            
-            
+
+            spfrecord = ""
+            answers = dns.resolver.query(domain, 'TXT')
+            for rdata in answers:
+                if rdata.strings[0].startswith('v=spf1'):
+                    spfrecord += rdata.strings[0]
+
+            res = Results(test=command.test)                
+            res.output_desc = unicode(_("SPF records") )
+            if spfrecord:
+                res.output_full = unicode(_("<p>OK, you have SPF record defined: <code>%s</code></p>"%(spfrecord) ))
+                res.status = RESULT_STATUS.success
+            else:
+                res.output_full = unicode(_("<p>There is no SPF defined. Consider creating one - it helps a lot dealing with SPAM.</p>"))
+                res.status = RESULT_STATUS.warning
+            res.save()
+
+                   
             
             return STATUS.success
         except StandardError,e:
