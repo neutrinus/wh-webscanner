@@ -7,7 +7,7 @@ import httplib
 from urlparse import urlparse
 from plugin import PluginMixin
 #from scanner.models import UsersTest_Options
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from scanner import pywhois
@@ -47,6 +47,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
                       
             from scanner.models import Results
             res = Results(test=command.test)                    
+            res.group = RESULT_GROUP.security
             res.output_desc = unicode(_("Google Safe Browsing ") )
 
             message = '<p>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></p>'

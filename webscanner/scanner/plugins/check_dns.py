@@ -3,7 +3,7 @@
 import sys
 import os
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
@@ -38,7 +38,9 @@ class PluginDNS(PluginMixin):
                     records += "A %s <br>"%(rdata.to_text() )
                             
                 
-                res = Results(test=command.test)                
+                res = Results(test=command.test)
+                res.group = RESULT_GROUP.general
+
                 res.output_desc = unicode(_("A records (IPv4)") )
                 if len(answers) > 1:
                     res.output_full = unicode(_("<p>Your nameserver returned %s A records: <code>%s</code></p>"%(len(answers),records ) ))
@@ -58,6 +60,7 @@ class PluginDNS(PluginMixin):
                         records += "%s <br"%rdate.address
                 
                 res = Results(test=command.test)                
+                res.group = RESULT_GROUP.general
                 res.output_desc = unicode(_("No private IP in A records ") )
                 if not records:
                     res.output_full = unicode(_("<p>All your A records are public.</p>" ))
@@ -69,6 +72,7 @@ class PluginDNS(PluginMixin):
                 
             except dns.resolver.NXDOMAIN:
                 res = Results(test=command.test)                
+                res.group = RESULT_GROUP.general
                 res.output_desc = unicode(_("A records (IPv4)") )
                 res.output_full = unicode(_("<p>Domain not found!.</p>" ))
                 res.status = RESULT_STATUS.error

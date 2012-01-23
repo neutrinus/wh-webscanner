@@ -8,7 +8,7 @@ from time import sleep
 from urlparse import urlparse
 from plugin import PluginMixin
 #from scanner.models import UsersTest_Options
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from scanner import pywhois
@@ -54,7 +54,8 @@ class PluginDomainExpireDate(PluginMixin):
                     
                     from scanner.models import Results
                     res = Results(test=command.test)
-                    
+                    res.group = RESULT_GROUP.general
+
                     res.output_desc = unicode(_("Domain expiration date") )
                     if dt - date.today() > timedelta(days=29):
                         res.output_full = unicode(_("<p>Your domain will be valid till %s. There is still %s days to renew it.</p>"%(dt, (dt - date.today()).days )) )

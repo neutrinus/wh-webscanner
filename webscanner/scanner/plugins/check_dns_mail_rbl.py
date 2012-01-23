@@ -3,7 +3,7 @@
 import sys
 import os
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
@@ -67,7 +67,8 @@ class PluginDNSmailRBL(PluginMixin):
                 results += "<br />"
                         
             
-            res = Results(test=command.test)                
+            res = Results(test=command.test)
+            res.group = RESULT_GROUP.mail
             res.output_desc = unicode(_("Mailservers on DNSBL blacklists (RBL)") )
             if blacklisted == 0:
                 res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. Details: <code>%s</code></p>"%(results) ))

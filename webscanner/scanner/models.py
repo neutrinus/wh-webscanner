@@ -16,11 +16,11 @@ log = getLogger('scanner.models')
 #local imports
 
 STATUS = Choices(
-    (-3, 'waiting',  _(u'Waiting for process')),
-    (-2, 'running',  _(u'In progress')),
-    (-1, 'unsuccess',_(u'Problem')),
-    (0,  'success',  _(u'Success')),
-    (1,  'exception',_(u'Error')),
+    (-3, 'waiting',  _(u'wait for processing')),
+    (-2, 'running',  _(u'in progress')),
+    (-1, 'unsuccess',_(u'unsuccess')),
+    (0,  'success',  _(u'success')),
+    (1,  'exception',_(u'exception')),
     (2,  'other',    _(u'Unknown')),
 )
 
@@ -29,6 +29,13 @@ RESULT_STATUS = Choices(
     (1,  'error',_(u'Error')),
     (2,  'warning',    _(u'Warning')),
     (3,  'info',    _(u'info'))
+)
+
+RESULT_GROUP = Choices(
+    (0,  'general',_(u'General')),
+    (1,  'mail',  _(u'E-mail related')),
+    (2,  'seo',    _(u'SEO')),
+    (3,  'security',    _(u'Security'))
 )
 
 
@@ -92,6 +99,7 @@ class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="results for test")    
     
     status              =   models.IntegerField(choices=RESULT_STATUS)
+    group               =   models.IntegerField(choices=RESULT_GROUP)
     output_desc         =   models.CharField(max_length=10000)  
     output_full         =   models.CharField(max_length=10000)  
     

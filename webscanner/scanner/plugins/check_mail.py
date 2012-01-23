@@ -3,7 +3,7 @@
 import sys
 import os
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 import dns.resolver
@@ -99,6 +99,7 @@ class PluginMail(PluginMixin):
                     pass    
                 
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.mail
             res.output_desc = unicode(_("accept mail to postmaster@"))
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to postmaster.</p> "))
             if not nopostmaster:
@@ -113,6 +114,7 @@ class PluginMail(PluginMixin):
 
 
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.mail
             res.output_desc = unicode(_("accept mail to abuse@"))
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to abuse.</p> "))
             if not noabuse:
@@ -127,6 +129,7 @@ class PluginMail(PluginMixin):
 
             
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.mail
             res.output_desc = unicode(_("connect to mailservers"))
             res.output_full = unicode(_("<p>Mailservers should accept TCP connections on port 25. Its needed to accept emails from other servers</p> "))
             if not noconnect:                    
@@ -144,6 +147,7 @@ class PluginMail(PluginMixin):
             res.save()
             
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.mail
             res.output_desc = unicode(_("open-relay check "))
             if not openrelay:
                 res.status = RESULT_STATUS.success

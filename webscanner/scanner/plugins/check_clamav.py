@@ -14,7 +14,7 @@ import shlex, subprocess
 from time import sleep
 from datetime import date
 from plugin import PluginMixin
-from scanner.models import STATUS,RESULT_STATUS
+from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -70,6 +70,7 @@ class PluginClamav(PluginMixin):
             
             from scanner.models import Results
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.security
             res.output_desc = unicode(_("Antivirus check"))
             
             if numberofthreats > 0:

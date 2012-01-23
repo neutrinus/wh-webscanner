@@ -69,7 +69,7 @@ def check_results(request,last_date=None):
     
     foo = []
     for result in results:
-        foo.append({'output_desc':result.output_desc,'output_full':result.output_full , 'status': result.status})
+        foo.append({'output_desc':result.output_desc,'output_full':result.output_full , 'status': result.status, 'group': result.group})
         if result.pk > lastresult:
             lastresult = result.pk
     

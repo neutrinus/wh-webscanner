@@ -10,7 +10,7 @@ import sys
 import urlparse
 from time import sleep
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -45,6 +45,7 @@ class PluginCheckW3CValid(PluginMixin):
             
             from scanner.models import Results
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.seo
             res.output_desc = unicode(_("W3C Validation"))
             
             if result.info().getheader('x-w3c-validator-status') == 'Valid' :

@@ -9,7 +9,7 @@ from time import sleep
 from urlparse import urlparse
 from plugin import PluginMixin
 #from scanner.models import UsersTest_Options
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -59,6 +59,7 @@ class PluginCheckHTTPCode(PluginMixin):
             #check http_status 200>X>300
             from scanner.models import Results
             res = Results(test=command.test)
+            res.group = RESULT_GROUP.general
             res.output_desc = unicode(_("HTTP return code"))
            
             if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
@@ -77,7 +78,7 @@ class PluginCheckHTTPCode(PluginMixin):
             encoding = response.getheader("Content-Encoding")
 
             res = Results(test=command.test)
-            
+            res.group = RESULT_GROUP.general
             res.output_desc = unicode(_("HTTP compresion"))
             if encoding:
                 res.status = RESULT_STATUS.success

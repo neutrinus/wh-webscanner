@@ -17,7 +17,7 @@ import urllib2
 import urllib
 
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -135,7 +135,8 @@ class PluginPagerank(PluginMixin):
         try:    
             rank = get_pagerank(domain)
             
-            res = Results(test=command.test)                
+            res = Results(test=command.test)
+            res.group = RESULT_GROUP.seo
             res.output_desc = unicode(_("google pagerank") )
             res.output_full = unicode(_("<p>Your website pagerank is %s.</p>"%(rank ) ))
             res.status = RESULT_STATUS.info
@@ -143,7 +144,8 @@ class PluginPagerank(PluginMixin):
 
             
             (popularity_rank,reach_rank) = get_alexa_rank(domain)           
-            res = Results(test=command.test)                
+            res = Results(test=command.test)
+            res.group = RESULT_GROUP.seo
             res.output_desc = unicode(_("alexa pagerank") )
             res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <p>Ranking for your site:</p> <li>popularity rank: %s</li> <li>reachability rank: %s</li>"%(popularity_rank,reach_rank ) ))
             res.status = RESULT_STATUS.info
