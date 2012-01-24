@@ -30,7 +30,8 @@ class PluginCheckW3CValid(PluginMixin):
     
     name = unicode(_('W3C Validator'))
     description = unicode(_('Check wheter site is in w3c code'))
-
+    wait_for_download = False
+    
     def run(self, command):
         domain = command.test.domain
         

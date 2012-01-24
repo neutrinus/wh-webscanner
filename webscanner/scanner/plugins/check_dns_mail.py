@@ -25,6 +25,7 @@ log.addHandler(fh)
 class PluginDNSmail(PluginMixin):
     name = unicode(_("Check dns MAIL"))
     description = unicode(_("Check dns MAIL"))
+    wait_for_download = False
     
     def run(self, command):
         from scanner.models import Results

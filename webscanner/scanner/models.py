@@ -75,8 +75,10 @@ class Tests(models.Model):
     domain              =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     priority            =   models.IntegerField(default=10)
 #   lang?    
-   
     creation_date       =   models.DateTimeField(auto_now_add=True)
+    
+    download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
+    download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     
     def __unicode__(self):
         return "%s"%(self.domain)
@@ -88,7 +90,8 @@ class CommandQueue(models.Model):
     testname            =   models.CharField(max_length=50, choices=TESTDEF_PLUGINS)
     
     run_date            =   models.DateTimeField(default=None,blank=1,null=1)
-    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
+    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)   
+    wait_for_download   =   models.BooleanField(default=True)
     
     def __unicode__(self):
         return "%s: status=%s:"%(self.test.domain,self.status)

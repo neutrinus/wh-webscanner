@@ -28,7 +28,8 @@ class PluginCheckHTTPCode(PluginMixin):
     
     name = unicode(_('Check HTTP site response'))
     description = unicode(_('Check http server http code response'))
-
+    wait_for_download = False
+    
     #def check_encoding(domain, encoding):
         #conn = httplib.HTTPConnection(domain,80)
         #conn.request("HEAD", "/",body="",headers={'Accept-Encoding': encoding})

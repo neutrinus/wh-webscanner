@@ -20,6 +20,7 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 from django.db import transaction
+from django.db.models import Q
 
 import logging
 log = logging.getLogger('worker')
@@ -47,7 +48,9 @@ def main(argv=None):
             log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
-                    ctest = CommandQueue.objects.filter(status = STATUS.waiting).select_related()[:1].get()
+                    #ctest = CommandQueue.objects.filter(status = STATUS.waiting)[:1].get()
+                    ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
+                    
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()

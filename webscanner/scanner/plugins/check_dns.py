@@ -23,6 +23,8 @@ log.addHandler(fh)
 class PluginDNS(PluginMixin):
     name = unicode(_("Check dns"))
     description = unicode(_("Check dns"))
+    wait_for_download = False
+    
     
     def run(self, command):
         from scanner.models import Results

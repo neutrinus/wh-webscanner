@@ -12,6 +12,9 @@ from django.utils.translation import ugettext_lazy as _
 class PluginMixin(object):
     name = unicode(_('Undefined'))
     
+    #wait with worker until webpage is downloaded
+    wait_for_download = True
+    
     def __unicode__(self):
         return unicode(self.name)
     def __str__(self):

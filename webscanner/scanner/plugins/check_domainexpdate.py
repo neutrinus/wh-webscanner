@@ -36,6 +36,7 @@ log.addHandler(fh)
 class PluginDomainExpireDate(PluginMixin):
     name = unicode(_("Check domain expiration date"))
     description = unicode(_("Check domain expiration date using data from whois database"))
+    wait_for_download = False
     
     def run(self, command):
         domain = command.test.domain

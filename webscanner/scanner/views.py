@@ -34,7 +34,9 @@ def results(request):
     request.session['testid'] = test.pk;
     
     for testname,plugin in TESTDEF_PLUGINS:
-        a = CommandQueue(test=test, testname = testname )
+        oplugin = PLUGINS[ testname ]()
+        
+        a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
         a.save()
   
     

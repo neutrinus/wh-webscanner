@@ -126,6 +126,7 @@ def get_alexa_rank(url):
 class PluginPagerank(PluginMixin):
     name = unicode(_("Check pagerank"))
     description = unicode(_("Check pagerank"))
+    wait_for_download = False
     
     def run(self, command):
         from scanner.models import Results

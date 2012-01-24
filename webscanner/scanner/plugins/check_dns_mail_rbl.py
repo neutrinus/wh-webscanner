@@ -25,6 +25,7 @@ log.addHandler(fh)
 class PluginDNSmailRBL(PluginMixin):
     name = unicode(_("Check dns MAIL RBL"))
     description = unicode(_("Check dns MAIL RBL"))
+    wait_for_download = False
     
     def run(self, command):
         from scanner.models import Results

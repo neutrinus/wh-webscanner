@@ -33,6 +33,7 @@ sburl = '/safebrowsing/api/lookup?client=webscanner&apikey=ABQIAAAAcHK-fy7eQw0ew
 class PluginGoogleSafeBrowsing(PluginMixin):
     name = unicode(_("Google Safe Browsing Blacklist checker"))
     description = unicode(_("Check if domain is listed in google safe browsing blacklist"))
+    wait_for_download = False
     
     def run(self, command):
         domain = command.test.domain

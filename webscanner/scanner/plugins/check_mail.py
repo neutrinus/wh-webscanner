@@ -24,6 +24,7 @@ log.addHandler(fh)
 
 class PluginMail(PluginMixin):
     name = unicode(_('Check mailservers'))
+    wait_for_download = False
     
     def run(self, command):
         from scanner.models import Results
