@@ -203,6 +203,7 @@ LOGGING = {
 
 
 
+PATH_TMPSCAN = '/tmp/webscanner/'
 
 
 ################################

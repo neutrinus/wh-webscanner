@@ -25,7 +25,7 @@ from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 from django.db import transaction
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-
+from settings import PATH_TMPSCAN
 import logging
 log = logging.getLogger('downloader')
 log.setLevel(logging.DEBUG)
@@ -41,8 +41,7 @@ sh.setLevel(logging.DEBUG)
 log.addHandler(fh) 
 log.addHandler(sh) 
 
-PATH_TMPSCAN = '/tmp/clamdd/'
-PATH_PUF = '/usr/bin/puf'
+PATH_HTTRACK = '/usr/bin/httrack'
 
 
 def main(argv=None):
@@ -52,7 +51,7 @@ def main(argv=None):
     #main program loop
     while(True):
         try:
-            tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(12))
+            tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
             log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
@@ -70,7 +69,8 @@ def main(argv=None):
                 domain = test.domain
                 
                 log.debug(unicode(_("Downloading webpage")))
-                cmd = PATH_PUF + " -U wh-webscanner -xd -xg  -r+ -l 2 -P %s %s"%(str(tmppath),str(domain))
+                #cmd = PATH_PUF + " -U wh-webscanner -xd -xg   -pr+ -r+ -l 3 -P %s %s"%(str(tmppath),str(domain))
+                cmd = PATH_HTTRACK + "  -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
