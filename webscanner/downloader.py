@@ -69,7 +69,6 @@ def main(argv=None):
                 domain = test.domain
                 
                 log.debug(unicode(_("Downloading webpage")))
-                #cmd = PATH_PUF + " -U wh-webscanner -xd -xg   -pr+ -r+ -l 3 -P %s %s"%(str(tmppath),str(domain))
                 cmd = PATH_HTTRACK + "  -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
               
                 args = shlex.split(cmd)
