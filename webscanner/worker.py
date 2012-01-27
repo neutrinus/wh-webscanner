@@ -45,7 +45,7 @@ def main(argv=None):
     #main program loop
     while(True):
         try:
-            log.debug('Try to fetch some fresh stuff')
+            #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
                     #ctest = CommandQueue.objects.filter(status = STATUS.waiting)[:1].get()
@@ -54,7 +54,7 @@ def main(argv=None):
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
-                    log.info('Processing command %s(%s) for %s '%(ctest.testname,ctest.pk,ctest.test.domain))
+                    log.info('Processing command %s(%s) for %s (queue len:%s)'%(ctest.testname,ctest.pk,ctest.test.domain,CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).count() ))
                     
                 except CommandQueue.DoesNotExist:
                     ctest = None

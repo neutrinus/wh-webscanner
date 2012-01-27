@@ -52,7 +52,7 @@ def main(argv=None):
     while(True):
         try:
             tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
-            log.debug('Try to fetch some fresh stuff')
+            #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
                     test = Tests.objects.filter(download_status = STATUS.waiting).order_by('?')[:1].get()
@@ -60,16 +60,13 @@ def main(argv=None):
                     test.download_path = tmppath
                     test.save()
                     log.info('Downloading website %s for test %s to %s'%(test.domain,test.pk,tmppath))
-                    
                 except Tests.DoesNotExist:
                     test = None
                     log.debug("No Tests in DownloadQueue to process, sleeping.")
                     
             if test:
                 domain = test.domain
-                
-                log.debug(unicode(_("Downloading webpage")))
-                cmd = PATH_HTTRACK + "  -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
+                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
@@ -80,8 +77,8 @@ def main(argv=None):
                 if p.returncode != 0:
                     test.download_status = STATUS.exception
                     test.save()
-                    log.exception("%s returned non-0 errorcode, strerr: %s"%(PATH_PUF,stderrdata))
-                    raise RuntimeError("%s returned non-0 errorcode"%(PATH_PUF) )
+                    log.exception("%s returned %s errorcode, strerr: %s"%(PATH_HTTRACK,p.returncode,stderrdata))
+                    raise RuntimeError("%s returned %s errorcode"%(PATH_HTTRACK,p.returncode) )
                 
                 test.download_status = STATUS.success
                 test.save()
