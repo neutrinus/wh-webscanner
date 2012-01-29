@@ -7,7 +7,6 @@ scannerpatterns = patterns('',
         url(r'^results/?$', results),
         url(r'^check_results/?$', check_results),
         url(r'^scan_progress/?$', scan_progress),
-
 )
 
 

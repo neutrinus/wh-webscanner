@@ -24,7 +24,7 @@ EMAIL_PORT=587
 EMAIL_HOST_USER='andrzej.niedzielan'
 EMAIL_HOST_PASSWORD='guardier2012'
 EMAIL_USE_TLS=False
-EMAIL_SUBJECT_PREFIX='[scanner]'
+EMAIL_SUBJECT_PREFIX='[webscanner]'
 
 LOGIN_REDIRECT_URL = '/user/welcome/'
 LOGIN_URL = '/user/login/'
@@ -202,7 +202,7 @@ LOGGING = {
 }
 
 
-
+# remember to remove old data and check disk usage! 
 PATH_TMPSCAN = '/tmp/webscanner/'
 
 
