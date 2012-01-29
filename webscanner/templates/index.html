@@ -1,63 +1,16 @@
-<!DOCTYPE html>
-<!--[if IE 7 ]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8 ]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if IE 9 ]>    <html class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html> <!--<![endif]-->
+{% extends "base.html" %}
+{% load humanize %}
 
-<head>
+{% block title %}Free scan your website{% endblock %}
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta charset="utf-8"/>
-    <meta name="description" content="">
-    <meta name="author" content="">
+{% block extrahead %} 
 
-    <title>webcheck.me</title>
+{% endblock %}
 
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/nivo-slider.css" type="text/css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.fancybox-1.3.4.css" type="text/css" />
 
-    
-    <!--[if lt IE 9]>
-	    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery-1.6.1.min.js"><\/script>')</script>
 
-    <script src="{{ STATIC_URL }}js/jquery.smoothscroll.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.nivo.slider.pack.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.easing-1.3.pack.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.fancybox-1.3.4.pack.js"></script>
-    <script src="{{ STATIC_URL }}js/init.js"></script>
-
-</head>
-
-<body>
-
-<!-- header-wrap -->
-<div id="header-wrap">
-    <header>
-
-        <hgroup>
-            <h1><a href="/">PageOne</a></h1>
-            <h3>Just Another Styleshout Template</h3>
-        </hgroup>
-
-        <nav>
-            <ul>
-                <li><a href="#main">Home</a></li>
-                <li><a href="#webscanner">Scan yor site</a></li>
-                <li><a href="#services">Our checks</a></li>
-                <li><a href="#contact">Contact Us</a></li>
-            </ul>
-        </nav>
-
-    </header>
-</div>
-
-<!-- content-wrap -->
-<div class="content-wrap">
+{% block content %}
 
     <!-- main -->
     <section id="main">
@@ -72,7 +25,6 @@
         </div>
 
         <div class="slider-wrapper">
-
             <div id="slider" class="nivoSlider">
             <img src="{{ STATIC_URL }}images/slides/slide1.png" width="383" height="198" alt="" />
             <img src="{{ STATIC_URL }}images/slides/slide2.png" width="383" height="198" alt="" />
@@ -215,7 +167,7 @@
 
              <div class="row no-bottom-margin">
                 <section class="col">
-                    <h2>Browsers</h2>
+                    <h2>Compatybility</h2>
 
                     <p><img class="align-left" alt="" src="{{ STATIC_URL }}images/services/webdesign.png" />Pellentesque magna mi, iaculis pharetra eu, fermentum ullamcorper nisi.
                     Integer fringilla magna ut quam vulputate erat. Pulvinar cum, ac eu augue ut sit amet
@@ -249,7 +201,7 @@
                     consectetur adipiscing elit. Sed commodo ligula blandit risus</p>
                 </section>
                 <section class="col mid">
-                    <h2>Logo Design  Branding</h2>
+                    <h2>Works in the Cloud</h2>
 
                     <p><img class="align-left" alt="" src="{{ STATIC_URL }}images/services/logo-design-and-branding.png" />Nascetur augue hac platea enim, egestas pulvinar vut. Pulvinar cum, ac eu, tristie
                     acus duis in dictumst non integer! Elit, sed scelerisque odio tortor, sed platea dis? Quis
@@ -663,25 +615,4 @@
             <a class="back-to-top" href="#main">Back to Top</a>
 
      </section>
-
-</div>
-
-<!-- footer -->
-<footer>
-    <div class="footer-content">
-        <ul class="footer-menu">
-            <li><a href="#main">Home</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#about-us">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <!-- <li class="rss-feed"><a href="#">RSS Feed</a></li> -->
-        </ul>
-
-        <p class="footer-text">Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a> &nbsp;&nbsp;&nbsp; Template based on <a href="http://www.styleshout.com/">Styleshout</a></p>
-    </div>
-
-</footer>
-
-</body>
-</html>
+{% endblock %}

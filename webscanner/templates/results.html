@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Check Results{% endblock %}
+
+{% block extrahead %} 
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
+<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<style>
+.ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif);  }
+</style>
+
+
+
+<script type="text/javascript">
+testid = {{ test.pk }};
+</script>
+{% endblock %}
+
+
+
+
+{% block content %}
+<div>
+<h1>SCAN Results for {{ test.domain }} </h1>
+
+<div id="progressbar"></div>
+
+<h2>General</h2>
+<table id="results_0"></table>
+<h2>Mail</h2>
+<table id="results_1"></table>
+<h2>SEO</h2>
+<table id="results_2"></table>
+<h2>Security</h2>
+<table id="results_3"></table>
+
+
+<script type="text/javascript">
+finished = 0;
+$("#progressbar").progressbar({ value: 0 });
+
+function add_result(status, output_desc, output_full, group) {
+    var element = document.createElement('tr');
+    
+    var a = document.createElement('td');
+    a.setAttribute('class','output_desc');
+    a.innerHTML = output_desc;
+    element.appendChild(a);
+    
+    var a = document.createElement('td');
+    a.setAttribute('class','status');
+    if (status == 0) {
+        element.setAttribute('class','status_ok');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
+    } 
+    if (status == 1) {
+        element.setAttribute('class','status_error');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+    }  
+    
+    if (status == 2) {
+        element.setAttribute('class','status_warning');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> '
+        }  
+        
+    if (status == 3) {
+        element.setAttribute('class','status_info');
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
+        }  
+    element.appendChild(a);
+
+    var a = document.createElement('td');
+    a.setAttribute('class','output_full');
+    a.innerHTML = output_full;
+    element.appendChild(a);
+       
+    $("#results_"+group).append(element);   
+    $(element).fadeOut(0);
+    $(element).fadeIn("slow");
+}
+
+function check_progress(){
+    $.ajax({
+        url: "{% url scanner.views.scan_progress %}",
+        data: "",
+        success: function(data) {
+            $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
+            if (data.done/data.ordered != 1) {
+                window.setTimeout(check_progress,1500);
+            } else {
+                $("#progressbar").fadeOut();
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        dataType: "jsonp"
+    });  
+}
+check_progress();
+
+function check_results(){
+    $.ajax({
+        url: "{% url scanner.views.check_results %}",
+        data: "",
+        success: function(data) {
+            $.each(data, function(key, value) { 
+                add_result(value.status, value.output_desc, value.output_full, value.group)
+            });
+            if (finished == 0) window.setTimeout(check_results,1000);   
+            if ($("#progressbar").progressbar("value") == 100) finished = 1;
+        },
+        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        dataType: "jsonp"
+    });  
+}
+check_results();   
+</script>
+    
+    
+</div>
+{% endblock %}
+
+
