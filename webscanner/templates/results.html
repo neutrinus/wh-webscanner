@@ -13,7 +13,6 @@
 </style>
 
 
-
 <script type="text/javascript">
 testid = {{ test.pk }};
 </script>
@@ -23,7 +22,7 @@ testid = {{ test.pk }};
 
 
 {% block content %}
-<div>
+<section id="results">
 <h1>SCAN Results for {{ test.domain }} </h1>
 
 <div id="progressbar"></div>
@@ -119,7 +118,7 @@ check_results();
 </script>
     
     
-</div>
+</section>
 {% endblock %}
 
 

@@ -1,19 +1,4 @@
 @charset "utf-8";
-/* CSS Reset */
-{
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    
-    text-align: center;
-    margin: 5em 0 0 0;
-    vertical-align: middle; 
-    background: #fafafa;
-    margin: 100px;
-}
-
 
 #content {
     width: 1000px;
@@ -101,8 +86,6 @@ tr.status_warning td.status {
 tr.status_info td.status {
     background-color: #69a9ff;
 }
-
-
 
 
 code {
