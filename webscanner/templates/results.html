@@ -32,7 +32,7 @@ testid = {{ test.pk }};
      <div class="row">
                 <section class="col">
 
-                    <h3>It's Free!</h3>
+                    <h3>Systematic</h3>
                     <br />
                     <p>In hac habitasse platea risus dictumst. Suspendisse sit amet enim arcu. Aliquam erat volutpat.
                     Phasellus a dui nisi. Nunc nec quam vitae nisl vehicula euismod.</p>
@@ -57,7 +57,7 @@ testid = {{ test.pk }};
                     </ul>
                     </p>
                     
-                    <p>Scan time: 4secs </p>
+                    <p>Scan time: <span id="timer">0</span> secs</p>
 
 
                 </section>
@@ -86,7 +86,8 @@ testid = {{ test.pk }};
 </div>
 
 <script type="text/javascript">
-finished = 0;
+var finished = 0;
+var timer_val = 0;
 $("#progressbar").progressbar({ value: 0 });
 
 function add_result(status, output_desc, output_full, group) {
@@ -163,6 +164,21 @@ function check_results(){
     });  
 }
 check_results();   
+
+
+function timer(){ 
+    if (finished == 0){
+            timer_val += 1
+            $("#timer").text(timer_val/10)
+            window.setTimeout(timer,100);   
+        }
+} 
+timer() 
+
+</script> 
+
+
+
 </script>
     
     
