@@ -43,7 +43,7 @@ log.addHandler(sh)
 
 PATH_HTTRACK = '/usr/bin/httrack'
 
-
+#http://www.youtube.com/watch?v=WY3C6FHqSqQ
 def main(argv=None):
     if argv is None:
         argv = sys.argv
