@@ -51,12 +51,14 @@
         </hgroup>
 
         <nav>
+        {% block navigation %}
             <ul>
-                <li><a href="#main">Home</a></li>
-                <li><a href="#webscanner">Scan yor site</a></li>
-                <li><a href="#services">Our checks</a></li>
-                <li><a href="#contact">Contact Us</a></li>
+                <li><a href="/#main">Home</a></li>
+                <li><a href="/#webscanner">Scan yor site</a></li>
+                <li><a href="/#services">Our checks</a></li>
+                <li><a href="/#contact">Contact Us</a></li>
             </ul>
+        {% endblock %}    
         </nav>
 
     </header>

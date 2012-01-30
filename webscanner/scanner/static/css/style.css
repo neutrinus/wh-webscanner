@@ -769,54 +769,12 @@ input {
     -webkit-border-radius: 4px;  
 }
 
-#floater {
-    float:left;
-    height:50%;
-    margin-bottom:-120px;
-}
-#content {
-    text-align: center;
-    clear:both;
-    height:540px;
-    position:relative;
-    
-}
 
 #domain {
     font-size: 28px;
-    
     padding: 5px;
-    
-    
 }
 
-
-#borderbox {
-    width:35%;
-    
-    
-    font-size: 22px;
-    
-    border-style:solid;
-    border-width:4px;
-    border-color: #74ef94;
-    
-    
-    border-radius: 10px;  
-    -moz-border-radius: 10px;  
-    -webkit-border-radius: 10px;  
-    
-    background-color: #ddf4e3;
-    
-    box-shadow: 3px 3px 5px #28b54c;
-    -webkit-box-shadow: 3px 3px 7px #777;  
-    
-    padding: 10px;
-    margin:10px;
-    
-    margin-left:35%;
-    
-}
 
 
 #authbox {
@@ -864,4 +822,79 @@ input {
      *    -webkit-box-shadow: 3px 3px 7px #777;  */
     
     
+}
+
+
+table.results {
+    width: 100%;    
+    vertical-align: top;   
+    table-layout:fixed;
+}
+
+
+
+table.results td {
+    margin: 10px;
+    padding: 10px;
+    vertical-align: top;
+}
+
+
+table.results tr.status_ok {
+    background-color: #ccffd1;
+    
+}
+
+table.results tr.status_error {
+    background-color: #ffcccc;
+}
+
+table.results tr.status_warning {
+    background-color: #feffcc;
+}
+
+table.results tr.status_info {
+    background-color: #ccffd1;
+}
+
+
+table.results tr td.output_desc {
+    width: 250px;
+}
+
+table.results td.output_full {
+/*     width: 450px; */
+}
+
+table.results td.status {
+    width: 50px;
+    text-align: center;
+}
+
+table.results tr.status_ok td.status {
+    background-color: green;
+}
+
+table.results tr.status_error td.status {
+    background-color: red;
+}
+
+table.results tr.status_warning td.status {
+    background-color: yellow;
+}
+table.results tr.status_info td.status {
+    background-color: #69a9ff;
+}
+
+
+code {
+    background-color: #EFEBEC;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+    font-size: 12px;
+    margin: 10px 0;
+    padding: 10px;
+    display: block;
 }

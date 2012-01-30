@@ -74,11 +74,11 @@ def main(argv=None):
 
                 #print stderrdata
                 
-                if p.returncode != 0:
-                    test.download_status = STATUS.exception
-                    test.save()
-                    log.exception("%s returned %s errorcode, strerr: %s"%(PATH_HTTRACK,p.returncode,stderrdata))
-                    raise RuntimeError("%s returned %s errorcode"%(PATH_HTTRACK,p.returncode) )
+                #if p.returncode != 0:
+                    #test.download_status = STATUS.exception
+                    #test.save()
+                    #log.exception("%s returned %s errorcode, strerr: %s"%(PATH_HTTRACK,p.returncode,stderrdata))
+                    #raise RuntimeError("%s returned %s errorcode"%(PATH_HTTRACK,p.returncode) )
                 
                 test.download_status = STATUS.success
                 test.save()

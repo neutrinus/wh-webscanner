@@ -4,7 +4,6 @@
 {% block title %}Check Results{% endblock %}
 
 {% block extrahead %} 
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style_results.css" />
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
@@ -27,15 +26,64 @@ testid = {{ test.pk }};
 
 <div id="progressbar"></div>
 
-<h2>General</h2>
-<table id="results_0"></table>
-<h2>Mail</h2>
-<table id="results_1"></table>
-<h2>SEO</h2>
-<table id="results_2"></table>
-<h2>Security</h2>
-<table id="results_3"></table>
+<br />
+<!-- <h2>Summary</h2> -->
 
+     <div class="row">
+                <section class="col">
+
+                    <h3>It's Free!</h3>
+                    <br />
+                    <p>In hac habitasse platea risus dictumst. Suspendisse sit amet enim arcu. Aliquam erat volutpat.
+                    Phasellus a dui nisi. Nunc nec quam vitae nisl vehicula euismod.</p>
+                </section>
+                <section class="col mid">
+                    <h3>Overall note</h3>
+                    <br />
+                    <p>basing on all checks bellow we give your website an obverall note:</p>
+                    <p style="font-size:4em; text-align:center">7.8/10<p>
+                    <p>congratulations!</p>
+                    
+                </section>
+
+                <section class="col">
+                    <h3>The numbers!</h3>
+                    <p>
+                    <ul>Reports:
+                        
+                        <li> errors: 3</li>
+                        <li> warnings: 3</li>
+                        <li> info: 3</li>
+                    </ul>
+                    </p>
+                    
+                    <p>Scan time: 4secs </p>
+
+
+                </section>
+            </div>
+
+<h2>Screenshoots</h2>
+
+<div class="row">
+    <h2>General</h2>
+    <table class="results" id="results_0"></table>
+</div>
+
+<div class="row">
+    <h2>Mail</h2>
+    <table class="results" id="results_1"></table>
+</div>
+
+<div class="row">
+    <h2>SEO</h2>
+    <table class="results" id="results_2"></table>
+</div>
+
+<div class="row">
+    <h2>Security</h2>
+    <table class="results" id="results_3"></table>
+</div>
 
 <script type="text/javascript">
 finished = 0;
