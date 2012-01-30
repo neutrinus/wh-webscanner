@@ -829,6 +829,9 @@ table.results {
     width: 100%;    
     vertical-align: top;   
     table-layout:fixed;
+    border-collapse:separate; 
+    border-spacing:0px 3px;
+    
 }
 
 
@@ -838,7 +841,6 @@ table.results td {
     padding: 10px;
     vertical-align: top;
 }
-
 
 table.results tr.status_ok {
     background-color: #ccffd1;
