@@ -5,7 +5,14 @@
 
 {% block extrahead %} 
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
+<link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pieRenderer.min.js"></script>
+
+
 
 <style>
 .ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif);  }
@@ -48,15 +55,7 @@ testid = {{ test.pk }};
 
                 <section class="col">
                     <h3>The numbers!</h3>
-                    <p>
-                    <ul>Reports:
-                        
-                        <li> errors: 3</li>
-                        <li> warnings: 3</li>
-                        <li> info: 3</li>
-                    </ul>
-                    </p>
-                    
+                    <div id="chart" style="height:200px; width:290px;"></div>
                     <p>Scan time: <span id="timer">0</span> secs</p>
 
 
@@ -88,6 +87,12 @@ testid = {{ test.pk }};
 <script type="text/javascript">
 var finished = 0;
 var timer_val = 0;
+var statuses_ok = 0;
+var statuses_error = 0;
+var statuses_warning = 0;
+var statuses_info = 0;
+
+var s = 0;
 $("#progressbar").progressbar({ value: 0 });
 
 function add_result(status, output_desc, output_full, group) {
@@ -103,23 +108,31 @@ function add_result(status, output_desc, output_full, group) {
     if (status == 0) {
         element.setAttribute('class','status_ok');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
+        statuses_ok += 1;
+        
     } 
     if (status == 1) {
         element.setAttribute('class','status_error');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
+        statuses_error += 1;
     }  
     
     if (status == 2) {
         element.setAttribute('class','status_warning');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> '
+        statuses_warning += 1;
         }  
         
     if (status == 3) {
         element.setAttribute('class','status_info');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
+        statuses_info += 1;
         }  
     element.appendChild(a);
 
+    status_plot.series[0].data = [ ['errors', statuses_error],['warnings', statuses_warning],['success', statuses_ok] ];
+    status_plot.redraw()
+    
     var a = document.createElement('td');
     a.setAttribute('class','output_full');
     a.innerHTML = output_full;
@@ -175,9 +188,28 @@ function timer(){
 } 
 timer() 
 
-</script> 
-
-
+var data = [ ['errors', statuses_error],['warnings', statuses_warning], ['success', statuses_ok] ];
+var status_plot = jQuery.jqplot ('chart', [data],
+    {
+    seriesDefaults: {
+        // Make this a pie chart.
+        renderer: jQuery.jqplot.PieRenderer,
+        rendererOptions: {
+            showDataLabels: true
+        }
+    },
+    legend: {
+          show:true,
+          location: 'e',
+    },
+    grid: {
+        background: 'transparent',
+        borderWidth: '0',
+        drawGridLines: false,
+        shadow: false,
+    },
+    seriesColors: [ "red", "yellow", "green"],      
+    });
 
 </script>
     
