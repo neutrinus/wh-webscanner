@@ -1,8 +1,8 @@
 dnspython
 IPy
 ipython
-
-
+selenium
+pyvirtualdisplay
 
 django==1.3
 django-annoying==0.7.6
