@@ -17,15 +17,9 @@ import urllib
 import sys
 import time
 from time import sleep
-import logging
-log = logging.getLogger('plugin')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
 
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh) 
+from logs import log
+
 
 sburl = '/safebrowsing/api/lookup?client=webscanner&apikey=ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw&appver=0.1&pver=3.0&url='
 # my key: ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw

@@ -22,15 +22,9 @@ from time import mktime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-import logging
-log = logging.getLogger('plugin')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
 
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh) 
+from logs import log
+
 
 
 class PluginDomainExpireDate(PluginMixin):

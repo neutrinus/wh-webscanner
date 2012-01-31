@@ -9,15 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 import dns.resolver
 from IPy import IP
 
-import logging
-log = logging.getLogger('plugin')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
-
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh) 
+from logs import log
 
 
 class PluginDNS(PluginMixin):

@@ -11,15 +11,8 @@ import dns.reversename
 from IPy import IP
 
 
-import logging
-log = logging.getLogger('plugin')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+from logs import log
 
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh) 
 
 
 class PluginDNSmailRBL(PluginMixin):

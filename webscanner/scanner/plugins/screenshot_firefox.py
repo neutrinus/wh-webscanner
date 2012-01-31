@@ -22,16 +22,8 @@ from settings import SCREENSHOT_SIZE, STATIC_ROOT
 from selenium import webdriver
 from pyvirtualdisplay import Display
 
+from logs import log
 
-
-import logging
-log = logging.getLogger('plugin')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh) 
 
 
 #http://pypi.python.org/pypi/selenium        
