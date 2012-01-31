@@ -1,3 +1,4 @@
+xvfb
 httrack
 gettext
 python2.6

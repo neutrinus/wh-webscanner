@@ -48,7 +48,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
 
             browser = webdriver.Firefox()
             browser.get("http://"+domain)
-            browser.save_screenshot(STATIC_ROOT+"/"+filename)
+            browser.save_screenshot(STATIC_ROOT+"/../scanner/static/"+filename)
             browser.close()
             
             
@@ -56,10 +56,10 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
             res.output_desc = unicode(_("Firefox screenshot")) 
-            res.output_full = '<p><img src="/static/%s" widht="300px" />%s</p>'%(filename,filename)
+            res.output_full = '<p><img src="/static/%s" width="300px" />%s</p>'%(filename,filename)
             res.save()
             
-            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))
+            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/../scanner/static/"+filename))
             #there was no exception - test finished with success
             return STATUS.success
         except Exception,e:
