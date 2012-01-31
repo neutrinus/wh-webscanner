@@ -204,7 +204,7 @@ LOGGING = {
 
 # remember to remove old data and check disk usage! 
 PATH_TMPSCAN = '/tmp/webscanner/'
-
+SCREENSHOT_SIZE = (1280,1024)
 
 ################################
 ### Third party apps options ###

@@ -35,7 +35,8 @@ RESULT_GROUP = Choices(
     (0,  'general',_(u'General')),
     (1,  'mail',  _(u'E-mail related')),
     (2,  'seo',    _(u'SEO')),
-    (3,  'security',    _(u'Security'))
+    (3,  'security',    _(u'Security')),
+    (4,  'screenshot',    _(u'Screenshot'))
 )
 
 
@@ -49,6 +50,7 @@ from scanner.plugins.check_dns import PluginDNS
 from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
 from scanner.plugins.check_pagerank import PluginPagerank
 from scanner.plugins.check_mail import PluginMail
+from scanner.plugins.screenshot_firefox import PluginMakeScreenshotFirefox
 
 
 
@@ -63,6 +65,7 @@ PLUGINS = dict((
     ('dns_mail_rbl', PluginDNSmailRBL ),
     ('pagerank', PluginPagerank ),
     ('mail', PluginMail ),
+    ('screenshot_ff', PluginMakeScreenshotFirefox ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
@@ -94,7 +97,7 @@ class CommandQueue(models.Model):
     wait_for_download   =   models.BooleanField(default=True)
     
     def __unicode__(self):
-        return "%s: status=%s:"%(self.test.domain,self.status)
+        return "%s: status=%s"%(self.test.domain,unicode(dict(STATUS)[self.status]))
 
 
         
@@ -109,5 +112,5 @@ class Results(models.Model):
     creation_date       =   models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return "%s: status=%s:"%(self.test.domain,self.output_desc)
+        return "%s: name=%s(%s)"%(self.test.domain,self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 

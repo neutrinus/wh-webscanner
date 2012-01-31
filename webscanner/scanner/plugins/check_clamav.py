@@ -70,7 +70,7 @@ class PluginClamav(PluginMixin):
             
             #as plugin finished - its success
             return STATUS.success
-        except OSError.e:
+        except OSError,e:
             log.error("OSError, check if clamscan file is present. Details %s "%(e))
             return STATUS.exception
         except Exception,e:
