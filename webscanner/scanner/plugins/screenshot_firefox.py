@@ -55,8 +55,8 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             res = Results(test=command.test)
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
-            res.output_desc = unicode(_("Firefox screenshot")) 
-            res.output_full = '<p><img src="/static/%s" width="300px" />%s</p>'%(filename,filename)
+            res.output_desc = unicode(_("Firefox")) 
+            res.output_full = '<p><img src="/static/%s" width="300px" title="%s" />%s</p>'%(filename,res.output_desc,filename)
             res.save()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/../scanner/static/"+filename))

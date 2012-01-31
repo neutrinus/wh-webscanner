@@ -16,6 +16,7 @@
 
 <style>
 .ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif);  }
+
 </style>
 
 
@@ -64,6 +65,15 @@ testid = {{ test.pk }};
 
 <div class="row">
     <h2>Screenshots</h2>
+    
+    <div class="screenshots-wrapper">
+        <div id="screenshots" class="nivoSlider">
+<!--            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="firefox" />
+            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="opera" />
+            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="chrome" />-->
+
+        </div>
+    </div>
     <table class="results" id="results_4"></table>
 </div>
 
@@ -99,7 +109,19 @@ var statuses_info = 0;
 var s = 0;
 $("#progressbar").progressbar({ value: 0 });
 
+
+function add_screenshot(status, output_desc, output_full, group) {
+    $("#screenshots").innerHTML += output_full
+    echo("dupa")
+}
+
 function add_result(status, output_desc, output_full, group) {
+    if (group == 4){
+        add_screenshot(status, output_desc, output_full, group);
+        return(0);
+    }
+        
+
     var element = document.createElement('tr');
     
     var a = document.createElement('td');
@@ -141,8 +163,9 @@ function add_result(status, output_desc, output_full, group) {
     a.setAttribute('class','output_full');
     a.innerHTML = output_full;
     element.appendChild(a);
-       
+    
     $("#results_"+group).append(element);   
+    
     $(element).fadeOut(0);
     $(element).fadeIn("slow");
 }
@@ -215,6 +238,18 @@ var status_plot = jQuery.jqplot ('chart', [data],
     seriesColors: [ "#ffcccc", "#feffcc", "#ccffd1"],      
     });
 
+
+    /* Nivo Slider */
+    $(window).load(function() {
+        $('#screenshots').nivoSlider({
+                directionNavHide:false,
+                effect:'slideInRight',
+                controlNav: false,
+                animSpeed: 0,
+                
+                });
+    });
+    
 </script>
     
     
