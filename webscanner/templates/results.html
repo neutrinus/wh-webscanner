@@ -68,13 +68,11 @@ testid = {{ test.pk }};
     
     <div class="screenshots-wrapper">
         <div id="screenshots" class="nivoSlider">
-<!--            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="firefox" />
-            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="opera" />
-            <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="chrome" />-->
-
+            <img src="{{ STATIC_URL }}screenshots/CS2SFVX09X5DYVO300XIQIGB.png" height="600" alt="" title="firefox" />
+<!--             <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="opera" /> -->
+<!--             <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="chrome" />-->
         </div>
     </div>
-    <table class="results" id="results_4"></table>
 </div>
 
 
@@ -111,8 +109,8 @@ $("#progressbar").progressbar({ value: 0 });
 
 
 function add_screenshot(status, output_desc, output_full, group) {
-    $("#screenshots").innerHTML += output_full
-    echo("dupa")
+    $("#screenshots")[0].innerHTML += output_full
+//     console.log(output_full)
 }
 
 function add_result(status, output_desc, output_full, group) {
@@ -197,7 +195,10 @@ function check_results(){
                 add_result(value.status, value.output_desc, value.output_full, value.group)
             });
             if (finished == 0) window.setTimeout(check_results,1000);   
-            if ($("#progressbar").progressbar("value") == 100) finished = 1;
+            if ($("#progressbar").progressbar("value") == 100) {
+                finished = 1;
+                start_slider();
+            }
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
         dataType: "jsonp"
@@ -239,16 +240,16 @@ var status_plot = jQuery.jqplot ('chart', [data],
     });
 
 
-    /* Nivo Slider */
-    $(window).load(function() {
-        $('#screenshots').nivoSlider({
-                directionNavHide:false,
-                effect:'slideInRight',
-                controlNav: false,
-                animSpeed: 0,
-                
-                });
-    });
+/* Nivo Slider */
+function start_slider() {
+    $('#screenshots').nivoSlider({
+            directionNavHide:false,
+            effect:'slideInRight',
+            controlNav: false,
+            animSpeed: 0,
+            
+            });
+};
     
 </script>
     

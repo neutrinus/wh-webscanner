@@ -32,7 +32,6 @@ from logs import log
 #https://developers.google.com/pagespeed/#url=guardier.com&mobile=false&rule=MinifyHTML    
 
 
-
 class PluginMakeScreenshotFirefox(PluginMixin):    
     name = unicode(_('Screenshot in Firefox'))
     wait_for_download = False
@@ -43,8 +42,8 @@ class PluginMakeScreenshotFirefox(PluginMixin):
        
         try:
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
-            display = Display(visible=0,size=SCREENSHOT_SIZE)
-            display.start()
+            #display = Display(visible=0,size=SCREENSHOT_SIZE)
+            #display.start()
 
             browser = webdriver.Firefox()
             browser.get("http://"+domain)
@@ -56,7 +55,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
             res.output_desc = unicode(_("Firefox")) 
-            res.output_full = '<p><img src="/static/%s" width="300px" title="%s" />%s</p>'%(filename,res.output_desc,filename)
+            res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s" /></a>'%(filename,filename,"FiReFoX")
             res.save()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/../scanner/static/"+filename))
