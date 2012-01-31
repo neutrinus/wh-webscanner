@@ -6,3 +6,4 @@
 py_env
 *.sqlite3
 docs/_build/
+webscanner/scanner/static/screenshots/
