@@ -21,6 +21,23 @@ from django.contrib.auth.models import User
 from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 from django.db import transaction
 from django.db.models import Q
+from multiprocessing import Pool, cpu_count
+import HTMLParser
+import urllib
+import urlparse
+import string
+import re
+
+from time import sleep
+from datetime import datetime
+from datetime import timedelta
+from django.contrib.auth.models import User
+from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
+from django.db import transaction
+from django.utils.translation import get_language
+from django.utils.translation import ugettext_lazy as _
+
+
 
 import logging
 log = logging.getLogger('worker')
@@ -37,11 +54,14 @@ sh.setLevel(logging.DEBUG)
 log.addHandler(fh) 
 log.addHandler(sh) 
 
+PATH_HTTRACK = '/usr/bin/httrack'
+from settings import PATH_TMPSCAN
 
-def main(argv=None):
-    if argv is None:
-        argv = sys.argv
 
+def worker():
+    sleep(random.uniform(0,3))
+    
+    log.debug("Starting new worker")
     #main program loop
     while(True):
         try:
@@ -89,8 +109,66 @@ def main(argv=None):
         except  Exception,e:
             log.error('Command run ended with exception: %s'%e)
             #give admins some time
+            sleep(30)            
+
+            
+            
+
+
+def downloader():
+    sleep(random.uniform(0,3))
+    
+    log.debug("Starting new downloader")
+    #main program loop
+    while(True):
+        try:
+            tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
+            #log.debug('Try to fetch some fresh stuff')
+            with transaction.commit_on_success():       
+                try:
+                    test = Tests.objects.filter(download_status = STATUS.waiting).order_by('?')[:1].get()
+                    test.download_status = STATUS.running
+                    test.download_path = tmppath
+                    test.save()
+                    log.info('Downloading website %s for test %s to %s'%(test.domain,test.pk,tmppath))
+                except Tests.DoesNotExist:
+                    test = None
+                    log.debug("No Tests in DownloadQueue to process, sleeping.")
+                    
+            if test:
+                domain = test.domain
+                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
+              
+                args = shlex.split(cmd)
+                p = subprocess.Popen(args,  stdout=subprocess.PIPE)
+                (stdoutdata, stderrdata) = p.communicate()
+
+                #print stderrdata
+                
+                #if p.returncode != 0:
+                    #test.download_status = STATUS.exception
+                    #test.save()
+                    #log.exception("%s returned %s errorcode, strerr: %s"%(PATH_HTTRACK,p.returncode,stderrdata))
+                    #raise RuntimeError("%s returned %s errorcode"%(PATH_HTTRACK,p.returncode) )
+                
+                test.download_status = STATUS.success
+                test.save()
+                log.info('Downloading website %s finished'%(test.domain))
+
+            else:
+                sleep(random.uniform(1,5)) #there was nothing to do - we can sleep longer
+        except  Exception,e:
+            log.error('Command run ended with exception: %s'%e)
+            #give admins some time
             sleep(30)
             
-            
+
 if __name__ == '__main__':
-    main()
+    pool = Pool()
+    
+    for x in xrange(0,cpu_count()):
+        pool.apply_async(worker)
+        pool.apply_async(downloader)
+    
+    worker()
+    
