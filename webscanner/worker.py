@@ -29,20 +29,21 @@ from multiprocessing import Pool, cpu_count
 from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 
 
-import logging
-log = logging.getLogger('worker')
-log.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+from logs import log
+#import logging
+#log = logging.getLogger('worker')
+#log.setLevel(logging.DEBUG)
+#formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
 
-fh = logging.FileHandler('plugin.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-sh = logging.StreamHandler()
-sh.setFormatter(formatter)
-sh.setLevel(logging.DEBUG)
+#fh = logging.FileHandler('plugin.log')
+#fh.setLevel(logging.DEBUG)
+#fh.setFormatter(formatter)
+#sh = logging.StreamHandler()
+#sh.setFormatter(formatter)
+#sh.setLevel(logging.DEBUG)
 
-log.addHandler(fh) 
-log.addHandler(sh) 
+#log.addHandler(fh) 
+#log.addHandler(sh) 
 
 PATH_HTTRACK = '/usr/bin/httrack'
 from settings import PATH_TMPSCAN
@@ -51,7 +52,7 @@ from settings import PATH_TMPSCAN
 def worker():
     sleep(random.uniform(0,5))
     
-    log.debug("Starting new worker")
+    log.debug("Starting new worker pid=%s"%(os.getpid()))
     #main program loop
     while(True):
         try:
@@ -68,7 +69,7 @@ def worker():
                     
                 except CommandQueue.DoesNotExist:
                     ctest = None
-                    log.debug("No Commands in Queue to process, sleeping.")
+                    #log.debug("No Commands in Queue to process, sleeping.")
                     
             if ctest:
                 try:
@@ -103,8 +104,8 @@ def worker():
 
 def downloader():
     sleep(random.uniform(0,5))
-    
-    log.debug("Starting new downloader")
+  
+    log.debug("Starting new downloader pid=%s"%(os.getpid()))
     #main program loop
     while(True):
         try:
@@ -119,7 +120,7 @@ def downloader():
                     log.info('Downloading website %s for test %s to %s'%(test.domain,test.pk,tmppath))
                 except Tests.DoesNotExist:
                     test = None
-                    log.debug("No Tests in DownloadQueue to process, sleeping.")
+                    #log.debug("No Tests in DownloadQueue to process, sleeping.")
                     
             if test:
                 domain = test.domain
