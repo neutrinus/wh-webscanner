@@ -42,7 +42,7 @@ sh.setFormatter(formatter)
 sh.setLevel(logging.DEBUG)
 
 log.addHandler(fh) 
-log.addHandler(sh) 
+#log.addHandler(sh) 
 
 PATH_HTTRACK = '/usr/bin/httrack'
 from settings import PATH_TMPSCAN
