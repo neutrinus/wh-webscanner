@@ -30,20 +30,6 @@ from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 
 
 from logs import log
-#import logging
-#log = logging.getLogger('worker')
-#log.setLevel(logging.DEBUG)
-#formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
-
-#fh = logging.FileHandler('plugin.log')
-#fh.setLevel(logging.DEBUG)
-#fh.setFormatter(formatter)
-#sh = logging.StreamHandler()
-#sh.setFormatter(formatter)
-#sh.setLevel(logging.DEBUG)
-
-#log.addHandler(fh) 
-#log.addHandler(sh) 
 
 PATH_HTTRACK = '/usr/bin/httrack'
 from settings import PATH_TMPSCAN
