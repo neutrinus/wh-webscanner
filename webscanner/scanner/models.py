@@ -87,7 +87,12 @@ class Tests(models.Model):
     def domain(self):
         return urlparse(self.url).hostname
         
-
+    def port(self):
+        if urlparse(self.url).port:
+            return(urlparse(self.url).port)
+        else:
+            return(80)
+            
 
 class CommandQueue(models.Model):
     test                =   models.ForeignKey(Tests, related_name="command for test")    

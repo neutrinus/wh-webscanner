@@ -22,7 +22,7 @@ from time import mktime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-
+from urlparse import urlparse
 from logs import log
 
 
@@ -32,8 +32,8 @@ class PluginDomainExpireDate(PluginMixin):
     wait_for_download = False
     
     def run(self, command):
-        domain = command.test.domain
-
+        domain = urlparse(command.test.url).hostname
+        
         #time.sleep(1)
         try:
             data = pywhois.whois(domain)   
