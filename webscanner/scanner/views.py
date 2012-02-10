@@ -30,7 +30,6 @@ def index(request):
 def results(request):
     
     if request.method == 'POST':
-        print ("POST")
         domain = request.POST.get("domain")
         test = Tests(domain=domain)
         test.save()
@@ -76,7 +75,11 @@ def check_results(request,last_date=None):
     
     foo = []
     for result in results:
-        foo.append({'output_desc':result.output_desc,'output_full':result.output_full , 'status': result.status, 'group': result.group})
+        foo.append({'output_desc':result.output_desc,
+                    'output_full':result.output_full,
+                    'status': result.status,
+                    'importance': result.importance,
+                    'group': result.group})
         if result.pk > lastresult:
             lastresult = result.pk
     

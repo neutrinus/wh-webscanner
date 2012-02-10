@@ -108,6 +108,9 @@ class Results(models.Model):
     group               =   models.IntegerField(choices=RESULT_GROUP)
     output_desc         =   models.CharField(max_length=10000)  
     output_full         =   models.CharField(max_length=10000)  
+
+    # used to calculate overal note rank in results (1-10))
+    importance          =   models.IntegerField(default=2)
     
     creation_date       =   models.DateTimeField(auto_now_add=True)
     

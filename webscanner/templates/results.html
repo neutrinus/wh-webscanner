@@ -49,7 +49,7 @@ testid = {{ test.pk }};
                     <h3>Overall note</h3>
                     <br />
                     <p>basing on all checks bellow we give your website an obverall note:</p>
-                    <p style="font-size:4em; text-align:center">7.8/10<p>
+                    <p style="font-size:4em; text-align:center"><span id="rating">?</span>/10<p>
                     <p>congratulations!</p>
                     
                 </section>
@@ -67,8 +67,8 @@ testid = {{ test.pk }};
     <h2>Screenshots</h2>
     
     <div class="screenshots-wrapper">
-        <div id="screenshots" class="nivoSlider">
-            <img src="{{ STATIC_URL }}screenshots/CS2SFVX09X5DYVO300XIQIGB.png" height="600" alt="" title="firefox" />
+        <div id="screenshots" class="nivoSlider" style="height:600px">
+<!--             <img src="{{ STATIC_URL }}screenshots/CS2SFVX09X5DYVO300XIQIGB.png" height="600" alt="" title="firefox" /> -->
 <!--             <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="opera" /> -->
 <!--             <img src="{{ STATIC_URL }}screenshots/0XQG6E224CQ5C6GRQVZU2FVT.png" height="600" alt="" title="chrome" />-->
         </div>
@@ -104,24 +104,27 @@ var statuses_error = 0;
 var statuses_warning = 0;
 var statuses_info = 0;
 
+var rate_curr = 0;
+var rate_max = 0;
+
+
 var s = 0;
 $("#progressbar").progressbar({ value: 0 });
+$("#screenshots").fadeOut();
 
 
 function add_screenshot(status, output_desc, output_full, group) {
     $("#screenshots")[0].innerHTML += output_full
-//     console.log(output_full)
 }
 
-function add_result(status, output_desc, output_full, group) {
+function add_result(status, output_desc, output_full, group, importance) {
     if (group == 4){
         add_screenshot(status, output_desc, output_full, group);
         return(0);
     }
-        
 
     var element = document.createElement('tr');
-    
+
     var a = document.createElement('td');
     a.setAttribute('class','output_desc');
     a.innerHTML = output_desc;
@@ -129,28 +132,32 @@ function add_result(status, output_desc, output_full, group) {
     
     var a = document.createElement('td');
     a.setAttribute('class','status');
+    
+    rate_max += importance;
+    
     if (status == 0) {
         element.setAttribute('class','status_ok');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
         statuses_ok += 1;
-        
+        rate_curr += importance;
     } 
     if (status == 1) {
         element.setAttribute('class','status_error');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
         statuses_error += 1;
-    }  
-    
+        rate_curr += 0;
+    }     
     if (status == 2) {
         element.setAttribute('class','status_warning');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> '
         statuses_warning += 1;
-        }  
-        
+        rate_curr += (importance/2);
+        }   
     if (status == 3) {
         element.setAttribute('class','status_info');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
         statuses_info += 1;
+        rate_curr += importance;
         }  
     element.appendChild(a);
 
@@ -192,12 +199,14 @@ function check_results(){
         data: "",
         success: function(data) {
             $.each(data, function(key, value) { 
-                add_result(value.status, value.output_desc, value.output_full, value.group)
+                add_result(value.status, value.output_desc, value.output_full, value.group, value.importance)
             });
             if (finished == 0) window.setTimeout(check_results,1000);   
             if ($("#progressbar").progressbar("value") == 100) {
                 finished = 1;
+                $("#screenshots").fadeIn(0);
                 start_slider();
+                $("#rating").text((rate_curr/rate_max*10).toFixed(1))
             }
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
