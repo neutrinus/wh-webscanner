@@ -34,6 +34,9 @@ def results(request):
         if not urlparse(url).scheme:
             url = "http://"+url
         
+        if urlparse(url).scheme not in ["http","https"]:
+            return redirect('/')    
+        
         test = Tests(url=url)
         test.save()
         request.session['testid'] = test.pk;
