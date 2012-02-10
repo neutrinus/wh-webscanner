@@ -160,7 +160,7 @@ function add_result(status, output_desc, output_full, group, importance) {
         element.setAttribute('class','status_info');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
         statuses_info += 1;
-        rate_curr += importance;
+        rate_max -= importance;
         }  
     element.appendChild(a);
 
