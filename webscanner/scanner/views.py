@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.views.generic.list_detail import object_list
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -29,20 +29,25 @@ def index(request):
 
 def results(request):
     
-    test = Tests(domain="guardier.com")
-    test.save()
-    request.session['testid'] = test.pk;
+    if request.method == 'POST':
+        print ("POST")
+        domain = request.POST.get("domain")
+        test = Tests(domain=domain)
+        test.save()
+        request.session['testid'] = test.pk;
+            
+        for testname,plugin in TESTDEF_PLUGINS:
+            oplugin = PLUGINS[ testname ]()    
+            a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
+            a.save()
     
-    for testname,plugin in TESTDEF_PLUGINS:
-        oplugin = PLUGINS[ testname ]()
+        return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
+    else:
+        return redirect('/')
         
-        a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
-        a.save()
-  
     
     #recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
     
-    return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))
     
 
 def scan_progress(request):

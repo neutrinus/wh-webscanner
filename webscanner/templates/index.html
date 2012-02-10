@@ -70,9 +70,9 @@
 
              <div class="row">
              
-            <form id="addtestform" action="{% url scanner.views.results %}" method="post" style="width:100%">
+            <form id="addtestform" action="{% url scanner.views.results %}" method="POST" style="width:100%">
                 {% csrf_token %}
-                <INPUT type="text" id="domain" style="width:90%;" title="http://example.org" value="" alt="kk" autocomplete = "off" />
+                <input type="text" id="domain" name="domain" style="width:90%;" title="http://example.org" value="" alt="kk" autocomplete = "off" >
                 <input type="submit"  value="Scan" class="button">
 
                 <div id="authbox">
@@ -134,24 +134,23 @@
             <div class="row">
                 <section class="col">
                     <h2>It's Free!</h2>
-                    <p>In hac habitasse platea risus dictumst. Suspendisse sit amet enim arcu. Aliquam erat volutpat.
-                    Phasellus a dui nisi. Nunc nec quam vitae nisl vehicula euismod. Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Sed commodo ligula blandit risus</p>
+                    <p>We belive that information should be free - we allow anybody to use our scanner for free (even for commercial use)</p>
+                    <p>Altrought there are additional options avalible for pro members.</p>
                 </section>
                 <section class="col mid">
                     <h2>Lot's of tests</h2>
-                    <p>Nascetur augue hac platea enim, egestas pulvinar vut. Pulvinar cum, ac eu, tristie
-                    acus duis in dictumst non integer! Elit, sed scelerisque odio tortor, sed platea dis? Quis
-                    cursus parturient ac amet odio in? Nunc Amet urna scelerisque eu lectus placerat.</p>
+                    <p>Our tests database was creted as a response for requests of our customers. We put huge
+                    effort to cover all aspect of webpages problems (like: XSS, sql injecton) or misconfigurations
+                    (like too big pagesize or non-optimal css or images). As webpages are more and more complex, there are lots
+                    of different technologies - we keep up-todate our technology. </p>
                 </section>
 
                 <section class="col">
                     <h2>Blazing fast</h2>
 
-                    <p>Pellentesque magna mi, iaculis pharetra eu, fermentum ullamcorper nisi.
-                    Integer fringilla magna ut quam vulputate erat. Pulvinar cum, ac eu augue ut sit amet
-                    gravida lacinia, eros massa condimentum sem, a fermentum ligula lorem non.
-                    Phasellus vulputate.</p>
+                    <p>We understand that your time is valuable! We use bleeding-edge cloud technology to provide you results as fast as its possible.
+                    As soon as we get result - you have got it on your PC, there is no need to wait until all test finish their job.</p>
+                    <p>Soon there will be email report option for pro members - saving more of your time!</p>
 
                 </section>
             </div>
