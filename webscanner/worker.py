@@ -96,7 +96,7 @@ def worker():
                     ctest.save()
                                     
             else:
-                sleep(random.uniform(1,5)) #there was nothing to do - we can sleep longer
+                sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer
         except  Exception,e:
             log.error('Command run ended with exception: %s'%e)
             #give admins some time
@@ -143,7 +143,7 @@ def downloader():
                 log.info('Downloading website %s finished'%(test.domain))
 
             else:
-                sleep(random.uniform(1,5)) #there was nothing to do - we can sleep longer
+                sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer
         except  Exception,e:
             log.error('Command run ended with exception: %s'%e)
             #give admins some time
