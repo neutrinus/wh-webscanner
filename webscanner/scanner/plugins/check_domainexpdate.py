@@ -29,7 +29,6 @@ from logs import log
 
 class PluginDomainExpireDate(PluginMixin):
     name = unicode(_("Check domain expiration date"))
-    description = unicode(_("Check domain expiration date using data from whois database"))
     wait_for_download = False
     
     def run(self, command):
@@ -68,7 +67,7 @@ class PluginDomainExpireDate(PluginMixin):
                     
                 return res.status
             else:  
-                log.exception(_(unicode(_("Error: This gTLD doesnt provide valid domain expiration date in whois database"))))
+                log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
                 return STATUS.exception
 
             

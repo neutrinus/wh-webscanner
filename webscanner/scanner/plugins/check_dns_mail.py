@@ -72,11 +72,15 @@ class PluginDNSmail(PluginMixin):
             
 
             spfrecord = ""
-            answers = dns.resolver.query(domain, 'TXT')
-            for rdata in answers:
-                if rdata.strings[0].startswith('v=spf1'):
-                    spfrecord += rdata.strings[0]
-
+            try:
+                answers = dns.resolver.query(domain, 'TXT')
+                for rdata in answers:
+                    if rdata.strings[0].startswith('v=spf1'):
+                        spfrecord += rdata.strings[0]
+            except dns.resolver.NoAnswer:
+                pass
+                
+                        
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=2)
             res.output_desc = unicode(_("SPF records") )
             if spfrecord:
@@ -92,7 +96,7 @@ class PluginDNSmail(PluginMixin):
             return STATUS.success
         except StandardError,e:
             log.exception("%s"%str(e))
-            return STATUS.exception
+            
 
 
 

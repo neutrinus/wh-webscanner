@@ -71,7 +71,7 @@
              
             <form id="addtestform" action="{% url scanner.views.results %}" method="POST" style="width:100%">
                 {% csrf_token %}
-                <input type="text" id="domain" name="domain" style="width:90%;" title="http://example.org" value="" alt="kk" autocomplete = "off" >
+                <input type="text" id="domain" name="url" style="width:90%;" title="http://example.org" value="" alt="kk" autocomplete = "off" >
                 <input type="submit"  value="Scan" class="button">
 
                 <div id="authbox">
