@@ -61,8 +61,7 @@ class PluginDNSmailRBL(PluginMixin):
                 results += "<br />"
                         
             
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.mail
+            res = Results(test=command.test, group = RESULT_GROUP.mail, importance=4)
             res.output_desc = unicode(_("Mailservers on DNSBL blacklists (RBL)") )
             if blacklisted == 0:
                 res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. Details: <code>%s</code></p>"%(results) ))

@@ -41,18 +41,17 @@ class PluginGoogleSafeBrowsing(PluginMixin):
             httpbody = str(response.read())
                       
             from scanner.models import Results
-            res = Results(test=command.test)                    
-            res.group = RESULT_GROUP.security
+            res = Results(test=command.test, group = RESULT_GROUP.security, importance=3)            
             res.output_desc = unicode(_("Google Safe Browsing ") )
 
-            message = '<p>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></p>'
+            message = '<p><small>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></small></p>'
             
             if (int(httpstatus) == 204):
-                res.output_full = unicode(_('Your domain is not listed at Google Safe Browsing Blacklist <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. It means that probably there is no malware or phishing. '%command.test.domain) + message) 
+                res.output_full = unicode(_('<p>Your domain is not listed at Google Safe Browsing Blacklist. <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. It means that probably there is no malware or phishing.</p> '%command.test.domain) + message) 
                 res.status = RESULT_STATUS.success
                 
             elif (int(httpstatus) == 200):
-                res.output_full = unicode(_('Your domain is listed at Google Safe Browsing Blacklist because of %s <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. Please check your website because its possible that there is %s.'%(command.test.domain,httpbody,httpbody) ) + message) 
+                res.output_full = unicode(_('<p>Your domain is listed at Google Safe Browsing Blacklist because of %s. <a href="http://www.google.com/safebrowsing/diagnostic?site=http://%s">Check it at google</a>. Please check your website because its possible that there is %s.</p> '%(command.test.domain,httpbody,httpbody) ) + message) 
                 res.status = RESULT_STATUS.error
             else:
                 log.exception("Google sent non expected http code:%s body:%s "%(httpcode,httpbody) )

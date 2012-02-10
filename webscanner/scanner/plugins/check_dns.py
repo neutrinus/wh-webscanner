@@ -32,9 +32,7 @@ class PluginDNS(PluginMixin):
                     records += "A %s <br>"%(rdata.to_text() )
                             
                 
-                res = Results(test=command.test)
-                res.group = RESULT_GROUP.general
-
+                res = Results(test=command.test,group = RESULT_GROUP.general, importance=5)
                 res.output_desc = unicode(_("A records (IPv4)") )
                 if len(answers) > 1:
                     res.output_full = unicode(_("<p>Your nameserver returned %s A records: <code>%s</code></p>"%(len(answers),records ) ))
@@ -53,8 +51,7 @@ class PluginDNS(PluginMixin):
                     if IP(rdata.address).iptype() == "PRIVATE":
                         records += "%s <br"%rdate.address
                 
-                res = Results(test=command.test)                
-                res.group = RESULT_GROUP.general
+                res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)                
                 res.output_desc = unicode(_("No private IP in A records ") )
                 if not records:
                     res.output_full = unicode(_("<p>All your A records are public.</p>" ))
@@ -65,8 +62,7 @@ class PluginDNS(PluginMixin):
                 res.save()
                 
             except dns.resolver.NXDOMAIN:
-                res = Results(test=command.test)                
-                res.group = RESULT_GROUP.general
+                res = Results(test=command.test,group = RESULT_GROUP.general, importance=5)
                 res.output_desc = unicode(_("A records (IPv4)") )
                 res.output_full = unicode(_("<p>Domain not found!.</p>" ))
                 res.status = RESULT_STATUS.error

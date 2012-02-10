@@ -109,7 +109,7 @@ class Results(models.Model):
     output_desc         =   models.CharField(max_length=10000)  
     output_full         =   models.CharField(max_length=10000)  
 
-    # used to calculate overal note rank in results (1-10))
+    # used to calculate overal note rank in results (1-5))
     importance          =   models.IntegerField(default=2)
     
     creation_date       =   models.DateTimeField(auto_now_add=True)

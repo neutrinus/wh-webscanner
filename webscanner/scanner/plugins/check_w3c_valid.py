@@ -39,8 +39,7 @@ class PluginCheckW3CValid(PluginMixin):
                     str(result.info().getheader('x-w3c-validator-errors')))
             
             from scanner.models import Results
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.seo
+            res = Results(test=command.test, group = RESULT_GROUP.seo)
             res.output_desc = unicode(_("W3C Validation"))
             
             if result.info().getheader('x-w3c-validator-status') == 'Valid' :
@@ -61,12 +60,4 @@ class PluginCheckW3CValid(PluginMixin):
             log.exception(_("No validation can be done: %s "%(e)))
             return STATUS.exception
 
-    #def results(self,current_test, notify_type, language_code):
-        
-        #if notify_type:
-            #output = current_test.output + ".."
-        #else:
-            #output = '<a href="' + w3c_validator + 'check?uri=' + \
-            #unicode(current_test.users_test.domain) + '">' + current_test.output + '</a>'
-        
-        #return current_test.status,output
+            

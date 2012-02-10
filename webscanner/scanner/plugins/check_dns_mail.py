@@ -48,8 +48,7 @@ class PluginDNSmail(PluginMixin):
                         noreversemxes += "%s(%s)<br />"%(mxdata.exchange,ip.address)
                     
                     
-            res = Results(test=command.test)                
-            res.group = RESULT_GROUP.mail
+            res = Results(test=command.test,group = RESULT_GROUP.mail,importance=5)
             res.output_desc = unicode(_("No private IP in MX records ") )
             if not records:
                 res.output_full = unicode(_("<p>All your MX records are public.</p>" ))
@@ -59,8 +58,7 @@ class PluginDNSmail(PluginMixin):
                 res.status = RESULT_STATUS.error         
             res.save()
 
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.mail
+            res = Results(test=command.test,group = RESULT_GROUP.mail,importance=3)
             res.output_desc = unicode(_("Reverse Entries for MX records") )
             if not noreversemxes:
                 res.output_full = unicode(_("<p>All your MX records have reverse records: <code>%s</code></p>"%(reversemxes) ))
@@ -79,8 +77,7 @@ class PluginDNSmail(PluginMixin):
                 if rdata.strings[0].startswith('v=spf1'):
                     spfrecord += rdata.strings[0]
 
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.mail
+            res = Results(test=command.test, group = RESULT_GROUP.mail, importance=2)
             res.output_desc = unicode(_("SPF records") )
             if spfrecord:
                 res.output_full = unicode(_("<p>OK, you have SPF record defined: <code>%s</code></p>"%(spfrecord) ))

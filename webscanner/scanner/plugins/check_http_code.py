@@ -52,8 +52,7 @@ class PluginCheckHTTPCode(PluginMixin):
 
             #check http_status 200>X>300
             from scanner.models import Results
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.general
+            res = Results(test=command.test, group = RESULT_GROUP.general, importance=5)
             res.output_desc = unicode(_("HTTP return code"))
            
             if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
@@ -71,8 +70,7 @@ class PluginCheckHTTPCode(PluginMixin):
             #check http encoding aceptation
             encoding = response.getheader("Content-Encoding")
 
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.general
+            res = Results(test=command.test, group = RESULT_GROUP.general, importance=1)
             res.output_desc = unicode(_("HTTP compresion"))
             if encoding:
                 res.status = RESULT_STATUS.success

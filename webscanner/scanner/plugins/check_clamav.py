@@ -46,8 +46,7 @@ class PluginClamav(PluginMixin):
             numberofthreats = int(re.search('Infected files: (?P<kaczka>[0-9]*)',output).group('kaczka'))
             
             from scanner.models import Results
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.security
+            res = Results(test=command.test,group = RESULT_GROUP.security, importance=5)
             res.output_desc = unicode(_("Antivirus check"))
             
             if numberofthreats > 0:
@@ -57,9 +56,6 @@ class PluginClamav(PluginMixin):
                 res.status = RESULT_STATUS.success
                 res.output_full = unicode(_("Our antivirus claims that there is no infected files on your website."))           
             res.save()
-            
-            
-
             
             #as plugin finished - its success
             return STATUS.success
