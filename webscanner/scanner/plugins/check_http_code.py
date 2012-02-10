@@ -12,7 +12,7 @@ from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-
+from urlparse import urlparse
 from logs import log
 
 
@@ -32,11 +32,9 @@ class PluginCheckHTTPCode(PluginMixin):
     
     
     def run(self, command):
-        #time.sleep(1)
-        
        
         try:
-            conn = httplib.HTTPConnection(command.test.domain,80)
+            conn = httplib.HTTPConnection(command.test.domain(),command.test.port())
             conn.request("HEAD", "/",body="",headers={'Accept-Encoding': 'gzip,deflate,bzip2,exi'})  
             response = conn.getresponse()
             httpstatus =  str(response.status)

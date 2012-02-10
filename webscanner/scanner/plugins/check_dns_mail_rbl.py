@@ -9,8 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 import dns.resolver
 import dns.reversename
 from IPy import IP
-
-
+from urlparse import urlparse
 from logs import log
 
 
@@ -22,7 +21,8 @@ class PluginDNSmailRBL(PluginMixin):
     
     def run(self, command):
         from scanner.models import Results
-        domain = command.test.domain
+        domain = urlparse(command.test.url).hostname
+        
 
         # list of blacklists to check
         blacklists      = [

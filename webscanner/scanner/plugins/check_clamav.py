@@ -31,7 +31,6 @@ class PluginClamav(PluginMixin):
     name = unicode(_('Clamscan'))
     
     def run(self, command):
-        domain = command.test.domain
       
         try:           
             #scan website

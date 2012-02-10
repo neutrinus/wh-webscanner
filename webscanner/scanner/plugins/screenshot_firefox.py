@@ -37,7 +37,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
     wait_for_download = False
     
     def run(self, command):
-        domain = command.test.domain
+        domain = command.test.url
         from scanner.models import Results
        
         try:
@@ -46,7 +46,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             #display.start()
 
             browser = webdriver.Firefox()
-            browser.get("http://"+domain)
+            browser.get(domain)
             browser.save_screenshot(STATIC_ROOT+"/../scanner/static/"+filename)
             browser.close()
             

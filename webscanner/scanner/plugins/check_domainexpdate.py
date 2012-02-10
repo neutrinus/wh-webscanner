@@ -22,19 +22,18 @@ from time import mktime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-
+from urlparse import urlparse
 from logs import log
 
 
 
 class PluginDomainExpireDate(PluginMixin):
     name = unicode(_("Check domain expiration date"))
-    description = unicode(_("Check domain expiration date using data from whois database"))
     wait_for_download = False
     
     def run(self, command):
-        domain = command.test.domain
-
+        domain = urlparse(command.test.url).hostname
+        
         #time.sleep(1)
         try:
             data = pywhois.whois(domain)   
@@ -68,7 +67,7 @@ class PluginDomainExpireDate(PluginMixin):
                     
                 return res.status
             else:  
-                log.exception(_(unicode(_("Error: This gTLD doesnt provide valid domain expiration date in whois database"))))
+                log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
                 return STATUS.exception
 
             

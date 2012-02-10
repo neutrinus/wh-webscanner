@@ -8,11 +8,10 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 #3rd party import
+from urlparse import urlparse
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
-from logging import getLogger
-log = getLogger('scanner.models')
-
+from logs import log
 #local imports
 
 STATUS = Choices(
@@ -73,9 +72,8 @@ TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
         
-        
 class Tests(models.Model):
-    domain              =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
+    url                 =   models.CharField(max_length=600,blank=1,null=1,db_index=True)
     priority            =   models.IntegerField(default=10)
 #   lang?    
     creation_date       =   models.DateTimeField(auto_now_add=True)
@@ -84,8 +82,17 @@ class Tests(models.Model):
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     
     def __unicode__(self):
-        return "%s"%(self.domain)
-
+        return "%s"%(self.url)
+        
+    def domain(self):
+        return urlparse(self.url).hostname
+        
+    def port(self):
+        if urlparse(self.url).port:
+            return(urlparse(self.url).port)
+        else:
+            return(80)
+            
 
 class CommandQueue(models.Model):
     test                =   models.ForeignKey(Tests, related_name="command for test")    
@@ -97,7 +104,7 @@ class CommandQueue(models.Model):
     wait_for_download   =   models.BooleanField(default=True)
     
     def __unicode__(self):
-        return "%s: status=%s"%(self.test.domain,unicode(dict(STATUS)[self.status]))
+        return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
 
         
@@ -115,5 +122,5 @@ class Results(models.Model):
     creation_date       =   models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return "%s: name=%s(%s)"%(self.test.domain,self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
+        return "%s: name=%s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 

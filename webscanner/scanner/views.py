@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.views.generic.list_detail import object_list
 from django.contrib.auth.models import User
@@ -11,14 +12,11 @@ from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.sitemaps import ping_google
 from django.http import HttpResponse
-
+from urlparse import urlparse
 from annoying.decorators import render_to
-import json
-
-
-
-
 from scanner.models import *
+from logs import log
+
 
 def index(request):
 	#recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
@@ -30,8 +28,13 @@ def index(request):
 def results(request):
     
     if request.method == 'POST':
-        domain = request.POST.get("domain")
-        test = Tests(domain=domain)
+        url = request.POST.get("url")
+        log.debug("User requested tests for url:%s"%(url))
+        
+        if not urlparse(url).scheme:
+            url = "http://"+url
+        
+        test = Tests(url=url)
         test.save()
         request.session['testid'] = test.pk;
             

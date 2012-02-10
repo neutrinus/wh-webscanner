@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 import dns.resolver
 import dns.reversename
 from IPy import IP
-
+from urlparse import urlparse
 from logs import log
 
 class PluginDNSmail(PluginMixin):
@@ -19,7 +19,8 @@ class PluginDNSmail(PluginMixin):
     
     def run(self, command):
         from scanner.models import Results
-        domain = command.test.domain
+        domain = urlparse(command.test.url).hostname
+        
 
         try:           
             mxes = ""
@@ -72,11 +73,14 @@ class PluginDNSmail(PluginMixin):
             
 
             spfrecord = ""
-            answers = dns.resolver.query(domain, 'TXT')
-            for rdata in answers:
-                if rdata.strings[0].startswith('v=spf1'):
-                    spfrecord += rdata.strings[0]
-
+            try:
+                answers = dns.resolver.query(domain, 'TXT')
+                for rdata in answers:
+                    if rdata.strings[0].startswith('v=spf1'):
+                        spfrecord += rdata.strings[0]
+            except dns.resolver.NoAnswer:
+                pass
+                                
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=2)
             res.output_desc = unicode(_("SPF records") )
             if spfrecord:
@@ -92,7 +96,7 @@ class PluginDNSmail(PluginMixin):
             return STATUS.success
         except StandardError,e:
             log.exception("%s"%str(e))
-            return STATUS.exception
+            
 
 
 

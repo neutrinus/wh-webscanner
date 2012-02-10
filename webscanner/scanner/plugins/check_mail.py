@@ -20,7 +20,7 @@ class PluginMail(PluginMixin):
     
     def run(self, command):
         from scanner.models import Results
-        domain = command.test.domain
+        domain = command.test.domain()
 
         try:           
             # list of all mail servers

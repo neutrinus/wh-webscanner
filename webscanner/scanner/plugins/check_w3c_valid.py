@@ -27,7 +27,7 @@ class PluginCheckW3CValid(PluginMixin):
     wait_for_download = False
     
     def run(self, command):
-        domain = command.test.domain
+        domain = command.test.url
         
         try:
             checklink = w3c_validator + 'check?uri=' + domain
