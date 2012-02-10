@@ -5,38 +5,28 @@ import sys
 sys.path.append('../')
 sys.path.append('./')
 
-
 import settings
 setup_environ(settings)
 
-import sys
 import os
 import random
 import subprocess
 import shlex
-from time import sleep
-from datetime import datetime
-from datetime import timedelta
-from django.contrib.auth.models import User
-from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
-from django.db import transaction
-from django.db.models import Q
-from multiprocessing import Pool, cpu_count
 import HTMLParser
 import urllib
 import urlparse
 import string
 import re
-
 from time import sleep
 from datetime import datetime
 from datetime import timedelta
 from django.contrib.auth.models import User
-from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
-from django.db import transaction
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-
+from django.db import transaction
+from django.db.models import Q
+from multiprocessing import Pool, cpu_count
+from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 
 
 import logging
@@ -59,7 +49,7 @@ from settings import PATH_TMPSCAN
 
 
 def worker():
-    sleep(random.uniform(0,3))
+    sleep(random.uniform(0,5))
     
     log.debug("Starting new worker")
     #main program loop
@@ -111,12 +101,8 @@ def worker():
             #give admins some time
             sleep(30)            
 
-            
-            
-
-
 def downloader():
-    sleep(random.uniform(0,3))
+    sleep(random.uniform(0,5))
     
     log.debug("Starting new downloader")
     #main program loop
