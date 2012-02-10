@@ -12,8 +12,8 @@ from IPy import IP
 from urlparse import urlparse
 from logs import log
 
-
-
+#TODO: add explanationry url
+#http://www.spamhaus.org/query/bl?ip=87.206.13.41 
 class PluginDNSmailRBL(PluginMixin):
     name = unicode(_("Check dns MAIL RBL"))
     description = unicode(_("Check dns MAIL RBL"))
