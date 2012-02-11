@@ -6,3 +6,4 @@ python-virtualenv
 python-pip
 python-openssl
 swig
+python-m2crypto
