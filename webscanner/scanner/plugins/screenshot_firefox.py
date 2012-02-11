@@ -42,14 +42,17 @@ class PluginMakeScreenshotFirefox(PluginMixin):
        
         try:
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
-            #display = Display(visible=0,size=SCREENSHOT_SIZE)
-            #display.start()
+            display = Display(visible=0,size=SCREENSHOT_SIZE)
+            log.debug("VDispaly initialized: %s "%(str(display)))
+            display.start()
+            log.debug("VDispaly started: %s "%(str(display)))
 
             browser = webdriver.Firefox()
+            log.debug("Firefox started: %s "%(str(browser)))
             browser.get(domain)
             browser.save_screenshot(STATIC_ROOT+"/../scanner/static/"+filename)
-            browser.close()
-            
+            browser.close()           
+            display.sendstop()
             
             res = Results(test=command.test)
             res.group = RESULT_GROUP.screenshot
