@@ -90,12 +90,28 @@ class PluginDNSmail(PluginMixin):
                 res.output_full = unicode(_("<p>There is no SPF defined. Consider creating one - it helps a lot dealing with SPAM.</p>"))
                 res.status = RESULT_STATUS.warning
             res.save()
-
-                   
             
             return STATUS.success
+        except dns.resolver.Timeout,e:
+            res = Results(test=command.test,group = RESULT_GROUP.general,importance=5)
+            res.output_desc = unicode(_("MX records") )
+            res.output_full = unicode(_("<p>There was timeout while asking your nameservers for MX records.</p>" ))
+            res.status = RESULT_STATUS.error
+            res.save()
+            log.debug("Timeout while asking for MX records: %s"%str(e))
+            
+        except dns.resolver.NoAnswer,e:
+            res = Results(test=command.test,group = RESULT_GROUP.general,importance=5)
+            res.output_desc = unicode(_("MX records") )
+            res.output_full = unicode(_("<p>Your nameserver didn't respond (NoAnswer) when asked for MX records.</p>" ))
+            res.status = RESULT_STATUS.error
+            res.save()
+            log.debug("NoAnswer while asking for MX records: %s"%str(e))
+            
         except StandardError,e:
             log.exception("%s"%str(e))
+            
+        return STATUS.unsuccess
             
 
 

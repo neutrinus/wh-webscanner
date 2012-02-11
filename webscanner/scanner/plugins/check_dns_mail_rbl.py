@@ -73,6 +73,9 @@ class PluginDNSmailRBL(PluginMixin):
             
             
             return STATUS.success
+        except (dns.resolver.Timeout,dns.resolver.NoAnswer),e:
+            log.debug("dns problem when asking for MX records: %s"%str(e))
+            return STATUS.unsuccess
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception

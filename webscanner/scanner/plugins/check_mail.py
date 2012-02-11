@@ -28,6 +28,9 @@ class PluginMail(PluginMixin):
             answers = dns.resolver.query(domain, 'MX')    
             for mxdata in answers:
                 mxes.append(mxdata.exchange)
+        except (dns.resolver.Timeout,dns.resolver.NoAnswer),e:
+            log.debug("dns problem when asking for MX records: %s"%str(e))
+            return STATUS.unsuccess
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception
@@ -159,13 +162,3 @@ class PluginMail(PluginMixin):
             return STATUS.exception
             
                         
-                        
-            #res = Results(test=command.test)                
-            #res.output_desc = unicode(_("No private IP in MX records ") )
-            #if not records:
-                #res.output_full = unicode(_("<p>All your MX records are public.</p>" ))
-                #res.status = RESULT_STATUS.success
-            #else:
-                #res.output_full = unicode(_("<p>Following MX records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
-                #res.status = RESULT_STATUS.error         
-            #res.save()
