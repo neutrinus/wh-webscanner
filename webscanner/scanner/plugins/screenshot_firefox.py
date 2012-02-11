@@ -60,7 +60,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s" /></a>'%(filename,filename,"FiReFoX")
             res.save()
             
-            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/../scanner/static/"+filename))
+            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))
             #there was no exception - test finished with success
             return STATUS.success
         except Exception,e:
