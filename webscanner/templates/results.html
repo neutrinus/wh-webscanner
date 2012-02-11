@@ -40,17 +40,17 @@ testid = {{ test.pk }};
      <div class="row">
                 <section class="col">
 
-                    <h3>Systematic</h3>
+                    <h3>Don't Wait</h3>
                     <br />
-                    <p>In hac habitasse platea risus dictumst. Suspendisse sit amet enim arcu. Aliquam erat volutpat.
-                    Phasellus a dui nisi. Nunc nec quam vitae nisl vehicula euismod.</p>
+                    <p>Average website check take 200 seconds. If your site is particularly slow it could be even more than 10 minutes. Pro-members just got .pdf report in their mailbox.</p>
+                    
                 </section>
                 <section class="col mid">
                     <h3>Overall note</h3>
                     <br />
-                    <p>basing on all checks bellow we give your website an obverall note:</p>
+                    <p>basing on all checks bellow we give your website an overall note:</p>
                     <p style="font-size:4em; text-align:center"><span id="rating">?</span>/10<p>
-                    <p style="text-align:center;" >congratulations!</p>
+                    <p id="congratulations" style="text-align:center; display:none;" >congratulations!</p>
                     
                 </section>
 
@@ -207,7 +207,8 @@ function check_results(){
             if (finished == 0) window.setTimeout(check_results,1000);   
             if ($("#progressbar").progressbar("value") == 100) {
                 finished = 1;
-                $("#screenshots").fadeIn(0);
+                $("#screenshots").fadeIn("slow");
+                $("#congratulations").fadeIn("slow");
                 start_slider();
                 $("#rating").text((rate_curr/rate_max*10).toFixed(1))
             }
