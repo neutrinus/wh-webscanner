@@ -49,7 +49,7 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             browser = webdriver.Firefox()
             log.debug("Firefox started: %s "%(str(browser)))
             browser.get(domain)
-            browser.save_screenshot(STATIC_ROOT+"/../scanner/static/"+filename)
+            browser.save_screenshot(STATIC_ROOT+"/"+filename)
             browser.close()           
             display.sendstop()
             
