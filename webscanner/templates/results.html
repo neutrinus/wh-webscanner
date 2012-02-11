@@ -154,7 +154,7 @@ function add_result(status, output_desc, output_full, group, importance) {
         element.setAttribute('class','status_warning');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> '
         statuses_warning += 1;
-        rate_curr += (importance/2);
+        rate_curr += (importance/4);
         }   
     if (status == 3) {
         element.setAttribute('class','status_info');
