@@ -43,7 +43,6 @@ class PluginMakeScreenshotFirefox(PluginMixin):
         try:
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
             display = Display(visible=0,size=SCREENSHOT_SIZE)
-            log.debug("VDispaly initialized: %s "%(str(display)))
             display.start()
             log.debug("VDispaly started: %s "%(str(display)))
 
