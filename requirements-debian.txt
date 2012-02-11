@@ -7,3 +7,6 @@ python-pip
 python-openssl
 swig
 python-m2crypto
+libssl-dev
+gcc
+python-dev
