@@ -53,7 +53,7 @@ class PluginMail(PluginMixin):
                     log.debug("Checking mail for MX: %s"%str(mx))
                     
                     #postmaster
-                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
                     #foo.set_debuglevel(True)
                     foo.ehlo()
@@ -66,7 +66,7 @@ class PluginMail(PluginMixin):
                     foo.quit()
                     
                     #abuse
-                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
                     foo.ehlo()
                     (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
@@ -78,7 +78,7 @@ class PluginMail(PluginMixin):
                     foo.quit()
                     
                     #openrelay
-                    foo = smtplib.SMTP(str(mx),timeout=5)
+                    foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
                     foo.ehlo()
                     (code,msg) = foo.docmd("MAIL","FROM: <mailtest-webscanner@neutrinus.com>")
@@ -88,7 +88,10 @@ class PluginMail(PluginMixin):
                     else:
                         noopenrelay +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: openrelaytest-webscanner@neutrinus.com <br />&nbsp; %s %s <br /><br />"%(mx,code,msg)
                     foo.quit()
-                    
+                except smtplib.SMTPServerDisconnected:
+                    noconnect +=   "%s (timeout)<br />"%(mx)
+                    noconnect_count +=1
+                    pass
                 except smtplib.socket.error:
                     noconnect +=   "%s<br />"%(mx)
                     noconnect_count +=1

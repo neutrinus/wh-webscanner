@@ -14,6 +14,8 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('neutrinus', 'admin@neutrinus.com'),
+    
 )
 MANAGERS = ADMINS
 
@@ -34,14 +36,16 @@ AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
 )
 
+
+        
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'scanner_test1',                      # Or path to database file if using sqlite3.
-        'USER': 'skaner',                      # Not used with sqlite3.
-        'PASSWORD': 'test7test!@#$',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'webcheck',                      # Or path to database file if using sqlite3.
+        'USER': 'webcheck',                      # Not used with sqlite3.
+        'PASSWORD': 'Ahfoo4veiV1r',                  # Not used with sqlite3.
+        'HOST': '10.253.1.12',                      # Set to empty string for localhost. Not 
     }
 }
 
@@ -156,7 +160,8 @@ INSTALLED_APPS = (
     'django_filters',
     'django_tables2',
     'djangosecure',
-
+    'django_wsgiserver',
+    
     #'south',
     #'configstore',
     #'paypal.standard',
@@ -231,4 +236,4 @@ SESSION_COOKIE_SECURE=1
 SESSION_COOKIE_HTTPONLY =1
 
 
-from settings_local import *
+#from settings_local import *

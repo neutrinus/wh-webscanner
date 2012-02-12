@@ -18,16 +18,7 @@ from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-
 from logs import log
-
-
-
-#PATH_KASPERSKY = '/'
-PATH_CLAMSCAN = '/usr/bin/clamscan'
-PATH_WGET = '/usr/bin/puf'
-PATH_TMPSCAN = '/tmp/clamdd/'
-
 
 class PluginOptipng(PluginMixin):
     name = unicode(_('OptiPNG'))
