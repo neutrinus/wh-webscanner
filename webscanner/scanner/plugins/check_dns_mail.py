@@ -83,11 +83,14 @@ class PluginDNSmail(PluginMixin):
                                 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=2)
             res.output_desc = unicode(_("SPF records") )
+            
+            res.output_full = "<p>Sender Policy Framework (SPF) is an email validation system designed to prevent email spam by detecting email spoofing, a common vulnerability, by verifying sender IP addresses. SPF allows administrators to specify which hosts are allowed to send mail from a given domain by creating a specific SPF record (or TXT record) in the Domain Name System (DNS). <a href='http://en.wikipedia.org/wiki/Sender_Policy_Framework'>More at wikipedia</a></p>"
+                        
             if spfrecord:
-                res.output_full = unicode(_("<p>OK, you have SPF record defined: <code>%s</code></p>"%(spfrecord) ))
+                res.output_full += unicode(_("<p>OK, you have SPF record defined: <code>%s</code></p>"%(spfrecord) ))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>There is no SPF defined. Consider creating one - it helps a lot dealing with SPAM.</p>"))
+                res.output_full += unicode(_("<p>There is no SPF defined for your domain. Consider creating one - it helps a lot dealing with SPAM.</p>"))
                 res.status = RESULT_STATUS.warning
             res.save()
             
