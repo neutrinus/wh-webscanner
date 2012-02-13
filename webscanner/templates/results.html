@@ -210,7 +210,8 @@ function check_results(){
                 $("#screenshots").fadeIn("slow");
                 $("#congratulations").fadeIn("slow");
                 start_slider();
-                $("#rating").text((rate_curr/rate_max*10).toFixed(1))
+                var rate = rate_curr/rate_max
+                $("#rating").text(( (rate*rate*rate*rate)*10).toFixed(1))
             }
         },
         error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
