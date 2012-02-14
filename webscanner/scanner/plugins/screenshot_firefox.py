@@ -51,15 +51,17 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             browser.get(domain)
             sleep(random.uniform(2,5))
             browser.save_screenshot(STATIC_ROOT+"/"+filename)
-            browser.close()           
-            display.sendstop()
-            
+
             res = Results(test=command.test)
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
             res.output_desc = unicode(_("Firefox")) 
-            res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s" /></a>'%(filename,filename,"Firefox")
+            res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,"Firefox",browser.capabilities['version']
+            )
             res.save()
+
+            browser.close()           
+            display.sendstop()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))
             #there was no exception - test finished with success
