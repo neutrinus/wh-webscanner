@@ -38,7 +38,7 @@ class PluginMakeScreenshotChrome(PluginMixin):
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
             display = Display(visible=0,size=SCREENSHOT_SIZE)
             display.start()
-            log.debug("VDispaly started: %s "%(str(display)))
+            log.debug("VDisplay started: %s "%(str(display)))
 
             browser = webdriver.Chrome()
             log.debug("Chrome started: %s "%(str(browser)))
@@ -50,7 +50,7 @@ class PluginMakeScreenshotChrome(PluginMixin):
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
             res.output_desc = unicode(_("Chrome")) 
-            res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,"Browser: Google Chrome",browser.capabilities['version'])
+            res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,"Google Chrome",browser.capabilities['version'])
             res.save()
 
             browser.close()           
