@@ -51,6 +51,7 @@ from scanner.plugins.check_pagerank import PluginPagerank
 from scanner.plugins.check_mail import PluginMail
 from scanner.plugins.screenshot_firefox import PluginMakeScreenshotFirefox
 from scanner.plugins.screenshot_chrome import PluginMakeScreenshotChrome
+from scanner.plugins.check_surbl import PluginSURBL
 
 
 
@@ -67,6 +68,7 @@ PLUGINS = dict((
     ('mail', PluginMail ),
     ('screenshot_ff', PluginMakeScreenshotFirefox ),
     ('screenshot_chrome', PluginMakeScreenshotChrome ),
+    ('check_surbl', PluginSURBL ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
