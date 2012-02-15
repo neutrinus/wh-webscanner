@@ -52,6 +52,7 @@ from scanner.plugins.check_mail import PluginMail
 from scanner.plugins.screenshot_firefox import PluginMakeScreenshotFirefox
 from scanner.plugins.screenshot_chrome import PluginMakeScreenshotChrome
 from scanner.plugins.check_surbl import PluginSURBL
+from scanner.plugins.check_plainemail import PluginPlainTextEmail
 
 
 
@@ -69,6 +70,7 @@ PLUGINS = dict((
     ('screenshot_ff', PluginMakeScreenshotFirefox ),
     ('screenshot_chrome', PluginMakeScreenshotChrome ),
     ('check_surbl', PluginSURBL ),
+    ('check_plainemail', PluginPlainTextEmail ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
