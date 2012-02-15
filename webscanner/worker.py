@@ -103,14 +103,16 @@ def downloader():
                     test.download_status = STATUS.running
                     test.download_path = tmppath
                     test.save()
-                    log.info('Downloading website %s for test %s to %s'%(test.domain,test.pk,tmppath))
+                    log.info('Downloading website %s for test %s to %s'%(test.url,test.pk,tmppath))
                 except Tests.DoesNotExist:
                     test = None
                     #log.debug("No Tests in DownloadQueue to process, sleeping.")
                     
             if test:
-                domain = test.domain
-                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive --urlhack --user-agent wh-webscanner -sN 0 -O %s %s"%(str(tmppath),str(domain))
+                domain = test.url
+                wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
+                
+                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN 0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)

@@ -20,7 +20,7 @@ class PluginPlainTextEmail(PluginMixin):
     wait_for_download = True
     
     def run(self, command):
-        path = command.test.download_path + "/0/"
+        path = command.test.download_path + "/"
         efound = ""
         
         try:
