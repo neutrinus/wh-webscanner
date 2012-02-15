@@ -39,7 +39,7 @@ class PluginPlainTextEmail(PluginMixin):
                 for line in memFile.readlines():
                     match = re.search("[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}",line)
                     if match is not None:
-                        efound += "%s found in %s"%(match.group(), file[len(path):])
+                        efound += "%s found in %s <br />"%(match.group(), file[len(path):])
                 memFile.close()
                 
             from scanner.models import Results
