@@ -207,7 +207,7 @@ function check_results(){
                 $("#screenshots").fadeIn("slow");
                 $("#congratulations").fadeIn("slow");
                 start_slider();
-                var rate = pow(rate_curr/rate_max,3)
+                var rate = Math.pow(rate_curr/rate_max,3)
                 $("#rating").text(( (rate)*10).toFixed(1))
             }
         },
