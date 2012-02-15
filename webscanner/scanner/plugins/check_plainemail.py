@@ -45,7 +45,7 @@ class PluginPlainTextEmail(PluginMixin):
             from scanner.models import Results
             res = Results(test=command.test,group = RESULT_GROUP.mail, importance=5)
             res.output_desc = unicode(_("Look for plain-text email addreses"))
-            res.output_full = unicode(_("<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/Email_address_harvesting'>email harvesters</a> to send SPAM to email addresses found on websites. To avoid being spammed you shoudn't put your email as plaintext on your webpage. Use some of cloaking techniques instead.</p>"%(efound)))
+            res.output_full = unicode(_("<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/Email_address_harvesting'>email harvesters</a> to send SPAM to email addresses found on websites. To avoid being spammed you shoudn't put your email as plaintext on your webpage. Use some of cloaking techniques instead.</p>"))
             
             if efound:
                 res.status = RESULT_STATUS.warning
