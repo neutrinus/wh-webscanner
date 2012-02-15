@@ -28,10 +28,16 @@ class PluginPlainTextEmail(PluginMixin):
             
             # We want to recurslivly grep all html files and look for something looking like email address
             filelist = []
+            path="/tmp/webscanner/IJZMJJ8TXYO1SMF2HZ6J8EML/"
             for root, dirs, files in os.walk(path):
                 for file in files:
                     if re.search('(.html)|(.php)|(.xml)',file) is not None:
-                        filelist.append(root+"/"+file)
+                        #filelist.append(root+"/"+file)
+                        #TODO:do it properly
+                        try:
+                            filelist.append(unicode(root)+unicode("/")+unicode(file))
+                        except UnicodeDecodeError:
+                            continue
                         
             for file in filelist:
                 log.debug("Analizing file %s "%(file))
@@ -49,7 +55,7 @@ class PluginPlainTextEmail(PluginMixin):
             
             if efound:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>We found: <code>%s</code> </p>"%(efound)))
+                res.output_full += unicode(_("<p>We have found folowing email addreses: <code>%s</code> </p>"%(efound)))
             else:
                 res.status = RESULT_STATUS.success
                 res.output_full += unicode(_("<p>OK, we didnt found any plaintext e-mail addreses on your website.</p>"))
