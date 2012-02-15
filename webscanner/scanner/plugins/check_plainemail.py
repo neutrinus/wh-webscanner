@@ -39,7 +39,7 @@ class PluginPlainTextEmail(PluginMixin):
                             continue
                         
             for file in filelist:
-                log.debug("Analizing file %s "%(file))
+                #log.debug("Analizing file %s "%(file))
                 memFile = open(file)
                 for line in memFile.readlines():
                     match = re.search("[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}",line)
