@@ -65,13 +65,11 @@ def scan_progress(request, uuid):
 def check_results(request, uuid):
     test = Tests.objects.filter(uuid=uuid).get()
    
-   
-    #TODO: move lastresult storage to client
-    lastresult = request.session.get('lastresult_'+str(uuid), False)
-    if not lastresult:
-        lastresult = 0;
-    
-    results = Results.objects.filter(test=test).filter(pk__gt = lastresult)
+    last = request.GET.get("last")
+    if not last:
+        last=0
+       
+    results = Results.objects.filter(test=test).filter(pk__gt = last)
     
     foo = []
     for result in results:
@@ -79,12 +77,11 @@ def check_results(request, uuid):
                     'output_full':result.output_full,
                     'status': result.status,
                     'importance': result.importance,
+                    'id': result.pk,
                     'group': result.group})
-        if result.pk > lastresult:
-            lastresult = result.pk
-    
-    request.session['lastresult_'+str(uuid)] = lastresult;
-    
+        #if result.pk > lastresult:
+            #lastresult = result.pk
+        
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(foo)), mimetype='application/json')
     
     

@@ -27,8 +27,7 @@
 {% block content %}
 <section id="results">
 <h1>SCAN Results for <a href="{{ test.url }}">{{ test.url }}</a></h1>
-
-{{ test.uuid }}
+<!-- test uuid: {{ test.uuid }} -->
 
 <div id="progressbar"></div>
 
@@ -101,10 +100,9 @@ var statuses_ok = 0;
 var statuses_error = 0;
 var statuses_warning = 0;
 var statuses_info = 0;
-
 var rate_curr = 0;
 var rate_max = 0;
-
+var last_result = 0;
 
 var s = 0;
 $("#progressbar").progressbar({ value: 0 });
@@ -193,10 +191,11 @@ check_progress();
 
 function check_results(){
     $.ajax({
-        url: "{% url scanner.views.check_results test.uuid %}",
+        url: "{% url scanner.views.check_results test.uuid %}?last="+last_result,
         data: "",
         success: function(data) {
             $.each(data, function(key, value) { 
+                if (value.id > last_result) last_result=value.id
                 add_result(value.status, value.output_desc, value.output_full, value.group, value.importance)
             });
             if (finished == 0) window.setTimeout(check_results,1000);   
