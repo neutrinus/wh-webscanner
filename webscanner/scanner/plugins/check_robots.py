@@ -27,17 +27,19 @@ class PluginCheckRobots(PluginMixin):
         
         try:
             from scanner.models import Results
-            res = Results(test=command.test, group = RESULT_GROUP.general)
+            res = Results(test=command.test, group = RESULT_GROUP.general,importance=2)
 
             res.output_desc = unicode(_("robots.txt"))            
             res.output_full = '<p><a href="http://www.robotstxt.org/">robots.txt</a> file is used to control automatic software (like Web Wanderers, Crawlers, or Spiders). </p> '
             res.status = RESULT_STATUS.success            
-            
+            output = ""
             try:
                 req = urllib2.Request(robotsurl)
                 req.add_header('Referer', 'http://webcheck.me/')
                 result = urllib2.urlopen(req)
-                output = result.read()    
+                
+                for line in result.readlines():
+                    output +=  "%s<br />"%(line)
                 res.output_full += '<p>robots.txt is present:<code>%s</code></p>'%(output)
                 
             except urllib2.HTTPError, e:
