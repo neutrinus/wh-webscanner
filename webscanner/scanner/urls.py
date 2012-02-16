@@ -7,6 +7,10 @@ scannerpatterns = patterns('',
         url(r'^results/?$', results),
         url(r'^check_results/?$', check_results),
         url(r'^scan_progress/?$', scan_progress),
+        url(r'^reports/(?P<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/?$', show_report),
+
 )
+
+
 
 

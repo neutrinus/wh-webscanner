@@ -19,21 +19,16 @@ from logs import log
 
 
 def index(request):
-	#recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
-
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
 
-
-
 def results(request):
-    
     if request.method == 'POST':
         url = request.POST.get("url")
-        log.debug("User requested tests for url:%s"%(url))
+        log.debug("User ordered report for url:%s"%(url))
         
+        #basic url validiation
         if not urlparse(url).scheme:
-            url = "http://"+url
-        
+            url = "http://"+url        
         if urlparse(url).scheme not in ["http","https"]:
             return redirect('/')    
         
@@ -41,35 +36,38 @@ def results(request):
         test.save()
         request.session['testid'] = test.pk;
             
+        # order all posible commands 
         for testname,plugin in TESTDEF_PLUGINS:
             oplugin = PLUGINS[ testname ]()    
             a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
             a.save()
     
-        return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
+        #TODO: please dont hardcode urls..
+        return redirect('/reports/'+ test.uuid)
     else:
         return redirect('/')
-        
-    
-    #recipe_list = Recipe.objects.filter(is_deleted=False).order_by('-created_at')
-    
-    
 
-def scan_progress(request):
+def show_report(request, uuid):
+    #get_object_or_404 ?
+    test = Tests.objects.filter(uuid=uuid).get()
+    
+    request.session['testid'] = test.pk;
+
+    return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
+
+def scan_progress(request, uuid=None):
     testid = request.session.get('testid', False)
-    
     test = Tests(pk=testid)
-    
+
     commands_count = CommandQueue.objects.filter(test=test).count()
     commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
         
-    #print req.GET, req.POST
     data = {'testid':testid, 'ordered': commands_count, "done": commands_done_count}
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
         
     
     
-def check_results(request,last_date=None):
+def check_results(request, uuid=None):
     testid = request.session.get('testid', False)
     test = Tests(pk=testid)
 
