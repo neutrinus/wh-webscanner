@@ -19,10 +19,6 @@
 
 </style>
 
-
-<script type="text/javascript">
-testid = {{ test.pk }};
-</script>
 {% endblock %}
 
 
@@ -179,7 +175,7 @@ function add_result(status, output_desc, output_full, group, importance) {
 
 function check_progress(){
     $.ajax({
-        url: "{% url scanner.views.scan_progress %}",
+        url: "{% url scanner.views.scan_progress test.uuid %}",
         data: "",
         success: function(data) {
             $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
@@ -197,7 +193,7 @@ check_progress();
 
 function check_results(){
     $.ajax({
-        url: "{% url scanner.views.check_results %}",
+        url: "{% url scanner.views.check_results test.uuid %}",
         data: "",
         success: function(data) {
             $.each(data, function(key, value) { 

@@ -34,7 +34,6 @@ def results(request):
         
         test = Tests(url=url)
         test.save()
-        request.session['testid'] = test.pk;
             
         # order all posible commands 
         for testname,plugin in TESTDEF_PLUGINS:
@@ -49,29 +48,26 @@ def results(request):
 
 def show_report(request, uuid):
     #get_object_or_404 ?
-    test = Tests.objects.filter(uuid=uuid).get()
-    
-    request.session['testid'] = test.pk;
+    test = get_object_or_404(Tests, uuid=uuid)
 
     return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
 
-def scan_progress(request, uuid=None):
-    testid = request.session.get('testid', False)
-    test = Tests(pk=testid)
+def scan_progress(request, uuid):
+    test = Tests.objects.filter(uuid=uuid).get()
 
     commands_count = CommandQueue.objects.filter(test=test).count()
     commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
         
-    data = {'testid':testid, 'ordered': commands_count, "done": commands_done_count}
+    data = {'ordered': commands_count, "done": commands_done_count}
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
         
     
-    
-def check_results(request, uuid=None):
-    testid = request.session.get('testid', False)
-    test = Tests(pk=testid)
-
-    lastresult = request.session.get('lastresult', False)
+def check_results(request, uuid):
+    test = Tests.objects.filter(uuid=uuid).get()
+   
+   
+    #TODO: move lastresult storage to client
+    lastresult = request.session.get('lastresult_'+str(uuid), False)
     if not lastresult:
         lastresult = 0;
     
@@ -87,10 +83,8 @@ def check_results(request, uuid=None):
         if result.pk > lastresult:
             lastresult = result.pk
     
-    request.session['lastresult'] = lastresult;
+    request.session['lastresult_'+str(uuid)] = lastresult;
+    
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(foo)), mimetype='application/json')
     
     
-    
-    
-

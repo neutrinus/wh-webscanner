@@ -128,7 +128,7 @@ def downloader():
                 
                 test.download_status = STATUS.success
                 test.save()
-                log.info('Downloading website %s finished'%(test.domain))
+                log.info('Downloading website %s finished'%(test.url))
 
             else:
                 sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer
