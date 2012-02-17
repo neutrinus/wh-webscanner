@@ -51,7 +51,7 @@ def worker():
                     #this should dissallow two concurrent workers for the same commandqueue object
                     CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
                     
-                    #ctest.status = STATUS.running
+                    ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
                     log.info('Processing command %s(%s) for %s (queue len:%s)'%(ctest.testname,ctest.pk,ctest.test.url,CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).count() ))
