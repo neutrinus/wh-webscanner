@@ -114,6 +114,7 @@ function add_screenshot(status, output_desc, output_full, group) {
     screenshots_count += 1;
     if (screenshots_count = 1) {
         $("#screenshots").fadeIn("slow");
+        start_slider();
         }
 }
 
@@ -206,7 +207,7 @@ function check_results(){
             if ($("#progressbar").progressbar("value") == 100) {
                 finished = 1;
                 $("#congratulations").fadeIn("slow");
-                start_slider();
+                
                 var rate = Math.pow(rate_curr/rate_max,2)
                 $("#rating").text(( (rate)*10).toFixed(1))
             }
