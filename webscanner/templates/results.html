@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block title %}Check Results{% endblock %}
+{% block title %}Report for {{ test.domain }} {% endblock %}
 
 {% block extrahead %} 
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
@@ -16,7 +16,6 @@
 
 <style>
 .ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif);  }
-
 </style>
 
 {% endblock %}
@@ -94,6 +93,7 @@
 
 
 <script type="text/javascript">
+var screenshots_count = 0;
 var finished = 0;
 var timer_val = 0;
 var statuses_ok = 0;
@@ -110,7 +110,11 @@ $("#screenshots").fadeOut();
 
 
 function add_screenshot(status, output_desc, output_full, group) {
-    $("#screenshots")[0].innerHTML += output_full
+    $("#screenshots")[0].innerHTML += output_full;
+    screenshots_count += 1;
+    if (screenshots_count = 1) {
+        $("#screenshots").fadeIn("slow");
+        }
 }
 
 function add_result(status, output_desc, output_full, group, importance) {
@@ -201,7 +205,6 @@ function check_results(){
             if (finished == 0) window.setTimeout(check_results,1000);   
             if ($("#progressbar").progressbar("value") == 100) {
                 finished = 1;
-                $("#screenshots").fadeIn("slow");
                 $("#congratulations").fadeIn("slow");
                 start_slider();
                 var rate = Math.pow(rate_curr/rate_max,2)
