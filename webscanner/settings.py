@@ -151,10 +151,10 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     #our apps
     'scanner',
-    'addonsapp',
     #'gpayments',
 
     #3rd party apps,
+    'autoroot',
     'django_extensions', 
     'model_utils',
     'django_filters',
