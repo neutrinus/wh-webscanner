@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="Nowy dokument 1">
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/marek/projekty/wh-webscanner/docs/logo.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -31,9 +34,9 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1032"
-     inkscape:window-x="1918"
-     inkscape:window-y="1077"
+     inkscape:window-height="1060"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -52,12 +55,12 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#000000;fill-opacity:0.84067796;stroke:#000000"
+       style="fill:#000000;fill-opacity:0.84067796;stroke:#000000;stroke-width:0.51551354"
        id="rect2985"
-       width="339.28571"
-       height="155"
-       x="99.653374"
-       y="142.83138" />
+       width="277.14072"
+       height="50.428619"
+       x="129.71571"
+       y="187.03584" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:rsfs10;-inkscape-font-specification:rsfs10 Bold Italic"
