@@ -30,7 +30,7 @@ class PluginPlainTextEmail(PluginMixin):
             filelist = []
             for root, dirs, files in os.walk(path):
                 for file in files:
-                    if re.search('(.html)|(.php)|(.xml)',file) is not None:
+                    if re.search('(.html)|(.php)|(.xml)|(.txt)|(.htm)|(.js)',file) is not None:
                         filelist.append(root+"/"+file)
                         
             for file in filelist:
