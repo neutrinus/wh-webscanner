@@ -187,7 +187,7 @@ function check_progress(){
                 $("#progressbar").fadeOut();
             }
         },
-        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        error:function (xhr, ajaxOptions, thrownError){ console.log(xhr.status + thrownError);},
         dataType: "jsonp"
     });  
 }
@@ -211,7 +211,7 @@ function check_results(){
                 $("#rating").text(( (rate)*10).toFixed(1))
             }
         },
-        error:function (xhr, ajaxOptions, thrownError){ alert(xhr.status + thrownError);},
+        error:function (xhr, ajaxOptions, thrownError){ console.log(xhr.status + thrownError);},
         dataType: "jsonp"
     });  
 }
