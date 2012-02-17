@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
+from __future__ import with_statement
 import sys
 import os
 import random
@@ -27,12 +28,52 @@ from logs import log
 
 
 
+
 class PluginDomainExpireDate(PluginMixin):
+    
+    tlds = []
+    def __init__(self):
+        try: 
+            # load tlds, ignore comments and empty lines:
+            #https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
+            with open("effective_tld_names.dat.txt") as tldFile:
+                self.tlds = [line.strip() for line in tldFile if line[0] not in "/\n"]
+        except IOError:
+            log.error("Could not find file effective_tld_names.dat.txt")
+
+    #http://stackoverflow.com/questions/1066933/how-to-extract-domain-name-from-url/1069780#1069780
+    def getDomain(self,url, tlds):
+        urlElements = urlparse(url)[1].split('.')
+        # urlElements = ["abcde","co","uk"]
+
+        for i in range(-len(urlElements),0):
+            lastIElements = urlElements[i:]
+            #    i=-3: ["abcde","co","uk"]
+            #    i=-2: ["co","uk"]
+            #    i=-1: ["uk"] etc
+
+            candidate = ".".join(lastIElements) # abcde.co.uk, co.uk, uk
+            wildcardCandidate = ".".join(["*"]+lastIElements[1:]) # *.co.uk, *.uk, *
+            exceptionCandidate = "!"+candidate
+
+            # match tlds: 
+            if (exceptionCandidate in tlds):
+                return ".".join(urlElements[i:]) 
+            if (candidate in tlds or wildcardCandidate in tlds):
+                return ".".join(urlElements[i-1:])
+                # returns "abcde.co.uk"
+        raise ValueError("Domain not in global list of TLDs")
+
+    
+
+    
+    
     name = unicode(_("Check domain expiration date"))
     wait_for_download = False
     
     def run(self, command):
-        domain = urlparse(command.test.url).hostname
+        domain = self.getDomain(command.test.url,self.tlds)
+        log.debug("Checking whois data for %s"%(domain))
         
         #time.sleep(1)
         try:
@@ -98,6 +139,3 @@ class PluginDomainExpireDate(PluginMixin):
         raise NameError("Unsupported date format: " + str(date_str))
         return None
 
-
-if __name__ == '__main__':
-    main()

@@ -48,6 +48,9 @@ def worker():
                     #ctest = CommandQueue.objects.filter(status = STATUS.waiting)[:1].get()
                     ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
                     
+                    #this should dissallow two concurrent workers for the same commandqueue object
+                    CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
+                    
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
@@ -128,7 +131,7 @@ def downloader():
                 
                 test.download_status = STATUS.success
                 test.save()
-                log.info('Downloading website %s finished'%(test.domain))
+                log.info('Downloading website %s finished'%(test.url))
 
             else:
                 sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer

@@ -31,10 +31,15 @@ class PluginPlainTextEmail(PluginMixin):
             for root, dirs, files in os.walk(path):
                 for file in files:
                     if re.search('(.html)|(.php)|(.xml)|(.txt)|(.htm)|(.js)',file) is not None:
-                        filelist.append(root+"/"+file)
+                        #filelist.append(root+"/"+file)
+                        #TODO:do it properly
+                        try:
+                            filelist.append(unicode(root)+unicode("/")+unicode(file))
+                        except UnicodeDecodeError:
+                            continue
                         
             for file in filelist:
-                log.debug("Analizing file %s "%(file))
+                #log.debug("Analizing file %s "%(file))
                 memFile = open(file)
                 for line in memFile.readlines():
                     match = re.search("[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}",line)
@@ -49,7 +54,7 @@ class PluginPlainTextEmail(PluginMixin):
             
             if efound:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>We found: <code>%s</code> </p>"%(efound)))
+                res.output_full += unicode(_("<p>We have found folowing email addreses: <code>%s</code> </p>"%(efound)))
             else:
                 res.status = RESULT_STATUS.success
                 res.output_full += unicode(_("<p>OK, we didnt found any plaintext e-mail addreses on your website.</p>"))

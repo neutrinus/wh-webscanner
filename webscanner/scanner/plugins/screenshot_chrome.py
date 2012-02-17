@@ -53,7 +53,8 @@ class PluginMakeScreenshotChrome(PluginMixin):
             res.output_full = '<a href="/static/%s"><img src="/static/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,"Google Chrome",browser.capabilities['version'])
             res.save()
 
-            browser.close()           
+            browser.close() 
+            sleep(2)
             display.sendstop()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))

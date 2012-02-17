@@ -27,9 +27,6 @@ from logs import log
 
 
 #http://pypi.python.org/pypi/selenium        
-#http://code.google.com/p/fighting-layout-bugs/
-#http://code.google.com/p/webpagetest/source/browse/#svn%2Ftrunk%2Fagent%2Fbrowser%2Ffirefox
-#https://developers.google.com/pagespeed/#url=guardier.com&mobile=false&rule=MinifyHTML    
 
 
 class PluginMakeScreenshotFirefox(PluginMixin):    
@@ -60,7 +57,8 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             )
             res.save()
 
-            browser.close()           
+            browser.close()      
+            sleep(2)
             display.sendstop()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))

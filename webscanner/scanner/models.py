@@ -5,6 +5,8 @@ from django.db import models
 from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_language)
 from django.contrib.auth.models import User 
 from django.core.exceptions import ValidationError
+from django_extensions.db.fields import UUIDField
+
 from django.conf import settings
 
 #3rd party import
@@ -53,6 +55,7 @@ from scanner.plugins.screenshot_firefox import PluginMakeScreenshotFirefox
 from scanner.plugins.screenshot_chrome import PluginMakeScreenshotChrome
 from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
+from scanner.plugins.check_robots import PluginCheckRobots
 
 
 
@@ -70,13 +73,15 @@ PLUGINS = dict((
     ('screenshot_ff', PluginMakeScreenshotFirefox ),
     ('screenshot_chrome', PluginMakeScreenshotChrome ),
     ('check_surbl', PluginSURBL ),
-    ('check_plainemail', PluginPlainTextEmail ),
+    ('check_robots', PluginCheckRobots ),
+    #('check_plainemail', PluginPlainTextEmail ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
+        
         
 class Tests(models.Model):
     url                 =   models.CharField(max_length=600,blank=1,null=1,db_index=True)
@@ -86,6 +91,7 @@ class Tests(models.Model):
     
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
+    uuid                =   UUIDField()
     
     def __unicode__(self):
         return "%s"%(self.url)
@@ -113,7 +119,6 @@ class CommandQueue(models.Model):
         return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
 
-        
 class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="results for test")    
     
