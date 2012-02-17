@@ -57,7 +57,8 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             )
             res.save()
 
-            browser.close()           
+            browser.close()      
+            sleep(2)
             display.sendstop()
             
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,STATIC_ROOT+"/"+filename))
