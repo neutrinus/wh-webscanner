@@ -16,6 +16,7 @@ django-model-utils==1.0.0
 #django-recaptcha-works==0.3.4 #moze sie przydac pozniej
 django-tables2==0.7.0
 django-registration
+django-autoroot
 South==0.7.3
 
 
