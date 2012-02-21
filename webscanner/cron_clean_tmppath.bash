@@ -5,4 +5,4 @@ if [ -f $PATH_TMPSCAN ]; then
     exit 1
 fi
 
-find $PATH_TMPSCAN/* -mtime +60 -exec rm {} \;
+find $PATH_TMPSCAN/* -mtime +3 -exec rm {} \;
