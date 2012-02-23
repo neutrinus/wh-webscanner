@@ -24,7 +24,7 @@ def index(request):
 def results(request):
     if request.method == 'POST':
         url = request.POST.get("url")
-        log.debug("User ordered report for url:%s"%(url))
+        
         
         #basic url validiation
         if not urlparse(url).scheme:
@@ -34,7 +34,9 @@ def results(request):
         
         test = Tests(url=url)
         test.save()
-            
+        
+        log.debug("User ordered report for url:%s, report_uuid:%s"%(url,test.uuid))
+        
         # order all posible commands 
         for testname,plugin in TESTDEF_PLUGINS:
             oplugin = PLUGINS[ testname ]()    

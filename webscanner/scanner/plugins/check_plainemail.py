@@ -30,11 +30,11 @@ class PluginPlainTextEmail(PluginMixin):
             filelist = []
             for root, dirs, files in os.walk(path):
                 for file in files:
-                    if re.search('(.html)|(.php)|(.xml)',file) is not None:
+                    if re.search('(.html)|(.php)|(.xml)|(.txt)|(.htm)|(.js)',file) is not None:
                         #filelist.append(root+"/"+file)
                         #TODO:do it properly
                         try:
-                            filelist.append(unicode(root)+unicode("/")+unicode(file))
+                            filelist.append(os.path.join(root,file))
                         except UnicodeDecodeError:
                             continue
                         

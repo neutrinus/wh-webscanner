@@ -13,20 +13,19 @@ TEMPLATE_DEBUG = DEBUG
 INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
     ('neutrinus', 'admin@neutrinus.com'),
     
 )
 MANAGERS = ADMINS
 
 ACCOUNT_ACTIVATION_DAYS=1
-DEFAULT_FROM_EMAIL = 'andrzej.niedzielan@wp.pl'
-EMAIL_HOST='smtp.wp.pl'
+DEFAULT_FROM_EMAIL = 'root@localhost'
+EMAIL_HOST='localhost'
 EMAIL_PORT=587
-EMAIL_HOST_USER='andrzej.niedzielan'
-EMAIL_HOST_PASSWORD='guardier2012'
+EMAIL_HOST_USER='root'
+EMAIL_HOST_PASSWORD='xxx'
 EMAIL_USE_TLS=False
-EMAIL_SUBJECT_PREFIX='[webscanner]'
+EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
 LOGIN_REDIRECT_URL = '/user/welcome/'
 LOGIN_URL = '/user/login/'
@@ -57,14 +56,10 @@ CACHES = {
         'OPTIONS':{
             'MAX_ENTRIES':10000,
         },
-#        'KEY_FUNCTION':make_cache_key,
-#        'KEY_PREFIX':'guardier',
-         
     }
 }
 
 TIME_ZONE = 'Europe/Warsaw'
-
 
 LANGUAGE_CODE = 'pl'
 
@@ -151,10 +146,10 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     #our apps
     'scanner',
-    'addonsapp',
     #'gpayments',
 
     #3rd party apps,
+    'autoroot',
     'django_extensions', 
     'model_utils',
     'django_filters',
