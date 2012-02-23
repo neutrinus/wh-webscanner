@@ -54,7 +54,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
                 res.output_full = unicode(_('<p>Your domain is listed at Google Safe Browsing Blacklist because of %s. <a href="http://www.google.com/safebrowsing/diagnostic?site=%s">Check it at google</a>. Please check your website because its possible that there is %s.</p> '%(domain,httpbody,httpbody) ) + message) 
                 res.status = RESULT_STATUS.error
             else:
-                log.exception("Google sent non expected http code:%s body:%s "%(httpcode,httpbody) )
+                log.exception("Google sent non expected http code:%s body:%s "%(httpstatus,httpbody) )
                 return STATUS.exception        
             res.save()
 
