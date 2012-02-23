@@ -93,9 +93,9 @@
 
 
 <script type="text/javascript">
-
 var finished = 0;
-var timer_val = 0;
+// miliseconds counter
+var timer_val = 0; 
 var statuses_ok = 0;
 var statuses_error = 0;
 var statuses_warning = 0;
@@ -177,6 +177,9 @@ function check_progress(){
         data: "",
         success: function(data) {
             $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
+            timer_val = (data.test_duration.toFixed(0) )*10
+            $("#timer").text(timer_val/10)
+
             if (data.done/data.ordered != 1) {
                 window.setTimeout(check_progress,1500);
             } else {

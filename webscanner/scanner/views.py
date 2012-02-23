@@ -13,6 +13,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.sitemaps import ping_google
 from django.http import HttpResponse
 from urlparse import urlparse
+from datetime import datetime
 from annoying.decorators import render_to
 from scanner.models import *
 from logs import log
@@ -55,12 +56,23 @@ def show_report(request, uuid):
     return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
 
 def scan_progress(request, uuid):
+    from django.db.models import Max
     test = Tests.objects.filter(uuid=uuid).get()
 
     commands_count = CommandQueue.objects.filter(test=test).count()
     commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
-        
-    data = {'ordered': commands_count, "done": commands_done_count}
+
+    if commands_count == commands_done_count: 
+        #all test finished
+        last_command = CommandQueue.objects.filter(test=test).aggregate(Max('finish_date'))['finish_date__max']
+    else:
+        last_command = datetime.now()
+    
+    
+    
+    test_duration = (last_command - test.creation_date).total_seconds()
+    
+    data = {'ordered': commands_count, "done": commands_done_count, "test_duration": test_duration}
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
         
     
