@@ -107,7 +107,7 @@ class Tests(models.Model):
             
 
 class CommandQueue(models.Model):
-    test                =   models.ForeignKey(Tests, related_name="command for test")    
+    test                =   models.ForeignKey(Tests, related_name="commands")    
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     testname            =   models.CharField(max_length=50, choices=TESTDEF_PLUGINS)
     
@@ -120,7 +120,7 @@ class CommandQueue(models.Model):
 
 
 class Results(models.Model):
-    test                =   models.ForeignKey(Tests, related_name="results for test")    
+    test                =   models.ForeignKey(Tests, related_name="result")
     
     status              =   models.IntegerField(choices=RESULT_STATUS)
     group               =   models.IntegerField(choices=RESULT_GROUP)
