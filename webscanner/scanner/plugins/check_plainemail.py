@@ -34,7 +34,7 @@ class PluginPlainTextEmail(PluginMixin):
                         #filelist.append(root+"/"+file)
                         #TODO:do it properly
                         try:
-                            filelist.append(unicode(root)+unicode("/")+unicode(file))
+                            filelist.append(os.path.join(root,file))
                         except UnicodeDecodeError:
                             continue
                         
