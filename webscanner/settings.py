@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     #our apps
     'scanner',
-    #'gpayments',
 
     #3rd party apps,
     'autoroot',
@@ -159,8 +158,6 @@ INSTALLED_APPS = (
     
     #'south',
     #'configstore',
-    #'paypal.standard',
-    #'paypal.standard.ipn',
 
 )
 
@@ -210,7 +207,7 @@ SCREENSHOT_SIZE = (1280,1024)
 ### Third party apps options ###
 ################################
 
-#PAYPAL_RECEIVER_EMAIL = 'tomeks_1317573182_biz@gmail.com'
+#PAYPAL_RECEIVER_EMAIL = 'kakak@gmail.com'
 #PAYPAL_ENCRYPTED = True # post data (for button) should be encrypted?
                         ## require using certificate and key
 ## GIVE RIGHT ABSOLUTE PATHS TO CERTIFICATES (more info in django-paypal)
