@@ -232,4 +232,4 @@ SESSION_COOKIE_SECURE=0
 SESSION_COOKIE_HTTPONLY =1
 
 
-from settings_local import *
+#from settings_local import *
