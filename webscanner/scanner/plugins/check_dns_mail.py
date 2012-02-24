@@ -117,7 +117,7 @@ class PluginDNSmail(PluginMixin):
             res.output_full = unicode(_("<p>The query name does not exist. Probably you should define MX entries in your DNS configuration.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
-            log.debug("NXDOMAIN while asking for MX records: %s"%str(e))
+            log.debug("NXDOMAIN while asking for MX records. ")
             
         except StandardError,e:
             log.exception("%s"%str(e))
