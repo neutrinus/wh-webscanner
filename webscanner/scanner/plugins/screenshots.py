@@ -64,7 +64,7 @@ class PluginMakeScreenshots(PluginMixin):
             #give a bit time for loading async-js
             sleep(random.uniform(2,5))
             browser.save_screenshot(MEDIA_ROOT+"/"+filename)
-
+            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
             timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
             #build javascript table with timing values
             jscode += "var timingdata_%s = [ "%(browsername)
@@ -76,6 +76,7 @@ class PluginMakeScreenshots(PluginMixin):
             res.output_full = '<a href="/media/%s"><img src="/media/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,browsername,browser.capabilities['version']
             )
             res.save()
+            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
             browser.close()      
             sleep(1)
             
@@ -132,7 +133,7 @@ class PluginMakeScreenshots(PluginMixin):
         
         display.sendstop()
         
-        log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
+
         #there was no exception - test finished with success
         return STATUS.success
 
