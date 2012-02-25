@@ -60,20 +60,20 @@ from scanner.plugins.check_robots import PluginCheckRobots
 
 
 PLUGINS = dict((
-    #('http_code', PluginCheckHTTPCode ),
-    #('w3c_valid', PluginCheckW3CValid ),
-    #('googlesb', PluginGoogleSafeBrowsing ),
-    #('domainexpdate', PluginDomainExpireDate ),
-    #('clamav', PluginClamav ),
-    #('dns', PluginDNS ),
-    #('dns_mail', PluginDNSmail ),
-    #('dns_mail_rbl', PluginDNSmailRBL ),
-    #('pagerank', PluginPagerank ),
-    #('mail', PluginMail ),
+    ('http_code', PluginCheckHTTPCode ),
+    ('w3c_valid', PluginCheckW3CValid ),
+    ('googlesb', PluginGoogleSafeBrowsing ),
+    ('domainexpdate', PluginDomainExpireDate ),
+    ('clamav', PluginClamav ),
+    ('dns', PluginDNS ),
+    ('dns_mail', PluginDNSmail ),
+    ('dns_mail_rbl', PluginDNSmailRBL ),
+    ('pagerank', PluginPagerank ),
+    ('mail', PluginMail ),
     ('screenshot_ff', PluginMakeScreenshotFirefox ),
-    #('screenshot_chrome', PluginMakeScreenshotChrome ),
-    #('check_surbl', PluginSURBL ),
-    #('check_robots', PluginCheckRobots ),
+    ('screenshot_chrome', PluginMakeScreenshotChrome ),
+    ('check_surbl', PluginSURBL ),
+    ('check_robots', PluginCheckRobots ),
     #('check_plainemail', PluginPlainTextEmail ),
 ))
 
