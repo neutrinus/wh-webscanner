@@ -29,8 +29,8 @@ from logs import log
 #http://pypi.python.org/pypi/selenium        
 #https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
 
-class PluginMakeScreenshotFirefox(PluginMixin):
-    name = unicode(_('Screenshot in Firefox'))
+class PluginMakeScreenshots(PluginMixin):
+    name = unicode(_('Screenshots'))
     wait_for_download = False
     
     def run(self, command):

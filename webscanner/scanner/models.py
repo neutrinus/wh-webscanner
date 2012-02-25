@@ -51,8 +51,7 @@ from scanner.plugins.check_dns import PluginDNS
 from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
 from scanner.plugins.check_pagerank import PluginPagerank
 from scanner.plugins.check_mail import PluginMail
-from scanner.plugins.screenshot_firefox import PluginMakeScreenshotFirefox
-from scanner.plugins.screenshot_chrome import PluginMakeScreenshotChrome
+from scanner.plugins.screenshots import PluginMakeScreenshots
 from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
@@ -60,20 +59,20 @@ from scanner.plugins.check_robots import PluginCheckRobots
 
 
 PLUGINS = dict((
-    ('http_code', PluginCheckHTTPCode ),
-    ('w3c_valid', PluginCheckW3CValid ),
-    ('googlesb', PluginGoogleSafeBrowsing ),
-    ('domainexpdate', PluginDomainExpireDate ),
-    ('clamav', PluginClamav ),
-    ('dns', PluginDNS ),
-    ('dns_mail', PluginDNSmail ),
-    ('dns_mail_rbl', PluginDNSmailRBL ),
-    ('pagerank', PluginPagerank ),
-    ('mail', PluginMail ),
-    ('screenshot_ff', PluginMakeScreenshotFirefox ),
-    ('screenshot_chrome', PluginMakeScreenshotChrome ),
-    ('check_surbl', PluginSURBL ),
-    ('check_robots', PluginCheckRobots ),
+    #('http_code', PluginCheckHTTPCode ),
+    #('w3c_valid', PluginCheckW3CValid ),
+    #('googlesb', PluginGoogleSafeBrowsing ),
+    #('domainexpdate', PluginDomainExpireDate ),
+    #('clamav', PluginClamav ),
+    #('dns', PluginDNS ),
+    #('dns_mail', PluginDNSmail ),
+    #('dns_mail_rbl', PluginDNSmailRBL ),
+    #('pagerank', PluginPagerank ),
+    #('mail', PluginMail ),
+    ('screenshots', PluginMakeScreenshots ),
+    #('screenshot_chrome', PluginMakeScreenshotChrome ),
+    #('check_surbl', PluginSURBL ),
+    #('check_robots', PluginCheckRobots ),
     #('check_plainemail', PluginPlainTextEmail ),
 ))
 
