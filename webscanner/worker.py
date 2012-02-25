@@ -45,7 +45,6 @@ def worker():
             #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
-                    #ctest = CommandQueue.objects.filter(status = STATUS.waiting)[:1].get()
                     ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
                     
                     #this should dissallow two concurrent workers for the same commandqueue object
@@ -73,17 +72,16 @@ def worker():
                 try:
                     # uruchamiamy i czekamy na status
                     ctest.status = plugin.run(ctest)
-                    ctest.finish_date =  datetime.now()
-                    ctest.save()
                     log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))                    
-                    
                 except  Exception,e:
-                    log.exception('Execution failed: %s'%(str(e)))
+                    log.error('Execution failed: %s'%(e))
                     stdout_value = None
                     ctest.status = STATUS.exception
-                    ctest.finish_date =  datetime.now()
-                    ctest.save()
-                                    
+                
+                ctest.finish_date =  datetime.now()
+                ctest.save()
+                
+                    
             else:
                 sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
         except  Exception,e:
@@ -120,8 +118,6 @@ def downloader():
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
                 (stdoutdata, stderrdata) = p.communicate()
-
-                #print stderrdata
                 
                 #if p.returncode != 0:
                     #test.download_status = STATUS.exception

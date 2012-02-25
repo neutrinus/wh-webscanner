@@ -34,86 +34,105 @@ class PluginMakeScreenshotFirefox(PluginMixin):
     wait_for_download = False
     
     def run(self, command):
-        domain = command.test.url
+        url = command.test.url
         from scanner.models import Results
-       
-        try:
-            filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
-            display = Display(visible=0,size=SCREENSHOT_SIZE)
-            display.start()
-            log.debug("VDisplay started: %s "%(str(display)))
 
-            browser = webdriver.Firefox()
-            log.debug("Firefox started: %s "%(str(browser)))
-            browser.get(domain)
+        display = Display(visible=0,size=SCREENSHOT_SIZE)
+        display.start()
+        log.debug("VDisplay started: %s "%(str(display)))
+        jscode = ""
+        timing = {}
+        
+        browsernames = ["firefox", "chrome"]
+        
+        jscode += "var browsernames = [ "
+        for browsername in browsernames:
+            jscode += '"%s",'%(browsername)
+        jscode += "]; \n"
+        
+        for browsername in browsernames:
+            filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
+
+            if browsername == "firefox":
+                browser = webdriver.Firefox()
+            if browsername == "chrome":
+                browser = webdriver.Chrome()
+                
+            log.debug("Browser %s started: %s "%(browsername, str(browser)))
+            browser.get(url)
+            
+            #give a bit time for loading async-js
             sleep(random.uniform(2,5))
             browser.save_screenshot(MEDIA_ROOT+"/"+filename)
 
-            timing = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+            timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+            #build javascript table with timing values
+            jscode += "var timingdata_%s = [ "%(browsername)
+            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                jscode += "['%s',%s ],"%(time, timing[browsername][time]-timing[browsername]["navigationStart"])
+            jscode += "]; \n"
             
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.screenshot
-            res.status = RESULT_STATUS.info
-            res.output_desc = unicode(_("Firefox")) 
-            res.output_full = '<a href="/media/%s"><img src="/media/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,"Firefox",browser.capabilities['version']
+            res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
+            res.output_full = '<a href="/media/%s"><img src="/media/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,browsername,browser.capabilities['version']
             )
             res.save()
-
-            res = Results(test=command.test)
-            res.group = RESULT_GROUP.general
-            res.status = RESULT_STATUS.success
-            res.output_desc = unicode(_("Webpage load time")) 
-            res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>")) 
-            
-            jscode = "<div id='timing_plot' style='height:400px;width:580px;'></div><script> \
-var tdata = [ "
-
-            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                jscode += "['%s',%s ],"%(time, timing[time]-timing["navigationStart"])
-            
-            jscode += "]; \n  \
-    var timing_plot = jQuery.jqplot('timing_plot', [tdata],    \
-    {   \
-    title: 'Loadtime - events', \
-    axesDefaults: { \
-        tickRenderer: $.jqplot.CanvasAxisTickRenderer , \
-        tickOptions: { \
-          angle: -70, \
-          fontSize: '10pt' \
-        } \
-    }, \
-    axes: { \
-      xaxis: { \
-        renderer: $.jqplot.CategoryAxisRenderer, \
-      }, \
-      yaxis: { \
-        pad: 0, \
-        label: 'time [milisecs]', \
-      } \
-    }, \
-    }); \
-    </script> \
-    "
-    
-            loadtime = timing["loadEventEnd"]-timing["navigationStart"]
-            res.output_full += jscode
-            res.output_full += "<p>Loading your website took <b>%s</b> milisecs.<p>"%(loadtime)
-            if loadtime > 4000:
-                res.status = RESULT_STATUS.warning
-            if loadtime > 12000:
-                res.status = RESULT_STATUS.error
-            res.save()
-
-            
-            
             browser.close()      
-            sleep(2)
-            display.sendstop()
+            sleep(1)
             
-            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
-            #there was no exception - test finished with success
-            return STATUS.success
-        except Exception,e:
-            log.exception("Error while creating screenshot: %s "%(e))
-            return STATUS.exception
+
+        res = Results(test=command.test, group = RESULT_GROUP.general, status = RESULT_STATUS.success)
+        res.output_desc = unicode(_("Webpage load time")) 
+        res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>")) 
+        
+        res.output_full += "<div id='timing_plot' style='height:400px;width:580px;'></div><script>\n"
+                
+        jscode += "var timing_plot =  jQuery.jqplot('timing_plot', ["
+        for browsername in browsernames:
+            jscode += "timingdata_%s,"%(browsername)
+        jscode += "],    \
+            {   \
+            title: 'Loadtime - events', \
+            axesDefaults: { \
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer , \
+                tickOptions: { \
+                angle: -70, \
+                fontSize: '10pt' \
+                } \
+            }, \
+            legend: { show:true, location: 'w', labels: browsernames}, \
+            axes: { \
+            xaxis: { \
+                renderer: $.jqplot.CategoryAxisRenderer, \
+            }, \
+            yaxis: { \
+                pad: 0, \
+                label: 'time [milisecs]', \
+            } \
+            }, \
+            }); \
+            </script> \
+            "
+            
+            
+        loadtime=0
+        for browsername in browsernames:
+            tmp =  timing[browsername]["loadEventEnd"]-timing[browsername]["navigationStart"]
+            if tmp > loadtime:
+                loadtime = tmp
+            
+        res.output_full += jscode
+        res.output_full += "<p>Loading your website took <b>%s</b> milisecs (at maximum).</p>"%(loadtime)
+        if loadtime > 5000:
+            res.status = RESULT_STATUS.warning
+        if loadtime > 15000:
+            res.status = RESULT_STATUS.error
+        res.save()
+
+        
+        
+        display.sendstop()
+        
+        log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
+        #there was no exception - test finished with success
+        return STATUS.success
 
