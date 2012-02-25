@@ -27,9 +27,9 @@ from logs import log
 
 
 #http://pypi.python.org/pypi/selenium        
+#https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
 
-
-class PluginMakeScreenshotFirefox(PluginMixin):    
+class PluginMakeScreenshotFirefox(PluginMixin):
     name = unicode(_('Screenshot in Firefox'))
     wait_for_download = False
     
@@ -51,7 +51,6 @@ class PluginMakeScreenshotFirefox(PluginMixin):
 
             timing = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
             
-            
             res = Results(test=command.test)
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
@@ -64,18 +63,44 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             res.group = RESULT_GROUP.general
             res.status = RESULT_STATUS.success
             res.output_desc = unicode(_("Webpage load time")) 
-            res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowsers. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 3000 milisecs, very slow more than 10000 milisecs.</p>")) 
-
-            res.output_full += "<code>"
-            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                res.output_full += "%s: %s <br />"%(time, timing[time]-timing["navigationStart"])
-            res.output_full += "</code>"
+            res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>")) 
             
+            jscode = "<div id='timing_plot' style='height:400px;width:580px;'></div><script> \
+var tdata = [ "
+
+            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                jscode += "['%s',%s ],"%(time, timing[time]-timing["navigationStart"])
+            
+            jscode += "]; \n  \
+    var timing_plot = jQuery.jqplot('timing_plot', [tdata],    \
+    {   \
+    title: 'Loadtime - events', \
+    axesDefaults: { \
+        tickRenderer: $.jqplot.CanvasAxisTickRenderer , \
+        tickOptions: { \
+          angle: -70, \
+          fontSize: '10pt' \
+        } \
+    }, \
+    axes: { \
+      xaxis: { \
+        renderer: $.jqplot.CategoryAxisRenderer, \
+      }, \
+      yaxis: { \
+        pad: 0, \
+        label: 'time [milisecs]', \
+      } \
+    }, \
+    }); \
+    </script> \
+    "
+    
             loadtime = timing["loadEventEnd"]-timing["navigationStart"]
-            res.output_full += "<p>Loading your website took %s milisecs.<p>"%(loadtime)
-            if loadtime > 3000:
+            res.output_full += jscode
+            res.output_full += "<p>Loading your website took <b>%s</b> milisecs.<p>"%(loadtime)
+            if loadtime > 4000:
                 res.status = RESULT_STATUS.warning
-            if loadtime > 10000:
+            if loadtime > 12000:
                 res.status = RESULT_STATUS.error
             res.save()
 
