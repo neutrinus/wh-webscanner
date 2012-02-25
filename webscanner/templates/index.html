@@ -64,68 +64,13 @@
       
       <!-- scan -->
       <section id="webscanner" >
-             <h1>Scan your site!</h1> <br />
-             <div class="row">
-             
-            <form id="addtestform" action="{% url scanner.views.results %}" method="POST" style="width:100%">
-                {% csrf_token %}
-                <input type="text" id="domain" name="url" style="width:90%;" title="http://example.org" value="" autocomplete = "off" >
-                <input type="submit"  value="Scan" class="button">
-
-                <div id="authbox">
-
-                    <div style="display:block; height:20%; border-color:red; width:95%">You are not logged in. Please login or provide your email to get <b>free</b> scan. </div>
-
-                    <div>
-                        <INPUT id="email" type="text" title="email@example.org" value="" />
-                        <input type="submit" value="Send email" />        
-                    </div>
-
-                    <div>
-                        <INPUT id="login" type="text" title="username" value="" />
-                        <INPUT id="password" type="password" title="password" value="" />
-                        <input type="submit" value="Scan now" />
-                    </div>
-
-                </div>
-            </form>
-            
-                {% if user.is_authenticated %}
-
-                {% else %}
-                <!-- in case when we are not logged in -->
-                <script type="text/javascript">
-                    $('input[type="text"]').each(function(){
-                    
-                        this.value = $(this).attr('title');
-                        $(this).addClass('text-label');
-                    
-                        $(this).focus(function(){
-                            if(this.value == $(this).attr('title')) {
-                                this.value = '';
-                                $(this).removeClass('text-label');
-                            }
-                        });
-                    
-                        $(this).blur(function(){
-                            if(this.value == '') {
-                                this.value = $(this).attr('title');
-                                $(this).addClass('text-label');
-                            }
-                        });
-                    });
-
-//                     $('#addtestform').submit(function() {
-//                         if ($('#authbox').css('display') == 'none'){
-//                             $('#authbox').slideDown('slow');   
-//                             return false;
-//                         }
-//                         
-//                     });
-                </script>
-                {% endif %}
-
-            
+            <h1>Scan your site!</h1> <br />
+            <div class="row">
+                <form id="addtestform" action="{% url scanner.views.results %}" method="POST" style="width:100%">
+                    {% csrf_token %}
+                    <input type="text" id="domain" name="url" style="width:90%;" title="http://example.org" value="" autocomplete = "off" >
+                    <input type="submit"  value="Scan" class="button">
+                </form>
             </div>
 
             <div class="row">
@@ -147,19 +92,15 @@
                     <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
                     You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
                     <p>In the nearest future there will be an option for pro members to send reports by e-mail. You will save more of your precious time!</p>
-
                 </section>
             </div>
-
             <a class="back-to-top" href="#main">Back to Top</a>
       </section>
       
       
       <!-- services -->
       <section id="services" >
-
              <h1>Our checks.</h1>
-
              <div class="row no-bottom-margin">
                 <section class="col">
                     <h2>Compatibility</h2>
@@ -171,12 +112,10 @@
                     <p><img class="align-left" alt="" src="{{ STATIC_URL }}images/services/webdevelopment.png" />We measure how fast does perform your webpage, then give it a note. You will know what should be changed to make it faster. Maybe your page size is too big? Maybe loadtime is too long aswell? Let us check it!</p>
                     <p>Our algorithms will sugest you what can be losslessly <b>minimalized</b> - images, css styles and html.  </p>
                 </section>
-
                 <section class="col">
                     <h2>Security</h2>
                     <p><img class="align-left" alt="" src="{{ STATIC_URL }}images/services/seo-services.png" />Security problems lead to decrease your brand value. React fast on any malware, viruses or hackers attack before they hit your customers. webcheck.me is a perfect tool to monitor and check systematically your website.</p>
                     <p>We provide <b>malware check</b>, scan your website against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</b>.  </p>
-
                 </section>
             </div>
 

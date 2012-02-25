@@ -1,24 +1,16 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block title %}Report for {{ test.domain }} {% endblock %}
+{% block title %}Webscan results for {{ test.domain }} {% endblock %}
 
 {% block extrahead %} 
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
 <link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
 
-
-
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-
-
-
-
-
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pieRenderer.min.js"></script>
-
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.dateAxisRenderer.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasTextRenderer.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasAxisTickRenderer.min.js"></script>
@@ -28,7 +20,6 @@
 <style>
 .ui-progressbar-value { background-image: url({{ STATIC_URL }}css/ui-lightness/images/pbar-ani.gif);  }
 </style>
-
 {% endblock %}
 
 
@@ -37,13 +28,10 @@
 {% block content %}
 <section id="results">
 <h1>SCAN Results for <a href="{{ test.url }}">{{ test.url }}</a></h1>
-<!-- test uuid: {{ test.uuid }} -->
 
 <div id="progressbar"></div>
 
 <br />
-<!-- <h2>Summary</h2> -->
-
      <div class="row">
                 <section class="col">
                     <h3>Don't Wait</h3>
@@ -71,11 +59,8 @@
 
 <div class="row">
     <h2>Screenshots</h2>
-    
     <div class="screenshots-wrapper">
-        <div id="screenshots" class="nivoSlider" style="height:600px">
-
-        </div>
+        <div id="screenshots" class="nivoSlider" style="height:600px"></div>
     </div>
 </div>
 
