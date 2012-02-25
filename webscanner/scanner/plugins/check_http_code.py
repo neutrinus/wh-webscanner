@@ -35,7 +35,9 @@ class PluginCheckHTTPCode(PluginMixin):
        
         try:
             conn = httplib.HTTPConnection(command.test.domain(),command.test.port())
-            conn.request("HEAD", "/",body="",headers={'Accept-Encoding': 'gzip,deflate,bzip2,exi'})  
+            conn.request("HEAD", "/",body="",headers={  'Accept-Encoding': 'gzip,deflate,bzip2,exi',
+                                                        'Referer': 'http://webcheck.me/',
+                                                        })  
             response = conn.getresponse()
             httpstatus =  str(response.status)
             

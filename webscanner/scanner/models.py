@@ -125,7 +125,7 @@ class Results(models.Model):
     status              =   models.IntegerField(choices=RESULT_STATUS)
     group               =   models.IntegerField(choices=RESULT_GROUP)
     output_desc         =   models.CharField(max_length=10000)  
-    output_full         =   models.CharField(max_length=10000)  
+    output_full         =   models.TextField()  
 
     # used to calculate overal note rank in results (1-5))
     importance          =   models.IntegerField(default=2)
