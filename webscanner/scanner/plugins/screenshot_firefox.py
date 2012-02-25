@@ -49,6 +49,9 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             sleep(random.uniform(2,5))
             browser.save_screenshot(MEDIA_ROOT+"/"+filename)
 
+            timing = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+            
+            
             res = Results(test=command.test)
             res.group = RESULT_GROUP.screenshot
             res.status = RESULT_STATUS.info
@@ -57,6 +60,27 @@ class PluginMakeScreenshotFirefox(PluginMixin):
             )
             res.save()
 
+            res = Results(test=command.test)
+            res.group = RESULT_GROUP.general
+            res.status = RESULT_STATUS.success
+            res.output_desc = unicode(_("Webpage load time")) 
+            res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowsers. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 3000 milisecs, very slow more than 10000 milisecs.</p>")) 
+
+            res.output_full += "<code>"
+            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                res.output_full += "%s: %s <br />"%(time, timing[time]-timing["navigationStart"])
+            res.output_full += "</code>"
+            
+            loadtime = timing["loadEventEnd"]-timing["navigationStart"]
+            res.output_full += "<p>Loading your website took %s milisecs.<p>"%(loadtime)
+            if loadtime > 3000:
+                res.status = RESULT_STATUS.warning
+            if loadtime > 10000:
+                res.status = RESULT_STATUS.error
+            res.save()
+
+            
+            
             browser.close()      
             sleep(2)
             display.sendstop()
