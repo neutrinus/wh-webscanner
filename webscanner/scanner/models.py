@@ -70,7 +70,6 @@ PLUGINS = dict((
     ('pagerank', PluginPagerank ),
     ('mail', PluginMail ),
     ('screenshots', PluginMakeScreenshots ),
-    ('screenshot_chrome', PluginMakeScreenshotChrome ),
     ('check_surbl', PluginSURBL ),
     ('check_robots', PluginCheckRobots ),
     #('check_plainemail', PluginPlainTextEmail ),
