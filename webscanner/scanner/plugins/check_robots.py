@@ -47,7 +47,7 @@ class PluginCheckRobots(PluginMixin):
                     if re.match(r'^\s(#+)?',line):
                         continue
                     
-                    if re.match(r'^\s*(user-agent)|(disallow)|(allow)|(sitemap)|(crawl-delay):\s.*',line.lower()):
+                    if re.match(r'^\s*(user-agent)|(disallow)|(allow)|(sitemap)|(crawl-delay)|(noarchive)|(noindex)|(nofollow)|(nopreview)|(nosnippet)|(index):\s.*',line.lower()):
                         output +=  "%s<br />"%(line)
                     else:
                         res.output_full += '<p>There was an error while parsing your robots.txt: <b>bad syntax</b> in line %s:<code>%s</code> </p>'%(linecounter,cgi.escape(line))
