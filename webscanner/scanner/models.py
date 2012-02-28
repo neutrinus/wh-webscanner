@@ -72,7 +72,7 @@ PLUGINS = dict((
     ('screenshots', PluginMakeScreenshots ),
     ('check_surbl', PluginSURBL ),
     ('check_robots', PluginCheckRobots ),
-    #('check_plainemail', PluginPlainTextEmail ),
+    ('check_plainemail', PluginPlainTextEmail ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

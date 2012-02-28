@@ -50,8 +50,6 @@ def worker():
                     #this should dissallow two concurrent workers for the same commandqueue object
                     commandschanged = CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
                     
-                    sleep(4)
-                    
                     if (commandschanged == 0):
                         log.exception("Someone already took care of this ctest(%s)"%(ctest.pk))
                         ctest = None
@@ -118,7 +116,7 @@ def downloader():
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
                 
-                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN 0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
@@ -143,9 +141,9 @@ def downloader():
             
 
 if __name__ == '__main__':
-    pool = Pool(2*cpu_count())
+    pool = Pool()
     
-    for x in xrange(0,(2*cpu_count())):
+    for x in xrange(0,cpu_count()):
         pool.apply_async(worker)
         pool.apply_async(downloader)
     
