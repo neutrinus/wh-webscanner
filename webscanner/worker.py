@@ -48,13 +48,18 @@ def worker():
                     ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
                     
                     #this should dissallow two concurrent workers for the same commandqueue object
-                    CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
+                    commandschanged = CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
                     
+                    sleep(4)
+                    
+                    if (commandschanged == 0):
+                        log.exception("Someone already took care of this ctest(%s)"%(ctest.pk))
+                        ctest = None
+                        
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
                     log.info('Processing command %s(%s) for %s (queue len:%s)'%(ctest.testname,ctest.pk,ctest.test.url,CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).count() ))
-                    
                 except CommandQueue.DoesNotExist:
                     ctest = None
                     #log.debug("No Commands in Queue to process, sleeping.")
@@ -138,9 +143,9 @@ def downloader():
             
 
 if __name__ == '__main__':
-    pool = Pool()
+    pool = Pool(2*cpu_count())
     
-    for x in xrange(0,cpu_count()):
+    for x in xrange(0,(2*cpu_count())):
         pool.apply_async(worker)
         pool.apply_async(downloader)
     
