@@ -44,7 +44,11 @@ class PluginCheckRobots(PluginMixin):
                 for line in result.readlines():
                     linecounter += 1
 
-                    if re.match(r'^\s(#+)?',line):
+                    #comments
+                    if re.match(r'^(\s)?#.*',line):
+                        continue
+                    #empty lines
+                    if re.match(r'^(\s)+',line):
                         continue
                     
                     if re.match(r'^\s*(user-agent)|(disallow)|(allow)|(sitemap)|(crawl-delay)|(noarchive)|(noindex)|(nofollow)|(nopreview)|(nosnippet)|(index):\s.*',line.lower()):

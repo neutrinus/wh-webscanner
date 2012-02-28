@@ -58,13 +58,13 @@ class PluginMakeScreenshots(PluginMixin):
             if browsername == "chrome":
                 browser = webdriver.Chrome()
                 
+            sleep(1)
             log.debug("Browser %s started: %s "%(browsername, str(browser)))
             browser.get(url)
             
             #give a bit time for loading async-js
-            sleep(random.uniform(2,5))
+            sleep(3)
             browser.save_screenshot(MEDIA_ROOT+"/"+filename)
-            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
             timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
             #build javascript table with timing values
             jscode += "var timingdata_%s = [ "%(browsername)
@@ -78,7 +78,7 @@ class PluginMakeScreenshots(PluginMixin):
             res.save()
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
             browser.close()      
-            sleep(1)
+
             
 
         res = Results(test=command.test, group = RESULT_GROUP.general, status = RESULT_STATUS.success)
