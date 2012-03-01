@@ -1,13 +1,6 @@
 # -*- encoding: utf-8 -*-
-
-from settings import *
-def apath(x):
-    '''
-    Sciezki w pythonie odpalane sa wzglednie do miejsca, z ktorego odpalony jest skrypt
-    dlatego musza byc podawane absolutne
-    '''
-    import os
-    return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
+import os
+apath = lambda a:a
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -25,36 +18,13 @@ DATABASES = {
 }
 
 
-#LOGIN_REDIRECT_URL = '/user/account/'
-#LOGIN_URL = '/user/login/'
 
-
-
-#CACHES = {
-    #'default':{
-        #'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        #'LOCATION': 'ram',
-        #'TIMEOUT':60*5,
-        #'OPTIONS':{
-            #'MAX_ENTRIES':10000,
-        #},
-        #'KEY_PREFIX':'webscanner',
-    #}
-#}
-
-
-
-#MIDDLEWARE_CLASSES += (
-#    'debug_toolbar.middleware.DebugToolbarMiddleware', # TEST
-#)
-TEMPLATE_CONTEXT_PROCESSORS += (
+TEMPLATE_CONTEXT_PROCESSORS += [
     'django.core.context_processors.debug',
-)
+]
 
 INSTALLED_APPS += (
-    #debugging
     'debug_toolbar',
-    'django_wsgiserver',
 )
 
 #django-debug-toolbar
@@ -76,8 +46,6 @@ DEBUG_TOOLBAR_CONFIG = {
 #    'HIDE_DJANGO_SQL': True,
 #    'TAG': 'body',
 }
-
-THUMBNAIL_DEBUG=1
 
 SESSION_COOKIE_SECURE=0
 

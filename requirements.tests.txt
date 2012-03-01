@@ -1,0 +1,6 @@
+pep8
+django-nose
+django-nose-selenium==dev
+pylint
+tox
+mock
