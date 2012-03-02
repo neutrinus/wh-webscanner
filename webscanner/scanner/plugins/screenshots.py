@@ -77,8 +77,6 @@ class PluginMakeScreenshots(PluginMixin):
             )
             res.save()
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
-            browser.close() 
-            sleep(1)
             browser.quit()
            
 
