@@ -1,3 +1,7 @@
+*egg*
+*coverage*
+*.coverage
+*.py,cover
 *.pyc
 *.swp
 *.kate-swp

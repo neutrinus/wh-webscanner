@@ -94,7 +94,3 @@ class PluginCheckHTTPCode(PluginMixin):
         except Exception,e:
             log.exception(_("No validation can be done: %s "%(e)))
             return STATUS.exception
-      
-	        	
-#if __name__ == '__main__':
-    #main()

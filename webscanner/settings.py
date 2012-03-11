@@ -1,11 +1,6 @@
 # -*- encoding: utf-8 -*-
-# Django settings for skaner project.
+import os
 def apath(x):
-    '''
-    Sciezki w pythonie odpalane sa wzglednie do miejsca, z ktorego odpalony jest skrypt
-    dlatego musza byc podawane absolutne
-    '''
-    import os
     return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
 
 DEBUG = False
@@ -29,14 +24,6 @@ EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
 LOGIN_REDIRECT_URL = '/user/welcome/'
 LOGIN_URL = '/user/login/'
-
-AUTH_PROFILE_MODULE = 'scanner.Profile'
-AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
-)
-
-
-        
 
 DATABASES = {
     'default': {
@@ -73,8 +60,9 @@ LANGUAGES = (
     ('es', _(u'Español')),
     ('fr', _(u'Français')),
 )
-LOCALE_PATHS=( apath('locale'), 
-             )
+
+
+LOCALE_PATHS=( apath('locale'), )
 
 
 SITE_ID = 1
@@ -118,7 +106,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+TEMPLATE_CONTEXT_PROCESSORS = [
     'django.core.context_processors.request',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
@@ -126,8 +114,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.csrf',
-    'django.core.context_processors.debug',
-)
+]
 
 ROOT_URLCONF = 'urls'
 
@@ -145,24 +132,21 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.humanize',
-    #our apps
+
+    #apps
     'scanner',
-    #'gpayments',
 
     #3rd party apps,
     'autoroot',
     'django_extensions', 
     'model_utils',
-    'django_filters',
-    'django_tables2',
     'djangosecure',
     'django_wsgiserver',
     
     #'south',
-    #'configstore',
-    #'paypal.standard',
-    #'paypal.standard.ipn',
 
+    #testing
+    'django_nose',
 )
 
 LOGGING = {
@@ -210,20 +194,6 @@ SCREENSHOT_SIZE = (1280,1024)
 ################################
 ### Third party apps options ###
 ################################
-
-#PAYPAL_RECEIVER_EMAIL = 'tomeks_1317573182_biz@gmail.com'
-#PAYPAL_ENCRYPTED = True # post data (for button) should be encrypted?
-                        ## require using certificate and key
-## GIVE RIGHT ABSOLUTE PATHS TO CERTIFICATES (more info in django-paypal)
-#PAYPAL_PRIVATE_CERT = '/path/to/paypal.pem'
-#PAYPAL_PUBLIC_CERT = '/path/to/pubpaypal.pem'
-#PAYPAL_CERT = '/path/to/paypal_cert.pem'
-#PAYPAL_CERT_ID = 'get-from-paypal-website'
-
-THUMBNAIL_DEBUG=0
-#THUMBNAIL_ENGINE='sorl.thumbnail.engines.pil_engine.Engine'
-THUMBNAIL_ENGINE='sorl.thumbnail.engines.convert_engine.Engine'
-
 SECURE_SSL_REDIRECT = 0
 SECURE_FRAME_DENY = 1
 SECURE_HSTS_SECONDS = 1
@@ -231,5 +201,19 @@ SECURE_HSTS_SECONDS = 1
 SESSION_COOKIE_SECURE=0
 SESSION_COOKIE_HTTPONLY =1
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+             '--with-coverage',
+             '--cover-tests',
+             '--cover-inclusive',
+             '--cover-html',
+             '--cover-html-dir=html_coverage',
+             '--cover-package=scanner',
+             '--with-selenium',
+             '-v',
+             '-s',
+             #'--with-profile',
+             #'--profile-stats-file=tests/profile',
+            ] # arguments to nose for testing
 
-#from settings_local import *
+execfile(apath('settings_local.py'))
