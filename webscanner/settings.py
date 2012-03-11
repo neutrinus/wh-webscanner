@@ -192,6 +192,8 @@ PATH_TMPSCAN = '/tmp/webscanner/'
 PATH_OPTIPNG = '/usr/bin/optipng'
 SCREENSHOT_SIZE = (1280,1024)
 
+GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'
+
 ################################
 ### Third party apps options ###
 ################################
@@ -217,5 +219,5 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-#execfile(apath('settings_local.py'))
+execfile(apath('settings_local.py'))
 
