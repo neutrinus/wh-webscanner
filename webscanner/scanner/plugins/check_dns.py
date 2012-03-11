@@ -11,6 +11,9 @@ from IPy import IP
 from urlparse import urlparse
 from logs import log
 
+from django.template.loader import render_to_string
+
+
 
 class PluginDNS(PluginMixin):
     name = unicode(_("Check dns"))
@@ -47,18 +50,19 @@ class PluginDNS(PluginMixin):
             from django.contrib.gis.utils import GeoIP
             from settings import GEOIP_PATH
             geoip = GeoIP()
-            locations = []
-            
+            locations = {}
+                        
             for server in answers:
-                locations[server] = geoip.city(str(server))
+                locations[str(server.address)] = geoip.city(str(server.address))
+                
+            for x in locations:
+                print(locations[x]['latitude'])
+
+            rendered = render_to_string('serversmap.js', {'locations': locations})
                 
             res = Results(test=command.test,group = RESULT_GROUP.general, importance=1)
-            res.output_desc = unicode(_("Web server(s) geo-location %s")%(location)) 
-            res.output_full = unicode(_('<p>Estimated geolocation of server %s is %s(%s) </p><div id="demoMap" style="height:250px"></div><script>\
-map = new OpenLayers.Map("demoMap");\
-map.addLayer(new OpenLayers.Layer.OSM());\
-map.zoomToMaxExtent();\
-</script>'%(server,location['city'],location['country_name'] )))
+            res.output_desc = unicode(_("Web server(s) geo-location") )
+            res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>")) 
             res.status = RESULT_STATUS.info
             res.save()
 
@@ -85,8 +89,6 @@ map.zoomToMaxExtent();\
             res.output_full = unicode(_("<p>Domain not found!.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
-        except StandardError,e:
-            log.exception("During check A record: %s"%str(e))
         
         #TODO: check AAA (ipv6)
         
