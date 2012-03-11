@@ -56,7 +56,7 @@ class PluginDNS(PluginMixin):
                 locations[str(server.address)] = geoip.city(str(server.address))
             rendered = render_to_string('serversmap.js', {'locations': locations,'id': 'webserversmap'} )
                
-            res = Results(test=command.test,group = RESULT_GROUP.general, importance=1)
+            res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Web server(s) geo-location") )
             res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>")) 
             res.status = RESULT_STATUS.info

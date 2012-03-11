@@ -37,7 +37,8 @@ RESULT_GROUP = Choices(
     (1,  'mail',  _(u'E-mail related')),
     (2,  'seo',    _(u'SEO')),
     (3,  'security',    _(u'Security')),
-    (4,  'screenshot',    _(u'Screenshot'))
+    (4,  'screenshot',    _(u'Screenshot')),
+    (5,  'performance',    _(u'Performance')),
 )
 
 

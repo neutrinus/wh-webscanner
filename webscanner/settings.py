@@ -219,5 +219,5 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-execfile(apath('settings_local.py'))
+#execfile(apath('settings_local.py'))
 
