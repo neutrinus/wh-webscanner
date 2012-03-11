@@ -60,21 +60,21 @@ from scanner.plugins.check_optipng import PluginOptipng
 
 
 PLUGINS = dict((
-    #('http_code', PluginCheckHTTPCode ),
-    #('w3c_valid', PluginCheckW3CValid ),
-    #('googlesb', PluginGoogleSafeBrowsing ),
-    #('domainexpdate', PluginDomainExpireDate ),
-    #('clamav', PluginClamav ),
-    #('dns', PluginDNS ),
-    #('dns_mail', PluginDNSmail ),
-    #('dns_mail_rbl', PluginDNSmailRBL ),
-    #('pagerank', PluginPagerank ),
-    #('mail', PluginMail ),
-    #('screenshots', PluginMakeScreenshots ),
-    #('surbl', PluginSURBL ),
-    #('robots', PluginCheckRobots ),
-    #('plainemail', PluginPlainTextEmail ),
-    ('optipng', PluginOptipng ),
+    ('http_code', PluginCheckHTTPCode ),
+    ('w3c_valid', PluginCheckW3CValid ),
+    ('googlesb', PluginGoogleSafeBrowsing ),
+    ('domainexpdate', PluginDomainExpireDate ),
+    ('clamav', PluginClamav ),
+    ('dns', PluginDNS ),
+    ('dns_mail', PluginDNSmail ),
+    ('dns_mail_rbl', PluginDNSmailRBL ),
+    ('pagerank', PluginPagerank ),
+    ('mail', PluginMail ),
+    ('screenshots', PluginMakeScreenshots ),
+    ('surbl', PluginSURBL ),
+    ('robots', PluginCheckRobots ),
+    ('plainemail', PluginPlainTextEmail ),
+    #('optipng', PluginOptipng ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

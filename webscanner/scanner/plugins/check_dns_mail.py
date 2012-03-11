@@ -11,6 +11,8 @@ import dns.reversename
 from IPy import IP
 from urlparse import urlparse
 from logs import log
+from django.template.loader import render_to_string
+
 
 class PluginDNSmail(PluginMixin):
     name = unicode(_("Check dns MAIL"))
@@ -49,6 +51,23 @@ class PluginDNSmail(PluginMixin):
                         noreversemxes += "%s(%s)<br />"%(mxdata.exchange,ip.address)
                     
                     
+                    
+            #check geolocation
+            from django.contrib.gis.utils import GeoIP
+            from settings import GEOIP_PATH
+            geoip = GeoIP()
+            locations = {}
+                       
+            for server in mxips:
+                locations[str(server)] = geoip.city(str(server))
+            rendered = render_to_string('serversmap.js', {'locations': locations,'id': 'mxserversmap'} )
+               
+            res = Results(test=command.test,group = RESULT_GROUP.mail, importance=1)
+            res.output_desc = unicode(_("Mail server(s) geo-location") )
+            res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>")) 
+            res.status = RESULT_STATUS.info
+            res.save()
+
             res = Results(test=command.test,group = RESULT_GROUP.mail,importance=5)
             res.output_desc = unicode(_("No private IP in MX records ") )
             if not records:
