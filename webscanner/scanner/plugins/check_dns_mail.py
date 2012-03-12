@@ -58,8 +58,8 @@ class PluginDNSmail(PluginMixin):
             geoip = GeoIP()
             locations = {}
                        
-            for server in mxips:
-                locations[str(server)] = geoip.city(str(server))
+            for server in answers:
+                locations[str(server.exchange)] = geoip.city(str(server.exchange))
             rendered = render_to_string('serversmap.js', {'locations': locations,'id': 'mxserversmap'} )
                
             res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
@@ -68,6 +68,7 @@ class PluginDNSmail(PluginMixin):
             res.status = RESULT_STATUS.info
             res.save()
 
+            #check private IPs
             res = Results(test=command.test,group = RESULT_GROUP.mail,importance=5)
             res.output_desc = unicode(_("No private IP in MX records ") )
             if not records:
