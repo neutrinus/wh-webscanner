@@ -61,9 +61,6 @@ class PluginClamav(PluginMixin):
         except OSError,e:
             log.error("OSError, check if clamscan file is present. Details %s "%(e))
             return STATUS.exception
-        except Exception,e:
-            log.exception("No check can be done: %s "%(e))
-            return STATUS.exception
     
 
 

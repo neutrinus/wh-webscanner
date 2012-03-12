@@ -30,6 +30,10 @@ from logs import log
 #https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
 
 class PluginMakeScreenshots(PluginMixin):
+    '''
+    This Plugin makes screenshots of a webpage by visiting it using different webbrowsers (firefox,chrome) and selenium. 
+    '''
+    
     name = unicode(_('Screenshots'))
     wait_for_download = False
     
