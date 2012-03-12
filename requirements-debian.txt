@@ -1,5 +1,6 @@
 xvfb
 httrack
+optipng
 gettext
 python2.6
 python-virtualenv
