@@ -76,7 +76,7 @@ PLUGINS = dict((
     ('surbl', PluginSURBL ),
     ('robots', PluginCheckRobots ),
     ('plainemail', PluginPlainTextEmail ),
-    #('optipng', PluginOptipng ),
+    ('optipng', PluginOptipng ),
     ('googlesite', PluginGoogleSite ),
 ))
 
