@@ -26,7 +26,7 @@
 
 <ul>
 {% for address, in_dict in locations.items %}
-<li><b>{{ address }}</b> is located in  {{ in_dict.city }} ({{ in_dict.country_name }})</li>
+<li><b>{{ address }}</b> is located in {% if in_dict.city %}{{ in_dict.city }}, {% endif %}{{ in_dict.country_name }}</li>
 {% endfor %}
 </ul>    
 

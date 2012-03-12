@@ -39,7 +39,7 @@ class PluginOptipng(PluginMixin):
             log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
             return STATUS.exception
 
-
+        #example output:
         #** Processing: /tmp/webscanner/FA2SW0LQF8H2GXUQ4LNYPZ3F/png/plik.png
         #Output IDAT size = 534 bytes (29665 bytes decrease)
         #Output file size = 715 bytes (29688 bytes = 97.65% decrease)
@@ -47,10 +47,10 @@ class PluginOptipng(PluginMixin):
         txtoutput = ""
         fcounter = 0
         filename = ""
-        
+
         olines = output.split("\n")
         for oline in olines:
-            #print oline
+            print oline
             re_filename =  re.search('\*\* Processing: (?P<filename>.*)',oline)
             if re_filename:
                 filename = re_filename.group("filename")
@@ -69,14 +69,14 @@ class PluginOptipng(PluginMixin):
         
         if txtoutput:
             res.status = RESULT_STATUS.warning
-            res.output_full = unicode(_("We analized %s files. Some of them may need optimalization: <code>%s</code>."%(fcounter,txtoutput)))
+            res.output_full = unicode(_("We analized %s files. Some of them may need optimalization: <code>%s</code>"%(fcounter,txtoutput)))
         else:
             res.status = RESULT_STATUS.success
             if fcounter >0:
                 res.output_full = unicode(_("All %s png files looks optimized. Good!"%(fcounter)))
             else:
                 res.status = RESULT_STATUS.info
-                res.output_full = unicode(_("No png files found."%(fcounter)))
+                res.output_full = unicode(_("No png files found."))
         res.save()
         
         #as plugin finished - its success
