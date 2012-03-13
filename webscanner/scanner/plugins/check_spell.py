@@ -31,20 +31,6 @@ import re
 from time import sleep
 from datetime import date
 
-if __name__=='__main__':
-    print 'configure django'
-    sys.path.insert(0,'..')
-    sys.path.insert(0,'../..')
-    from django.conf import settings
-    settings.configure(
-            DATABASE_ENGINE    = "sqlite3",
-            DATABASE_NAME      = ":memory:",
-            SHOW_LANGUAGES     = (),
-    )
-
-# django
-print 'OK 1'
-
 from django.utils.translation import ugettext_lazy as _
 
 # 3rd party
@@ -56,18 +42,13 @@ import guess_language
 import enchant.checker
 from enchant.tokenize import EmailFilter, URLFilter
 
-print 'OK 2'
 # local imports
 
 from plugin import PluginMixin
-print 'OK 3'
-from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP, Results, 
-                            CommandQueue)
+from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
 
-print 'OK 4'
 
 from logs import log
-print 'OK 5'
 
 
 class PluginSpellCheck(PluginMixin):
@@ -77,6 +58,7 @@ class PluginSpellCheck(PluginMixin):
     max_file_size = 1024*1024 # in bytes
 
     def spellcheck(self, text, command):
+        from scanner.models import (Results, CommandQueue)
         # guess language code 
         lang_code, lang_num, lang_name = guess_language.\
                                             guessLanguageInfo(text)
@@ -142,10 +124,11 @@ class PluginSpellCheck(PluginMixin):
         return None, STATUS.exception
 
     def run(self, command):
-        #path = command.test.download_path + "/"
+        log.info("Start spellchecking")
+        from scanner.models import (Results, CommandQueue)
 
         # search html files
-        log.debug("Search html files in %s "%(path))
+        log.debug("Search html files in %s "%(command.test.download_path))
         for root, dirs, files in os.walk(command.test.download_path):
             for file in [ os.path.abspath(os.path.join(root, file))
                             for file in files ]:
@@ -168,7 +151,3 @@ class PluginSpellCheck(PluginMixin):
                     return status
 
 
-if __name__=='__main__':
-    # performing tests
-    sp = PluginSpellCheck()
-    print sp.spellcheck('witaj bla bla bla',CommandQueue())
