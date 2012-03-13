@@ -56,6 +56,7 @@ from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
 from scanner.plugins.check_optipng import PluginOptipng
+from scanner.plugins.check_spell import PluginSpellCheck
 
 
 
@@ -75,6 +76,7 @@ PLUGINS = dict((
     #('robots', PluginCheckRobots ),
     #('plainemail', PluginPlainTextEmail ),
     ('optipng', PluginOptipng ),
+    ('spellcheck', PluginSpellCheck),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
