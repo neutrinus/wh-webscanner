@@ -68,8 +68,8 @@ class PluginSpellCheck(PluginMixin):
                         group=RESULT_GROUP.general,
                         importance=1,
                         status=RESULT_STATUS.info)
-            r.output_desc = unicode(_('Cannot detect language of page'))
-            r.output_full = r.output_desc
+            r.output_full = unicode(_('Cannot detect language of page'))
+            r.output_desc = self.name
             log.warning('Cannot detect language of page')
             return r,STATUS.unsuccess # .. todo:: is it good status?
 
@@ -83,8 +83,8 @@ class PluginSpellCheck(PluginMixin):
                         group=RESULT_GROUP.general,
                         importance=1,
                         status=RESULT_STATUS.info)
-            r.output_desc = unicode(_('Cannot detect language of page'))
-            r.output_full = r.output_desc
+            r.output_full = unicode(_('Cannot detect language of page'))
+            r.output_desc = self.name
             return r,STATUS.warning # .. todo:: what status?
 
         # checking page
@@ -98,8 +98,8 @@ class PluginSpellCheck(PluginMixin):
             r = Results(test=command.test,
                         group=RESULT_GROUP.general,
                         importance=1,
-                        status=RESULT_STATUS.unsuccess)
-            r.output_desc = unicode(_('You have some spelling errors'))
+                        status=RESULT_STATUS.error)
+            r.output_desc = self.name
             resp = '''<p>You have spelling errors on site:</p>'''
             resp2 =u'<ul>\n'
 
@@ -118,8 +118,8 @@ class PluginSpellCheck(PluginMixin):
                         group=RESULT_GROUP.general,
                         importance=1,
                         status=RESULT_STATUS.success)
-            r.output_desc = unicode(_('There is no mispelled words.'))
-            r.output_full = r.output_desc
+            r.output_full = unicode(_('There is no mispelled words.'))
+            r.output_desc = self.name
             return r, STATUS.success
         return None, STATUS.exception
 
