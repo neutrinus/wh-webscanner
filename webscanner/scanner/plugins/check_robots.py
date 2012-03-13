@@ -7,6 +7,8 @@ import random
 import urllib2
 import sys
 import urlparse
+import re
+import cgi
 from time import sleep
 from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
@@ -30,17 +32,34 @@ class PluginCheckRobots(PluginMixin):
             res = Results(test=command.test, group = RESULT_GROUP.general,importance=2)
 
             res.output_desc = unicode(_("robots.txt"))            
-            res.output_full = '<p><a href="http://www.robotstxt.org/">robots.txt</a> file is used to control automatic software (like Web Wanderers, Crawlers, or Spiders). </p> '
-            res.status = RESULT_STATUS.success            
+            res.output_full = '<p><a href="http://www.robotstxt.org/">robots.txt</a> file is used to control automatic software (like Web Wanderers, Crawlers, or Spiders). Address of your robots.txt for your domain should be: <code>%s</code> </p> '%(robotsurl)
+            res.status = RESULT_STATUS.success
             output = ""
             try:
                 req = urllib2.Request(robotsurl)
                 req.add_header('Referer', 'http://webcheck.me/')
                 result = urllib2.urlopen(req)
                 
+                linecounter=0
                 for line in result.readlines():
-                    output +=  "%s<br />"%(line)
-                res.output_full += '<p>robots.txt is present:<code>%s</code></p>'%(output)
+                    linecounter += 1
+
+                    #comments
+                    if re.match(r'^(\s)?#.*',line):
+                        continue
+                    #empty lines
+                    if re.match(r'^(\s)+',line):
+                        continue
+                    
+                    if re.match(r'^\s*(user-agent)|(disallow)|(allow)|(sitemap)|(crawl-delay)|(noarchive)|(noindex)|(nofollow)|(nopreview)|(nosnippet)|(index):\s.*',line.lower()):
+                        output +=  "%s<br />"%(line)
+                    else:
+                        res.output_full += '<p>There was an error while parsing your robots.txt: <b>bad syntax</b> in line %s:<code>%s</code> </p>'%(linecounter,cgi.escape(line))
+                        res.status = RESULT_STATUS.error
+                        print line
+                        break    
+                else:
+                    res.output_full += '<p>robots.txt is present:<code>%s</code></p>'%(output)
                 
             except urllib2.HTTPError, e:
                 
@@ -51,7 +70,7 @@ class PluginCheckRobots(PluginMixin):
             except urllib2.URLError, e:
                 res.status = RESULT_STATUS.warning
                 res.output_full += '<p>There was problem while connecting to server:%s.</p>'%(e.reason)
-                                        
+
             res.save()
             
             #there was no exception - test finished with success

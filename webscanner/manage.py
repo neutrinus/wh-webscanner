@@ -3,16 +3,11 @@ import sys
 import os.path as op
 
 def apath(x):
-    '''
-    Sciezki w pythonie odpalane sa wzglednie do miejsca, z ktorego odpalony jest skrypt
-    dlatego musza byc podawane absolutne
-    '''
     import os
     return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
 
 sys.path.insert(0,apath('..'))
 sys.path.insert(0,apath('../../'))
-sys.path.insert(0,apath('../webscanner/'))
 
 from django.core.management import execute_manager
 import imp

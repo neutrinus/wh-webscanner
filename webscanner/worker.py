@@ -45,17 +45,19 @@ def worker():
             #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():		
                 try:
-                    #ctest = CommandQueue.objects.filter(status = STATUS.waiting)[:1].get()
                     ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
                     
                     #this should dissallow two concurrent workers for the same commandqueue object
-                    CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
+                    commandschanged = CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
                     
+                    if (commandschanged == 0):
+                        log.exception("Someone already took care of this ctest(%s)"%(ctest.pk))
+                        ctest = None
+                        
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
                     ctest.save()
                     log.info('Processing command %s(%s) for %s (queue len:%s)'%(ctest.testname,ctest.pk,ctest.test.url,CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).count() ))
-                    
                 except CommandQueue.DoesNotExist:
                     ctest = None
                     #log.debug("No Commands in Queue to process, sleeping.")
@@ -73,19 +75,18 @@ def worker():
                 try:
                     # uruchamiamy i czekamy na status
                     ctest.status = plugin.run(ctest)
-                    ctest.finish_date =  datetime.now()
-                    ctest.save()
                     log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))                    
-                    
                 except  Exception,e:
-                    log.exception('Execution failed: %s'%(str(e)))
+                    log.error('Execution failed: %s'%(e))
                     stdout_value = None
                     ctest.status = STATUS.exception
-                    ctest.finish_date =  datetime.now()
-                    ctest.save()
-                                    
+                
+                ctest.finish_date =  datetime.now()
+                ctest.save()
+                
+                    
             else:
-                sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer
+                sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
         except  Exception,e:
             log.error('Command run ended with exception: %s'%e)
             #give admins some time
@@ -115,13 +116,11 @@ def downloader():
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
                 
-                cmd = PATH_HTTRACK + " -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN 0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
                 (stdoutdata, stderrdata) = p.communicate()
-
-                #print stderrdata
                 
                 #if p.returncode != 0:
                     #test.download_status = STATUS.exception
@@ -134,7 +133,7 @@ def downloader():
                 log.info('Downloading website %s finished'%(test.url))
 
             else:
-                sleep(random.uniform(2,5)) #there was nothing to do - we can sleep longer
+                sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
         except  Exception,e:
             log.error('Command run ended with exception: %s'%e)
             #give admins some time

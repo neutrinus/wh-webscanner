@@ -1,0 +1,7 @@
+pep8
+django-nose
+django-nose-selenium
+pylint
+tox
+mock
+nose-cov

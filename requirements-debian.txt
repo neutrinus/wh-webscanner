@@ -10,3 +10,4 @@ python-m2crypto
 libssl-dev
 gcc
 python-dev
+geoip-database-contrib

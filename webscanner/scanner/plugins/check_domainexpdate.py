@@ -65,9 +65,6 @@ class PluginDomainExpireDate(PluginMixin):
         raise ValueError("Domain not in global list of TLDs")
 
     
-
-    
-    
     name = unicode(_("Check domain expiration date"))
     wait_for_download = False
     
@@ -75,11 +72,10 @@ class PluginDomainExpireDate(PluginMixin):
         domain = self.getDomain(command.test.url,self.tlds)
         log.debug("Checking whois data for %s"%(domain))
         
-        #time.sleep(1)
         try:
             data = pywhois.whois(domain)   
             
-            if hasattr(data,'expiration_date'):
+            if hasattr(data,'expiration_date') and (len(data.expiration_date) >0): 
                 output = data.expiration_date[0]
                 
                 try: 
@@ -110,8 +106,9 @@ class PluginDomainExpireDate(PluginMixin):
             else:  
                 log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
                 return STATUS.exception
-
-            
+        except ValueError,e:
+            log.exception("%s"%str(e))
+            return STATUS.exception
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception
@@ -128,6 +125,7 @@ class PluginDomainExpireDate(PluginMixin):
             '%d-%b-%Y %H:%M:%S %Z',     # 24-Jul-2009 13:20:03 UTC
             '%a %b %d %H:%M:%S %Z %Y',  # Tue Jun 21 23:59:59 GMT 2011
             '%Y-%m-%dT%H:%M:%SZ',       # 2007-01-26T19:10:31Z
+            '%d-%b-%Y %H:%M:%S',        # 30-Mar-2012 15:32:20
         ]
 
         for format in known_formats:

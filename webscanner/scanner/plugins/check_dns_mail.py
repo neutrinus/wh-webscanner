@@ -96,7 +96,7 @@ class PluginDNSmail(PluginMixin):
             
             return STATUS.success
         except dns.resolver.Timeout,e:
-            res = Results(test=command.test,group = RESULT_GROUP.general,importance=5)
+            res = Results(test=command.test,group = RESULT_GROUP.general,importance=3)
             res.output_desc = unicode(_("MX records") )
             res.output_full = unicode(_("<p>There was timeout while asking your nameservers for MX records.</p>" ))
             res.status = RESULT_STATUS.error
@@ -104,12 +104,20 @@ class PluginDNSmail(PluginMixin):
             log.debug("Timeout while asking for MX records: %s"%str(e))
             
         except dns.resolver.NoAnswer,e:
-            res = Results(test=command.test,group = RESULT_GROUP.general,importance=5)
+            res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
             res.output_desc = unicode(_("MX records") )
             res.output_full = unicode(_("<p>Your nameserver didn't respond (NoAnswer) when asked for MX records.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
             log.debug("NoAnswer while asking for MX records: %s"%str(e))
+         
+        except dns.resolver.NXDOMAIN:
+            res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
+            res.output_desc = unicode(_("MX records") )
+            res.output_full = unicode(_("<p>The query name does not exist. Probably you should define MX entries in your DNS configuration.</p>" ))
+            res.status = RESULT_STATUS.error
+            res.save()
+            log.debug("NXDOMAIN while asking for MX records. ")
             
         except StandardError,e:
             log.exception("%s"%str(e))
