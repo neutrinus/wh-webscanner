@@ -34,7 +34,7 @@ class PluginGoogleSite(PluginMixin):
     def run(self, command):
         domain = command.test.url
 
-        query = urllib.urlencode({'q' : 'site:%s'%(domain)})
+        query = urllib.urlencode({'q' : 'link:%s'%(domain)})
         url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&hl=en&%s'%(query)
         search_results = urllib.urlopen(url)
         jdata = json.loads(search_results.read())
