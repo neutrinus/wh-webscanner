@@ -138,11 +138,21 @@ class PluginSpellCheck(PluginMixin):
                     continue
 
                 # read html file and convert it to plain text
-                with codecs.open(file,'r','utf-8') as f:
+                with open(file,'r') as f:
                     orig = f.read(self.max_file_size) # Max 1 MB of html text file
+                    try:
+                        charset = chardet.detect(orig)
+                    except:
+                        charset = {'confidence':0.1,
+                                   'encoding':'ascii'}
+
+                    try:
+                        orig = orig.decode(charset['encoding'])
+                    except:
+                        pass
+
                     text = html2text.html2text(orig) # .. todo:: handle exception
 
-                #: .. todo:: run spellchecking
                 result, status = self.spellcheck(text, command)
                 if not result:
                     return STATUS.exception
