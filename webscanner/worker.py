@@ -126,7 +126,7 @@ def downloader():
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
                 
-                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
