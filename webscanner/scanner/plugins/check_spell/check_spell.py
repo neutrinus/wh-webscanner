@@ -151,6 +151,13 @@ class PluginSpellCheck(PluginMixin):
                     except:
                         pass
 
+                    # TODO: remove links from text
+                    # nltk.clean_html
+                    # html2text.html2text
+                    # stripogram.html2text - deprecated buuuu
+                    # webstemmer - advanced - need site 'learning'
+                    # boilerpipe - java interface
+                    # transmogrify.htmlcontentextractor
                     text = html2text.html2text(orig) # .. todo:: handle exception
 
                 result, status = self.spellcheck(text, command)
