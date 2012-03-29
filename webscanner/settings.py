@@ -147,6 +147,7 @@ INSTALLED_APPS = (
 
     #testing
     'django_nose',
+    'django_cron',
 )
 
 LOGGING = {
@@ -219,5 +220,15 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-execfile(apath('settings_local.py'))
 
+CRON_CLASSES = []
+
+
+
+
+
+
+
+
+# This should be at the very end
+execfile(apath('settings_local.py'))
