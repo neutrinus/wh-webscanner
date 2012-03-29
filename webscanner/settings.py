@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'model_utils',
     'djangosecure',
     'django_wsgiserver',
+    'django_cron',
     
     #'south',
 
