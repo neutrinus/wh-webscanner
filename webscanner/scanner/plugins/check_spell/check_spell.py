@@ -29,7 +29,8 @@ import random
 import string
 import re
 from time import sleep
-from datetime import date
+from datetime import date, datetime, timedelta
+from urlparse import urlparse
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -45,10 +46,19 @@ from enchant.tokenize import EmailFilter, URLFilter
 # local imports
 
 from plugin import PluginMixin
-from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
-
+from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP, BadWord)
 
 from logs import log
+
+
+word_regex = re.compile(r'\w+')
+
+
+def parse_word(url):
+    'returns tuple of words (unicodes)'
+    url = urlparse(url)
+    words = word_regex.findall(url.hostname)
+    return words
 
 
 class PluginSpellCheck(PluginMixin):
@@ -56,6 +66,30 @@ class PluginSpellCheck(PluginMixin):
     description = _('Search mistakes in text')
     wait_for_download = True
     max_file_size = 1024*1024 # in bytes
+
+    @staticmethod
+    def clean_bad_words(date=None):
+        'default date is 30 days'
+        if not date:
+            date = datetime.now() - timedelta(days=30)
+        BadWord.objects.filter(timestamp__lt=date).delete()
+
+    def add_bad_word(self, words):
+        for word in words:
+            BadWord.objects.create(word=word)
+
+    def filter_badwords(self, words):
+        bad_words = set(w.word for w in BadWord.objects.\
+                                            order_by('-timestamp').\
+                                            distinct('word')
+                       )
+        def check(word):
+            word = word.strip().lower()
+            if word not in bad_words:
+                return True
+            return False
+        return filter(check, words)
+
 
     def spellcheck(self, text, command):
         from scanner.models import (Results, CommandQueue)

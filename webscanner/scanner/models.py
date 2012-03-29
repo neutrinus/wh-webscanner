@@ -137,3 +137,21 @@ class Results(models.Model):
     def __unicode__(self):
         return "%s: name=%s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
+
+#: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
+#: them ;])
+class BadWord(models.Model):
+    word = models.CharField(max_length=128)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.word
+
+    def __repr__(self):
+        return u'<%s: %s (seen:%s)'%(self.__class__.__name__,
+                                     self.word,
+                                     self.timestamp)
+
+    def save(self,*a,**b):
+        self.word = self.word.strip().lower()
+        super(BadWord, self).save(*a,**b)
