@@ -177,7 +177,11 @@ class BadWord(models.Model):
         bad_words = cache.get('scanner.bad_words') 
 
         # do caching if not in cache
+        BadWord.clean_bad_words()
+
         if not bad_words:
+
+            # when saving to cache, clear DB :)
 
             bad_words = BadWord.objects.values('word').order_by().\
                     annotate(count=Count('word'))
@@ -188,6 +192,7 @@ class BadWord(models.Model):
             ))
 
             cache.set('scanner.bad_words', bad_words, 60*60*24)
+
             log.debug('Bad words saved to cache (%d bad words)'%len(bad_words))
             log.debug(' * %s '%bad_words)
         else:
