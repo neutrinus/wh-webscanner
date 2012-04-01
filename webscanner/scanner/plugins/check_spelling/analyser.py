@@ -349,7 +349,8 @@ def process_docs(iterable):
     errf.close()
 
 
-process_docs(docs)
+if __name__ == '__name__':
+    process_docs(docs)
 
 
 
