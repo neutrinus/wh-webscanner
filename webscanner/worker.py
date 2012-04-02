@@ -67,7 +67,7 @@ def worker():
                     # bierzemy plugina
                     plugin = PLUGINS[ ctest.testname ]()
                 except KeyError as e:
-                    log.error('Could not find plugin: %s'%ctest.testname)
+                    log.exception('Could not find plugin: %s'%ctest.testname)
                     break
         
                 log.debug('Starting scanner process: %s'%plugin)
@@ -77,7 +77,7 @@ def worker():
                     ctest.status = plugin.run(ctest)
                     log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name,ctest))                    
                 except  Exception,e:
-                    log.error('Execution failed: %s'%(e))
+                    log.exception('Execution failed: %s'%(e))
                     stdout_value = None
                     ctest.status = STATUS.exception
                 
@@ -88,7 +88,7 @@ def worker():
             else:
                 sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
         except  Exception,e:
-            log.error('Command run ended with exception: %s'%e)
+            log.exception('Command run ended with exception: %s'%e)
             #give admins some time
             sleep(30)            
 
