@@ -36,7 +36,7 @@ class PluginOptipng(PluginMixin):
         p = subprocess.Popen(args, stdout=subprocess.PIPE)
         (output, stderrdata2) = p.communicate()
         if p.returncode != 0:
-            log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
+            log.exception("%s returned non-0 status, stderr: %s "%(PATH_OPTIPNG,stderrdata2))
             return STATUS.exception
 
         #example output:
