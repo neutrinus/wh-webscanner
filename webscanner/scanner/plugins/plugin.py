@@ -7,7 +7,7 @@ Plugin
 
 #from gpanel.scanner.models import STATUS
 #from django.utils.translation import get_language
-#from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 class PluginMixin(object):
     '''
