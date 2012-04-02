@@ -124,38 +124,30 @@ class PluginPagerank(PluginMixin):
         from scanner.models import Results
         domain = command.test.domain()
 
+        rank = get_pagerank(domain)
         
-        try:    
-            rank = get_pagerank(domain)
-            
-            res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
-            res.output_desc = unicode(_("google pagerank") )
-            res.output_full = unicode(_("<p>A <a href='http://en.wikipedia.org/wiki/PageRank'>PageRank</a> results from a mathematical algorithm based on the graph, the webgraph, created by all World Wide Web pages as nodes and hyperlinks as edges.</p><p>Your website pagerank is %s.</p>"%(rank ) ))
-            
-            if ( int(rank) <2):
-                res.status = RESULT_STATUS.warning
-            else:              
-                res.status = RESULT_STATUS.info
-            res.save()
+        res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
+        res.output_desc = unicode(_("google pagerank") )
+        res.output_full = unicode(_("<p>A <a href='http://en.wikipedia.org/wiki/PageRank'>PageRank</a> results from a mathematical algorithm based on the graph, the webgraph, created by all World Wide Web pages as nodes and hyperlinks as edges.</p><p>Your website pagerank is %s.</p>"%(rank ) ))
+        
+        if ( int(rank) <2):
+            res.status = RESULT_STATUS.warning
+        else:              
+            res.status = RESULT_STATUS.info
+        res.save()
 
-            
-            (popularity_rank,reach_rank) = get_alexa_rank(domain)           
-            res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
-            res.output_desc = unicode(_("alexa pagerank") )
-            res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <p>Ranking for your site:</p> <li>popularity rank: %s</li> <li>reachability rank: %s</li>"%(popularity_rank,reach_rank ) ))
-            if (popularity_rank < 0) | (reach_rank < 0):
-                res.status = RESULT_STATUS.warning
-            else:
-                res.status = RESULT_STATUS.info
-            res.save()
-            
-            
-                
-            
-            return STATUS.success
-        except StandardError,e:
-            log.exception("%s"%str(e))
-            return STATUS.exception
+        
+        (popularity_rank,reach_rank) = get_alexa_rank(domain)           
+        res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
+        res.output_desc = unicode(_("alexa pagerank") )
+        res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <p>Ranking for your site:</p> <li>popularity rank: %s</li> <li>reachability rank: %s</li>"%(popularity_rank,reach_rank ) ))
+        if (popularity_rank < 0) | (reach_rank < 0):
+            res.status = RESULT_STATUS.warning
+        else:
+            res.status = RESULT_STATUS.info
+        res.save()
+                    
+        return STATUS.success
 
 
 

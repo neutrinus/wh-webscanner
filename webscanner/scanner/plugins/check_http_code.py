@@ -62,7 +62,7 @@ class PluginCheckHTTPCode(PluginMixin):
         #check http encoding aceptation
         encoding = response.getheader("Content-Encoding")
 
-        res = Results(test=command.test, group = RESULT_GROUP.general, importance=1)
+        res = Results(test=command.test, group = RESULT_GROUP.performance, importance=1)
         res.output_desc = unicode(_("HTTP compresion"))
         if encoding:
             res.status = RESULT_STATUS.success

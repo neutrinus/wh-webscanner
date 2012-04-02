@@ -16,6 +16,9 @@ from logs import log
 
 
 class PluginPlainTextEmail(PluginMixin):
+    '''
+    Look for plain text emails in html files
+    '''
     name = unicode(_('PlainTextEmails'))
     wait_for_download = True
     

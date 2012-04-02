@@ -10,8 +10,11 @@ Plugin
 #from django.utils.translation import ugettext_lazy as _
 
 class PluginMixin(object):
-    name = 'Undefined'
-    desc = 'Undefined'
+    '''
+    Generic plugin
+    '''
+    name = unicode(_('Undefined'))
+    description = unicode(_("It has no description yet!"))
     
     #wait with worker until webpage is downloaded
     wait_for_download = True

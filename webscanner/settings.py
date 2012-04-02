@@ -222,14 +222,6 @@ NOSE_ARGS = [
             ] # arguments to nose for testing
 
 
-CRON_CLASSES = []
-
-
-
-
-
-
-
 
 # This should be at the very end
 execfile(apath('settings_local.py'))

@@ -39,7 +39,8 @@ RESULT_GROUP = Choices(
     (1,  'mail',  _(u'E-mail related')),
     (2,  'seo',    _(u'SEO')),
     (3,  'security',    _(u'Security')),
-    (4,  'screenshot',    _(u'Screenshot'))
+    (4,  'screenshot',    _(u'Screenshot')),
+    (5,  'performance',    _(u'Performance')),
 )
 
 
@@ -59,26 +60,28 @@ from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
 from scanner.plugins.check_optipng import PluginOptipng
 from scanner.plugins.check_spelling import PluginCheckSpelling
+from scanner.plugins.check_google_site import PluginGoogleSite
 
 
 
 PLUGINS = dict((
-    #('http_code', PluginCheckHTTPCode ),
-    #('w3c_valid', PluginCheckW3CValid ),
-    #('googlesb', PluginGoogleSafeBrowsing ),
-    #('domainexpdate', PluginDomainExpireDate ),
-    #('clamav', PluginClamav ),
-    #('dns', PluginDNS ),
-    #('dns_mail', PluginDNSmail ),
-    #('dns_mail_rbl', PluginDNSmailRBL ),
-    #('pagerank', PluginPagerank ),
-    #('mail', PluginMail ),
-    #('screenshots', PluginMakeScreenshots ),
-    #('surbl', PluginSURBL ),
-    #('robots', PluginCheckRobots ),
-    #('plainemail', PluginPlainTextEmail ),
+    ('http_code', PluginCheckHTTPCode ),
+    ('w3c_valid', PluginCheckW3CValid ),
+    ('googlesb', PluginGoogleSafeBrowsing ),
+    ('domainexpdate', PluginDomainExpireDate ),
+    ('clamav', PluginClamav ),
+    ('dns', PluginDNS ),
+    ('dns_mail', PluginDNSmail ),
+    ('dns_mail_rbl', PluginDNSmailRBL ),
+    ('pagerank', PluginPagerank ),
+    ('mail', PluginMail ),
+    ('screenshots', PluginMakeScreenshots ),
+    ('surbl', PluginSURBL ),
+    ('robots', PluginCheckRobots ),
+    ('plainemail', PluginPlainTextEmail ),
     ('optipng', PluginOptipng ),
     ('spellcheck', PluginCheckSpelling),
+    ('googlesite', PluginGoogleSite ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

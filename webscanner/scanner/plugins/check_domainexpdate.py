@@ -30,7 +30,9 @@ from logs import log
 
 
 class PluginDomainExpireDate(PluginMixin):
-    
+    '''
+    This Plugin uses whois data to determine domain expiration date
+    '''
     tlds = []
     def __init__(self):
         try: 

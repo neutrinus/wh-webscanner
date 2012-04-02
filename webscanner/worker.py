@@ -100,10 +100,20 @@ def downloader():
     while(True):
         try:
             tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
+            
+            
             #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():       
                 try:
                     test = Tests.objects.filter(download_status = STATUS.waiting).order_by('?')[:1].get()
+                    
+                    #this should dissallow two concurrent workers for the same commandqueue object
+                    testschanged = Tests.objects.filter(download_status = STATUS.waiting).filter(pk = test.pk).update(download_status=STATUS.running)
+                    
+                    if (testschanged == 0):
+                        log.exception("Someone already is downloading this ctest(%s)"%(test.pk))
+                        test = None
+                    
                     test.download_status = STATUS.running
                     test.download_path = tmppath
                     test.save()
@@ -116,7 +126,7 @@ def downloader():
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
                 
-                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -rN 2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -sN0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=240 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s"%(str(tmppath),wwwdomain,domain)
               
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
@@ -130,7 +140,7 @@ def downloader():
                 
                 test.download_status = STATUS.success
                 test.save()
-                log.info('Downloading website %s finished'%(test.url))
+                log.info('Downloading website %s(%s) finished'%(test.url, test.pk))
 
             else:
                 sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
