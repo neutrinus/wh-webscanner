@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from logs import log
 import dns.resolver
 import urlparse
-
+from settings import apath
 
 class PluginSURBL(PluginMixin):
     name = unicode(_("Check SURBL database"))
@@ -20,7 +20,7 @@ class PluginSURBL(PluginMixin):
     # An example of such a file can be downloaded from:
     # http://spamcheck.freeapp.net/two-level-tlds
     def __init__(self):
-        f = open("./two-level-tlds")
+        f = open(apath("two-level-tlds"))
         self._twoLevelsTlds = f.readlines()
         f.close()
         

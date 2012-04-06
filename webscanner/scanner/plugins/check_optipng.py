@@ -64,7 +64,7 @@ class PluginOptipng(PluginMixin):
                 txtoutput += "%s (%s bytes): <b>%s%%</b> <br />"%(filename[len(path)+1:], oldsize, ratio )
                         
         from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.security,importance=2)
+        res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("Images (png) optimalization"))
         
         if txtoutput:
