@@ -1,3 +1,4 @@
+clamav
 xvfb
 httrack
 optipng
