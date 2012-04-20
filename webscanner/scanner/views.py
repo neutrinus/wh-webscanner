@@ -17,7 +17,7 @@ from datetime import datetime
 from annoying.decorators import render_to
 from scanner.models import *
 from logs import log
-
+from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
@@ -51,8 +51,12 @@ def results(request):
 
 def show_report(request, uuid):
     #get_object_or_404 ?
-    test = get_object_or_404(Tests, uuid=uuid)
-
+    
+    try:
+        test = Tests.objects.filter(uuid=uuid).get()
+    except ObjectDoesNotExist:
+        return redirect('/')
+        
     return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
 
 def scan_progress(request, uuid):
