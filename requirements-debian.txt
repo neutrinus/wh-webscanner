@@ -1,7 +1,14 @@
 clamav
 xvfb
 httrack
+
 optipng
+jpegoptim
+gifsicle
+html2ps
+pngcrush
+
+
 gettext
 python2.6
 python-virtualenv

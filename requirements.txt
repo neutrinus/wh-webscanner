@@ -26,3 +26,7 @@ M2Crypto
 django-wsgiserver
 django-secure
 
+
+#-e git+git://github.com/thebeansgroup/smush.py.git#egg=smush
+-e git+git://github.com/neutrinus/smush.py.git#egg=smush
+
