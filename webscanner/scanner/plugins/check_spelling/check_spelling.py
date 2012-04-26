@@ -65,6 +65,8 @@ class NoDictionary(CheckSpellingError):pass
 class CannotGuessEncoding(CheckSpellingError):pass
 class CannotGuessLanguage(CheckSpellingError):pass
 class LanguageNotInstalled(CheckSpellingError):pass
+class CannotDecode(CheckSpellingError):pass
+class CannotCleanHTML(CheckSpellingError):pass
 
 try:
     tlds = [
@@ -164,7 +166,7 @@ class PluginCheckSpelling(PluginMixin):
         log.debug('      * after filtering out there is %d errors (%s)'%\
                   (len(errors),errors))
 
-        return set(errors)
+        return lang_name, set(errors)
 
 
     def check_file(self, path):
@@ -173,7 +175,7 @@ class PluginCheckSpelling(PluginMixin):
         # check if file is type of 'html'
         if 'html' not in str(mimetypes.guess_type(path)[0]):
             log.debug('   * is not html file ')
-            return set()
+            return None, set()
         else:
             log.debug("   * is html file")
 
@@ -197,7 +199,7 @@ class PluginCheckSpelling(PluginMixin):
                 orig = orig.decode(charset['encoding'])
             except Exception as e:
                 log.exception('    * error while decoding text')
-                raise e
+                raise CannotDecode(e)
 
             # nltk.clean_html
             # html2text.html2text
@@ -209,11 +211,15 @@ class PluginCheckSpelling(PluginMixin):
             #
             # The winner is: nltk - fastest and best accurate (imho)
             log.debug('    * cleaning from html to txt')
-            text = nltk.clean_html(orig) # .. todo:: handle exception
+            try:
+                text = nltk.clean_html(orig) # .. todo:: handle exception
+            except Exception as e:
+                log.exception('    * error while cleaning html')
+                raise CannotCleanHTML(e)
 
-        errors = self.spellcheck(text)
+        lang, errors = self.spellcheck(text)
         log.info(' * stop checking file: %s'%path)
-        return errors
+        return lang, errors
 
     def run(self, command):
         log.info("Start spellchecking")
@@ -234,7 +240,7 @@ class PluginCheckSpelling(PluginMixin):
                 for file in files:
                     file_path = os.path.abspath(os.path.join(root, file))
                     try:
-                        errors = self.check_file(file_path)
+                        lang, errors = self.check_file(file_path)
                     except CheckSpellingError as e:
                         log.exception(" * Spellchecking error: %s",e)
                         errors=set()
@@ -242,6 +248,7 @@ class PluginCheckSpelling(PluginMixin):
                     if errors:
                         files_with_errors[os.path.join(
                             dir[len(path):],
+                            lang,
                             file
                         )] = errors
 
