@@ -189,6 +189,9 @@ class PluginCheckSpelling(PluginMixin):
                            'encoding':'ascii'}
                 log.exception('    * error while detecting charset: %s',e)
             log.debug('    * detected charset: %s'%charset['encoding'])
+            if not charset['encoding']:
+                log.debug('    * set default encoding (ascii)')
+                charset['encoding'] = 'ascii'
 
             try:
                 orig = orig.decode(charset['encoding'])
