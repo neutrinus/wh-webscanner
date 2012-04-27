@@ -1,6 +1,6 @@
 
 <div>
-{% for file, lang, errors in files.items %}
+{% for file, lang, errors in files %}
     Spelling errors in file <code>{{file}} (guessed language: {{lang}})</code>
     <ul>
     {% for error in errors %}

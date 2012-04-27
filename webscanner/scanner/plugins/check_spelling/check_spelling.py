@@ -233,7 +233,7 @@ class PluginCheckSpelling(PluginMixin):
 
         log.debug("Search html files in %s "%(dirs))
 
-        files_with_errors = {}
+        files_with_errors = []
         was_errors = False
         for dir in dirs:
             for root, dirs, files in os.walk(str(dir)):
@@ -246,14 +246,15 @@ class PluginCheckSpelling(PluginMixin):
                         errors=set()
                         was_errors=True
                     if errors:
-                        files_with_errors[os.path.join(
-                            dir[len(path):],
+                        files_with_errors.append( [os.path.join(
+                                os.path.relpath(file_path,path),
+                            ),
                             lang,
-                            file
-                        )] = errors
+                            errors,
+                        ])
 
-        if was_errors and not errors:
-            return STATUS.unsuccess
+        #if was_errors and not errors:
+        #    return STATUS.unsuccess
 
         template = Template(open(os.path.join(os.path.dirname(__file__),
                                               'templates/msg.html')).read())
