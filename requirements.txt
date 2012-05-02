@@ -6,8 +6,6 @@ pyvirtualdisplay
 psycopg2
 
 html2text
-guess_language
-pyenchant
 
 django==1.3
 django-annoying==0.7.6
@@ -34,3 +32,4 @@ nltk
 guess-language
 pyenchant
 chardet
+beautifulsoup4
