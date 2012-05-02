@@ -5,6 +5,7 @@ selenium
 pyvirtualdisplay
 psycopg2
 
+html2text
 
 django==1.3
 django-annoying==0.7.6
@@ -30,3 +31,9 @@ django-secure
 #-e git+git://github.com/thebeansgroup/smush.py.git#egg=smush
 -e git+git://github.com/neutrinus/smush.py.git#egg=smush
 
+-e git://github.com/Tivix/django-cron.git#egg=django-cron
+nltk
+guess-language
+pyenchant
+chardet
+beautifulsoup4
