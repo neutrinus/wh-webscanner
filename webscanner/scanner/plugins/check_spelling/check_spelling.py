@@ -42,7 +42,9 @@ from django.template import Template, Context
 import mimetypes
 import codecs
 # pip: nltk
-import nltk
+#import nltk
+# pip: beautifulsoup4
+import bs4
 # pip: guess_language
 import guess_language
 
@@ -195,11 +197,21 @@ class PluginCheckSpelling(PluginMixin):
                 log.debug('    * set default encoding (ascii)')
                 charset['encoding'] = 'ascii'
 
+
             try:
                 orig = orig.decode(charset['encoding'])
             except Exception as e:
                 log.exception('    * error while decoding text')
                 raise CannotDecode(e)
+
+            def strip_script_tags(root):
+               for s in root.childGenerator():
+                 if hasattr(s, 'name'):    # then it's a tag
+                   if s.name == 'script':  # skip it!
+                     continue
+                   for x in strip_script_tags(s): yield x
+                 else:                     # it's a string!
+                   yield s
 
             # nltk.clean_html
             # html2text.html2text
@@ -212,7 +224,10 @@ class PluginCheckSpelling(PluginMixin):
             # The winner is: nltk - fastest and best accurate (imho)
             log.debug('    * cleaning from html to txt')
             try:
-                text = nltk.clean_html(orig) # .. todo:: handle exception
+                #text = nltk.clean_html(orig) 
+                text = '\n'.join(strip_script_tags(
+                            bs4.BeautifulSoup(orig).html.body
+                ))
             except Exception as e:
                 log.exception('    * error while cleaning html')
                 raise CannotCleanHTML(e)
