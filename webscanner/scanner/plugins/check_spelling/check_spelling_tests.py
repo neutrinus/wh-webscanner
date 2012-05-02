@@ -9,6 +9,8 @@ import nltk
 
 from ...models import *
 from check_spelling import PluginCheckSpelling as Plug, BetterURLFilter, tlds
+from check_spelling import CannotGuessLanguage
+            
 
 def abspath(p):
     return os.path.abspath(os.path.join(os.path.dirname(__file__),p))
@@ -37,14 +39,14 @@ class TestCode(TestCase):
 
     def test_undetected_language(self):
         pl = self.plugin
-        assert pl.spellcheck("sadagaewqr",self.cmd)[1] == STATUS.unsuccess 
+        self.assertRaises(CannotGuessLanguage, lambda:pl.spellcheck("sadagaewqr"))
 
     def test_pl_ok(self):
         pl = self.plugin
         t1_ok='''Litwo ojczyzno moja ty jesteś jak zdrowie ile Cię trzeba cenić ten tylko
         się dowie
         '''
-        assert pl.spellcheck(t1_ok,self.cmd)[1] == STATUS.success
+        assert len(pl.spellcheck(t1_ok)[1]) == 0
 
     def test_pl_1error(self):
         pl = self.plugin
@@ -52,7 +54,7 @@ class TestCode(TestCase):
         t1_fail='''Litwo ojczyznw moja ty jesteś jak zdrowie ile Cię trzeba cenić ten tylko
         się dowie
         '''
-        assert 'ojczyznw' in pl.spellcheck(t1_fail,self.cmd)[0].output_full
+        assert 'ojczyznw' in pl.spellcheck(t1_fail)[1]
 
     def test_filtering_bad_words(self):
         pl = self.plugin
@@ -62,14 +64,14 @@ class TestCode(TestCase):
             BadWord.objects.create(word=w)
 
         # all words shoul pass, because limit was not reached
-        assert BadWord.filter_bad_words(['amazon','google','kotku'])\
-                == ['amazon', 'google', 'kotku']
+        ret = BadWord.filter_bad_words(['amazon','google','kotku'])
+        assert list(ret) == ['amazon', 'google', 'kotku']
 
         for w in ['kotku']*10:
             BadWord.objects.create(word=w)
 
-        assert BadWord.filter_bad_words(['amazon','google','kotku'])\
-                == ['amazon', 'google']
+        ret = BadWord.filter_bad_words(['amazon','google','kotku'])
+        assert list(ret) == ['amazon', 'google']
 
     def test_cleaning_bad_words(self):
         pl = self.plugin
@@ -197,7 +199,6 @@ class TestCode(TestCase):
 
         errors = BadWord.filter_bad_words(errors)
         log.error('ERRORS: %s'%errors)
-        assert 1==2
 
 
     def check_wykop(self):
@@ -207,3 +208,19 @@ class TestCode(TestCase):
     def check_amazon(self):
         pl = self.plugin
         pass
+
+    def tes_compare(self):
+        # only for see what files are handled
+        from glob import glob
+        pl = self.plugin
+        local_dir = 'tests_htmls/compatibility_test'
+        print  ' --------------------'
+        for f in glob(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                   '%s/*/index.html'%local_dir)
+                     ):
+            ff = os.path.relpath(f, os.path.join(
+                    os.path.abspath(os.path.dirname(__file__)),
+                    local_dir
+            ))
+            lang, errs = pl.check_file(f)
+            print 'CHECK: %s => %s (%s)'%(ff,lang, len(errs) )
