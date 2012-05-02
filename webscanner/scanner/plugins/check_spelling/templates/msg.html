@@ -1,0 +1,20 @@
+
+<div>
+<p>For each site we guess the language and use advanced algorithms to detect spelling errors. Proper text is important to credibility of your website, it can also affect SEO.</p>
+{% for file, lang, errors in files %}
+    Spelling errors in file <code>{{file}} (guessed language: {{lang}})</code>
+    <ul>
+    {% for error in errors %}
+        <li>
+            {{error}}
+        </li>
+    {% empty %}
+        <li>
+            There was no spelling errors
+        </li>
+    {% endfor %}
+    </ul>
+{% empty %}
+    There was no spelling errors
+{% endfor %}
+</div>

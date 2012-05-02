@@ -29,3 +29,8 @@ M2Crypto
 django-wsgiserver
 django-secure
 
+-e git://github.com/Tivix/django-cron.git#egg=django-cron
+nltk
+guess-language
+pyenchant
+chardet

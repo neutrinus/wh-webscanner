@@ -30,6 +30,10 @@ from logs import log
 #https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
 
 class PluginMakeScreenshots(PluginMixin):
+    '''
+    This Plugin makes screenshots of a webpage by visiting it using different webbrowsers (firefox,chrome) and selenium. 
+    '''
+    
     name = unicode(_('Screenshots'))
     wait_for_download = False
     
@@ -82,7 +86,7 @@ class PluginMakeScreenshots(PluginMixin):
 
             
 
-        res = Results(test=command.test, group = RESULT_GROUP.general, status = RESULT_STATUS.success)
+        res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
         res.output_desc = unicode(_("Webpage load time")) 
         res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>")) 
         

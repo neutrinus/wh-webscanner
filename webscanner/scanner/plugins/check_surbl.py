@@ -52,23 +52,19 @@ class PluginSURBL(PluginMixin):
         from scanner.models import Results
         domain = urlparse.urlparse(command.test.url).hostname
 
-        try:    
-            res = Results(test=command.test,group = RESULT_GROUP.general, importance=3)
-            res.output_desc = unicode(_("<a href='http://www.surbl.org'>SURBL</a> database check") )
-            res.output_full = unicode(_("<p>SURBLs are lists of web sites that have appeared in unsolicited messages.</p>" ))
-            if self.isMarkedAsSpam(domain):
-                res.output_full += unicode(_("<p>Your webpage is <b>listed</b> at SURBL. Check it at <a href='http://www.surbl.org/surbl-analysis'>their site</a> </p>" ))
-                res.status = RESULT_STATUS.warning
-            else:
-                res.output_full += unicode(_("<p>Ok, your webpage is not listed at SURBL.</p>" ))
-                res.status = RESULT_STATUS.success         
-            res.save()
-                
+        res = Results(test=command.test,group = RESULT_GROUP.general, importance=3)
+        res.output_desc = unicode(_("<a href='http://www.surbl.org'>SURBL</a> database check") )
+        res.output_full = unicode(_("<p>SURBLs are lists of web sites that have appeared in unsolicited messages.</p>" ))
+        if self.isMarkedAsSpam(domain):
+            res.output_full += unicode(_("<p>Your webpage is <b>listed</b> at SURBL. Check it at <a href='http://www.surbl.org/surbl-analysis'>their site</a> </p>" ))
+            res.status = RESULT_STATUS.warning
+        else:
+            res.output_full += unicode(_("<p>Ok, your webpage is not listed at SURBL.</p>" ))
+            res.status = RESULT_STATUS.success         
+        res.save()
             
-            return STATUS.success
-        except StandardError,e:
-            log.exception("%s"%str(e))
-            return STATUS.exception
+        
+        return STATUS.success
 
 
 

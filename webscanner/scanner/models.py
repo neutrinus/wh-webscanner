@@ -6,6 +6,8 @@ from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_lan
 from django.contrib.auth.models import User 
 from django.core.exceptions import ValidationError
 from django_extensions.db.fields import UUIDField
+from django.core.cache import cache
+from django.db.models import Count
 
 from django.conf import settings
 
@@ -37,7 +39,8 @@ RESULT_GROUP = Choices(
     (1,  'mail',  _(u'E-mail related')),
     (2,  'seo',    _(u'SEO')),
     (3,  'security',    _(u'Security')),
-    (4,  'screenshot',    _(u'Screenshot'))
+    (4,  'screenshot',    _(u'Screenshot')),
+    (5,  'performance',    _(u'Performance')),
 )
 
 
@@ -56,7 +59,8 @@ from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
 from scanner.plugins.check_optipng import PluginOptipng
-from scanner.plugins.check_spell import PluginSpellCheck
+from scanner.plugins.check_spelling import PluginCheckSpelling
+from scanner.plugins.check_google_site import PluginGoogleSite
 
 
 
@@ -76,7 +80,8 @@ PLUGINS = dict((
     ('robots', PluginCheckRobots ),
     ('plainemail', PluginPlainTextEmail ),
     ('optipng', PluginOptipng ),
-    ('spellcheck', PluginSpellCheck),
+    ('spellcheck', PluginCheckSpelling),
+    ('googlesite', PluginGoogleSite ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
@@ -137,3 +142,66 @@ class Results(models.Model):
     def __unicode__(self):
         return "%s: name=%s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
+
+#: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
+#: them ;])
+class BadWord(models.Model):
+    word = models.CharField(max_length=128)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.word
+
+    def __repr__(self):
+        return u'<%s: %s (seen:%s)'%(self.__class__.__name__,
+                                     self.word,
+                                     self.timestamp)
+
+    def save(self,*a,**b):
+        self.word = self.word.strip().lower()
+        super(BadWord, self).save(*a,**b)
+
+    @staticmethod
+    def clean_bad_words(date=None):
+        'default date is 30 days'
+        if date is None:
+            date = dt.now() - td(days=30)
+        elif isinstance(date, int):
+            date = dt.now() - td(days=date)
+        log.info('Cleaning "bad words" older than: %s.' % date)
+
+        bad_words = BadWord.objects.filter(timestamp__lt=date).count()
+        log.info('Deleted "bad words": %d.' % bad_words)
+        bad_words = BadWord.objects.filter(timestamp__lt=date).delete()
+        return bad_words
+
+    @staticmethod
+    def filter_bad_words(words):
+        bad_words = cache.get('scanner.bad_words') 
+
+        # do caching if not in cache
+        BadWord.clean_bad_words()
+
+        if not bad_words:
+
+            # when saving to cache, clear DB :)
+
+            bad_words = BadWord.objects.values('word').order_by().\
+                    annotate(count=Count('word'))
+
+            bad_words = set((
+                w['word'] for w in bad_words if w['count'] > \
+                    PluginCheckSpelling.bad_word_limit
+            ))
+
+            cache.set('scanner.bad_words', bad_words, 60*60*24)
+
+            log.debug('Bad words saved to cache (%d bad words)'%len(bad_words))
+            log.debug(' * %s '%bad_words)
+        else:
+            log.debug('Bad words loaded from cache')
+            log.debug(' * %s'%bad_words)
+
+        ok_words = list(( w for w in words if w.strip().lower() not in bad_words ))
+
+        return ok_words
