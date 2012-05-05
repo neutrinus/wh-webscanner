@@ -38,7 +38,7 @@ class PluginDomainExpireDate(PluginMixin):
         try: 
             # load tlds, ignore comments and empty lines:
             #https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
-            with open(apath("effective_tld_names.dat.txt)") as tldFile:
+            with open(apath("effective_tld_names.dat.txt")) as tldFile:
                 self.tlds = [line.strip() for line in tldFile if line[0] not in "/\n"]
         except IOError:
             log.error("Could not find file effective_tld_names.dat.txt")
