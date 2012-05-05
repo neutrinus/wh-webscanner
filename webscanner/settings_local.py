@@ -17,6 +17,7 @@ DATABASES = {
     }
 }
 
+DATABASE_OPTIONS = {'timeout': 60}
 
 
 TEMPLATE_CONTEXT_PROCESSORS += [
