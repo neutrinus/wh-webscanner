@@ -30,8 +30,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'webcheck',                      # Or path to database file if using sqlite3.
         'USER': 'webcheck',                      # Not used with sqlite3.
-        'PASSWORD': 'Ahfoo4veiV1r',                  # Not used with sqlite3.
-        'HOST': '10.253.1.12',                      # Set to empty string for localhost. Not 
+        'PASSWORD': 'eepa6aez9OoS',                  # Not used with sqlite3.
+        'HOST': '10.239.1.11',                      # Set to empty string for localhost. Not 
     }
 }
 
@@ -142,13 +142,11 @@ INSTALLED_APPS = (
     'model_utils',
     'djangosecure',
     'django_wsgiserver',
-    'django_cron',
     
-    #'south',
+    'south',
 
     #testing
     'django_nose',
-    'django_cron',
 )
 
 LOGGING = {
@@ -224,4 +222,4 @@ NOSE_ARGS = [
 
 
 # This should be at the very end
-execfile(apath('settings_local.py'))
+#execfile(apath('settings_local.py'))
