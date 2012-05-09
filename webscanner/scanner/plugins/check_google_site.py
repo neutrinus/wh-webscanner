@@ -39,6 +39,10 @@ class PluginGoogleSite(PluginMixin):
         search_results = urllib.urlopen(url)
         jdata = json.loads(search_results.read())
         
+        if 'estimatedResultCount' not in jdata['responseData']['cursor']:
+            log.debug("no estimatedResultCount")
+            return STATUS.exception
+        
         from scanner.models import Results
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
         res.output_desc = unicode(_("google backlinks ") )
