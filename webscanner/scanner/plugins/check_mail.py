@@ -34,7 +34,10 @@ class PluginMail(PluginMixin):
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception
-                        
+        except dns.resolver.NXDOMAIN:
+            #log is already produced in check_mail_dns
+            return STATUS.exception
+
 
         try:
             nopostmaster = ""
