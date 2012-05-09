@@ -51,8 +51,10 @@ def worker():
                     commandschanged = CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
                     
                     if (commandschanged == 0):
-                        log.exception("Someone already took care of this ctest(%s)"%(ctest.pk))
+                        log.debug("Someone already took care of this ctest(%s)"%(ctest.pk))
                         ctest = None
+                        sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
+                        continue
                         
                     ctest.status = STATUS.running
                     ctest.run_date =  datetime.now()
@@ -60,7 +62,9 @@ def worker():
                     log.info('Processing command %s(%s) for %s (queue len:%s)'%(ctest.testname,ctest.pk,ctest.test.url,CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).count() ))
                 except CommandQueue.DoesNotExist:
                     ctest = None
-                    #log.debug("No Commands in Queue to process, sleeping.")
+                    log.debug("No Commands in Queue to process, sleeping.")
+                    sleep(random.uniform(5,10)) #there was nothing to do - we can sleep longer
+                    continue
                     
             if ctest:
                 try:
@@ -111,8 +115,10 @@ def downloader():
                     testschanged = Tests.objects.filter(download_status = STATUS.waiting).filter(pk = test.pk).update(download_status=STATUS.running)
                     
                     if (testschanged == 0):
-                        log.exception("Someone already is downloading this ctest(%s)"%(test.pk))
+                        log.debug("Someone already is downloading this ctest(%s)"%(test.pk))
                         test = None
+                        sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
+                        continue
                     
                     test.download_status = STATUS.running
                     test.download_path = tmppath
@@ -120,7 +126,9 @@ def downloader():
                     log.info('Downloading website %s for test %s to %s'%(test.url,test.pk,tmppath))
                 except Tests.DoesNotExist:
                     test = None
-                    #log.debug("No Tests in DownloadQueue to process, sleeping.")
+                    log.debug("No Tests in DownloadQueue to process, sleeping.")
+                    sleep(random.uniform(5,10)) #there was nothing to do - we can sleep longer
+                    continue
                     
             if test:
                 domain = test.url
