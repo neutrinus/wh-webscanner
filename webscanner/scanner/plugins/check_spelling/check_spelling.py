@@ -222,6 +222,7 @@ class PluginCheckSpelling(PluginMixin):
             # beautifulsoup4
             #
             # The winner is: nltk - fastest and best accurate (imho)
+            # - noooooooo, nltk works not well with different encodings
             log.debug('    * cleaning from html to txt')
             try:
                 #text = nltk.clean_html(orig) 
@@ -229,8 +230,8 @@ class PluginCheckSpelling(PluginMixin):
                             bs4.BeautifulSoup(orig).html.body
                 ))
             except Exception as e:
-                log.exception('    * error while cleaning html')
-                raise CannotCleanHTML(e)
+                log.info('    * error while cleaning html, omitting file')
+                return lang, set()
 
         lang, errors = self.spellcheck(text)
         log.info(' * stop checking file: %s'%path)
@@ -260,6 +261,7 @@ class PluginCheckSpelling(PluginMixin):
                         log.exception(" * Spellchecking error: %s",e)
                         errors=set()
                         was_errors=True
+                        continue
                     if errors:
                         files_with_errors.append( [os.path.join(
                                 os.path.relpath(file_path,path),
@@ -268,8 +270,6 @@ class PluginCheckSpelling(PluginMixin):
                             errors,
                         ])
 
-        #if was_errors and not errors:
-        #    return STATUS.unsuccess
 
         template = Template(open(os.path.join(os.path.dirname(__file__),
                                               'templates/msg.html')).read())
@@ -284,6 +284,8 @@ class PluginCheckSpelling(PluginMixin):
 
         log.info(' * check spelling: END')
 
+        if was_errors:
+            return STATUS.unsuccess
         return STATUS.success
 
 
