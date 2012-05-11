@@ -152,48 +152,25 @@ class PluginPlagiarism(PluginMixin):
             for root, dirs, files in os.walk(str(dir)):
                 for file in files:
                     file_path = os.path.abspath(os.path.join(root, file))
-                    try:
-                        text = self.file2text(file_path)
-                        
-                    #except CheckSpellingError as e:
-                        #log.exception(" * Spellchecking error: %s",e)
-                        #errors=set()
-                        #was_errors=True
-                        #continue
-                    #if errors:
-                        #files_with_errors.append( [os.path.join(
-                                #os.path.relpath(file_path,path),
-                            #),
-                            #lang,
-                            #errors,
-                        #])
+                    log.debug("Check file %s"%(file_path))
 
+                    text = self.file2text(file_path)
+                    lang_code, lang_num, lang_name = guess_language.guessLanguageInfo(text)
+                    
 
-        template = Template(open(os.path.join(os.path.dirname(__file__),
-                                              'templates/msg.html')).read())
-        r = Results(test=command.test,
-                    group=RESULT_GROUP.general,
-                    importance=1,
-                    status=RESULT_STATUS.warning if files_with_errors else\
-                           RESULT_STATUS.success)
-        r.output_desc = unicode(self.name)
-        r.output_full = template.render(Context({'files':files_with_errors}))
-        r.save()
+        #template = Template(open(os.path.join(os.path.dirname(__file__),
+                                              #'templates/msg.html')).read())
+        #r = Results(test=command.test,
+                    #group=RESULT_GROUP.general,
+                    #importance=1,
+                    #status=RESULT_STATUS.warning if files_with_errors else\
+                           #RESULT_STATUS.success)
+        #r.output_desc = unicode(self.name)
+        #r.output_full = template.render(Context({'files':files_with_errors}))
+        #r.save()
 
-        if was_errors:
-            return STATUS.unsuccess
-        return STATUS.success
+        #if was_errors:
+            #return STATUS.unsuccess
+        #return STATUS.success
 
-
-    
-    
-    
-    
-    
-    
-
-        
-        
-        
-        
 
