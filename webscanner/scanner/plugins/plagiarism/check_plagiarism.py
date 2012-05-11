@@ -5,7 +5,7 @@ import os
 import random
 import httplib
 from urlparse import urlparse
-from plugin import PluginMixin
+from scanner.plugins.plugin import PluginMixin
 #from scanner.models import UsersTest_Options
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
@@ -24,21 +24,18 @@ from logs import log
 
 ## 3rd party
 
-#import mimetypes
-#import codecs
-## pip: nltk
-##import nltk
-## pip: beautifulsoup4
-#import bs4
-## pip: guess_language
-#import guess_language
+import mimetypes
+import codecs
+import nltk
+import bs4
+import guess_language
 
 ## pip: pyenchant
 #import enchant.checker
 #from enchant.tokenize import EmailFilter, URLFilter, Filter
 
 ## pip: chardet
-#import chardet
+import chardet
 
 
 
@@ -64,6 +61,7 @@ class PluginPlagiarism(PluginMixin):
     
     name = unicode(_("plagiarism checker"))
     wait_for_download = True
+    max_file_size = 1024*1024 # in bytes
 
 
     def file2text(self, path):
@@ -72,7 +70,7 @@ class PluginPlagiarism(PluginMixin):
         # check if file is type of 'html'
         if 'html' not in str(mimetypes.guess_type(path)[0]):
             log.debug('   * is not html file ')
-            return None, set()
+            return None
         else:
             log.debug("   * is html file")
 
@@ -113,13 +111,26 @@ class PluginPlagiarism(PluginMixin):
                 ))
             except Exception as e:
                 log.info('    * error while cleaning html, omitting file')
-                return ""
+                return None
 
         log.info(' * stop checking file: %s'%path)
         return text
 
+        
+    def text2sentences(self, text, lang='en'):
+        import nltk.data      
+        nltk.download("punkt")
+        
+        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+            
+            
+        string.splitlines
+        print '\n-----\n'.join(tokenizer.tokenize(text))
 
-    def plagcheck(self, text):
+        
+        
+
+    def plagcheck(self, sentence):
         query = urllib.urlencode({'q' : 'link:%s'%(domain)})
         url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&hl=en&%s'%(query)
         search_results = urllib.urlopen(url)
@@ -155,8 +166,14 @@ class PluginPlagiarism(PluginMixin):
                     log.debug("Check file %s"%(file_path))
 
                     text = self.file2text(file_path)
+                    if not text: 
+                        continue
+                
                     lang_code, lang_num, lang_name = guess_language.guessLanguageInfo(text)
-                    
+                    print lang_code
+        
+                    sentences = self.text2sentences(text, lang_code)
+        
 
         #template = Template(open(os.path.join(os.path.dirname(__file__),
                                               #'templates/msg.html')).read())
@@ -171,6 +188,6 @@ class PluginPlagiarism(PluginMixin):
 
         #if was_errors:
             #return STATUS.unsuccess
-        #return STATUS.success
+        return STATUS.success
 
 
