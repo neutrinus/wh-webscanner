@@ -4,6 +4,7 @@ import sys
 import os
 import random
 import httplib
+import string
 from urlparse import urlparse
 from scanner.plugins.plugin import PluginMixin
 #from scanner.models import UsersTest_Options
@@ -123,27 +124,35 @@ class PluginPlagiarism(PluginMixin):
         
         tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
             
+        czik = tokenizer.tokenize(text)
+
+        sentences = []
+        for czi in czik:
+                x = czi.splitlines()
+                for y in x:
+                    sentences.append(y)
+
+        
+        return sentences
+        
+
+    def plagcheck(self, sentences):
+        
+        for sentence in sentences:
+            log.debug("Check sentence: %s"%(sentence))
+            query = urllib.urlencode({'q' : 'link:%s'%(domain)})
+            url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&hl=en&%s'%(query)
+            search_results = urllib.urlopen(url)
+            jdata = json.loads(search_results.read())
             
-        string.splitlines
-        print '\n-----\n'.join(tokenizer.tokenize(text))
-
-        
-        
-
-    def plagcheck(self, sentence):
-        query = urllib.urlencode({'q' : 'link:%s'%(domain)})
-        url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&hl=en&%s'%(query)
-        search_results = urllib.urlopen(url)
-        jdata = json.loads(search_results.read())
-        
-        if 'estimatedResultCount' not in jdata['responseData']['cursor']:
-            log.debug("no estimatedResultCount")
-            return STATUS.exception
-        
-        from scanner.models import Results
-        res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
-        res.output_desc = unicode(_("google backlinks ") )
-        res.output_full = unicode(_('<p>There is about %s sites linking to your site. <a href="%s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> '%(jdata['responseData']['cursor']['estimatedResultCount'], jdata['responseData']['cursor']['moreResultsUrl'] )))
+            if 'estimatedResultCount' not in jdata['responseData']['cursor']:
+                log.debug("no estimatedResultCount")
+                return STATUS.exception
+            
+            from scanner.models import Results
+            res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
+            res.output_desc = unicode(_("google backlinks ") )
+            res.output_full = unicode(_('<p>There is about %s sites linking to your site. <a href="%s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> '%(jdata['responseData']['cursor']['estimatedResultCount'], jdata['responseData']['cursor']['moreResultsUrl'] )))
         
     
     
@@ -170,11 +179,13 @@ class PluginPlagiarism(PluginMixin):
                         continue
                 
                     lang_code, lang_num, lang_name = guess_language.guessLanguageInfo(text)
-                    print lang_code
-        
+                    
+                    log.debug("  lang code: %s"%(lang_code))
                     sentences = self.text2sentences(text, lang_code)
-        
-
+                    
+                    
+                            
+                
         #template = Template(open(os.path.join(os.path.dirname(__file__),
                                               #'templates/msg.html')).read())
         #r = Results(test=command.test,
