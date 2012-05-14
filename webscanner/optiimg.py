@@ -36,8 +36,8 @@ def identify(filename):
     
     
 def gentmpfilename():
-    return PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
-
+    return PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) 
+  
 def optimize_agif(filename):
     file1 = gentmpfilename()
     files = [filename,file1]
@@ -71,17 +71,30 @@ def optimize_png(filename):
     file1 = gentmpfilename()
     file2 = gentmpfilename()
     files = [filename,file1, file2]
-    
-    command = 'pngcrush -rem alla -brute -reduce -q %s %s'%(filename, file1)
+
+  
+    command =  'pngnq -n 256 -o %s %s '%(file1,filename)
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     (output, stderrdata) = p.communicate()
-  
-    command =  'pngnq -n 256 -o %s %s '%(file2,file1)
+    
+    command = 'pngcrush -rem alla -brute -reduce -q %s %s'%(file1, file2)
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     (output, stderrdata) = p.communicate()
     return files
     
+  
+def optimize_gif(filename):
+    file1 = gentmpfilename()
+    #convert it to png and then optimize it as png
+    command = 'convert %s png:%s'%(filename,file1)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+
+    flist = optimize_png(file1)
     
+    flist.append(filename)
+    
+    return flist
     
     
 def select_smallest_file(filelist):
@@ -112,6 +125,8 @@ for root, dirs, files in os.walk(path):
             ofiles = optimize_jpg(fpath)
         elif ftype == 'PNG':
             ofiles = optimize_png(fpath)
+        elif ftype == 'GIF':
+            ofiles = optimize_gif(fpath)
         elif ftype == 'AGIF':
             ofiles = optimize_agif(fpath)
         else:
@@ -120,3 +135,4 @@ for root, dirs, files in os.walk(path):
         if ofiles:
             sfile = select_smallest_file(ofiles)
             print("Optimized %s to %s"%(sfile,os.path.getsize(sfile) ))
+            
