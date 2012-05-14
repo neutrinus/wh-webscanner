@@ -139,7 +139,9 @@ class PluginCheckSpelling(PluginMixin):
 
         if lang_code == 'UNKNOWN':
             log.warning('    * Cannot detect language of page - end')
-            raise CannotGuessLanguage()
+            # 
+            # raise CannotGuessLanguage()
+            return None,set()
 
         try:
             checker = enchant.checker.SpellChecker(lang_code,
@@ -148,9 +150,10 @@ class PluginCheckSpelling(PluginMixin):
         #                                       BetterURLFilter,
                                                ])
         except enchant.DictNotFoundError as e:
-            log.exception("Cannot find language for spellchecker for %s - end"%\
+            log.error("Cannot find language for spellchecker for %s - end"%\
                           lang_code)
-            raise e
+            #raise e
+            return None,set()
 
         # checking page for bad words
         log.debug('    * check spelling')
@@ -191,7 +194,7 @@ class PluginCheckSpelling(PluginMixin):
             except Exception as e:
                 charset = {'confidence':0.1,
                            'encoding':'ascii'}
-                log.exception('    * error while detecting charset: %s',e)
+                log.warning('    * error while detecting charset')
             log.debug('    * detected charset: %s'%charset['encoding'])
             if not charset['encoding']:
                 log.debug('    * set default encoding (ascii)')
@@ -201,8 +204,9 @@ class PluginCheckSpelling(PluginMixin):
             try:
                 orig = orig.decode(charset['encoding'])
             except Exception as e:
-                log.exception('    * error while decoding text')
-                raise CannotDecode(e)
+                log.warning('    * error while decoding text')
+                log.info('     * try cleaning without decoding')
+                #raise CannotDecode(e)
 
             def strip_script_tags(root):
                for s in root.childGenerator():
@@ -230,8 +234,8 @@ class PluginCheckSpelling(PluginMixin):
                             bs4.BeautifulSoup(orig).html.body
                 ))
             except Exception as e:
-                log.info('    * error while cleaning html, omitting file')
-                return lang, set()
+                log.warning('    * error while cleaning html, omitting file')
+                return None, set()
 
         lang, errors = self.spellcheck(text)
         log.info(' * stop checking file: %s'%path)
