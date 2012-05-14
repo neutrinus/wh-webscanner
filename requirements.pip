@@ -15,11 +15,6 @@ django-autoroot
 django-model-utils==1.0.0
 South==0.7.3
 
-#django-filter==0.5.3
-#django-groupcache==0.5.0
-#django-localeurl==1.4
-#django-recaptcha-works==0.3.4 #moze sie przydac pozniej
-#django-tables2==0.7.0
 django-registration
 
 
@@ -27,11 +22,8 @@ M2Crypto
 django-wsgiserver
 django-secure
 
+-e git+git://github.com/thebeansgroup/smush.py.git#egg=smush
 
-#-e git+git://github.com/thebeansgroup/smush.py.git#egg=smush
--e git+git://github.com/neutrinus/smush.py.git#egg=smush
-
--e git://github.com/Tivix/django-cron.git#egg=django-cron
 nltk
 guess-language
 pyenchant
