@@ -38,6 +38,16 @@ def identify(filename):
 def gentmpfilename():
     return PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
 
+def optimize_agif(filename):
+    file1 = gentmpfilename()
+    files = [filename,file1]
+    
+    command = 'gifsicle -O2 %s --output %s'%(filename,file1)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+
+    return files
+
 
 def optimize_jpg(filename):
     file1 = gentmpfilename()
@@ -102,6 +112,8 @@ for root, dirs, files in os.walk(path):
             ofiles = optimize_jpg(fpath)
         elif ftype == 'PNG':
             ofiles = optimize_png(fpath)
+        elif ftype == 'AGIF':
+            ofiles = optimize_agif(fpath)
         else:
             ofiles = None
 
