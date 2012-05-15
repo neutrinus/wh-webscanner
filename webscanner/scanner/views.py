@@ -76,7 +76,7 @@ def scan_progress(request, uuid):
     
     test_duration = (last_command - test.creation_date).total_seconds()
     
-    data = {'ordered': commands_count, "done": commands_done_count, "test_duration": test_duration}
+    data = {'ordered': commands_count+1, "done": commands_done_count+1, "test_duration": test_duration}
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
         
     
