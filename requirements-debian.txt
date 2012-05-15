@@ -9,6 +9,7 @@ html2ps
 pngcrush
 imagemagick
 pngnq
+libjpeg-progs
 
 gettext
 python2.6
