@@ -34,7 +34,7 @@ class PluginOptiimg(PluginMixin):
         (output, stderrdata) = p.communicate()
         
         if p.returncode != 0:
-            print("Cannot identify file.")
+            log.debug("Cannot identify file %s."%filename)
             return False
             
         #animated gif produce (GIF)+
@@ -110,7 +110,7 @@ class PluginOptiimg(PluginMixin):
         minfile = filelist[0]
         
         for filek in filelist:
-            if os.path.getsize(filek) < os.path.getsize(minfile):
+            if  (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
                 minfile = filek
         return minfile
         
@@ -121,17 +121,19 @@ class PluginOptiimg(PluginMixin):
         path = command.test.download_path
 
         log.debug("Recursive check image files size in %s "%(path))
-        filesizes = dict()
+        
+        optiimgs = ""
 
+        
         for root, dirs, files in os.walk(path):
             for file in files:
                 fpath = os.path.join(root,file)
-                print("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
-                
+
                 #mimetypes is much faster than identify
                 if 'image' not in str(mimetypes.guess_type(fpath)[0]):
                     continue
                 
+                log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))                
                 #filesizes[fpath] = 
                 
                 ftype = self.identify(fpath)
@@ -149,28 +151,28 @@ class PluginOptiimg(PluginMixin):
 
                 if ofiles:
                     sfile = self.select_smallest_file(ofiles)
-                    print("Optimized %s to %s"%(sfile,os.path.getsize(sfile) ))
+                    bytes_saved = os.path.getsize(fpath) - os.path.getsize(sfile)
+                    if bytes_saved == 0:
+                        continue
+
                     
+                    log.debug("Optimized %s to %s"%(sfile,os.path.getsize(sfile) ))
+        
+                    
+                    optiimgs += "%s %s optimized to %s (bytes saved:%s %.1f%%) <br />"%(fpath[(len(path)+1):], os.path.getsize(fpath), sfile[len(PATH_TMPSCAN):], bytes_saved,  ( float(bytes_saved) / float(os.path.getsize(fpath)) ) )
+            
                     #remove not needed files
                     for ofile in ofiles[:1]:
                         if (ofile != sfile) and (ofile != fpath):
                             os.remove(ofile)
 
                         
-        #from scanner.models import Results
-        #res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
-        #res.output_desc = unicode(_("Images (png) optimalization"))
-        
-            #res.status = RESULT_STATUS.warning
-            #res.output_full = unicode(_("We analized %s files. Some of them may need optimalization: <code>%s</code>"%(fcounter,txtoutput)))
-        #else:
-            #res.status = RESULT_STATUS.success
-            #if fcounter >0:
-                #res.output_full = unicode(_("All %s png files looks optimized. Good!"%(fcounter)))
-            #else:
-                #res.status = RESULT_STATUS.info
-                #res.output_full = unicode(_("No png files found."))
-        #res.save()
+        from scanner.models import Results
+        res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
+        res.output_desc = unicode(_("Images optimalization"))
+        res.output_full = unicode(_("<p>Using proved methods, we analize photos and images on your site if there is possibility to losslossly  shirnk them. As images make most of the website traffic, optimizing them is a easy way to make your site much faster. </p> <p>We analized %s files. Some of them may need optimalization: <code>%s</code></p>"%("",optiimgs)))
+        res.status = RESULT_STATUS.success
+        res.save()
         
         #as plugin finished - its success
         return STATUS.success
