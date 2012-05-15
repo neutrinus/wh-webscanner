@@ -11,6 +11,7 @@ import string
 import re
 import shlex, subprocess
 import mimetypes
+import shutil 
 from time import sleep
 from datetime import date
 from scanner.plugins.plugin import PluginMixin
@@ -82,8 +83,9 @@ class PluginOptiimg(PluginMixin):
         file2 = self.gentmpfilename()
         files = [filename,file1, file2]
 
-    
-        command =  'pngnq -n 256 -o %s %s '%(file1,filename)
+        shutil.copyfile(filename, file1)
+
+        command =  'pngnq -n 256 %s '%(file1)
         p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
         (output, stderrdata) = p.communicate()
         
