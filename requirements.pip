@@ -22,8 +22,6 @@ M2Crypto
 django-wsgiserver
 django-secure
 
--e git+git://github.com/thebeansgroup/smush.py.git#egg=smush
-
 nltk
 guess-language
 pyenchant
