@@ -1,0 +1,19 @@
+
+<div>
+<p>Using proved methods, we analize photos and images on your site if there is possibility to losslossly  shirnk them. As images make most of the website traffic, optimizing them is a easy way to make your site much faster. </p> 
+
+<ul>
+{% for image in optiimgs %}
+    <li>      
+        <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize }}B, optimized {{ image.ofilesize }}B, <b>{{ image.bytessaved }}B ({{ image.decrease|floatformat:0 }}%)</b> decrease
+    </li>
+{% empty %}
+    <li>
+        There was no images that could be optimized.
+    </li>
+{% endfor %}
+</ul>
+
+<p>Total <b>{{ btotals }}B</b> could be saved by optimizing those images.</p>
+
+</div>
