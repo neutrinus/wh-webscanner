@@ -62,8 +62,10 @@ class PluginMakeScreenshots(PluginMixin):
             if browsername == "chrome":
                 browser = webdriver.Chrome()
                 
-            sleep(1)
             log.debug("Browser %s started: %s "%(browsername, str(browser)))
+            
+            #http://seleniumhq.org/docs/04_webdriver_advanced.html
+            browser.implicitly_wait(20)
             browser.get(url)
             
             #give a bit time for loading async-js
