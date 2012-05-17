@@ -85,7 +85,7 @@ class PluginOptiimg(PluginMixin):
 
         shutil.copyfile(filename, file1)
 
-        command =  'pngnq -n 256 %s '%(file1)
+        command =  'pngnq -n 256 -e .png -f %s '%(file1)
         p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
         (output, stderrdata) = p.communicate()
         
