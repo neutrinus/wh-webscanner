@@ -4,6 +4,9 @@
 {% block title %}Webscan results for {{ test.domain }} {% endblock %}
 
 {% block extrahead %} 
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
+
+
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
 <link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
 
@@ -35,63 +38,69 @@
 <div id="progressbar"></div>
 
 <br />
-     <div class="row">
-                <section class="col">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row">
+                <div class="span4">
                     <h3>Don't Wait</h3>
-                    <br />
                     <p>Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. Pro-members just got .pdf report in their mailbox.</p>
-                    
-                </section>
-                <section class="col mid">
+                </div>
+                <div class="span4">
                     <h3>Overall note</h3>
                     <br />
                     <p>basing on all checks bellow we give your website an overall note:</p>
                     <p style="font-size:4em; text-align:center"><span id="rating">?</span>/10<p>
                     <p id="congratulations" style="text-align:center; display:none;" >congratulations!</p>
-                    
-                </section>
-
-                <section class="col">
+                </div>
+                <div class="span4">
                     <h3>The numbers!</h3>
                     <div id="chart" style="height:200px; width:290px;"></div>
                     <p>Scan time: <span id="timer">0</span> secs</p>
-
-
-                </section>
+                </div>
             </div>
-
-<div class="row">
-    <h2>Screenshots</h2>
-    <div class="screenshots-wrapper">
-        <div id="screenshots" class="nivoSlider" style="height:600px"></div>
+            
+        </div>
     </div>
-</div>
 
+        
+<div id="myCarousel" class="carousel">
+    <!-- Carousel items -->
+    <div id="screenshots-inner" class="carousel-inner" style="width:300px">
+        <div class="item active"><a href="/static/images/slides/slide1.png"><img title="firefox (version:12.0)" src="/static/images/slides/slide1.png"></a></div>
+        <div class="item"><a href="/static/images/slides/slide2.png"><img title="firefox (version:12.0)" src="/static/images/slides/slide2.png"></a></div>
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
+    
+    
 
 <div class="row">
     <h2>General</h2>
-    <table class="results" id="results_0"></table>
+    
+    <table class="table table-striped table-bordered results" id="results_0"></table>
 </div>
 
 <div class="row">
     <h2>Performance</h2>
-    <table class="results" id="results_5"></table>
+    <table class="table table-striped table-bordered results" id="results_5"></table>
 </div>
 
 <div class="row">
     <h2>Security</h2>
-    <table class="results" id="results_3"></table>
+    <table class="table table-striped table-bordered results" id="results_3"></table>
 </div>
 
 <div class="row">
     <h2>SEO</h2>
-    <table class="results" id="results_2"></table>
+    <table class="table table-striped table-bordered results" id="results_2"></table>
 </div>
 
 
 <div class="row">
     <h2>Mail</h2>
-    <table class="results" id="results_1"></table>
+    <table class="table table-striped table-bordered results" id="results_1"></table>
 </div>
 
 
@@ -114,7 +123,7 @@ $("#screenshots").fadeOut();
 
 
 function add_screenshot(status, output_desc, output_full, group) {
-    $("#screenshots")[0].innerHTML += output_full;
+     $("#screenshots-inner")[0].innerHTML += "<div class='item'>"+output_full+"</div>";
 }
 
 function add_result(status, output_desc, output_full, group, importance) {
@@ -137,7 +146,7 @@ function add_result(status, output_desc, output_full, group, importance) {
     
     if (status == 0) {
         element.setAttribute('class','status_ok');
-        a.innerHTML += '<img src="{{ STATIC_URL }}status_success.png" /> '
+        a.innerHTML += '<i class="icon-ok-sign"></i> '
         statuses_ok += 1;
         rate_curr += importance;
     } 
@@ -155,7 +164,7 @@ function add_result(status, output_desc, output_full, group, importance) {
         }   
     if (status == 3) {
         element.setAttribute('class','status_info');
-        a.innerHTML += '<img src="{{ STATIC_URL }}status_info.png" /> '
+        a.innerHTML += '<i class="icon-info-sign"></i> '
         statuses_info += 1;
         rate_max -= importance;
         }  
@@ -210,7 +219,7 @@ function check_results(){
                 finished = 1;
 
                 $("#screenshots").fadeIn("slow");
-                start_slider();
+
                 var rate = (Math.pow(rate_curr/rate_max,2))*10
                 
                 $("#rating").text( (rate).toFixed(1) );
@@ -260,17 +269,9 @@ var status_plot = jQuery.jqplot ('chart', [data],
     seriesColors: [ "#ffcccc", "#feffcc", "#ccffd1"],      
     });
 
-
-/* Nivo Slider */
-function start_slider() {
-    $('#screenshots').nivoSlider({
-            directionNavHide:false,
-            effect:'slideInRight',
-            controlNav: false,
-            animSpeed: 0,
-            
-            });
-};
+    $('.carousel').carousel({
+    interval: 2000
+    })
     
 </script>
     
