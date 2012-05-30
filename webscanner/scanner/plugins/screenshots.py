@@ -18,6 +18,7 @@ from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
+from django.template import Template, Context
 from settings import SCREENSHOT_SIZE, MEDIA_ROOT
 from selenium import webdriver
 from pyvirtualdisplay import Display
@@ -96,18 +97,26 @@ class PluginMakeScreenshots(PluginMixin):
                 jscode += "['%s',%s ],"%(time, timing[browsername][time]-timing[browsername]["navigationStart"])
             jscode += "]; \n"
             
+            template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
             res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-            res.output_full = '<a href="/media/%s"><img src="/media/%s" title="%s (version:%s)" /></a>'%(filename,thumb,browsername,browser.capabilities['version']
-            )
+            
+            res.output_full = template.render(Context({'filename':filename,
+                                                        'thumb': thumb,
+                                                        'browsername': browsername,
+                                                        'browserversion':browser.capabilities['version']}))
             res.save()
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
             browser.quit()
            
 
             
-
+        #template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
+    
         res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
         res.output_desc = unicode(_("Webpage load time")) 
+       
+        #res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals}))
+
         res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>")) 
         
         res.output_full += "<div id='timing_plot' style='height:400px;width:580px;'></div><script>\n"

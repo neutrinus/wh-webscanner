@@ -140,7 +140,7 @@ class PluginPagerank(PluginMixin):
         (popularity_rank,reach_rank) = get_alexa_rank(domain)           
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
         res.output_desc = unicode(_("alexa pagerank") )
-        res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <ul? <li>Popularity rank: %s</li> <li>Reachability rank: %s</li></ul>"%(popularity_rank,reach_rank ) ))
+        res.output_full = unicode(_("<p>Alexa collects statistics about visits by internet users to websites through the Alexa Toolbar. Based on the collected data, Alexa computes site ranking.</p> <ul> <li>Popularity rank: %s</li> <li>Reachability rank: %s</li></ul>"%(popularity_rank,reach_rank ) ))
         if (popularity_rank < 0) | (reach_rank < 0):
             res.status = RESULT_STATUS.warning
         else:
