@@ -24,6 +24,83 @@ from django.template import Template, Context
 
 from logs import log
 
+
+def gentmpfilename():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) 
+
+def select_smallest_file(filelist):    
+    minfile = filelist[0]
+    
+    for filek in filelist:
+        if  (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
+            minfile = filek
+            
+    return minfile
+    
+   
+def optimize_agif(filename):
+    file1 = PATH_TMPSCAN + gentmpfilename()
+    files = [filename,file1]
+    
+    command = 'gifsicle -O2 %s --output %s'%(filename,file1)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+
+    return select_smallest_file(files)
+
+
+def optimize_jpg(filename):
+    file1 = PATH_TMPSCAN +gentmpfilename()
+    files = [filename,file1]
+    
+    command = 'jpegtran -outfile %s -optimise -copy none %s'%(file1,filename)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+
+    if os.path.getsize(filename) > 10000:
+        file2 = PATH_TMPSCAN +gentmpfilename()
+        files.append(file2)
+        
+        command = 'jpegtran -outfile %s -optimise -progressive %s'%(file2,file1)
+        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+        (output, stderrdata) = p.communicate()    
+    return select_smallest_file(files)
+    
+    
+def optimize_png(filename):
+    file1 = PATH_TMPSCAN +gentmpfilename()
+    file2 = PATH_TMPSCAN +gentmpfilename()
+    files = [filename,file1, file2]
+
+    shutil.copyfile(filename, file1)
+
+    command =  'pngnq -n 256 -e .png -f %s '%(file1)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+    
+    command = 'pngcrush -rem alla -brute -reduce -q %s %s'%(file1, file2)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+    return select_smallest_file(files)
+    
+
+def optimize_gif(filename):
+    file1 = PATH_TMPSCAN +gentmpfilename()
+    #convert it to png and then optimize it as png
+    command = 'convert %s png:%s'%(filename,file1)
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    (output, stderrdata) = p.communicate()
+
+    flist = [optimize_png(file1), filename]
+    
+    return select_smallest_file(flist)
+    
+    
+
+    
+
+    
+
 class PluginOptiimg(PluginMixin):
     name = unicode(_('OptiIMG'))
     wait_for_download = True        
@@ -46,78 +123,7 @@ class PluginOptiimg(PluginMixin):
         return output.strip()
         
         
-    def gentmpfilename(self):
-        return PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) 
-    
-    def optimize_agif(self, filename):
-        file1 = self.gentmpfilename()
-        files = [filename,file1]
-        
-        command = 'gifsicle -O2 %s --output %s'%(filename,file1)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
 
-        return files
-
-
-    def optimize_jpg(self, filename):
-        file1 = self.gentmpfilename()
-        files = [filename,file1]
-        
-        command = 'jpegtran -outfile %s -optimise -copy none %s'%(file1,filename)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
-
-        if os.path.getsize(filename) > 10000:
-            file2 = self.gentmpfilename()
-            files.append(file2)
-            
-            command = 'jpegtran -outfile %s -optimise -progressive %s'%(file2,file1)
-            p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-            (output, stderrdata) = p.communicate()    
-        return files
-        
-        
-    def optimize_png(self, filename):
-        file1 = self.gentmpfilename()
-        file2 = self.gentmpfilename()
-        files = [filename,file1, file2]
-
-        shutil.copyfile(filename, file1)
-
-        command =  'pngnq -n 256 -e .png -f %s '%(file1)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
-        
-        command = 'pngcrush -rem alla -brute -reduce -q %s %s'%(file1, file2)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
-        return files
-        
-    
-    def optimize_gif(self, filename):
-        file1 = self.gentmpfilename()
-        #convert it to png and then optimize it as png
-        command = 'convert %s png:%s'%(filename,file1)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
-
-        flist = self.optimize_png(file1)
-        
-        flist.append(filename)
-        
-        return flist
-        
-        
-    def select_smallest_file(self, filelist):
-        minfile = filelist[0]
-        
-        for filek in filelist:
-            if  (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
-                minfile = filek
-        return minfile
-        
-    
     
     def run(self, command):
         domain = command.test.domain
@@ -142,30 +148,29 @@ class PluginOptiimg(PluginMixin):
                 ftype = self.identify(fpath)
                 
                 if ftype == 'JPEG' :
-                    ofiles = self.optimize_jpg(fpath)
+                    ofile = optimize_jpg(fpath)
                 elif ftype == 'PNG':
-                    ofiles = self.optimize_png(fpath)
+                    ofile = optimize_png(fpath)
                 elif ftype == 'GIF':
-                    ofiles = self.optimize_gif(fpath)
+                    ofile = optimize_gif(fpath)
                 elif ftype == 'AGIF':
-                    ofiles = self.optimize_agif(fpath)
+                    ofile = optimize_agif(fpath)
                 else:
-                    ofiles = None
+                    ofile = None
 
-                if ofiles:
-                    sfile = self.select_smallest_file(ofiles)
-                    bytes_saved = os.path.getsize(fpath) - os.path.getsize(sfile)
+                if ofile:
+                    bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
                     if bytes_saved == 0:
                         continue
 
                     
-                    log.debug("Optimized %s to %s"%(sfile,os.path.getsize(sfile) ))
+                    log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
         
 
                     a = {   "ifile":fpath[(len(path)+1):],
-                            "ofile":sfile[len(PATH_TMPSCAN):],
+                            "ofile":ofile[len(PATH_TMPSCAN):],
                             "ifilesize":os.path.getsize(fpath),
-                            "ofilesize":os.path.getsize(sfile),
+                            "ofilesize":os.path.getsize(ofile),
                             "bytessaved":bytes_saved,
                             "decrease": ( float(bytes_saved) / os.path.getsize(fpath) )*100,
 
@@ -173,10 +178,6 @@ class PluginOptiimg(PluginMixin):
                     optiimgs.append(a)
                     btotals += bytes_saved
                    
-                    #remove not needed files
-                    for ofile in ofiles[:1]:
-                        if (ofile != sfile) and (ofile != fpath):
-                            os.remove(ofile)
 
         template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
         

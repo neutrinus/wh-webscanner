@@ -21,8 +21,24 @@ from django.utils.translation import ugettext_lazy as _
 from settings import SCREENSHOT_SIZE, MEDIA_ROOT
 from selenium import webdriver
 from pyvirtualdisplay import Display
+from PIL import Image
+
+
+from scanner.plugins.optiimg import gentmpfilename, optimize_png, select_smallest_file
 
 from logs import log
+
+def crop_screenshot(inputfile):
+    
+    # size is width/height
+    img = Image.open(inputfile)
+    box = (0, 0, 940, 400)
+    area = img.crop(box)
+
+    ofile = MEDIA_ROOT+"/"+gentmpfilename()+".png"
+    area.save(ofile, 'png')
+    
+    return(ofile)
 
 
 
@@ -71,6 +87,8 @@ class PluginMakeScreenshots(PluginMixin):
             #give a bit time for loading async-js
             sleep(3)
             browser.save_screenshot(MEDIA_ROOT+"/"+filename)
+            thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)[len(MEDIA_ROOT)+1:]
+            
             timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
             #build javascript table with timing values
             jscode += "var timingdata_%s = [ "%(browsername)
@@ -79,7 +97,7 @@ class PluginMakeScreenshots(PluginMixin):
             jscode += "]; \n"
             
             res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-            res.output_full = '<a href="/media/%s"><img src="/media/%s" width="300px" title="%s (version:%s)" /></a>'%(filename,filename,browsername,browser.capabilities['version']
+            res.output_full = '<a href="/media/%s"><img src="/media/%s" title="%s (version:%s)" /></a>'%(filename,thumb,browsername,browser.capabilities['version']
             )
             res.save()
             log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
