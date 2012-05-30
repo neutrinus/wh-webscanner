@@ -27,3 +27,6 @@ guess-language
 pyenchant
 chardet
 beautifulsoup4
+
+PIL
+
