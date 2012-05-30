@@ -34,7 +34,7 @@
 
 
 
-<div class="progress progress-striped active">
+<div class="progress progress-striped active" id="progressbar" >
     <div class="bar" style="width: 10%;">10%</div>
 </div>
    
@@ -62,11 +62,9 @@
             
         </div>
     </div>
-
     
 <hr />
-    
-    
+        
 <h2>Siteshots</h2>
 <div id="myCarousel" class="carousel">
     <!-- Carousel items -->
@@ -77,7 +75,6 @@
     <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
     <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
-    
     
 
 <div class="row">
@@ -120,10 +117,9 @@ var statuses_info = 0;
 var rate_curr = 0;
 var rate_max = 0;
 var last_result = 0;
-
+var percentage = 0;
 var s = 0;
-$("#progressbar").progressbar({ value: 0 });
-$("#screenshots").fadeOut();
+
 
 
 function add_screenshot(status, output_desc, output_full, group) {
@@ -193,7 +189,12 @@ function check_progress(){
         url: "{% url scanner.views.scan_progress test.uuid %}",
         data: "",
         success: function(data) {
-            $("#progressbar").progressbar({ value: (data.done/data.ordered)*100 });
+            percentage = (data.done/data.ordered)*100
+            console.log(percentage)
+            $(".bar").css('width',percentage+'%');
+            $(".bar").text(percentage.toFixed(0)+'%');
+
+  
             timer_val = (data.test_duration.toFixed(0) )*10
             $("#timer").text(timer_val/10)
 
@@ -219,10 +220,8 @@ function check_results(){
                 add_result(value.status, value.output_desc, value.output_full, value.group, value.importance)
             });
             if (finished == 0) window.setTimeout(check_results,1000);   
-            if ($("#progressbar").progressbar("value") == 100) {
+            if (percentage == 100) {
                 finished = 1;
-
-                $("#screenshots").fadeIn("slow");
 
                 var rate = (Math.pow(rate_curr/rate_max,2))*10
                 

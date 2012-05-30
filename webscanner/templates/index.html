@@ -14,15 +14,16 @@
 
 <br /><br /><br /><br /><br /><br />
 <div class="row">
-    <div class="span4 offset4"> <img src="{{ STATIC_URL }}images/logo2.png" height=100px /></div>
+    <div class="span4 offset4"> <img src="{{ STATIC_URL }}images/logo2.png" /></div>
 </div>
 
+<br /><br /><br />
 <div>      
     
     <form class="form-vertical" action="{% url scanner.views.results %}" method="POST" style="text-align:center;">
         
         {% csrf_token %}
-        <input type="text" id="domain" name="url" style="width:60%;" placeholder="Type your website url: http://example.org" autocomplete="off"  />
+        <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="Type your website url: http://example.org" autocomplete="off"  />
         <input type="submit"  value="scan this website" class="btn-large" /> 
     </form>
 </div>    
