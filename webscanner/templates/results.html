@@ -35,7 +35,7 @@
 
 
 <div class="progress progress-striped active" id="progressbar" >
-    <div class="bar" style="width: 10%;">10%</div>
+    <div class="bar" style="width: 1%;">1%</div>
 </div>
    
 <br />
@@ -173,7 +173,7 @@ function sort_results() {
             .filter(function(){ return $(this).index() === 1; })
             .sortElements(
                 function(a, b){ 
-                    console.log( $(a).text() );
+                    console.log( $(a).sork );
                     return $(a).text() > $(b).text() ? -1 : 1;
                 },
                 function(){  return this.parentNode; }
@@ -207,14 +207,14 @@ function add_result(status, output_desc, output_full, group, importance) {
     if (status == 0) {
         element.setAttribute('class','status_ok');
         a.innerHTML += '<i class="icon-ok-sign"></i> '
-        a.sork = 0
+        element.sork = 0
         statuses_ok += 1;
         rate_curr += importance;
     } 
     if (status == 1) {
         element.setAttribute('class','status_error');
         a.innerHTML += '2<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
-        a.sork = 10
+        element.sork = 10
         statuses_error += 1;
         rate_curr += 0;
     }     

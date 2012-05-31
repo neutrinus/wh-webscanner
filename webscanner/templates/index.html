@@ -12,9 +12,9 @@
 
 {% block content %}
 
-<br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br />
 <div class="row">
-    <div class="span4 offset4"> <img src="{{ STATIC_URL }}images/logo2.png" /></div>
+    <div class="span4 offset4"><a href="/"> <img src="{{ STATIC_URL }}images/logo2.png" /></a></div>
 </div>
 
 <br /><br /><br />
@@ -23,8 +23,8 @@
     <form class="form-vertical" action="{% url scanner.views.results %}" method="POST" style="text-align:center;">
         
         {% csrf_token %}
-        <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="Type your website url: http://example.org" autocomplete="off"  />
-        <input type="submit"  value="scan this website" class="btn-large" /> 
+        <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="enter your website url: http://example.org" autocomplete="off"  />
+        <input type="submit"  value="scan this website" class="btn-large btn-primary" /> 
     </form>
 </div>    
 
@@ -126,8 +126,8 @@
                     <p>We respect your bizness time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>
                 </div>
                 <div class="span4">
-                    <h2>Historical data</h2>
-                    <p>Now you can </p>
+                    <h2>Scan deeper</h2>
+                    <p>We understand how important are results for your buisness. As VIP your webpages are checked deeper and with more care. Just to provide more acurate hints!</p>
                 </div>
             </div>
             
