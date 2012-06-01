@@ -287,7 +287,10 @@ function check_results(){
                 window.setTimeout(check_results,1000);            
             }
         },
-        error:function (xhr, ajaxOptions, thrownError){ console.log(xhr.status + thrownError);},
+        error:function (xhr, ajaxOptions, thrownError){
+                console.log(xhr.status + thrownError);
+                window.setTimeout(check_results,5000);
+        },
         dataType: "jsonp"
     });  
 }
