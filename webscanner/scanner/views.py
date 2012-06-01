@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.sitemaps import ping_google
+from django.contrib.auth import logout
 from django.http import HttpResponse
 from urlparse import urlparse
 from datetime import datetime
@@ -19,6 +20,7 @@ from scanner.models import *
 from logs import log
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
+from django.contrib import messages
 
 def index(request):
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
@@ -26,7 +28,6 @@ def index(request):
 def results(request):
     if request.method == 'POST':
         url = request.POST.get("url")
-        
         
         #basic url validiation
         if not urlparse(url).scheme:
@@ -51,6 +52,10 @@ def results(request):
         return redirect('/')
 
 def show_report(request, uuid):
+    #messages.info(request, 'Three credits remain in your account.')
+    #messages.success(request, 'Profile details updated.')
+    #messages.warning(request, 'Your account expires in three days.')
+    #messages.error(request, 'Document deleted.')
     #get_object_or_404 ?
     
     try:
@@ -78,9 +83,6 @@ def check_results(request, uuid):
                     'importance': result.importance,
                     'id': result.pk,
                     'group': result.group})
-        #if result.pk > lastresult:
-            #lastresult = result.pk
-        
     
     commands_count = CommandQueue.objects.filter(test=test).count()
     commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
@@ -101,4 +103,10 @@ def check_results(request, uuid):
         
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
     
-    
+   
+
+def ulogout(request):
+    logout(request)
+    messages.success(request, _('You have ben logged-out. We will miss you!'))
+    # Redirect to a success page.    
+    return redirect('/')

@@ -2,15 +2,24 @@ body {
 /*     color: #3B3B3B; */
     background: url(/static/images/bg.png) left top repeat ;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
-    padding-top: 40px;
+    padding-top: 50px;
 }
 
 
 
-row-fluid {
-    margin-top: 30px;
+.row {
+    margin-bottom: 30px;
 }
 
+div.section {
+    margin-bottom: 2em;
+    margin-top: 2em;
+}
+
+div.section h1 {
+    margin-bottom: 0.8em;
+    
+}
 
 table.results {
     width: 100%;    
@@ -56,4 +65,10 @@ code {
     margin: 10px 0;
     padding: 10px;
     display: block;
+}
+
+
+#footer {
+    text-align:right;
+    margin-right:7%;
 }

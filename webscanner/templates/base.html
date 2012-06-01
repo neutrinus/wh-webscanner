@@ -20,6 +20,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     
     <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
   
@@ -48,12 +49,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
-        
 
         
-        <div class="btn-group pull-right">
+        
+
+{% if user.is_authenticated %}
+        <div class="btn-group pull-right">        
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> Username
+                <i class="icon-user"></i> {{ user }}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -61,11 +64,24 @@
                 <li><a href="#">Payments</a></li>
                 <li><a href="#">History</a></li>
                 <li class="divider"></li>
-                <li><a href="#">Sign Out</a></li>
+                <li><a href="/logout">Sign Out</a></li>
             </ul>
         </div>
-        <div class="nav-collapse">
-            
+
+{% else %}
+        <div class="btn-group pull-right">        
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-user"></i> Anonymous
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Login</a></li>
+                <li><a href="#">Register</a></li>
+            </ul>
+        </div>        
+{% endif %}
+
+        <div class="nav-collapse">          
             <ul class="nav">
                 <li> <a href="/"> <img src="{{ STATIC_URL }}images/logo.png" style="height:20px" /></a> </li>
                 <li class="active"><a href="/">Home</a></li>
@@ -73,11 +89,29 @@
                 <li><a href="/contact">Contact</a></li>
             </ul>
         </div><!--/.nav-collapse -->
+        
     </div>
     </div>
 </div>
 
 
+{% if messages %}
+<div class="container">
+
+    <div class="row">
+        <div class="span8 offset2">
+            {% for message in messages %}    
+                <div class="alert alert-block {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    {% if message.tags %}<h4 class="alert-heading">{{ message.tags }}</h4>{% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endif %}
 
 
 <div class="container">
@@ -90,8 +124,8 @@ Something go wrong?
 
 
 <hr />
-<div class="row">
-    <div class="span3 offset12">Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a></div>
+<div id="footer" >
+    Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>
 </div>
 
 </body>
