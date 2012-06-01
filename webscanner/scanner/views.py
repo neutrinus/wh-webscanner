@@ -18,6 +18,7 @@ from annoying.decorators import render_to
 from scanner.models import *
 from logs import log
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max
 
 def index(request):
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
@@ -59,26 +60,6 @@ def show_report(request, uuid):
         
     return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
 
-def scan_progress(request, uuid):
-    from django.db.models import Max
-    test = Tests.objects.filter(uuid=uuid).get()
-
-    commands_count = CommandQueue.objects.filter(test=test).count()
-    commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
-
-    if commands_count == commands_done_count: 
-        #all test finished
-        last_command = CommandQueue.objects.filter(test=test).aggregate(Max('finish_date'))['finish_date__max']
-    else:
-        last_command = datetime.now()
-    
-    
-    
-    test_duration = (last_command - test.creation_date).total_seconds()
-    
-    data = {'ordered': commands_count+1, "done": commands_done_count+1, "test_duration": test_duration}
-    return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
-        
     
 def check_results(request, uuid):
     test = Tests.objects.filter(uuid=uuid).get()
@@ -100,6 +81,24 @@ def check_results(request, uuid):
         #if result.pk > lastresult:
             #lastresult = result.pk
         
-    return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(foo)), mimetype='application/json')
+    
+    commands_count = CommandQueue.objects.filter(test=test).count()
+    commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
+
+    if commands_count == commands_done_count: 
+        #all test finished
+        last_command = CommandQueue.objects.filter(test=test).aggregate(Max('finish_date'))['finish_date__max']
+    else:
+        last_command = datetime.now()
+     
+    test_duration = (last_command - test.creation_date).total_seconds()
+    
+    data = {    'ordered': commands_count+1,
+                "done": commands_done_count+1,
+                "test_duration": test_duration,
+                "results": foo,
+    }
+        
+    return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
     
     
