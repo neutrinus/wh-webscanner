@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.sitemaps import ping_google
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
 from urlparse import urlparse
 from datetime import datetime
@@ -103,6 +103,46 @@ def check_results(request, uuid):
         
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
     
+   
+def ulogin(request):
+    #reason = None
+    #if request.method == "POST":
+        ##def if_not_user_url(request):
+          ##return HttpResponseRedirect(reverse('acct_login'))
+
+        #form = LoginForm(request.POST)
+        #redirect_to = None
+        #if form.login(request):
+            #try:
+                #redirect_to = request.META.get('HTTP_REFERER', None)
+            #except KeyError:
+                #redirect_to = "/konto/"
+            #if (redirect_to==None) | (redirect_to==''):
+                #redirect_to = "/konto/"
+            #return HttpResponseRedirect(redirect_to)
+    #else:
+
+    
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                messages.success(request, _('Welcome!'))
+                return redirect('/')
+            else:
+                messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
+                return redirect('/')
+        else:
+            # Return an 'invalid login' error message.
+            messages.error(request, _('Invalid login data. Please try again.'))
+            return redirect('/')
+    else:
+        return render_to_response('login.html', {}, context_instance=RequestContext(request))            
+    
+
    
 
 def ulogout(request):

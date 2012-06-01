@@ -6,7 +6,7 @@ scannerpatterns = patterns('',
         url(r'^/?$', index),
         url(r'^results/?$', results),
         url(r'^logout?$', ulogout),
-        #url(r'^login?$', ulogin),
+        url(r'^login?$', ulogin),
         url(r'^check_results/(?P<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/?$', check_results),
         url(r'^reports/(?P<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/?$', show_report),
 
