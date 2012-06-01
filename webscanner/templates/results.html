@@ -173,8 +173,7 @@ function sort_results() {
             .filter(function(){ return $(this).index() === 1; })
             .sortElements(
                 function(a, b){ 
-                    console.log( $(a).sork );
-                    return $(a).text() > $(b).text() ? -1 : 1;
+                    return a.sork > b.sork ? -1 : 1;
                 },
                 function(){  return this.parentNode; }
              )  ;
@@ -207,28 +206,28 @@ function add_result(status, output_desc, output_full, group, importance) {
     if (status == 0) {
         element.setAttribute('class','status_ok');
         a.innerHTML += '<i class="icon-ok-sign"></i> '
-        element.sork = 0
+        a.sork = 1;
         statuses_ok += 1;
         rate_curr += importance;
     } 
     if (status == 1) {
         element.setAttribute('class','status_error');
-        a.innerHTML += '2<img src="{{ STATIC_URL }}status_unsuccess.png" /> '
-        element.sork = 10
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> ';
+        a.sork = 9;
         statuses_error += 1;
         rate_curr += 0;
     }     
     if (status == 2) {
         element.setAttribute('class','status_warning');
-        a.innerHTML += '3<img src="{{ STATIC_URL }}status_warning.png" /> '
-        a.sork = 7
+        a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> ';
+        a.sork = 7;
         statuses_warning += 1;
         rate_curr += (importance/4);
         }   
     if (status == 3) {
         element.setAttribute('class','status_info');
-        a.innerHTML += '4<i class="icon-info-sign"></i> '
-        a.sork = 3
+        a.innerHTML += '<i class="icon-info-sign"></i> ';
+        a.sork = 3;
         statuses_info += 1;
         rate_max -= importance;
         }  
@@ -246,6 +245,7 @@ function add_result(status, output_desc, output_full, group, importance) {
     
     $(element).fadeOut(0);
     $(element).fadeIn("slow");
+    sort_results()
 }
 
 
@@ -254,7 +254,6 @@ function check_results(){
         url: "{% url scanner.views.check_results test.uuid %}?last="+last_result,
         data: "",
         success: function(data) {
-            console.log(data)
 
             percentage = (data.done/data.ordered)*100
             $(".bar").css('width',percentage+'%');
@@ -284,11 +283,10 @@ function check_results(){
                 $("#progressbar").fadeOut("slow");
                 
             } else {
-                window.setTimeout(check_results,1000);            
+                window.setTimeout(check_results,1000);
             }
         },
         error:function (xhr, ajaxOptions, thrownError){
-                console.log(xhr.status + thrownError);
                 window.setTimeout(check_results,5000);
         },
         dataType: "jsonp"
