@@ -4,7 +4,6 @@
 {% block title %}Free scan your website{% endblock %}
 
 {% block extrahead %} 
-
 {% endblock %}
 
 
@@ -25,54 +24,29 @@
 
 <div class="section">
     <div class="row-fluid">
-        <div class="span12">
-           <p class="intro">Learn more <a href="#about-us">about us</a>  or <a href="#contact">get in touch</a>.</p>
-        </div>
-
-        <div class="slider-wrapper">
-            <div id="slider" class="nivoSlider">
-            <img src="{{ STATIC_URL }}images/slides/slide1.png" width="383" height="198" alt="" title="#htmlcaption2" />
-            <img src="{{ STATIC_URL }}images/slides/slide2.png" width="383" height="198" alt="" />
-            <img src="{{ STATIC_URL }}images/slides/slide3.png" width="383" height="198" alt="" title="#htmlcaption" />
+        <div class="row">
+            <div class="span3">
+                <h2><b>Welcome</b></h2>
+                <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form below and let us check your site!</p>
+                <p>Learn more <a href="#about-us">about us</a>  or <a href="#contact">get in touch</a>.</p>
             </div>
-            <div id="htmlcaption" class="nivo-html-caption"> Turn your visitors into <strong>satisfated</strong> customers.</div>
-            <div id="htmlcaption2" class="nivo-html-caption"> Just enter your website address below.</div>
-        </div>
-
-        <div class="row no-bottom-margin">
-        </div>
-
-      </section>
-      
-      <!-- scan -->
-      <section id="webscanner" style="padding-top:35px;" >
-            <h1>Scan your site!</h1> <br />
-            
-            <div class="row">
-                <div class="span3">
-                    <h2><b>Welcome</b></h2>
-                    <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form below and let us check your site!</p>
-                    <p>Learn more <a href="#about-us">about us</a>  or <a href="#contact">get in touch</a>.</p>
-
-                </div>
-                <div class="span3">
-                    <h2>It's Free!</h2>
-                    <p>We belive that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
-                    <p>Altrought there are additional options avalible for pro members.</p>
-                </div>
-                <div class="span3">
-                    <h2>Lots of tests</h2>
-                    <p>Our tests database was created as a response for requests from our customers. We put huge
-                    effort to cover all aspect of webpages problems (XSS, sql injecton) or misconfigurations
-                    (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
-                    of different technologies. We keep our technology updated - for you!</p>
-                </div>
-                <div class="span3">
-                    <h2>Lightning fast</h2>
-                    <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
-                    You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
-                    <p>In the nearest future there will be an option for pro members to send reports by e-mail. You will save more of your precious time!</p>    
-                </div>
+            <div class="span3">
+                <h2>It's Free!</h2>
+                <p>We belive that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
+                <p>Altrought there are additional options avalible for pro members.</p>
+            </div>
+            <div class="span3">
+                <h2>Lots of tests</h2>
+                <p>Our tests database was created as a response for requests from our customers. We put huge
+                effort to cover all aspect of webpages problems (XSS, sql injecton) or misconfigurations
+                (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
+                of different technologies. We keep our technology updated - for you!</p>
+            </div>
+            <div class="span3">
+                <h2>Lightning fast</h2>
+                <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
+                You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
+                <p>In the nearest future there will be an option for pro members to send reports by e-mail. You will save more of your precious time!</p>    
             </div>
         </div>
     </div>
@@ -81,7 +55,6 @@
 <div class="section">      
     <h1>Our checks.</h1>
     <div class="row-fluid">
-    <div class="span12">
         <div class="row">
             <div class="span4">
                 <h2>Compatibility <img alt="" class="align-right" src="{{ STATIC_URL }}images/services/webdesign.png" /></h2>
@@ -109,17 +82,13 @@
                     <h2>Cloud-based <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/logo-design-and-branding.png" /></h2>
                     <p>All of our services are cloud-based. There is <b>no need to install</b> anything on your computer. You can reach it from any place in the world!</p>
                     
-                    <p>Our distributed free website scanner gives you highest performance connected with high availability. <b>webcheck.me</b> was created to be a handy tool. </p>
-            
+                    <p>Our distributed free website scanner gives you highest performance connected with high availability. <b>webcheck.me</b> was created to be a handy tool. </p>          
             </div>
             <div class="span4">
                     <h2>E-mail <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/newsletter.png" /></h2>
                     <p>This monitoring tool checks not only websites but also other aspects of electronical commounication. <b>webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p>
-                    <p></p>                
             </div>
         </div>
-
-    </div>
     </div>
 </div>
     
@@ -150,11 +119,8 @@
         <div class="span3 offset10">
             <!--<h1>become a VIP!</h1>-->
             <a href="/buy/" class="btn btn-large btn-inverse">    <i class="icon-star icon-white"></i> Become a VIP</a>
-        
-        </div>
-    
+        </div>  
     </div>
-
 </div>
     
 <script type="text/javascript">
