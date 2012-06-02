@@ -71,4 +71,5 @@ code {
 #footer {
     text-align:right;
     margin-right:7%;
+    clear: all;
 }
