@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Login{% endblock %}
+
+
+{% block content %}
+
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+
+{% if user.is_authenticated %}
+You are already logged in
+{% else %}
+
+<section style="margin-top:3em">
+    <form class="well form-horizontal" id="form_login" method="post" action="{% url django.contrib.auth.views.login %}" >
+        <h2>Login <i class="icon-user"></i></h2>
+        {% csrf_token %}
+        
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="input01">Login</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="username" name="username" placeholder="john" /> 
+                </div>
+
+                <label class="control-label" for="input02">Password</label>
+                <div class="controls">
+                    <input type="password" class="input-xlarge" id="password" name="password" placeholder="**********">  </input>
+                    <p class="help-block"><a href="{% url auth_password_reset %}">Forgot</a> your password?  <a href="{% url registration_register %}">Need an account</a>?</p>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Login</button>&nbsp;
+                <a href="/" class="btn">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+
+<!--<script type="text/javascript">
+// $("#domain").focus();
+</script>-->
+</section>
+{% endif %}
+
+{% endblock %}
+

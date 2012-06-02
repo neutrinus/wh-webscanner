@@ -9,13 +9,14 @@ html2text
 
 django==1.4
 django-annoying==0.7.6
-django-debug-toolbar==0.8.5
+django-debug-toolbar
 django-extensions==0.6
 django-autoroot
 django-model-utils==1.0.0
 South==0.7.3
 
 django-registration
+django-crispy-forms
 
 
 M2Crypto

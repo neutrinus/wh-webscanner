@@ -124,9 +124,7 @@ jQuery.fn.sortElements = (function(){
     var sort = [].sort;
  
     return function(comparator, getSortable) {
- 
-        getSortable = getSortable || function(){return this;};
- 
+        getSortable = getSortable || function(){return this;}; 
         var placements = this.map(function(){
  
             var sortElement = getSortable.call(this),
@@ -167,7 +165,8 @@ jQuery.fn.sortElements = (function(){
 
 function sort_results() {
      ["#results_0", "#results_1", "#results_2", "#results_3", "#results_5" ].forEach( function(item) {
-         $(item).find('td')
+         $(item).children()
+            .find('td')
             .filter(function(){ return $(this).index() === 1; })
             .sortElements(
                 function(a, b){ 
@@ -183,7 +182,7 @@ function add_screenshot(status, output_desc, output_full, group) {
      $("#screenshots-inner")[0].innerHTML += output_full;
 }
 
-function add_result(status, output_desc, output_full, group, importance) {
+function add_result(status, output_desc, output_full, group, importance) {.filter(function(){ return $(this).index() === 1; })
     if (group == 4){
         add_screenshot(status, output_desc, output_full, group);
         return(0);
@@ -243,7 +242,7 @@ function add_result(status, output_desc, output_full, group, importance) {
     
     $(element).fadeOut(0);
     $(element).fadeIn("slow");
-    sort_results()
+//     sort_results()
 }
 
 

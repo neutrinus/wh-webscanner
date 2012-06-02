@@ -12,11 +12,11 @@
 
 {% block content %}
 
-<div class="row" style="margin-top:8em;">
+<div class="row" style="margin-top:9em;">
     <div class="span4 offset4"><a href="/"> <img src="{{ STATIC_URL }}images/logo2.png" /></a></div>
 </div>
 
-<form class="form-vertical" action="{% url scanner.views.results %}" method="POST" style="text-align:center; margin-top:4em;">
+<form class="form-vertical" action="{% url scanner.results %}" method="POST" style="text-align:center; margin-top:4em;">
     {% csrf_token %}
     <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="enter your website url: http://example.org" autocomplete="off"  />
     <input type="submit"  value="scan this website" class="btn-large btn-primary" /> 

@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls.defaults import patterns, include, url
-from webscanner.scanner.urls import scannerpatterns
 from django.conf import settings                                                
 import registration
 from django.contrib import admin
@@ -19,8 +18,9 @@ urlpatterns += patterns('django.views.generic.simple',
     #url(r'^/?$','redirect_to',{'url':'/user/welcome/'}),
     #url(r'^/user/?$','redirect_to',{'url':'/user/welcome/'}),
 )
+urlpatterns += patterns('',   (r'^', include('scanner.urls')), )
 
-urlpatterns += patterns(   (r'^registration/', include('registration.urls')), )
+urlpatterns += patterns('',   (r'^user/', include('registration.urls')), )
 
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static                                      
@@ -28,6 +28,5 @@ from django.conf.urls.static import static
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)  
-urlpatterns += scannerpatterns
 
    
