@@ -182,7 +182,7 @@ function add_screenshot(status, output_desc, output_full, group) {
      $("#screenshots-inner")[0].innerHTML += output_full;
 }
 
-function add_result(status, output_desc, output_full, group, importance) {.filter(function(){ return $(this).index() === 1; })
+function add_result(status, output_desc, output_full, group, importance) {
     if (group == 4){
         add_screenshot(status, output_desc, output_full, group);
         return(0);
