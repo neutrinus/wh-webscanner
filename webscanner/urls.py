@@ -19,7 +19,7 @@ urlpatterns += patterns('django.views.generic.simple',
     #url(r'^/user/?$','redirect_to',{'url':'/user/welcome/'}),
 )
 urlpatterns += patterns('',   (r'^', include('scanner.urls')), )
-
+urlpatterns += patterns('',   (r'^', include('account.urls')), )
 urlpatterns += patterns('',   (r'^user/', include('registration.urls')), )
 
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns

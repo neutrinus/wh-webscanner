@@ -165,7 +165,7 @@ jQuery.fn.sortElements = (function(){
 
 function sort_results() {
      ["#results_0", "#results_1", "#results_2", "#results_3", "#results_5" ].forEach( function(item) {
-         $(item).children()
+         $(item).contents()
             .find('td')
             .filter(function(){ return $(this).index() === 1; })
             .sortElements(

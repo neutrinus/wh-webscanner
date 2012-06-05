@@ -11,4 +11,3 @@ urlpatterns = patterns('scanner.views',
 
 
 
-

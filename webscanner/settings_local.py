@@ -17,7 +17,7 @@ DATABASES = {
     }
 }
 
-DATABASE_OPTIONS = {'timeout': 60}
+DATABASE_OPTIONS = {'timeout': 200}
 
 
 TEMPLATE_CONTEXT_PROCESSORS += [
@@ -49,4 +49,14 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 SESSION_COOKIE_SECURE=0
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST='localhost'
+#EMAIL_PORT=1025
+#EMAIL_HOST_USER=''
+#EMAIL_HOST_PASSWORD=''
+#EMAIL_USE_TLS=False
+
+
 
