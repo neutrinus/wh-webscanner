@@ -11,7 +11,7 @@ import urlparse
 import string
 import re
 import shlex
-
+import signal
 
 from time import sleep
 from plugin import PluginMixin
@@ -28,6 +28,14 @@ from PIL import Image
 from scanner.plugins.optiimg import gentmpfilename, optimize_png, select_smallest_file
 
 from logs import log
+
+
+class Alarm(Exception):
+    pass
+
+def alarm_handler(signum, frame):
+    raise Alarm
+
 
 def crop_screenshot(inputfile):
     
@@ -58,6 +66,9 @@ class PluginMakeScreenshots(PluginMixin):
         url = command.test.url
         from scanner.models import Results
 
+        
+
+
         display = Display(visible=0,size=SCREENSHOT_SIZE)
         display.start()
         log.debug("VDisplay started: %s "%(str(display)))
@@ -74,40 +85,47 @@ class PluginMakeScreenshots(PluginMixin):
         for browsername in browsernames:
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
 
-            if browsername == "firefox":
-                browser = webdriver.Firefox()
-            if browsername == "chrome":
-                browser = webdriver.Chrome()
+            
+            signal.signal(signal.SIGALRM, alarm_handler)
+            signal.alarm(2*60)  # 2 minutes
+
+            try:
+                if browsername == "firefox":
+                    browser = webdriver.Firefox()
+                if browsername == "chrome":
+                    browser = webdriver.Chrome()
+                    
+                log.debug("Browser %s started: %s "%(browsername, str(browser)))
                 
-            log.debug("Browser %s started: %s "%(browsername, str(browser)))
-            
-            #http://seleniumhq.org/docs/04_webdriver_advanced.html
-            browser.implicitly_wait(20)
-            browser.get(url)
-            
-            #give a bit time for loading async-js
-            sleep(3)
-            browser.save_screenshot(MEDIA_ROOT+"/"+filename)
-            thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)[len(MEDIA_ROOT)+1:]
-            
-            timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
-            #build javascript table with timing values
-            jscode += "var timingdata_%s = [ "%(browsername)
-            for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                jscode += "['%s',%s ],"%(time, timing[browsername][time]-timing[browsername]["navigationStart"])
-            jscode += "]; \n"
-            
-            template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
-            res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-            
-            res.output_full = template.render(Context({'filename':filename,
-                                                        'thumb': thumb,
-                                                        'browsername': browsername,
-                                                        'browserversion':browser.capabilities['version']}))
-            res.save()
-            log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
-            browser.quit()
-           
+                #http://seleniumhq.org/docs/04_webdriver_advanced.html
+                browser.implicitly_wait(20)
+                browser.get(url)
+                
+                #give a bit time for loading async-js
+                sleep(3)
+                browser.save_screenshot(MEDIA_ROOT+"/"+filename)
+                thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)[len(MEDIA_ROOT)+1:]
+                
+                timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+                #build javascript table with timing values
+                jscode += "var timingdata_%s = [ "%(browsername)
+                for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                    jscode += "['%s',%s ],"%(time, timing[browsername][time]-timing[browsername]["navigationStart"])
+                jscode += "]; \n"
+                
+                template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
+                res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
+                
+                res.output_full = template.render(Context({'filename':filename,
+                                                            'thumb': thumb,
+                                                            'browsername': browsername,
+                                                            'browserversion':browser.capabilities['version']}))
+                res.save()
+                log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
+                browser.quit()
+                signal.alarm(0)
+            except Alarm:
+                log.warning("shoot timeout")
 
             
         #template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
