@@ -1,0 +1,147 @@
+# -*- encoding: utf-8 -*-
+# Create your views here.
+import os
+import random
+from decimal import Decimal
+from datetime import datetime as dt, timedelta as td
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext_lazy as _
+from django.http import Http404, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from logging import getLogger
+
+from annoying.decorators import render_to
+from annoying.functions import get_object_or_None as gooN
+
+from paypal.standard.forms import PayPalPaymentsForm
+from paypal.standard.forms import PayPalEncryptedPaymentsForm
+from paypal.standard.ipn.signals import (payment_was_successful,
+                                         payment_was_flagged)
+
+
+SITE_NAME = Site.objects.get_current()
+log= getLogger(__name__)
+
+def make_form(d):
+    t = PayPalPaymentsForm
+    if getattr(settings,'PAYPAL_ENCRYPTED',False):
+        t=PayPalEncryptedPaymentsForm
+    form = t(initial=d)
+    if getattr(settings,'DEBUG',False):
+        return form.sandbox()
+    else:
+        return form.render()
+        
+@login_required
+@render_to('payments/buy.html')
+def buy(req,tariff):
+    tariff = gooN(TariffDef,pk=tariff)
+    if not tariff:
+        raise Http404
+
+    coupon = None
+    if req.GET.get('coupon',None):
+        coupon = Coupon.objects.filter(used=False,
+                                   code=req.GET.get('coupon',None))
+        if coupon:
+            coupon=coupon[0]
+        else:
+            coupon = False
+
+    price = tariff.price - tariff.price*Decimal(coupon.percent)/Decimal("100.0") \
+                if coupon else tariff.price
+    if price < Decimal("0"): price = Decimal("0")
+    
+    tariff.price = price
+
+    t=Transaction(user=req.user,
+                  type='paypal',
+                  price=price,
+                  coupon = coupon if coupon else None,
+                  tariff_def = tariff,
+                 )
+    t.save()
+
+    return dict(
+        coupon = coupon,
+        tariff = tariff,
+        paypal =
+            make_form(dict(
+            bussiness = settings.PAYPAL_RECEIVER_EMAIL,
+            amount = price,
+            item_name = unicode(tariff.name),
+            item_number = unicode(tariff.id),
+            invoice = "%s"%t.code,
+            notify_url = "%s%s" %(SITE_NAME, reverse('paypal-ipn')),
+            return_url = "%s%s" %(SITE_NAME,
+                                  reverse('gpayments_paypal_return')),
+            cancel_return = "%s%s" %(SITE_NAME,
+                                     reverse('gpayments_paypal_cancel')),
+        ))
+        ,
+    )
+
+@login_required
+@render_to('payments/tariffs.html')
+def tariffs(req):
+    tars = TariffDef.objects.filter(is_sellable=True)
+    return {'tariffs':tars}
+
+@csrf_exempt
+@render_to('payments/paypal_return.html')
+def paypal_return(req):
+    return {
+        'msg':_("Transakcja zakończona powodzeniem. Dziękujemy.")
+    }
+
+@csrf_exempt
+@render_to('payments/paypal_cancel.html')
+def paypal_cancel(req):
+    return {
+        'msg':_("Transakcja anulowana")
+    }
+
+
+# signals
+def payment_ok(sender, **kwargs):
+    print'------ paypal ok -----------'
+    ipn=sender
+    print 'paypal invoice',ipn.invoice
+    try:
+        t=gooN(Transaction,code=ipn.invoice)
+        if not t:
+            print 'error: not transaction in db: %s'%ipn.invoice
+            return
+        print 'db transaction',t,t.code
+        u=gooN(User,pk=t.user.pk)
+        if not u:
+            print 'error: not user %s in db'%t.user
+            return
+        print 'db paypal user',u
+        if t and t.done():
+            p=u.get_profile()
+            p.tariff_def = t.tariff_def
+            p.expiration_date = dt.now() + td(days=t.tariff_def.duration)
+            p.save()
+            t.save()
+            log.info('transaction %s OK!'%t.code)
+            send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
+            
+            return
+        else:
+            log.error('error: transaction %s FAILED but cash go '%t.code)
+            
+    except Exception as e:
+        log.error('error %s'%e)
+
+
+def payment_flagged(sender, **kwargs):
+    print'------ paypal flagged -----------'
+    return payment_ok(sender, **kwargs)
+
+payment_was_successful.connect(payment_ok)
+payment_was_flagged.connect(payment_flagged)

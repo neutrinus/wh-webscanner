@@ -1,0 +1,41 @@
+{% extends 'index.html' %}
+{%load i18n%}
+
+
+
+{% block content %}
+
+     
+{% trans "Kod rabatowy" %}<br/>
+
+{% if coupon %}
+    {% blocktrans with percent=coupon.percent %}
+        Kupon rabatowy na {{percent}}%
+    {% endblocktrans %}
+{%else%}
+
+    {%if coupon == None %}
+        <form action='' method='get'>
+            <input type=text name='coupon' />
+            <input type=submit value='{% trans "Pobierz kupon" %}'/>
+        </form>
+    {% else %}
+        {% trans "Kod rabatowy niepoprawny" %}
+    {% endif %}
+
+{% endif %}
+<br/>
+
+{% trans "Pakiet"%}: {{tariff.name}}<br/>
+{% trans "Cena"%}: {{tariff.price}}<br/>
+
+<br/>
+{%trans "Testy"%}:<br/>
+{% for t in tariff.tests.all %}
+{{t}} ({%trans "min. częstotliwość testu"%}: {{t.max_frequency}} min.)<br/>
+{% endfor %}<br/>
+
+{{paypal}}
+
+{% endblock content %}
+

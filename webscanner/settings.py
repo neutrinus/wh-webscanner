@@ -14,7 +14,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 ACCOUNT_ACTIVATION_DAYS=1
-DEFAULT_FROM_EMAIL = 'root@localhost'
+DEFAULT_FROM_EMAIL = 'noreply@webcheck.me'
 EMAIL_HOST='localhost'
 EMAIL_PORT=587
 EMAIL_HOST_USER='root'
@@ -22,8 +22,8 @@ EMAIL_HOST_PASSWORD='xxx'
 EMAIL_USE_TLS=False
 EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
-LOGIN_REDIRECT_URL = '/user/welcome/'
-LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
 
 DATABASES = {
     'default': {
@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
 
     #apps
+    'account',
     'scanner',
 
     #3rd party apps,
