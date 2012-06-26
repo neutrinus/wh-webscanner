@@ -85,12 +85,6 @@ def buy(req,tariff):
         ,
     )
 
-@login_required
-@render_to('payments/tariffs.html')
-def tariffs(req):
-    tars = TariffDef.objects.filter(is_sellable=True)
-    return {'tariffs':tars}
-
 @csrf_exempt
 @render_to('payments/paypal_return.html')
 def paypal_return(req):
