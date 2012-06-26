@@ -44,7 +44,7 @@ def crop_screenshot(inputfile):
     box = (0, 0, 940, 400)
     area = img.crop(box)
 
-    ofile = MEDIA_ROOT+"/"+gentmpfilename()+".png"
+    ofile = MEDIA_ROOT+"/screenshots/thumb_"+gentmpfilename()+".png"
     area.save(ofile, 'png')
     
     return(ofile)
