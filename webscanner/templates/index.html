@@ -3,7 +3,7 @@
 
 {% block title %}Free scan your website{% endblock %}
 
-{% block extrahead %} 
+{% block extrahead %}
 {% endblock %}
 
 
@@ -19,7 +19,7 @@
 <form class="form-vertical" action="{% url scanner.results %}" method="POST" style="text-align:center; margin-top:4em;">
     {% csrf_token %}
     <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="enter your website url: http://example.org" autocomplete="off"  />
-    <input type="submit"  value="scan this website" class="btn-large btn-primary" /> 
+    <input type="submit"  value="scan this website" class="btn-large btn-primary" />
 </form>
 
 
@@ -33,13 +33,13 @@
             </div>
             <div class="span3">
                 <h2>It's Free!</h2>
-                <p>We belive that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
-                <p>Altrought there are additional options avalible for pro members.</p>
+                <p>We believe that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
+                <p>There are, though, additional options available for pro members.</p>
             </div>
             <div class="span3">
                 <h2>Lots of tests</h2>
-                <p>Our tests database was created as a response for requests from our customers. We put huge
-                effort to cover all aspect of webpages problems (XSS, sql injecton) or misconfigurations
+                <p>Our tests database was created in response to requests from our customers. We make every
+                effort to cover all aspects of webpages problems (XSS, sql injecton) or misconfigurations
                 (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
                 of different technologies. We keep our technology updated - for you!</p>
             </div>
@@ -47,56 +47,56 @@
                 <h2>Lightning fast</h2>
                 <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
                 You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
-                <p>In the nearest future there will be an option for pro members to send reports by e-mail. You will save more of your precious time!</p>    
+                <p>In the near future there will be an option for pro members to recive reports by e-mail. You will save more of your precious time!</p>
             </div>
         </div>
     </div>
-</div>      
-      
-<div class="section">      
+</div>
+
+<div class="section">
     <h1>Our checks.</h1>
     <div class="row-fluid">
         <div class="row">
             <div class="span4">
                 <h2>Compatibility <img alt="" class="align-right" src="{{ STATIC_URL }}images/services/webdesign.png" /></h2>
-                <p>World of webbrowsers is huge and changing all the time. There is Mozilla Firefox, Google Chrome, Internet Explorer, Opera, Safari and many others. Wait - there are different versions of them!</p>
-                <p><b>webcheck.me</b> allows you to check how your page behave in different enviroments, by providing full-size <b>website snapshots</b>.</p>
+                <p>The world of webbrowsers is huge and changing all the time. There is Mozilla Firefox, Google Chrome, Internet Explorer, Opera, Safari and many others. Wait - there are different versions of them!</p>
+                <p><b>Webcheck.me</b> allows you to check how your page behaves in different enviroments, by providing full-size <b>website snapshots</b>.</p>
             </div>
             <div class="span4">
                 <h2>Performance <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/webdevelopment.png" /></h2>
-                <p>We measure how fast does perform your webpage, then give it a note. You will know what should be changed to make it faster. Maybe your page size is too big? Maybe loadtime is too long aswell? Let us check it!</p>
-                <p>Our algorithms will sugest you what can be losslessly <b>minimalized</b> - images, css styles and html.  </p>
+                <p>We measure how fast your webpage performs, then give it a note. You will know what should be changed to make it faster. Maybe your page size is too big? Maybe loadtime is too long as well? Let us check it!</p>
+                <p>Our algorithms will sugest to you what can be easily <b>minimalized</b> - images, css styles and html.  </p>
             </div>
             <div class="span4">
                 <h2>Security <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/seo-services.png" /></h2>
-                <p>Security problems lead to decrease your brand value. React fast on any malware, viruses or hackers attack before they hit your customers. webcheck.me is a perfect tool to monitor and check systematically your website.</p>
+                <p>Security problems lead to a decrease in your brand value. React fast on any malware, viruses or hackers attack before they hit your customers. webcheck.me is a perfect tool to monitor and check your website systematically.</p>
                 <p>We provide <b>malware check</b>, scan your website against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</b>.  </p>
             </div>
         </div>
         <div class="row">
             <div class="span4">
                     <h2>SEO <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/print-design.png" /></h2>
-                    <p>We understand how important for your business is to be easly found by search engines (like google or yahoo). This probably have direct connection with your profits.</p>
-                    <p><b>webcheck.me</b> checks parameters that have influence on your position in google search. We want to help your customers to reach you! </p>
+                    <p>We understand how important it is for your business to be easly found by search engines (like google or yahoo). This probably have direct connection with your profits.</p>
+                    <p><b>webcheck.me</b> checks parameters that influences on your position in google search. We want to help your customers to reach you! </p>
             </div>
             <div class="span4">
                     <h2>Cloud-based <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/logo-design-and-branding.png" /></h2>
                     <p>All of our services are cloud-based. There is <b>no need to install</b> anything on your computer. You can reach it from any place in the world!</p>
-                    
-                    <p>Our distributed free website scanner gives you highest performance connected with high availability. <b>webcheck.me</b> was created to be a handy tool. </p>          
+
+                    <p>Our distributed free website scanner gives you highest performance with high availability. <b>Webcheck.me</b> was created to be a handy tool. </p>
             </div>
             <div class="span4">
                     <h2>E-mail <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/newsletter.png" /></h2>
-                    <p>This monitoring tool checks not only websites but also other aspects of electronical commounication. <b>webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p>
+                    <p>This monitoring tool checks not only websites but also other aspects of communication. <b>Webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p>
             </div>
         </div>
     </div>
 </div>
-    
+
     <!--
 <div class="section">
     <h1>Want more?</h1>
-    
+
     <div class="row-fluid">
         <div class="span12">
             <div class="row">
@@ -115,14 +115,14 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="span3 offset10">
             <a href="/buy/" class="btn btn-large btn-inverse">    <i class="icon-star icon-white"></i> Become a VIP</a>
-        </div>  
+        </div>
     </div>
 </div>-->
-    
+
 <script type="text/javascript">
         $("#domain").focus();
 </script>
