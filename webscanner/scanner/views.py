@@ -28,24 +28,24 @@ def index(request):
 def results(request):
     if request.method == 'POST':
         url = request.POST.get("url")
-        
+
         #basic url validiation
         if not urlparse(url).scheme:
-            url = "http://"+url        
+            url = "http://"+url
         if urlparse(url).scheme not in ["http","https"]:
-            return redirect('/')    
-        
+            return redirect('/')
+
         test = Tests(url=url)
         test.save()
-        
+
         log.debug("User ordered report for url:%s, report_uuid:%s"%(url,test.uuid))
-        
-        # order all posible commands 
+
+        # order all posible commands
         for testname,plugin in TESTDEF_PLUGINS:
-            oplugin = PLUGINS[ testname ]()    
+            oplugin = PLUGINS[ testname ]()
             a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
             a.save()
-    
+
         #TODO: please dont hardcode urls..
         return redirect('/reports/'+ test.uuid)
     else:
@@ -57,24 +57,24 @@ def show_report(request, uuid):
     #messages.warning(request, 'Your account expires in three days.')
     #messages.error(request, 'Document deleted.')
     #get_object_or_404 ?
-    
+
     try:
         test = Tests.objects.filter(uuid=uuid).get()
     except ObjectDoesNotExist:
         return redirect('/')
-        
-    return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))        
 
-    
+    return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))
+
+
 def check_results(request, uuid):
     test = Tests.objects.filter(uuid=uuid).get()
-   
+
     last = request.GET.get("last")
     if not last:
         last=0
-       
+
     results = Results.objects.filter(test=test).filter(pk__gt = last)
-    
+
     foo = []
     for result in results:
         foo.append({'output_desc':result.output_desc,
@@ -83,76 +83,23 @@ def check_results(request, uuid):
                     'importance': result.importance,
                     'id': result.pk,
                     'group': result.group})
-    
+
     commands_count = CommandQueue.objects.filter(test=test).count()
     commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
 
-    if commands_count == commands_done_count: 
+    if commands_count == commands_done_count:
         #all test finished
         last_command = CommandQueue.objects.filter(test=test).aggregate(Max('finish_date'))['finish_date__max']
     else:
         last_command = datetime.now()
-     
+
     test_duration = (last_command - test.creation_date).total_seconds()
-    
+
     data = {    'ordered': commands_count+1,
                 "done": commands_done_count+1,
                 "test_duration": test_duration,
                 "results": foo,
     }
-        
+
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
-    
-   
-def ulogin(request):
-    
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.success(request, _('Welcome %s!'%(user)) )
-                return redirect('/')
-            else:
-                messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
-                return redirect('/')
-        else:
-            # Return an 'invalid login' error message.
-            messages.error(request, _('Invalid login data. Please try again.'))
-            return render_to_response('login.html', {}, context_instance=RequestContext(request))
-    else:
-        return render_to_response('login.html', {}, context_instance=RequestContext(request))            
-    
 
-def uregister(request):
-    
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.success(request, _('Welcome %s!'%(user)) )
-                return redirect('/')
-            else:
-                messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
-                return redirect('/')
-        else:
-            # Return an 'invalid login' error message.
-            messages.error(request, _('Invalid login data. Please try again.'))
-            return render_to_response('register.html', {}, context_instance=RequestContext(request))
-    else:
-        return render_to_response('register.html', {}, context_instance=RequestContext(request))            
-
-   
-
-def ulogout(request):
-    logout(request)
-    messages.success(request, _('You have ben logged-out. We will miss you!'))
-    # Redirect to a success page.    
-    return redirect('/')

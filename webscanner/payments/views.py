@@ -39,8 +39,8 @@ def make_form(d):
         return form.render()
 
 @login_required
-@render_to('payments/buy.html')
-def buy(req):
+@render_to('payments/payments.html')
+def payments(req):
 
     if req.GET.get('coupon',None):
         coupon = Coupon.objects.filter(used=False, code=req.GET.get('coupon',None))
@@ -62,7 +62,10 @@ def buy(req):
                  )
     t.save()
 
+
+
     return dict(
+        transactions = Transaction.objects.filter(user = req.user),
         coupon = coupon,
         paypal =
             make_form(dict(
@@ -86,9 +89,6 @@ def buy(req):
         ))
         ,
     )
-
-paypal_dict = {
-}
 
 
 @csrf_exempt

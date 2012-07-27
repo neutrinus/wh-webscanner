@@ -34,3 +34,49 @@ def ulogout(request):
 
     return redirect('/')
 
+
+#def ulogin(request):
+
+    #if request.method == "POST":
+        #username = request.POST['username']
+        #password = request.POST['password']
+
+        #user = authenticate(username=username, password=password)
+        #if user is not None:
+            #if user.is_active:
+                #login(request, user)
+                #messages.success(request, _('Welcome %s!'%(user)) )
+                #return redirect('/')
+            #else:
+                #messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
+                #return redirect('/')
+        #else:
+            ## Return an 'invalid login' error message.
+            #messages.error(request, _('Invalid login data. Please try again.'))
+            #return render_to_response('login.html', {}, context_instance=RequestContext(request))
+    #else:
+        #return render_to_response('login.html', {}, context_instance=RequestContext(request))
+
+
+#def uregister(request):
+
+    #if request.method == "POST":
+        #username = request.POST['username']
+        #password = request.POST['password']
+
+        #user = authenticate(username=username, password=password)
+        #if user is not None:
+            #if user.is_active:
+                #login(request, user)
+                #messages.success(request, _('Welcome %s!'%(user)) )
+                #return redirect('/')
+            #else:
+                #messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
+                #return redirect('/')
+        #else:
+            ## Return an 'invalid login' error message.
+            #messages.error(request, _('Invalid login data. Please try again.'))
+            #return render_to_response('register.html', {}, context_instance=RequestContext(request))
+    #else:
+        #return render_to_response('register.html', {}, context_instance=RequestContext(request))
+

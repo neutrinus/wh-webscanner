@@ -98,6 +98,7 @@ class Transaction(models.Model):
             self.status = TRANSACTION_STATUS_TYPES.success
             return True
         return False
+
     def save(self,*a,**b):
         if self.coupon and self.status == TRANSACTION_STATUS_TYPES.success and not self.coupon.used:
             self.coupon.used=True

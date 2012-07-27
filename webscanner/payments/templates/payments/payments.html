@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+{%load i18n%}
+
+
+
+{% block content %}
+
+<h1>Payments</h1>
+
+<section style="margin-top:3em">
+    <div class="well">
+    {% trans "Coupon" %}<br/>
+
+    {% if coupon %}
+        {% blocktrans with percent=coupon.percent %}
+            Coupon code gives you {{percent}}% discount
+        {% endblocktrans %}
+    {%else%}
+        <form action='' method='get'>
+            <input type=text name='coupon' />
+            <input type=submit value='{% trans "Get coupon" %}'/>
+        </form>
+    {% endif %}
+
+    {{paypal}}
+
+    </div>
+</section>
+
+{% if transactions %}
+<h2>Payments archive</h2>
+<div class="container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>code</th>
+                <th>status</th>
+                <th>price</th>
+                <th>coupon</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.code }}</td>
+                <td>{{ transaction.status }}</td>
+                <td>{{ transaction.price }}</td>
+                <td>{{ transaction.coupon }}</td>
+                <td>{{ transaction.creation_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endif %}
+
+
+{% endblock content %}
+

@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = patterns('payments.views',
         url(r'^paypal/ret/$','paypal_return', name='payments_paypal_return'),
         url(r'^paypal/cancel/$','paypal_cancel', name='payments_paypal_cancel'),
-        url(r'^buy/$', 'buy', name='payments_buy'),
+        url(r'^user/payments/$', 'payments', name='payments_payments'),
 )
 
 urlpatterns += patterns('',
