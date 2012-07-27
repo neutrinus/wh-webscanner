@@ -7,11 +7,11 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-    
+
 def ulogout(request):
     logout(request)
     messages.success(request, _('You have ben logged-out. We will miss you!'))
-    
+
     next_page = request.REQUEST.get("next", '')
     print("next: %s"%next_page)
     if next_page:
@@ -21,7 +21,7 @@ def ulogout(request):
             log.error("URL hacking detected to %s"%(next_page))
             return redirect('/')
         return(redirect(next_page))
-    
+
     referer = request.META.get('HTTP_REFERER')
     print("referer: %s"%referer)
     if referer:
@@ -31,8 +31,7 @@ def ulogout(request):
             log.error("URL hacking detected to %s"%(referer))
             return redirect('/')
         return(redirect(referer))
-        
+
     return redirect('/')
 
 
-    

@@ -22,6 +22,7 @@ from paypal.standard.forms import PayPalEncryptedPaymentsForm
 from paypal.standard.ipn.signals import (payment_was_successful,
                                          payment_was_flagged)
 
+from payments.models import Transaction, Coupon
 
 SITE_NAME = Site.objects.get_current()
 log= getLogger(__name__)
@@ -35,52 +36,43 @@ def make_form(d):
         return form.sandbox()
     else:
         return form.render()
-        
+
 @login_required
 @render_to('payments/buy.html')
-def buy(req,tariff):
-    tariff = gooN(TariffDef,pk=tariff)
-    if not tariff:
-        raise Http404
+def buy(req):
 
     coupon = None
     if req.GET.get('coupon',None):
-        coupon = Coupon.objects.filter(used=False,
-                                   code=req.GET.get('coupon',None))
+        coupon = Coupon.objects.filter(used=False, code=req.GET.get('coupon',None))
         if coupon:
             coupon=coupon[0]
         else:
             coupon = False
 
-    price = tariff.price - tariff.price*Decimal(coupon.percent)/Decimal("100.0") \
-                if coupon else tariff.price
+    price = 10 - 10*Decimal(coupon.percent)/Decimal("100.0")  if coupon else 10
     if price < Decimal("0"): price = Decimal("0")
-    
-    tariff.price = price
 
     t=Transaction(user=req.user,
                   type='paypal',
                   price=price,
                   coupon = coupon if coupon else None,
-                  tariff_def = tariff,
                  )
     t.save()
 
     return dict(
         coupon = coupon,
-        tariff = tariff,
         paypal =
             make_form(dict(
             bussiness = settings.PAYPAL_RECEIVER_EMAIL,
             amount = price,
-            item_name = unicode(tariff.name),
-            item_number = unicode(tariff.id),
+            item_name = "Item name",
+            item_number = 1,
             invoice = "%s"%t.code,
             notify_url = "%s%s" %(SITE_NAME, reverse('paypal-ipn')),
             return_url = "%s%s" %(SITE_NAME,
-                                  reverse('gpayments_paypal_return')),
+                                  reverse('payments_paypal_return')),
             cancel_return = "%s%s" %(SITE_NAME,
-                                     reverse('gpayments_paypal_cancel')),
+                                     reverse('payments_paypal_cancel')),
         ))
         ,
     )
@@ -124,11 +116,11 @@ def payment_ok(sender, **kwargs):
             t.save()
             log.info('transaction %s OK!'%t.code)
             send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
-            
+
             return
         else:
             log.error('error: transaction %s FAILED but cash go '%t.code)
-            
+
     except Exception as e:
         log.error('error %s'%e)
 

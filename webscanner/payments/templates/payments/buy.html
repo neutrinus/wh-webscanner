@@ -5,8 +5,8 @@
 
 {% block content %}
 
-     
-{% trans "Kod rabatowy" %}<br/>
+
+{% trans "Coupon" %}<br/>
 
 {% if coupon %}
     {% blocktrans with percent=coupon.percent %}
@@ -17,17 +17,17 @@
     {%if coupon == None %}
         <form action='' method='get'>
             <input type=text name='coupon' />
-            <input type=submit value='{% trans "Pobierz kupon" %}'/>
+            <input type=submit value='{% trans "Get coupon" %}'/>
         </form>
     {% else %}
-        {% trans "Kod rabatowy niepoprawny" %}
+        {% trans "Coupon code is invalid" %}
     {% endif %}
 
 {% endif %}
 <br/>
 
 {% trans "Pakiet"%}: {{tariff.name}}<br/>
-{% trans "Cena"%}: {{tariff.price}}<br/>
+{% trans "Price"%}: {{tariff.price}}<br/>
 
 <br/>
 {%trans "Testy"%}:<br/>
