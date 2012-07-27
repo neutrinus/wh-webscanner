@@ -34,4 +34,3 @@ def ulogout(request):
 
     return redirect('/')
 
-

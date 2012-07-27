@@ -20,12 +20,12 @@ You are already logged in
     <form class="well form-horizontal" id="form_login" method="post" action="{% url django.contrib.auth.views.login %}" >
         <h2>Login <i class="icon-user"></i></h2>
         {% csrf_token %}
-        
+
         <fieldset>
             <div class="control-group">
                 <label class="control-label" for="input01">Login</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="username" name="username" placeholder="john" /> 
+                    <input type="text" class="input-xlarge" id="username" name="username" placeholder="john" />
                 </div>
 
                 <label class="control-label" for="input02">Password</label>
