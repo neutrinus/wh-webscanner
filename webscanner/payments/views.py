@@ -29,10 +29,10 @@ log= getLogger(__name__)
 
 def make_form(d):
     t = PayPalPaymentsForm
-    if getattr(settings,'PAYPAL_ENCRYPTED',False):
-        t=PayPalEncryptedPaymentsForm
-    form = t(initial=d)
-    if getattr(settings,'DEBUG',False):
+    #if getattr(settings,'PAYPAL_ENCRYPTED',False):
+        #t=PayPalEncryptedPaymentsForm
+    form = t(initial = d)
+    if getattr(settings,'DEBUG', False):
         return form.sandbox()
     else:
         return form.render()
@@ -68,6 +68,13 @@ def buy(req):
             item_name = "Item name",
             item_number = 1,
             invoice = "%s"%t.code,
+            cmd = "_xclick-subscriptions",
+            a3 = "9.99",                      # monthly price
+            p3 = 1,                           # duration of each unit (depends on unit)
+            t3 = "M",                         # duration unit ("M for Month")
+            src = "1",                        # make payments recur
+            sra = "1",                        # reattempt payment on payment error
+            no_note = "1",                    # remove extra notes (optional)
             notify_url = "%s%s" %(SITE_NAME, reverse('paypal-ipn')),
             return_url = "%s%s" %(SITE_NAME,
                                   reverse('payments_paypal_return')),
@@ -76,6 +83,10 @@ def buy(req):
         ))
         ,
     )
+
+paypal_dict = {
+}
+
 
 @csrf_exempt
 @render_to('payments/paypal_return.html')

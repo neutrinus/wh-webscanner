@@ -9,7 +9,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
     ('neutrinus', 'admin@neutrinus.com'),
-    
+
 )
 MANAGERS = ADMINS
 
@@ -31,9 +31,11 @@ DATABASES = {
         'NAME': 'webcheck',                      # Or path to database file if using sqlite3.
         'USER': 'webcheck',                      # Not used with sqlite3.
         'PASSWORD': 'eepa6aez9OoS',                  # Not used with sqlite3.
-        'HOST': '10.239.1.11',                      # Set to empty string for localhost. Not 
+        'HOST': '10.239.1.11',                      # Set to empty string for localhost. Not
     }
 }
+
+DATABASE_ENGINE = ""
 
 CACHES = {
     'default':{
@@ -136,14 +138,16 @@ INSTALLED_APPS = (
     #apps
     'account',
     'scanner',
+    'payments',
+    'paypal.standard.ipn',
 
     #3rd party apps,
     'autoroot',
-    'django_extensions', 
+    'django_extensions',
     'model_utils',
     'djangosecure',
     'django_wsgiserver',
-    
+    'crispy_forms',
     'south',
 
     #testing
@@ -188,7 +192,7 @@ LOGGING = {
 }
 
 
-# remember to remove old data and check disk usage! 
+# remember to remove old data and check disk usage!
 PATH_TMPSCAN = '/tmp/webscanner/'
 PATH_OPTIPNG = '/usr/bin/optipng'
 SCREENSHOT_SIZE = (1280,1024)
