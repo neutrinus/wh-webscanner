@@ -19,7 +19,8 @@
 <form class="form-vertical" action="{% url scanner.results %}" method="POST" style="text-align:center; margin-top:4em;">
     {% csrf_token %}
     <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="enter your website url: http://example.org" autocomplete="off"  />
-    <input type="submit"  value="scan this website" class="btn-large btn-primary" />
+   <input type="submit"  value="scan this website" class="btn-large btn-primary"> </input>
+
 </form>
 
 

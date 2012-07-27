@@ -6,36 +6,28 @@
 {% block content %}
 
 
-{% trans "Coupon" %}<br/>
 
-{% if coupon %}
-    {% blocktrans with percent=coupon.percent %}
-        Kupon rabatowy na {{percent}}%
-    {% endblocktrans %}
-{%else%}
+<section style="margin-top:3em">
+    <div class="well">
+    {% trans "Coupon" %}<br/>
 
-    {%if coupon == None %}
+    {% if coupon %}
+        {% blocktrans with percent=coupon.percent %}
+            Kupon rabatowy na {{percent}}%
+        {% endblocktrans %}
+    {%else%}
         <form action='' method='get'>
             <input type=text name='coupon' />
             <input type=submit value='{% trans "Get coupon" %}'/>
         </form>
-    {% else %}
-        {% trans "Coupon code is invalid" %}
     {% endif %}
 
-{% endif %}
-<br/>
+    {{paypal}}
 
-{% trans "Pakiet"%}: {{tariff.name}}<br/>
-{% trans "Price"%}: {{tariff.price}}<br/>
+    </div>
+</section>
 
-<br/>
-{%trans "Testy"%}:<br/>
-{% for t in tariff.tests.all %}
-{{t}} ({%trans "min. częstotliwość testu"%}: {{t.max_frequency}} min.)<br/>
-{% endfor %}<br/>
 
-{{paypal}}
 
 {% endblock content %}
 

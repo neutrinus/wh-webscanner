@@ -23,6 +23,7 @@ from paypal.standard.ipn.signals import (payment_was_successful,
                                          payment_was_flagged)
 
 from payments.models import Transaction, Coupon
+from django.contrib import messages
 
 SITE_NAME = Site.objects.get_current()
 log= getLogger(__name__)
@@ -41,13 +42,15 @@ def make_form(d):
 @render_to('payments/buy.html')
 def buy(req):
 
-    coupon = None
     if req.GET.get('coupon',None):
         coupon = Coupon.objects.filter(used=False, code=req.GET.get('coupon',None))
         if coupon:
             coupon=coupon[0]
         else:
+            messages.error(req, _('Invalid coupon code!'))
             coupon = False
+    else:
+        coupon = None
 
     price = 10 - 10*Decimal(coupon.percent)/Decimal("100.0")  if coupon else 10
     if price < Decimal("0"): price = Decimal("0")
