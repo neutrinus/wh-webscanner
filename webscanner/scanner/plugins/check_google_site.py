@@ -27,10 +27,10 @@ class PluginGoogleSite(PluginMixin):
     https://developers.google.com/web-search/docs/reference
     to ask for data related to website (number of backlinks, keywords)
     '''
-    
+
     name = unicode(_("Google Blacklist checker"))
     wait_for_download = False
-    
+
     def run(self, command):
         domain = command.test.url
 
@@ -38,15 +38,15 @@ class PluginGoogleSite(PluginMixin):
         url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&hl=en&%s'%(query)
         search_results = urllib.urlopen(url)
         jdata = json.loads(search_results.read())
-        
+
         if 'estimatedResultCount' not in jdata['responseData']['cursor']:
             log.debug("no estimatedResultCount")
             return STATUS.exception
-        
+
         from scanner.models import Results
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
         res.output_desc = unicode(_("google backlinks ") )
-        res.output_full = unicode(_('<p>There is about %s sites linking to your site. <a href="%s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> '%(jdata['responseData']['cursor']['estimatedResultCount'], jdata['responseData']['cursor']['moreResultsUrl'] )))
+        res.output_full = unicode(_('<p>There is about %(number_of_sites)s sites linking to your site. <a href="%(url)s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> '%(jdata['responseData']['cursor']['estimatedResultCount'], jdata['responseData']['cursor']['moreResultsUrl'] )))
         res.status = RESULT_STATUS.info
         res.save()
 

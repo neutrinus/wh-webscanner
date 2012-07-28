@@ -25,7 +25,7 @@ EMAIL_USE_TLS=False
 EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/user/login/'
 
 DATABASES = {
     'default': {

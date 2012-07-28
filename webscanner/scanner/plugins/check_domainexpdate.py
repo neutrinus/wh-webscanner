@@ -35,7 +35,7 @@ class PluginDomainExpireDate(PluginMixin):
     '''
     tlds = []
     def __init__(self):
-        try: 
+        try:
             # load tlds, ignore comments and empty lines:
             #https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
             with open(apath("scanner/plugins/effective_tld_names.dat.txt")) as tldFile:
@@ -58,54 +58,54 @@ class PluginDomainExpireDate(PluginMixin):
             wildcardCandidate = ".".join(["*"]+lastIElements[1:]) # *.co.uk, *.uk, *
             exceptionCandidate = "!"+candidate
 
-            # match tlds: 
+            # match tlds:
             if (exceptionCandidate in tlds):
-                return ".".join(urlElements[i:]) 
+                return ".".join(urlElements[i:])
             if (candidate in tlds or wildcardCandidate in tlds):
                 return ".".join(urlElements[i-1:])
                 # returns "abcde.co.uk"
         raise ValueError("Domain not in global list of TLDs")
 
-    
+
     name = unicode(_("Check domain expiration date"))
     wait_for_download = False
-    
+
     def run(self, command):
         domain = self.getDomain(command.test.url,self.tlds)
         log.debug("Checking whois data for %s"%(domain))
-        
+
         try:
-            data = pywhois.whois(domain)   
-            
-            if hasattr(data,'expiration_date') and (len(data.expiration_date) >0): 
+            data = pywhois.whois(domain)
+
+            if hasattr(data,'expiration_date') and (len(data.expiration_date) >0):
                 output = data.expiration_date[0]
-                
-                try: 
+
+                try:
                     domainexp = self.cast_date(output)
                     # convert time.struct_time object into a datetime.datetime
                     dt = date.fromtimestamp(mktime(domainexp))
-                    
+
                     from scanner.models import Results
                     res = Results(test=command.test, group = RESULT_GROUP.general, importance=5)
 
                     res.output_desc = unicode(_("Domain expiration date") )
                     if dt - date.today() > timedelta(days=20):
-                        res.output_full = unicode(_("<p>Your domain will be valid till %s. There is still %s days to renew it.</p>"%(dt, (dt - date.today()).days )) )
+                        res.output_full = unicode(_("<p>Your domain will be valid till %(date)s. There is still %s days to renew it.</p>"%(dt, (dt - date.today()).days )) )
                         res.status = RESULT_STATUS.success
                     else:
-                        res.output_full = unicode(_("<p>Better renew your domain, its valid till %s! There is only %s days left.</p>"%(dt, (dt - date.today()).days ) ))
+                        res.output_full = unicode(_("<p>Better renew your domain, its valid till %(date)s! There is only %s days left.</p>"%(dt, (dt - date.today()).days ) ))
                         res.status = RESULT_STATUS.error
-                    
+
                     res.output_full += unicode(_("<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to check domain expiration date. Depending on your domain registrar this date may be inaccurate or outdated.</p> "))
-                    
+
                     res.save()
                 except StandardError,e:
                     log.exception("output:%s exception:%s "%(str(output),str(e)) )
                     return STATUS.exception
-                 
-                    
+
+
                 return res.status
-            else:  
+            else:
                 log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
                 return STATUS.exception
         except ValueError,e:
@@ -136,7 +136,7 @@ class PluginDomainExpireDate(PluginMixin):
                 return time.strptime(date_str.strip(), format)
             except ValueError, e:
                 pass # Wrong format, keep trying
-        
+
         raise NameError("Unsupported date format: " + str(date_str))
         return None
 

@@ -17,15 +17,15 @@ from logs import log
 class PluginMail(PluginMixin):
     name = unicode(_('Check mailservers'))
     wait_for_download = False
-    
+
     def run(self, command):
         from scanner.models import Results
         domain = command.test.domain()
 
-        try:           
+        try:
             # list of all mail servers
             mxes = []
-            answers = dns.resolver.query(domain, 'MX')    
+            answers = dns.resolver.query(domain, 'MX')
             for mxdata in answers:
                 mxes.append(mxdata.exchange)
         except (dns.resolver.Timeout,dns.resolver.NoAnswer),e:
@@ -42,19 +42,19 @@ class PluginMail(PluginMixin):
         try:
             nopostmaster = ""
             postmaster = ""
-            
+
             noabuse = ""
             abuse = ""
             noconnect = ""
             noconnect_count = 0
-            
+
             openrelay = ""
             noopenrelay = ""
-            
+
             for mx in mxes:
                 try:
                     log.debug("Checking mail for MX: %s"%str(mx))
-                    
+
                     #postmaster
                     foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
@@ -67,7 +67,7 @@ class PluginMail(PluginMixin):
                     else:
                         nopostmaster +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: postmaster@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
                     foo.quit()
-                    
+
                     #abuse
                     foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
@@ -79,7 +79,7 @@ class PluginMail(PluginMixin):
                     else:
                         noabuse +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: abuse@%s <br />&nbsp; %s %s <br /><br />"%(mx,domain,code,msg)
                     foo.quit()
-                    
+
                     #openrelay
                     foo = smtplib.SMTP(str(mx),timeout=10)
                     #if here - connection succesfull
@@ -98,19 +98,19 @@ class PluginMail(PluginMixin):
                 except smtplib.socket.error:
                     noconnect +=   "%s<br />"%(mx)
                     noconnect_count +=1
-                    pass    
-                
+                    pass
+
             res = Results(test=command.test,group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("accept mail to postmaster@"))
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to postmaster.</p> "))
             if not nopostmaster:
                 res.status = RESULT_STATUS.success
-                res.output_full += unicode(_("<p>All of your mailservers accept mail to postmaster@%s: <code>%s</code></p>"%(domain,postmaster ) ))
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to postmaster@%(domain)s: <code>%s</code></p>"%(domain,postmaster ) ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%s:<code>%s</code> </p>"%(domain,nopostmaster ) ))
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>%s</code> </p>"%(domain,nopostmaster ) ))
                 if postmaster:
-                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%s:<code>%s</code> </p>"%(domain,postmaster ) ))    
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%(domain)s:<code>%s</code> </p>"%(domain,postmaster ) ))
             res.save()
 
 
@@ -119,32 +119,32 @@ class PluginMail(PluginMixin):
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to abuse.</p> "))
             if not noabuse:
                 res.status = RESULT_STATUS.success
-                res.output_full += unicode(_("<p>All of your mailservers accept mail to abuse@%s: <code>%s</code></p>"%(domain,abuse ) ))
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to abuse@%(domain)s: <code>%s</code></p>"%(domain,abuse ) ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%s:<code>%s</code> </p>"%(domain,noabuse ) ))
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>%s</code> </p>"%(domain,noabuse ) ))
                 if abuse:
-                    res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%s:<code>%s</code> </p>"%(domain,abuse ) ))    
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%(domain)s:<code>%s</code> </p>"%(domain,abuse ) ))
             res.save()
 
-            
+
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=4)
             res.output_desc = unicode(_("connect to mailservers"))
             res.output_full = unicode(_("<p>Mailservers should accept TCP connections on port 25. Its needed to accept emails from other servers</p> "))
-            if not noconnect:                    
+            if not noconnect:
                 #all servers responds
                 res.status = RESULT_STATUS.success
                 res.output_full += unicode(_("<p>All of your %s accepted connections</p>"%(len(mxes) ) ))
-            elif (noconnect_count< len(mxes)):    
+            elif (noconnect_count< len(mxes)):
                 #some servers didnt respond
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Some(%s) of your %s mailservers didnt accept connection from our check, details:<code>%s</code></p>"%(noconnect_count,len(mxes),noconnect ) ))
+                res.output_full += unicode(_("<p>Some(%(number)s) of your %s mailservers didnt accept connection from our check, details:<code>%s</code></p>"%(noconnect_count,len(mxes),noconnect ) ))
             else:
                 #none server responded
                 res.status = RESULT_STATUS.error
-                res.output_full += unicode(_("<p>None of your %s mailservers accepted connection, details: <code>%s</code></p>"%(len(mxes),noconnect ) ))               
+                res.output_full += unicode(_("<p>None of your %(total_number)s mailservers accepted connection, details: <code>%s</code></p>"%(len(mxes),noconnect ) ))
             res.save()
-            
+
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=3)
             res.output_desc = unicode(_("open-relay check "))
             if not openrelay:
@@ -154,17 +154,17 @@ class PluginMail(PluginMixin):
                 res.status = RESULT_STATUS.error
                 res.output_full += unicode(_("<p>Mailservers that are open-relays:<code>%s</code> </p>"%(openrelay ) ))
                 if noopenrelay:
-                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%s</code> </p>"%(noopenrelay ) ))    
-                    
-            res.output_full += unicode(_("<p>Mailservers should not allow relaying, except for authenticated users and trusted IPs.  </p>" ))    
-                    
+                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%s</code> </p>"%(noopenrelay ) ))
+
+            res.output_full += unicode(_("<p>Mailservers should not allow relaying, except for authenticated users and trusted IPs.  </p>" ))
+
             res.save()
-            
-            
-            
+
+
+
             return STATUS.success
         except StandardError,e:
             log.exception("%s"%str(e))
             return STATUS.exception
-            
-                        
+
+
