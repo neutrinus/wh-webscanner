@@ -2,7 +2,7 @@
 # Create your views here.
 import os
 import random
-from decimal import Decimal
+from decimal import Decimal, getcontext
 from datetime import datetime as dt, timedelta as td
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -19,11 +19,11 @@ from annoying.functions import get_object_or_None as gooN
 
 from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.forms import PayPalEncryptedPaymentsForm
-from paypal.standard.ipn.signals import (payment_was_successful,
-                                         payment_was_flagged)
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
 
 from payments.models import Transaction, Coupon
 from django.contrib import messages
+from settings import PRODUCT_PRICE
 
 SITE_NAME = Site.objects.get_current()
 log= getLogger(__name__)
@@ -41,7 +41,6 @@ def make_form(d):
 @login_required
 @render_to('payments/payments.html')
 def payments(req):
-
     if req.GET.get('coupon',None):
         coupon = Coupon.objects.filter(used=False, code=req.GET.get('coupon',None))
         if coupon:
@@ -52,40 +51,41 @@ def payments(req):
     else:
         coupon = None
 
-    price = 10 - 10*Decimal(coupon.percent)/Decimal("100.0")  if coupon else 10
+    print SITE_NAME
+
+    # set Decimal calculation precision
+    getcontext().prec = 3
+    price = PRODUCT_PRICE - PRODUCT_PRICE*Decimal(coupon.percent)/Decimal("100.0")  if coupon else PRODUCT_PRICE
     if price < Decimal("0"): price = Decimal("0")
 
-    t=Transaction(user=req.user,
-                  type='paypal',
-                  price=price,
-                  coupon = coupon if coupon else None,
-                 )
+    t=Transaction(
+        user=req.user,
+        type='paypal',
+        price=price,
+        coupon = coupon if coupon else None,
+    )
     t.save()
-
-
 
     return dict(
         transactions = Transaction.objects.filter(user = req.user),
         coupon = coupon,
+        price = price,
         paypal =
             make_form(dict(
             bussiness = settings.PAYPAL_RECEIVER_EMAIL,
-            amount = price,
             item_name = "Item name",
             item_number = 1,
             invoice = "%s"%t.code,
             cmd = "_xclick-subscriptions",
-            a3 = "9.99",                      # monthly price
+            a3 = price ,                      # monthly price
             p3 = 1,                           # duration of each unit (depends on unit)
             t3 = "M",                         # duration unit ("M for Month")
             src = "1",                        # make payments recur
             sra = "1",                        # reattempt payment on payment error
             no_note = "1",                    # remove extra notes (optional)
             notify_url = "%s%s" %(SITE_NAME, reverse('paypal-ipn')),
-            return_url = "%s%s" %(SITE_NAME,
-                                  reverse('payments_paypal_return')),
-            cancel_return = "%s%s" %(SITE_NAME,
-                                     reverse('payments_paypal_cancel')),
+            return_url = "%s%s" %(SITE_NAME, reverse('payments_paypal_return')),
+            cancel_return = "%s%s" %(SITE_NAME, reverse('payments_paypal_cancel')),
         ))
         ,
     )

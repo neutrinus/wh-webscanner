@@ -62,22 +62,22 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="#">Profile</a></li>
-                <li><a href="{% url payments_payments %}">Payments</a></li>
-                <li><a href="#">Scan archive</a></li>
+                <li><a href="#">{% trans "Profile" %}</a></li>
+                <li><a href="{% url payments_payments %}">{% trans "Payments" %}</a></li>
+                <li><a href="#">{% trans "Scan archive" %}</a></li>
                 <li class="divider"></li>
-                <li><a href="{% url django.contrib.auth.views.logout %}">Sign Out</a></li>
+                <li><a href="{% url django.contrib.auth.views.logout %}">{% trans "Logout" %}</a></li>
             </ul>
         </div>
 {% else %}
         <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> Anonymous
+                <i class="icon-user"></i> {% trans "Anonymous" %}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#modal_login">Login</a></li>
-                <li><a href="{% url registration_register %}">Register</a></li>
+                <li><a data-toggle="modal" href="#modal_login">{% trans "Login" %}</a></li>
+                <li><a href="{% url registration_register %}">{% trans "Register" %}</a></li>
             </ul>
         </div>
 {% endif %}
@@ -85,9 +85,9 @@
         <div class="nav-collapse">
             <ul class="nav">
                 <li> <a href="/"> <img src="{{ STATIC_URL }}images/logo.png" style="height:20px" /></a> </li>
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li class="active"><a href="/">{% trans "Home" %}</a></li>
+                <li><a href="/about">{% trans "About" %}</a></li>
+                <li><a href="/contact">{% trans "Contact" %}</a></li>
             </ul>
         </div><!--/.nav-collapse -->
 
@@ -125,15 +125,15 @@
 
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label" for="input01">Login</label>
+                    <label class="control-label" for="input01">{% trans "Login" %}</label>
                     <div class="controls">
                         <input type="text" name="username" class="input-xlarge" id="input01" placeholder="john" />
                     </div>
 
-                    <label class="control-label" for="input02">Password</label>
+                    <label class="control-label" for="input02">{% trans "Password" %}</label>
                     <div class="controls">
                         <input type="password" name="password" class="input-xlarge" id="input02" placeholder="**********" />
-                        <p class="help-block"><a href="#">Forgot password?</a></p>
+                        <p class="help-block"><a href="#">{% trans "Forgot password?" %}</a></p>
                     </div>
                 </div>
             </fieldset>
@@ -142,8 +142,8 @@
     </div>
 
     <div class="modal-footer">
-        <a href="#" id="SubmitLogin" class="btn btn-primary">Login</a>&nbsp;
-        <a href="#" class="btn close"  data-dismiss="modal" >Cancel</a>
+        <a href="#" id="SubmitLogin" class="btn btn-primary">{% trans "Login" %}</a>&nbsp;
+        <a href="#" class="btn close"  data-dismiss="modal" >{% trans "Cancel" %}</a>
     </div>
 </div>
 <script type="text/javascript">
@@ -155,7 +155,7 @@ $('#SubmitLogin').click(function() {
 
 <div class="container">
 {% block content %}
-Something go wrong?
+{% trans "Something go wrong?" %}
 {% endblock %}
 </div>
 

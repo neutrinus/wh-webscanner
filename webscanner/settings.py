@@ -2,6 +2,8 @@
 import os
 def apath(x):
     return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
+from decimal import Decimal
+
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -23,7 +25,7 @@ EMAIL_USE_TLS=False
 EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login'
+LOGIN_URL = '/login/'
 
 DATABASES = {
     'default': {
@@ -224,7 +226,8 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-
+PRODUCT_PRICE = Decimal("9.99")
+PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 
 # This should be at the very end
 #execfile(apath('settings_local.py'))
