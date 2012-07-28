@@ -1,6 +1,6 @@
 {% load l10n %}
 
-<p>We use GeoIP database to estimate geolocation of your servers, please note that locations are approximated.</p>
+<p>{% trans "We use GeoIP database to estimate geolocation of your servers, please note that locations are approximated." %}</p>
 <div id="{{ id }}" style="height:250px"></div>
 
 {% localize off %}
@@ -10,8 +10,8 @@
     map.addLayer(new OpenLayers.Layer.OSM());
     var markers = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);
-    
-    
+
+
     {% for address, in_dict in locations.items %}
         var marker_{{ forloop.counter }} = new OpenLayers.LonLat({{ in_dict.longitude }},{{ in_dict.latitude }})
         .transform(
@@ -20,7 +20,7 @@
         );
         markers.addMarker(new OpenLayers.Marker(marker_{{ forloop.counter }}));
     {% endfor %}
-    
+
     map.setCenter ([0,0], 1);
 </script>
 
@@ -28,8 +28,7 @@
 {% for address, in_dict in locations.items %}
 <li><b>{{ address }}</b> is located in {% if in_dict.city %}{{ in_dict.city }}, {% endif %}{{ in_dict.country_name }}</li>
 {% endfor %}
-</ul>    
+</ul>
 
 {% endlocalize %}
 
- 

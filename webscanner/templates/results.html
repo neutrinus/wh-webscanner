@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load l10n %}
 
-{% block title %}Webscan results for {{ test.domain }} {% endblock %}
+{% block title %}{% trans "Webscan results for " %}{{ test.domain }} {% endblock %}
 
-{% block extrahead %} 
+{% block extrahead %}
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
 
-<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />   
+<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -23,47 +24,44 @@
 {% endblock %}
 
 
-
-
 {% block content %}
 <div class="page-header">
-    <h1>SCAN Results for <a href="{{ test.url }}">{{ test.url }}</a></h1>
+    <h1>{% trans "SCAN Results for " %}<a href="{{ test.url }}">{{ test.url }}</a></h1>
 </div>
-
 
 
 <div class="progress progress-striped active" id="progressbar" >
     <div class="bar" style="width: 1%;">1%</div>
 </div>
-   
+
 <br />
     <div class="row-fluid">
         <div class="span12">
             <div class="row">
                 <div class="span4">
-                    <h3>Don't Wait</h3>
-                    <p>Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. Pro-members just got .pdf report in their mailbox.</p>
+                    <h3>{% trans "Don't Wait" %}</h3>
+                    <p>{% trans "Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. Pro-members just got .pdf report in their mailbox." %}</p>
                 </div>
                 <div class="span4">
-                    <h3>Overall note</h3>
+                    <h3>{% trans "Overall note" %}</h3>
                     <br />
-                    <p>basing on all checks bellow we give your website an overall note:</p>
+                    <p>{% trans "basing on all checks bellow we give your website an overall note:" %}</p>
                     <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">?</span>/10<p>
-                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >congratulations!</p>
+                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
                 </div>
                 <div class="span4">
-                    <h3>The numbers!</h3>
+                    <h3>{% trans "The numbers!" %}</h3>
                     <div id="chart" style="height:200px; width:290px;"></div>
-                    <p>Scan time: <span id="timer">0</span> secs</p>
+                    <p>{% trans "Scan time: " %}<span id="timer">0</span> secs</p>
                 </div>
             </div>
-            
+
         </div>
     </div>
-    
+
 <hr />
-        
-<h2>Siteshots</h2>
+
+<h2>{% trans "Siteshots" %}</h2>
 <div id="myCarousel" class="carousel">
     <!-- Carousel items -->
     <div id="screenshots-inner" class="carousel-inner" style="height:400px">
@@ -73,32 +71,32 @@
     <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
     <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
-    
+
 
 <div class="row">
-    <h2>General</h2>
-    
+    <h2>{% trans "General" %}</h2>
+
     <table class="table  table-bordered table-striped results" id="results_0"></table>
 </div>
 
 <div class="row">
-    <h2>Performance</h2>
+    <h2>{% trans "Performance" %}</h2>
     <table class="table table-striped table-bordered results" id="results_5"></table>
 </div>
 
 <div class="row">
-    <h2>Security</h2>
+    <h2>{% trans "Security" %}</h2>
     <table class="table table-striped table-bordered results" id="results_3"></table>
 </div>
 
 <div class="row">
-    <h2>SEO</h2>
+    <h2>{% trans "SEO" %}</h2>
     <table class="table table-striped table-bordered results" id="results_2"></table>
 </div>
 
 
 <div class="row">
-    <h2>Mail</h2>
+    <h2>{% trans "Mail" %}</h2>
     <table class="table table-striped table-bordered results" id="results_1"></table>
 </div>
 
@@ -107,7 +105,7 @@
 <script type="text/javascript">
 var finished = 0;
 // miliseconds counter
-var timer_val = 0; 
+var timer_val = 0;
 var statuses_ok = 0;
 var statuses_error = 0;
 var statuses_warning = 0;
@@ -120,16 +118,16 @@ var s = 0;
 
 
 jQuery.fn.sortElements = (function(){
- 
+
     var sort = [].sort;
- 
+
     return function(comparator, getSortable) {
-        getSortable = getSortable || function(){return this;}; 
+        getSortable = getSortable || function(){return this;};
         var placements = this.map(function(){
- 
+
             var sortElement = getSortable.call(this),
                 parentNode = sortElement.parentNode,
- 
+
                 // Since the element itself will change position, we have
                 // to have some way of storing its original position in
                 // the DOM. The easiest way is to have a 'flag' node:
@@ -137,30 +135,30 @@ jQuery.fn.sortElements = (function(){
                     document.createTextNode(''),
                     sortElement.nextSibling
                 );
- 
+
             return function() {
- 
+
                 if (parentNode === this) {
                     throw new Error(
                         "You can't sort elements if any one is a descendant of another."
                     );
                 }
- 
+
                 // Insert before flag:
                 parentNode.insertBefore(this, nextSibling);
                 // Remove flag:
                 parentNode.removeChild(nextSibling);
- 
+
             };
- 
+
         });
- 
+
         return sort.call(this, comparator).each(function(i){
             placements[i].call(getSortable.call(this));
         });
- 
+
     };
- 
+
 })();
 
 function sort_results() {
@@ -169,12 +167,12 @@ function sort_results() {
             .find('td')
             .filter(function(){ return $(this).index() === 1; })
             .sortElements(
-                function(a, b){ 
+                function(a, b){
                     return a.sork > b.sork ? -1 : 1;
                 },
                 function(){  return this.parentNode; }
              )  ;
-        
+
     });
 }
 
@@ -194,52 +192,52 @@ function add_result(status, output_desc, output_full, group, importance) {
     a.setAttribute('class','output_desc');
     a.innerHTML = output_desc;
     element.appendChild(a);
-    
+
     var a = document.createElement('td');
     a.setAttribute('class','status');
-    
+
     rate_max += importance;
-    
+
     if (status == 0) {
         element.setAttribute('class','status_ok');
         a.innerHTML += '<i class="icon-ok-sign"></i> '
         a.sork = 1;
         statuses_ok += 1;
         rate_curr += importance;
-    } 
+    }
     if (status == 1) {
         element.setAttribute('class','status_error');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> ';
         a.sork = 9;
         statuses_error += 1;
         rate_curr += 0;
-    }     
+    }
     if (status == 2) {
         element.setAttribute('class','status_warning');
         a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> ';
         a.sork = 7;
         statuses_warning += 1;
         rate_curr += (importance/4);
-        }   
+        }
     if (status == 3) {
         element.setAttribute('class','status_info');
         a.innerHTML += '<i class="icon-info-sign"></i> ';
         a.sork = 3;
         statuses_info += 1;
         rate_max -= importance;
-        }  
+        }
     element.appendChild(a);
 
     status_plot.series[0].data = [ ['errors', statuses_error],['warnings', statuses_warning],['success', statuses_ok] ];
     status_plot.redraw()
-    
+
     var a = document.createElement('td');
     a.setAttribute('class','output_full');
     a.innerHTML = output_full;
     element.appendChild(a);
-    
-    $("#results_"+group).append(element);   
-    
+
+    $("#results_"+group).append(element);
+
     $(element).fadeOut(0);
     $(element).fadeIn("slow");
 //     sort_results()
@@ -257,28 +255,27 @@ function check_results(){
             $(".bar").text(percentage.toFixed(0)+'%');
             timer_val = (data.test_duration.toFixed(0) )*10
             $("#timer").text(timer_val/10)
- 
-            
+
+
             results = data.results
-            $.each(results, function(key, value) { 
+            $.each(results, function(key, value) {
                 if (value.id > last_result) last_result=value.id
                 add_result(value.status, value.output_desc, value.output_full, value.group, value.importance)
             });
-            
+
             if (percentage == 100) {
                 finished = 1;
 
                 var rate = (Math.pow(rate_curr/rate_max,2))*10
-    
+
                 $("#rating").text( (rate).toFixed(1) );
-                if (rate < 5 ) { $("#congratulations").text("Could be better..");}
-                if ((rate >= 5 ) && (rate<7 )) { $("#congratulations").text("Not so bad.."); }
-                if ((rate >= 7 ) && (rate<8.5 )) { $("#congratulations").text("Good!"); }
-                if (rate >= 8.5 )  { $("#congratulations").text("Congratulations"); }
+                if (rate < 5 ) { $("#congratulations").text("{% trans "Could be better.." %}");}
+                if ((rate >= 5 ) && (rate<7 )) { $("#congratulations").text("{% trans "Not so bad.." %}"); }
+                if ((rate >= 7 ) && (rate<8.5 )) { $("#congratulations").text("{% trans "Good!" %}"); }
+                if (rate >= 8.5 )  { $("#congratulations").text("{% trans "Congratulations" %}"); }
                 $("#congratulations").fadeIn("slow");
-                
                 $("#progressbar").fadeOut("slow");
-                
+
             } else {
                 window.setTimeout(check_results,1000);
             }
@@ -287,19 +284,19 @@ function check_results(){
                 window.setTimeout(check_results,5000);
         },
         dataType: "jsonp"
-    });  
+    });
 }
-check_results();   
+check_results();
 
 
-function timer(){ 
+function timer(){
     if (finished == 0){
             timer_val += 1
             $("#timer").text(timer_val/10)
-            window.setTimeout(timer,100);   
+            window.setTimeout(timer,100);
         }
-} 
-timer() 
+}
+timer()
 
 var data = [ ['errors', statuses_error],['warnings', statuses_warning], ['success', statuses_ok] ];
 var status_plot = jQuery.jqplot ('chart', [data],
@@ -321,16 +318,14 @@ var status_plot = jQuery.jqplot ('chart', [data],
         drawGridLines: false,
         shadow: false,
     },
-    seriesColors: [ "#ffcccc", "#feffcc", "#ccffd1"],      
+    seriesColors: [ "#ffcccc", "#feffcc", "#ccffd1"],
     });
 
     $('.carousel').carousel({
     interval: 2000
     })
-    
+
 </script>
-    
-    
+
+
 {% endblock %}
-
-

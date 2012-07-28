@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
+
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.views.generic.list_detail import object_list
 from django.contrib.auth.models import User
@@ -7,21 +7,20 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.sitemaps import ping_google
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from urlparse import urlparse
 from datetime import datetime
 from annoying.decorators import render_to
-from scanner.models import *
+import json
 from logs import log
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Max
-from django.contrib import messages
-from annoying.decorators import render_to
+from scanner.models import *
 
 def index(request):
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
@@ -31,7 +30,7 @@ def index(request):
 def scan_archive(request):
     """ Presents user his scans archive """
     return dict(
-        transactions = Transaction.objects.filter(user = req.user).order_by('-creation_date'),
+        tests = Tests.objects.filter(user = request.user).order_by('-creation_date'),
     )
 
 
@@ -46,7 +45,10 @@ def results(request):
         if urlparse(url).scheme not in ["http","https"]:
             return redirect('/')
 
-        test = Tests(url=url)
+        if request.user.is_authenticated():
+            test = Tests(url=url, user=request.user, priority=20)
+        else:
+            test = Tests(url=url)
         test.save()
 
         log.debug("User ordered report for url:%s, report_uuid:%s"%(url,test.uuid))
@@ -76,7 +78,6 @@ def show_report(request, uuid):
 
     return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))
 
-
 def check_results(request, uuid):
     test = Tests.objects.filter(uuid=uuid).get()
 
@@ -95,20 +96,9 @@ def check_results(request, uuid):
                     'id': result.pk,
                     'group': result.group})
 
-    commands_count = CommandQueue.objects.filter(test=test).count()
-    commands_done_count = CommandQueue.objects.filter(test=test).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
-
-    if commands_count == commands_done_count:
-        #all test finished
-        last_command = CommandQueue.objects.filter(test=test).aggregate(Max('finish_date'))['finish_date__max']
-    else:
-        last_command = datetime.now()
-
-    test_duration = (last_command - test.creation_date).total_seconds()
-
-    data = {    'ordered': commands_count+1,
-                "done": commands_done_count+1,
-                "test_duration": test_duration,
+    data = {    'ordered': test.commands_count() + 1,
+                "done": test.commands_done_count() + 1,
+                "test_duration": test.duration(),
                 "results": foo,
     }
 

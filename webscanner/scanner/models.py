@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.db.models import Count
 
 from django.conf import settings
-
+from datetime import datetime
 #3rd party import
 from urlparse import urlparse
 from model_utils import Choices
@@ -102,7 +102,7 @@ class Tests(models.Model):
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     uuid                =   UUIDField()
-    user                =   models.ForeignKey(User)
+    user                =   models.ForeignKey(User, null=1)
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
 
     def __unicode__(self):
@@ -117,6 +117,25 @@ class Tests(models.Model):
         else:
             return(80)
 
+    def commands_count(self):
+        return CommandQueue.objects.filter(test=self).count()
+
+    def commands_done_count(self):
+        return CommandQueue.objects.filter(test=self).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
+
+    def percent_done(self):
+        done = float(self.commands_done_count())
+        total = float(self.commands_count())
+        return (done/total) * 100
+
+    def duration(self):
+        if self.commands_count() == self.commands_done_count():
+            #all test finished
+            last_command = CommandQueue.objects.filter(test=self).aggregate(Max('finish_date'))['finish_date__max']
+        else:
+            last_command = datetime.now()
+
+        return (last_command - self.creation_date).total_seconds()
 
 class CommandQueue(models.Model):
     test                =   models.ForeignKey(Tests, related_name="commands")

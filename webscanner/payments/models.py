@@ -38,8 +38,7 @@ class Coupon(models.Model):
         verbose_name = _("jednorazowy kupon rabatowy")
         verbose_name_plural = _("jednorazowe kupony rabatowe")
 
-    used                =   models.BooleanField(_(u'został użyty'),
-                                                default=False)
+    used                =   models.BooleanField(_(u'został użyty'), default=False)
     code                =   models.CharField(_(u'kod'),
                                              max_length=256,
                                              unique=True,

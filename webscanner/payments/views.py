@@ -90,7 +90,6 @@ def payments(req):
         ,
     )
 
-
 @csrf_exempt
 @render_to('payments/paypal_return.html')
 def paypal_return(req):
