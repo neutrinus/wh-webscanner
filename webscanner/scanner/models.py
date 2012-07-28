@@ -3,7 +3,7 @@
 #django import
 from django.db import models
 from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_language)
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django_extensions.db.fields import UUIDField
 from django.core.cache import cache
@@ -91,57 +91,59 @@ TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
-        
-        
+
+
 class Tests(models.Model):
     url                 =   models.CharField(max_length=600,blank=1,null=1,db_index=True)
     priority            =   models.IntegerField(default=10)
-#   lang?    
+#   lang?
     creation_date       =   models.DateTimeField(auto_now_add=True)
-    
+
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     uuid                =   UUIDField()
-    
+    user                =   models.ForeignKey(User)
+    is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
+
     def __unicode__(self):
         return "%s"%(self.url)
-        
+
     def domain(self):
         return urlparse(self.url).hostname
-        
+
     def port(self):
         if urlparse(self.url).port:
             return(urlparse(self.url).port)
         else:
             return(80)
-            
+
 
 class CommandQueue(models.Model):
-    test                =   models.ForeignKey(Tests, related_name="commands")    
+    test                =   models.ForeignKey(Tests, related_name="commands")
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     testname            =   models.CharField(max_length=50, choices=TESTDEF_PLUGINS)
-    
+
     run_date            =   models.DateTimeField(default=None,blank=1,null=1)
-    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)   
+    finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     wait_for_download   =   models.BooleanField(default=True)
-    
+
     def __unicode__(self):
         return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
 
 class Results(models.Model):
     test                =   models.ForeignKey(Tests, related_name="result")
-    
+
     status              =   models.IntegerField(choices=RESULT_STATUS)
     group               =   models.IntegerField(choices=RESULT_GROUP)
-    output_desc         =   models.CharField(max_length=10000)  
-    output_full         =   models.TextField()  
+    output_desc         =   models.CharField(max_length=10000)
+    output_full         =   models.TextField()
 
     # used to calculate overal note rank in results (1-5))
     importance          =   models.IntegerField(default=2)
-    
+
     creation_date       =   models.DateTimeField(auto_now_add=True)
-    
+
     def __unicode__(self):
         return "%s: name=%s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
@@ -180,7 +182,7 @@ class BadWord(models.Model):
 
     @staticmethod
     def filter_bad_words(words):
-        bad_words = cache.get('scanner.bad_words') 
+        bad_words = cache.get('scanner.bad_words')
 
         # do caching if not in cache
         BadWord.clean_bad_words()

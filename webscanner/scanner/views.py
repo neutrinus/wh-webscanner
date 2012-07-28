@@ -21,11 +21,22 @@ from logs import log
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.contrib import messages
+from annoying.decorators import render_to
 
 def index(request):
 	return render_to_response('index.html', {}, context_instance=RequestContext(request))
 
+@login_required
+@render_to('scanner/scan_archive.html')
+def scan_archive(request):
+    """ Presents user his scans archive """
+    return dict(
+        transactions = Transaction.objects.filter(user = req.user).order_by('-creation_date'),
+    )
+
+
 def results(request):
+    """ page with scann results """
     if request.method == 'POST':
         url = request.POST.get("url")
 

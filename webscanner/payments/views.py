@@ -67,7 +67,7 @@ def payments(req):
     t.save()
 
     return dict(
-        transactions = Transaction.objects.filter(user = req.user),
+        transactions = Transaction.objects.filter(user = req.user).order_by('-creation_date'),
         coupon = coupon,
         price = price,
         paypal =
