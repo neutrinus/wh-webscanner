@@ -7,31 +7,15 @@ from django.contrib.auth.models import User
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
 
-# Create your models here.
-
-#: Używamy w sposób następujący::
-#:
-#:      from scanner.models import TRANSACTION_STATUS_TYPE as TST
-#:
-#:      x = TST.success
-TRANSACTION_STATUS_TYPES = Choices(
-    (0, 'waiting', _('in progress')),
-    (1, 'nomoney', _('not enough money')),
-    (2, 'prov_canceled', _('canceled by provider')),
-    (3, 'self_canceled', _('canceled by myself')),
-    (4, 'canceled', _('canceled by site operator')),
-    (5, 'success', _('payed')),
-    (6, 'timeout', _('time out for payment')),
-)
-
-TRANSACTION_TYPES = Choices(
-    ('paypal', 'paypal',_('Paypal') ),
-)
-
-
 
 def make_coupon_code(max=20):
     return sha256(str(getrandbits(8*100))).hexdigest()[:max]
+
+def make_sub_code(max=20):
+    return sha256(str(getrandbits(8*100))).hexdigest()[:max]
+
+def expdate():
+    return dt.now() + td(hours=24)
 
 class Coupon(models.Model):
     class Meta:
@@ -50,55 +34,37 @@ class Coupon(models.Model):
                                                  blank=True,
                                                  null=True)
 
+    def is_used(self):
+        self.coupon.used=True
+        self.coupon.used_date=dt.now()
+        self.save()
 
-def make_transaction_code():
-    return sha256(str(getrandbits(8*512))).hexdigest()
+class Subscription(models.Model):
 
-def expdate():
-    return dt.now() + td(hours=24)
+    code                = models.CharField(_(u'Subscription uuid'),
+                                        max_length=512,
+                                        default=make_sub_code,
+                                        unique=True,
+                                        primary_key=True)
 
-class Transaction(models.Model):
-    class Meta:
-        verbose_name = _("Transaction")
-    code                = models.CharField(_(u'Transaction uuid'),
-                                           max_length=512,
-                                           default=make_transaction_code,
-                                           unique=True,
-                                           primary_key=True)
     user                =   models.ForeignKey(User)
-    type                =   models.CharField(max_length=50,
-                                             choices = TRANSACTION_TYPES)
-    price               =   models.DecimalField(_(u'Price'),
-                                                max_digits=10,
-                                                decimal_places=2)
+    date_created        =   models.DateTimeField(auto_now_add=True)
+    date_subscribed     =   models.DateTimeField(null = True, default = None)
+    date_canceled       =   models.DateTimeField(null = True, default = None)
+    is_canceled         =   models.BooleanField(_(u'has been cancel'), default=False)
+    is_subscribed       =   models.BooleanField(_(u'has been subscribed'), default=False)
+
+    price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2, null = True)
     coupon              =   models.ForeignKey("Coupon",blank=True, null=True, default=None)
 
-    status              =   models.IntegerField(choices=TRANSACTION_STATUS_TYPES, default=0)
-    creation_date       =   models.DateTimeField(auto_now_add=True)
-    modify_date         =   models.DateTimeField(auto_now=True)
-    expire_date         =   models.DateTimeField(default=expdate)
 
-    def is_valid(self):
-        if self.status == TRANSACTION_STATUS_TYPES.waiting and self.check_timeout():
-            return True
-        return False
+class Payment(models.Model):
+    subscription        =   models.ForeignKey(Subscription)
+    price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2)
+    date_created        =   models.DateTimeField(auto_now_add=True)
+    #status
+    #idn
 
-    def check_timeout(self):
-        if dt.now() > self.expire_date:
-            if self.status == TRANSACTION_STATUS_TYPES.waiting:
-                self.status=TRANSACTION_STATUS_TYPES.timeout
-                self.save()
-            return False
-        return True
+    #on save: check if price and sub.price are the same!
 
-    def done(self):
-        if self.is_valid():
-            self.status = TRANSACTION_STATUS_TYPES.success
-            return True
-        return False
 
-    def save(self,*a,**b):
-        if self.coupon and self.status == TRANSACTION_STATUS_TYPES.success and not self.coupon.used:
-            self.coupon.used=True
-            self.coupon.used_date=dt.now()
-        super(Transaction,self).save(*a,**b)

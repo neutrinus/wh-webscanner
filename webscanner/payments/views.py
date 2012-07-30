@@ -22,7 +22,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.forms import PayPalEncryptedPaymentsForm
 from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, subscription_signup, recurring_payment
 
-from payments.models import Transaction, Coupon
+from payments.models import Subscription, Payment, Coupon
 from django.contrib import messages
 from settings import PRODUCT_PRICE, STATIC_URL
 
@@ -48,25 +48,26 @@ def payments(req):
             coupon=coupon[0]
         else:
             messages.error(req, _('Invalid coupon code!'))
-            coupon = False
+            coupon = None
     else:
         coupon = None
+
 
     # set Decimal calculation precision
     getcontext().prec = 3
     price = PRODUCT_PRICE - PRODUCT_PRICE*Decimal(coupon.percent)/Decimal("100.0")  if coupon else PRODUCT_PRICE
     if price < Decimal("0"): price = Decimal("0")
 
-    t=Transaction(
-        user=req.user,
-        type='paypal',
-        price=price,
-        coupon = coupon if coupon else None,
-    )
-    t.save()
+    # get empty subscription or reuse old one
+    subscription = Subscription.objects.get_or_create(user = req.user, date_subscribed = None)[0]
+    subscription.price = price
+    subscription.coupon = coupon
+    subscription.save()
 
     return dict(
-        transactions = Transaction.objects.filter(user = req.user).order_by('-creation_date'),
+        # just pass valid ipns
+        subscriptions = Subscription.objects.filter(user = req.user).order_by('-creation_date'),
+        subscription = subscription,
         coupon = coupon,
         price = price,
         paypal =
@@ -75,7 +76,7 @@ def payments(req):
             item_name = _("webcheck.me PRO membership"),
             item_number = 1,
             custom = "1337",
-            invoice = "%s"%t.code,
+            invoice = "%s" % subscription.code,
             cmd = "_xclick-subscriptions",
             a3 = price ,                      # monthly price
             p3 = 1,                           # duration of each unit (depends on unit)
@@ -115,34 +116,19 @@ def testsig(sender, **kwargs):
 
 def payment_ok(sender, **kwargs):
     print'------ paypal ok -----------'
-    ipn=sender
-    print 'paypal invoice',ipn.invoice
-    try:
-        t=gooN(Transaction,code=ipn.invoice)
-        if not t:
-            print 'error: not transaction in db: %s'%ipn.invoice
-            return
-        print 'db transaction',t,t.code
-        u=gooN(User,pk=t.user.pk)
-        if not u:
-            print 'error: not user %s in db'%t.user
-            return
-        print 'db paypal user',u
-        if t and t.done():
-            p=u.get_profile()
-            p.tariff_def = t.tariff_def
-            p.expiration_date = dt.now() + td(days=t.tariff_def.duration)
-            p.save()
-            t.save()
-            log.info('transaction %s OK!'%t.code)
-            send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 
-            return
-        else:
-            log.error('error: transaction %s FAILED but cash go '%t.code)
+    pprofile=gooN(PayProfile, code=sender.invoice)
+    if not pprofile:
+        log.error('Invalid pprofile code in ipn.invoice: %s' % sender.invoice)
+        return
 
-    except Exception as e:
-        log.error('error %s'%e)
+    log.debug('Payment: user=%s price=%s invoice=%s' % (pprofile.user, sender.price, sender.invoice))
+
+    pprofile.expire_date = dt.now() + td(months=1)
+    pprofile.save()
+
+    log.info('transaction %s OK!'%t.code)
+    #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 
 
 def payment_flagged(sender, **kwargs):

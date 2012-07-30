@@ -15,14 +15,23 @@ class CouponAdmin(admin.ModelAdmin):
     ordering = ('-used_date',)
 
 
-class TransactionAdmin(admin.ModelAdmin):
-    model = Transaction
-    readonly_fields = ('code', 'user', 'type', 'price', 'status', 'expire_date', 'coupon')
-    list_display = ('code', 'user', 'type', 'status')
-    list_filter = ('expire_date',)
+class SubscriptionAdmin(admin.ModelAdmin):
+    model = Subscription
+    readonly_fields = ('code', 'user', 'price', 'coupon', 'date_subscribed', 'date_canceled')
+    list_display = ('code', 'user')
+    list_filter = ('date_subscribed', 'date_canceled')
     list_per_page = 25
-    date_hierarchy = 'expire_date'
+    date_hierarchy = 'date_subscribed'
+
+class PaymentAdmin(admin.ModelAdmin):
+    model = Payment
+    readonly_fields = ('subscription', 'price', 'date_created')
+    list_per_page = 25
 
 
-site.register(Coupon,CouponAdmin)
-site.register(Transaction,TransactionAdmin)
+
+site.register(Coupon, CouponAdmin)
+site.register(Subscription, SubscriptionAdmin)
+site.register(Payment, PaymentAdmin)
+
+
