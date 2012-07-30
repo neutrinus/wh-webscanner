@@ -23,7 +23,7 @@ from logs import log
 from scanner.models import *
 
 def index(request):
-	return render_to_response('index.html', {}, context_instance=RequestContext(request))
+	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
 
 @login_required
 @render_to('scanner/scan_archive.html')
@@ -62,7 +62,7 @@ def results(request):
         #TODO: please dont hardcode urls..
         return redirect('/reports/'+ test.uuid)
     else:
-        return redirect('/')
+        return redirect(reverse('scanner_index'))
 
 def show_report(request, uuid):
     #messages.info(request, 'Three credits remain in your account.')
@@ -76,9 +76,12 @@ def show_report(request, uuid):
     except ObjectDoesNotExist:
         return redirect('/')
 
-    return render_to_response('results.html', {'test': test}, context_instance=RequestContext(request))
+    return render_to_response('scanner/results.html', {'test': test}, context_instance=RequestContext(request))
 
 def check_results(request, uuid):
+    """
+    ajax requests handler - suply information about tests
+    """
     test = Tests.objects.filter(uuid=uuid).get()
 
     last = request.GET.get("last")

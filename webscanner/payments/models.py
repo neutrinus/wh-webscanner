@@ -35,15 +35,14 @@ def make_coupon_code(max=20):
 
 class Coupon(models.Model):
     class Meta:
-        verbose_name = _("jednorazowy kupon rabatowy")
-        verbose_name_plural = _("jednorazowe kupony rabatowe")
+        verbose_name = _("one-use coupon code")
 
-    used                =   models.BooleanField(_(u'został użyty'), default=False)
-    code                =   models.CharField(_(u'kod'),
+    used                =   models.BooleanField(_(u'has been used'), default=False)
+    code                =   models.CharField(_(u'code'),
                                              max_length=256,
                                              unique=True,
                                              default=make_coupon_code)
-    percent             =   models.IntegerField(_(u'Wysokość zniżki'),
+    percent             =   models.IntegerField(_(u'Discount size'),
                                                 help_text=_(u'Wyrażona w'
                                                 u'procentach, przykład: 20'),
                                                )
@@ -60,16 +59,16 @@ def expdate():
 
 class Transaction(models.Model):
     class Meta:
-        verbose_name = _("transakcja")
-        verbose_name_plural = _("transakcje")
-    code                = models.CharField(max_length=512,
+        verbose_name = _("Transaction")
+    code                = models.CharField(_(u'Transaction uuid'),
+                                           max_length=512,
                                            default=make_transaction_code,
                                            unique=True,
                                            primary_key=True)
     user                =   models.ForeignKey(User)
     type                =   models.CharField(max_length=50,
                                              choices = TRANSACTION_TYPES)
-    price               =   models.DecimalField(_(u'cena'),
+    price               =   models.DecimalField(_(u'Price'),
                                                 max_digits=10,
                                                 decimal_places=2)
     coupon              =   models.ForeignKey("Coupon",blank=True, null=True, default=None)

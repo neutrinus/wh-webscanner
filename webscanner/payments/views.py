@@ -13,17 +13,18 @@ from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from logging import getLogger
+from django.shortcuts import redirect
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None as gooN
 
 from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.forms import PayPalEncryptedPaymentsForm
-from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, subscription_signup, recurring_payment
 
 from payments.models import Transaction, Coupon
 from django.contrib import messages
-from settings import PRODUCT_PRICE
+from settings import PRODUCT_PRICE, STATIC_URL
 
 SITE_NAME = Site.objects.get_current()
 log= getLogger(__name__)
@@ -51,8 +52,6 @@ def payments(req):
     else:
         coupon = None
 
-    print SITE_NAME
-
     # set Decimal calculation precision
     getcontext().prec = 3
     price = PRODUCT_PRICE - PRODUCT_PRICE*Decimal(coupon.percent)/Decimal("100.0")  if coupon else PRODUCT_PRICE
@@ -73,16 +72,18 @@ def payments(req):
         paypal =
             make_form(dict(
             bussiness = settings.PAYPAL_RECEIVER_EMAIL,
-            item_name = "Item name",
+            item_name = _("webcheck.me PRO membership"),
             item_number = 1,
+            custom = "1337",
             invoice = "%s"%t.code,
             cmd = "_xclick-subscriptions",
             a3 = price ,                      # monthly price
             p3 = 1,                           # duration of each unit (depends on unit)
-            t3 = "M",                         # duration unit ("M for Month")
+            t3 = "W",                         # duration unit ("M for Month")
             src = "1",                        # make payments recur
             sra = "1",                        # reattempt payment on payment error
-            no_note = "1",                    # remove extra notes (optional)
+            no_note = "1",                    # remove extra notes (req)
+            image_url = "%s%s%s" %(SITE_NAME, STATIC_URL, 'paypal_logo.gif'  ),
             notify_url = "%s%s" %(SITE_NAME, reverse('paypal-ipn')),
             return_url = "%s%s" %(SITE_NAME, reverse('payments_paypal_return')),
             cancel_return = "%s%s" %(SITE_NAME, reverse('payments_paypal_cancel')),
@@ -91,21 +92,27 @@ def payments(req):
     )
 
 @csrf_exempt
-@render_to('payments/paypal_return.html')
 def paypal_return(req):
-    return {
-        'msg':_("Transakcja zakończona powodzeniem. Dziękujemy.")
-    }
+    messages.success(req, _('Your payment is finished, thank you! Please wait few seconds till payment is processed'))
+    return redirect(reverse('payments_payments'))
 
 @csrf_exempt
-@render_to('payments/paypal_cancel.html')
 def paypal_cancel(req):
-    return {
-        'msg':_("Transakcja anulowana")
-    }
-
+    messages.error(req, _('Your payment has been canceled!'))
+    return redirect(reverse('payments_payments'))
 
 # signals
+
+def signup(sender, **kwargs):
+    print'------ paypal signup -----------'
+    ipn=sender
+    print ipn
+
+def testsig(sender, **kwargs):
+    print'------ tests -----------'
+    ipn=sender
+    print ipn
+
 def payment_ok(sender, **kwargs):
     print'------ paypal ok -----------'
     ipn=sender
@@ -144,3 +151,5 @@ def payment_flagged(sender, **kwargs):
 
 payment_was_successful.connect(payment_ok)
 payment_was_flagged.connect(payment_flagged)
+subscription_signup.connect(signup)
+recurring_payment.connect(testsig)

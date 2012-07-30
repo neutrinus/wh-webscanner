@@ -60,7 +60,7 @@ class PluginDNSmail(PluginMixin):
 
             for server in answers:
                 locations[str(server.exchange)] = geoip.city(str(server.exchange))
-            rendered = render_to_string('serversmap.js', {'locations': locations,'id': 'mxserversmap'} )
+            rendered = render_to_string('scanner/serversmap.js', {'locations': locations,'id': 'mxserversmap'} )
 
             res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Mail server(s) geo-location") )

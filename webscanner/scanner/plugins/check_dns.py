@@ -36,16 +36,10 @@ class PluginDNS(PluginMixin):
             res = Results(test=command.test,group = RESULT_GROUP.general, importance=5)
             res.output_desc = unicode(_("A records (IPv4)") )
             if len(answers) > 1:
-                res.output_full = unicode(_("<p>Your nameserver returned %(number)s A records: <code>%(records)s</code></p>" % {
-                    'number': len(answers),
-                    'records':records
-                } ) ))
+                res.output_full = unicode(_("<p>Your nameserver returned %(number)s A records: <code>%(records)s</code></p>" % (len(answers),records) ))
                 res.status = RESULT_STATUS.success
             elif len(answers) == 1:
-                res.output_full = unicode(_("<p>Your nameserver returned %(number)s A record: <code>%(records)s</code></p> <p>Having multiple A records with different IP can load-balance traffic.</p>"% {
-                    'number':len(answers),
-                    'records': records
-                } ) ))
+                res.output_full = unicode(_("<p>Your nameserver returned %(number)s A record: <code>%(records)s</code></p> <p>Having multiple A records with different IP can load-balance traffic.</p>"% (len(answers), records) ))
                 res.status = RESULT_STATUS.success
             else:
                 res.output_full = unicode(_("<p>There are no A records for this domain! It means that nobody can reach your website.</p>" ))
@@ -60,7 +54,7 @@ class PluginDNS(PluginMixin):
 
             for server in answers:
                 locations[str(server.address)] = geoip.city(str(server.address))
-            rendered = render_to_string('serversmap.js', {'locations': locations,'id': 'webserversmap'} )
+            rendered = render_to_string('scanner/serversmap.js', {'locations': locations,'id': 'webserversmap'} )
 
             res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Web server(s) geo-location") )
