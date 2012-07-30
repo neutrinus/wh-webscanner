@@ -42,7 +42,10 @@ def results(request):
         #basic url validiation
         if not urlparse(url).scheme:
             url = "http://"+url
-        if urlparse(url).scheme not in ["http","https"]:
+        if (urlparse(url).scheme not in ["http","https"]) or \
+           (not urlparse(url).netloc) or \
+           len(urlparse(url).netloc) < 3:
+            messages.warning(request, _('Invalid website address (URL), please try again.'))
             return redirect('/')
 
         if request.user.is_authenticated():

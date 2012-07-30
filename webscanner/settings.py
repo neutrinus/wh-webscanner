@@ -24,6 +24,8 @@ EMAIL_HOST_PASSWORD='xxx'
 EMAIL_USE_TLS=False
 EMAIL_SUBJECT_PREFIX='[webcheck.me]'
 
+AUTH_PROFILE_MODULE = 'account.UserProfile'
+
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/user/login/'
 
