@@ -34,7 +34,7 @@ class Coupon(models.Model):
                                                  blank=True,
                                                  null=True)
 
-    def is_used(self):
+    def set_used(self):
         self.coupon.used=True
         self.coupon.used_date=dt.now()
         self.save()

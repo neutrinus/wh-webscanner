@@ -3,7 +3,7 @@
 import os
 import random
 from decimal import Decimal, getcontext
-from datetime import datetime as dt, timedelta as td
+from datetime import datetime, timedelta as td
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
@@ -26,8 +26,11 @@ from payments.models import Subscription, Payment, Coupon
 from django.contrib import messages
 from settings import PRODUCT_PRICE, STATIC_URL
 
+
 SITE_NAME = Site.objects.get_current()
-log= getLogger(__name__)
+
+log = getLogger('plugin')
+
 
 def make_form(d):
     t = PayPalPaymentsForm
@@ -65,8 +68,7 @@ def payments(req):
     subscription.save()
 
     return dict(
-        # just pass valid ipns
-        subscriptions = Subscription.objects.filter(user = req.user).order_by('-creation_date'),
+        payments = Payment.objects.filter(subscription__user = req.user).order_by('-date_created'),
         subscription = subscription,
         coupon = coupon,
         price = price,
@@ -103,32 +105,46 @@ def paypal_cancel(req):
     return redirect(reverse('payments_payments'))
 
 # signals
-
 def signup(sender, **kwargs):
-    print'------ paypal signup -----------'
-    ipn=sender
-    print ipn
+    log.debug("Payment signup")
+
+    sub = gooN(Subscription, code = sender.invoice)
+    if not sub:
+        log.error("Coudnt find subscription for invoice %s" % sender.invoice )
+        return
+
+    sub.date_subscribed = datetime.now()
+    sub.is_subscribed = True
+    sub.save()
+
+    if sub.coupon:
+        sub.coupon.set_used()
+
+    log.info("User %s has subscribed at price %s" % (sub.user, sub.price))
+    print sender
+
+def payment_ok(sender, **kwargs):
+    log.debug("Payment OK")
+    sub = gooN(Subscription, code = sender.invoice)
+    if not sub:
+        log.error("Coudnt find subscription for invoice %s" % sender.invoice )
+        return
+
+    # create new payment
+    pay = Payment(subscription = sub, price = sender.mc_gross)
+    pay.save()
+    log.debug('Payment: user=%s price=%s invoice=%s' % (sub.user, pay.price, sub.code))
+
+    #pprofile.expire_date = datetime.now() + td(months=1)
+    #pprofile.save()
+
+    #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
+
 
 def testsig(sender, **kwargs):
     print'------ tests -----------'
     ipn=sender
     print ipn
-
-def payment_ok(sender, **kwargs):
-    print'------ paypal ok -----------'
-
-    pprofile=gooN(PayProfile, code=sender.invoice)
-    if not pprofile:
-        log.error('Invalid pprofile code in ipn.invoice: %s' % sender.invoice)
-        return
-
-    log.debug('Payment: user=%s price=%s invoice=%s' % (pprofile.user, sender.price, sender.invoice))
-
-    pprofile.expire_date = dt.now() + td(months=1)
-    pprofile.save()
-
-    log.info('transaction %s OK!'%t.code)
-    #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 
 
 def payment_flagged(sender, **kwargs):

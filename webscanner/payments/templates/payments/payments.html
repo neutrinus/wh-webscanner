@@ -6,7 +6,7 @@
 <h1>{% trans "Payments" %}</h1>
 
 <div class="row-fluid">
-    {% if transactions %}
+    {% if payments %}
     <div class="span6">
         <h2>{% trans "Payments archive" %}</h2>
         <div class="container">
@@ -14,18 +14,16 @@
                 <thead>
                     <tr>
                         <th>{% trans "date" %}</th>
-                        <th>{% trans "status" %}</th>
                         <th>{% trans "price" %}</th>
                         <th>{% trans "discount" %}</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for transaction in transactions %}
+                {% for payment in payments %}
                     <tr>
-                        <td>{{ transaction.creation_date }}</td>
-                        <td>{{ transaction.status }}</td>
-                        <td>${{ transaction.price }}</td>
-                        <td>{% if transaction.coupon %}{{ transaction.coupon.percent }}% {% endif %}</td>
+                        <td>{{ payment.date_created }}</td>
+                        <td>${{ payment.price }}</td>
+                        <td>{% if payment.subscription.coupon %}{{ payment.subscription.coupon.percent }}% {% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
