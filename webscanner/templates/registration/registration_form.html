@@ -1,41 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Register for an account{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Register for an account" %}{% endblock %}
 {% block content %}
+
+
+{% if user.is_authenticated %}
+{% trans "You are already logged in, why would you like to register?" %}
+{% else %}
 <section style="margin-top:3em">
     <form class="well form-horizontal" id="form_login" method="post" action="" >
         <h2>Register <i class="icon-plus"></i></h2>
         {% csrf_token %}
         <fieldset>
             <div class="control-group">
-                <label class="control-label" for="input01">Login</label>
+                <label class="control-label" for="input01">{% trans "Login" %}:</label>
                 <div class="controls">
-                    <input id="id_username" class="required input-xlarge" type="text" maxlength="30" name="username" placeholder="john" />     
+                    <input id="id_username" class="required input-xlarge" type="text" maxlength="30" name="username" placeholder="john" />
                     <p class="help-block">{{ form.username.errors }}</p>
                 </div>
-                <label class="control-label" for="id_email">E-mail:</label>
+                <label class="control-label" for="id_email">{% trans "E-mail" %}:</label>
                 <div class="controls">
                     <input id="id_email" class="required input-xlarge" type="text" maxlength="75" name="email" />
                     <p class="help-block">{{ form.email.errors }}</p>
-                </div>                
-                <label class="control-label" for="id_password1">Password:</label>
+                </div>
+                <label class="control-label" for="id_password1">{% trans "Password" %}:</label>
                 <div class="controls">
                     <input id="id_password1" class="required input-xlarge" type="password" name="password1">
                     <p class="help-block">{{ form.password1.errors }}</p>
                 </div>
-                
-                <label class="control-label" for="id_password2">Password (again):</label>
+
+                <label class="control-label" for="id_password2">{% trans "Password (again)" %}:</label>
                 <div class="controls">
                     <input id="id_password2" class="required input-xlarge" type="password" name="password2">
                     <p class="help-block">{{ form.password2.errors }}</p>
                 </div>
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Send activation email</button>&nbsp;
-                <a href="/" class="btn">Cancel</a>
+                <button class="btn btn-primary" type="submit">{% trans "Send activation email" %}</button>&nbsp;
+                <a href="/" class="btn">{% trans "Cancel" %}</a>
             </div>
         </fieldset>
     </form>
-
+{% endif %}
 <!--<script type="text/javascript">
 // $("#domain").focus();
 </script>-->
