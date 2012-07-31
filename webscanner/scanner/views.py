@@ -29,6 +29,19 @@ def index(request):
 def terms(request):
     return dict()
 
+@render_to('about.html')
+def about(request):
+    return dict()
+
+@render_to('contact.html')
+def contact(request):
+    return dict()
+
+@render_to('pricing.html')
+def pricing(request):
+    return dict()
+
+
 @login_required
 @render_to('scanner/scan_archive.html')
 def scan_archive(request):

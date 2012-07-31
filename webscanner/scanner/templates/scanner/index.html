@@ -32,12 +32,12 @@
             <div class="span3">
                 <h2><b>{% trans "Welcome" %}</b></h2>
                 <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form below and let us check your site!</p>
-                <p>Learn more <a href="#about-us">about us</a>  or <a href="#contact">get in touch</a>.</p>
+                <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url scanner_contact %}">get in touch</a>.</p>
             </div>
             <div class="span3">
                 <h2>{% trans "It's Free!" %}</h2>
                 <p>We believe that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
-                <p>There are, though, additional options available for pro members.</p>
+                <p>There are, though, additional options available for pro members. <a href="{% url scanner_pricing %}">(learn more)</a></p>
             </div>
             <div class="span3">
                 <h2>{% trans "Lots of tests" %}</h2>
@@ -96,24 +96,24 @@
     </div>
 </div>
 
-    <!--
+
 <div class="section">
-    <h1>Want more?</h1>
+    <h1>{% trans "Want more?" %}</h1>
 
     <div class="row-fluid">
         <div class="span12">
             <div class="row">
                 <div class="span4">
-                    <h2>No limits!</h2>
-                    <p>There is no complicted tariffs table, no additional payments, just pay and use!</p>
+                    <h2>{% trans "No limits!" %}</h2>
+                    <p>There is no complicted tariffs table, no additional hidden payments, just pay <a href="{% url scanner_pricing %)">flat monthly fee</a> and use: the limit is the sky! (and the hardware). </p>
                 </div>
                 <div class="span4">
-                    <h2>Priority queue</h2>
+                    <h2>{% trans "Priority queue" %}</h2>
                     <p>We respect your bizness time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>
                 </div>
                 <div class="span4">
-                    <h2>Scan deeper</h2>
-                    <p>We understand how important are results for your buisness. As VIP your webpages are checked deeper and with more care. Just to provide more acurate hints!</p>
+                    <h2>{% trans "Scan deeper" %}</h2>
+                    <p>{% trans "We understand how important are results for your business. As VIP your webpages are checked deeper and with more care. Just to provide more acurate hints for your business!" %}</p>
                 </div>
             </div>
         </div>
@@ -121,10 +121,10 @@
 
     <div class="row">
         <div class="span3 offset10">
-            <a href="/buy/" class="btn btn-large btn-inverse">    <i class="icon-star icon-white"></i> Become a VIP</a>
+            <a href="{% if user.is_authenticated %}{% url payments_payments %}{% else %}{% url registration_register %}{% endif %}" class="btn btn-large btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Become a VIP" %}</a>
         </div>
     </div>
-</div>-->
+</div>
 
 <script type="text/javascript">
         $("#domain").focus();

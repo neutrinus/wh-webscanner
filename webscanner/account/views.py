@@ -13,7 +13,6 @@ def ulogout(request):
     messages.success(request, _('You have ben logged-out. We will miss you!'))
 
     next_page = request.REQUEST.get("next", '')
-    print("next: %s"%next_page)
     if next_page:
         netloc = urlparse.urlparse(next_page)[1]
         # Security check -- don't allow redirection to a different host.
@@ -23,7 +22,6 @@ def ulogout(request):
         return(redirect(next_page))
 
     referer = request.META.get('HTTP_REFERER')
-    print("referer: %s"%referer)
     if referer:
         netloc = urlparse.urlparse(referer)[1]
         # Security check -- don't allow redirection to a different host.
