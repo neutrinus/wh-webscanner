@@ -78,7 +78,7 @@ def payments(req):
             cmd = "_xclick-subscriptions",
             a3 = price ,                      # monthly price
             p3 = 1,                           # duration of each unit (depends on unit)
-            t3 = "W",                         # duration unit ("M for Month")
+            t3 = "M",                         # duration unit ("M for Month")
             src = "1",                        # make payments recur
             sra = "1",                        # reattempt payment on payment error
             no_note = "1",                    # remove extra notes (req)
@@ -109,12 +109,14 @@ def signup(sender, **kwargs):
         log.error("Coudn't find subscription for invoice %s" % sender.invoice )
         return
 
-    print "DUPA"
     sub.date_subscribed = datetime.now()
     sub.is_subscribed = True
     sub.save()
 
     if sub.coupon:
+        log.info("Coupon code %s has been used by user %s" % (sub.coupon.code, sub.user))
+        if sub.coupon.used:
+            log.error("It was already used by someone else. Fraud warning!")
         sub.coupon.set_used()
 
     log.info("User %s has subscribed at price %s" % (sub.user, sub.price))
@@ -155,7 +157,7 @@ def payment_ok(sender, **kwargs):
     # create new payment
     pay = Payment(subscription = sub, price = sender.mc_gross)
     pay.save()
-    log.debug('Payment: user=%s price=%s invoice=%s' % (sub.user, pay.price, sub.code))
+    log.info('Payment: user=%s price=%s invoice=%s' % (sub.user, pay.price, sub.code))
 
     #pprofile.expire_date = datetime.now() + td(months=1)
     #pprofile.save()
@@ -164,7 +166,7 @@ def payment_ok(sender, **kwargs):
 
 
 def payment_flagged(sender, **kwargs):
-    print'------ paypal flagged -----------'
+    log.debug("paypal flagged")
     return payment_ok(sender, **kwargs)
 
 payment_was_successful.connect(payment_ok)

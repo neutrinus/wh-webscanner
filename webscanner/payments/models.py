@@ -35,8 +35,8 @@ class Coupon(models.Model):
                                                  null=True)
 
     def set_used(self):
-        self.coupon.used=True
-        self.coupon.used_date=dt.now()
+        self.used=True
+        self.used_date=dt.now()
         self.save()
 
 class Subscription(models.Model):
