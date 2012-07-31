@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     'django_wsgiserver',
     'crispy_forms',
     'south',
+    'infinite_pagination',
 
     #testing
     'django_nose',

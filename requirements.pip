@@ -30,6 +30,7 @@ chardet
 beautifulsoup4
 
 PIL
+django-infinite-pagination
 
 -e git+git://github.com/dcramer/django-paypal.git#egg=paypal
 

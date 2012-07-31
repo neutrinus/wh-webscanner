@@ -1,7 +1,17 @@
+
+
 {% extends 'base.html' %}
-{%load i18n%}
+{% load humanize %}
+{% load l10n %}
+{% load i18n %}
+{% load infinite_pagination %}
+
+{% block title %}{% trans "Scan archive" %}{% endblock %}
 
 {% block content %}
+
+
+{% autopaginate tests per_page=30 as ptests %}
 
 <h1>{% trans "Scan archive" %}</h1>
 {% trans "Here you can find your old scans performed by webcheck.me" %}
@@ -20,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for test in tests %}
+                {% for test in ptests %}
                     <tr>
                         <td><a href="{% url scanner_report test.uuid %} ">{{ test.url }}</a></td>
                         <td>{{ test.percent_done|floatformat:"0" }}%</td>
@@ -35,6 +45,10 @@
     </div>
     {% endif %}
 </div>
+
+{% paginate %}
+
+
 
 {% endblock content %}
 

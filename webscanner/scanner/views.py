@@ -33,6 +33,7 @@ def terms(request):
 @render_to('scanner/scan_archive.html')
 def scan_archive(request):
     """ Presents user his scans archive """
+
     return dict(
         tests = Tests.objects.filter(user = request.user).order_by('-creation_date'),
     )
