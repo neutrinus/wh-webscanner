@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Error [500] Server error" %}{% endblock %}
+
+{% block content %}
+
+{% blocktrans %}
+<h1>Error <b>500</b></h1>
+<h2>While processing your request({{ request_path }}) there was a server error</h2>
+<p>We are sorry for any troubles, we are working to fix this issue as soon as possible.</p>
+{% endblocktrans %}
+
+{% endblock %}
+

@@ -28,7 +28,6 @@ SITE_NAME = Site.objects.get_current()
 
 log = getLogger('plugin')
 
-
 def make_form(d):
     t = PayPalPaymentsForm
     #if getattr(settings,'PAYPAL_ENCRYPTED',False):
@@ -166,8 +165,8 @@ def payment_ok(sender, **kwargs):
 
 
 def payment_flagged(sender, **kwargs):
-    log.debug("paypal flagged")
-    return payment_ok(sender, **kwargs)
+    log.warning("Paypal flagged transaction %s" % sender.invoice )
+
 
 payment_was_successful.connect(payment_ok)
 payment_was_flagged.connect(payment_flagged)

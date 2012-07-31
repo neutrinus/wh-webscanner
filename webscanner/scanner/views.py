@@ -25,6 +25,10 @@ from scanner.models import *
 def index(request):
 	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
 
+@render_to('terms.html')
+def terms(request):
+    return dict()
+
 @login_required
 @render_to('scanner/scan_archive.html')
 def scan_archive(request):

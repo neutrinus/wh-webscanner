@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Terms of service" %}{% endblock %}
+
+{% block content %}
+
+<style>
+body {
+    counter-reset: section;
+}
+dd {
+    color: #6298DB;
+    counter-reset: subsection;
+    font-size: 24px;
+    margin: 7px 0;
+}
+
+dt {
+    counter-reset: subsubsection;
+    margin: 3px;
+    margin-left:2em;
+}
+
+dk {
+    display: block;
+    margin: 3px;
+    margin-left:4em;
+}
+
+dd:before {
+    content: counter(section, decimal) ". ";
+    counter-increment: section;
+}
+dt:before {
+    content: counter(section, decimal) "." counter(subsection, decimal) " ";
+    counter-increment: subsection;
+}
+dk:before {
+    content: counter(section, decimal) "." counter(subsection, decimal) "." counter(subsubsection, decimal) " ";
+    counter-increment: subsubsection;
+}
+
+</style>
+{% blocktrans %}
+<h1>Webcheck.me Service Regulations</h1>
+
+<dd>General provisions</dd>
+<dt>These Regulations define the conditions of the provision of webcheck.me service by
+the Provider which is WHITE HATS Marek Hobler with its registered office in Wrocław,
+Poland, address: ul. Powstańców Sląskich 5/206, Wrocław, Poland, hereinafter reffered to
+as the Provider.
+
+The terms used in the Regulations mean:</dt>
+
+<dk >"subscription" – a service allowing the Subscriber to use webcheck.me service rendered by the Provider;</dk>
+
+<dk>"Subscriber" – a person using the subscription bound with the Provider by means of the contract for the provision of webcheck.me service;</dk>
+
+<dk>"price list" – an annex to the contract defining the amount of fees which is not a part of the contract and may be updated according to the rules stipulated in the regulations;</dk>
+
+<dk>"subscription period" – a month – long period for which the settlement of the subscription is made on the grounds of rendering webcheck.me service, which begins and finishes on certain days of calendar months indicated by the Provider of the service;</dk>
+
+<dk>"package" – a group of rules available to define which constitute webcheck.me service rendered by the Provider for the Subscriber at certain price and under certain conditions;</dk>
+
+<dk>"webcheck.me system" – the Provider’s technology by means of which he renders webcheck.me service which includes software and computer infrastructure belonging to the Provider of the service. webcheck.me system comprises monitoring center monitoring stations, graphic interface, reporting system and notifying system;</dk>
+
+<dk>"webcheck.me service" – the service of monitoring internet services and applications rendered through the Internet by means of webcheck.me service;</dk>
+
+<br />
+<dt>webcheck.me service requires having a computer connected to the Internet, with a web browser;</dt>
+
+<dt>Customer who is a consumer has the right to rescind the contract without giving a reason within 10 days from the date on which the contract was concluded, by submitting an appropriate declaration in writing</dt>
+
+<dt>The provider reserves the right to change the Regulations. The changes start being valid from the moment of publication of the new version of the Regulations on the website: WWW <a href="http://webcheck.me">http://webcheck.me</a>. In case of the change in Regulations, Customer has the right to rescind the contract under the condition that he sends written declaration within 14 days from the date on which the new version of the Regulations was published, in according to the rules specified in the section " Complaint proceedings" of these Regulations.</dt>
+
+<dd>Personal data protection</dd>
+
+    <dt>From the moment of registration and activation of the profile the User gives consent to process his e-mail address and other personal details given in oder to register for the purposes specified in the preceding and the information section; in particular the User gives consent to receive reports or information from the Provider or other subjects (with the knowledge and explicit acceptance of the Provider) and information considering products or services of the Provider as well as other subjects (with the knowledge and explicit acceptance of the Provider).</dt>
+    <dt>The User has the right to inspect his personal data and to correct it.</dt>
+
+<dd>The obligation to comply with the law</dd>
+    <dt>If the Provider obtains information that the Customer uses webcheck.me service against the provisions of the law, the Provider has the right to deprive the Customer of the access to webcheck.me service and process his personal data in order to establish his responsibility as well as to pass the data to appropriate public authorities.</dt>
+
+<dd>Concluding a contract and activating webcheck.me service</dd>
+
+    <dt>webcheck.me service shall be ordered through registration on the website: <a href="http://www.webcheck.me.com">www.webcheck.me.com</a>, then  making payment of the amount of the subscription;</dt>
+
+    <dt>Concluding a contract for webcheck.me service is possible by means of the contract form in administrator’s panel.</dt>
+
+    <dt>Upon conclusion of the contract the person becomes Subscriber.</dt>
+
+    <dt>The contract may be concluded for the specified period of time.</dt>
+
+    <dt>The contract for the specified period of time is concluded for the period of a month from the date on which the service was activated.</dt>
+
+    <dt>After a period of time for which the contract was valid, the contract is automatically renewed for the indefinite period, unless the Subscriber declares in written form at least a
+    month before the end of period of the duration of the contract ( the date of the postmark shall be decisive) under pain of nullity.</dt>
+
+    <dt>The date of termination of the contract shall be the date after which new subscription fee shall be paid. In case of a lack of booked payment on the bank account to the time of the termination of the previous subscription, the contract shall be considered terminated.</dt>
+
+    <dt>Activation of the service happens after the payment of the activation fee.</dt>
+
+    <dt>First day of rendering webcheck.me service to the Subscriber shall be the first working day after the day on which the activation fee was paid to the Provider’s bank account unless the Contract concluded in written form stipulates otherwise.</dt>
+
+<dd>Payments</dd>
+
+    <dt>The amount of the payments is enclosed in the price list on the subwebsite <a href="http://www.webcheck.me">www.webcheck.me</a>.</dt>
+
+    <dt>The payment shall be made in advance for the subscription period and the type of the subscription chosen by the Customer.</dt>
+
+    <dt>The payment for the service relates to the subcription period pursuant to the order placed by the Customer. </dt>
+
+    <dt>We do not accept refunds</dt>
+
+<dd>Invoices for webcheck.me service</dd>
+
+    <dt>The Subscriber receives an invoice at request choosing appropriate option in the settings of the service or sending e-mail to the address <a href="mailto:support@webcheck.me">support@webcheck.me</a>.</dt>
+
+    <dt>The day of making payment shall be the day on which the fee is noted on the Provider’s bank account.</dt>
+
+<dd>Obligations and responsibility of the Customer</dd>
+
+    <dt>The Customer shall be obliged to inform the Provider about all the changes that may influence the performance of the Contract.</dt>
+
+    <dt>The Customer is obliged to give true personal details in the process of ordering the service.</dt>
+
+    <dt>The Customer is obliged to make payments on time.</dt>
+
+    <dt>Scanned website cannot have more than 100 subwebsites. Limits of the subwebsites are fixed individually and are dependent on the choice of the test.</dt>
+
+    <dt>The Customer bears entire responsibility for using webcheck.me service rendered by the Provider. </dt>
+
+    <dt>The Provider has the right to cease rendering the service immediately or terminate the contract with the Subscriber without the right to obtain the repayment of the unused subscription fee, if:</dt>
+
+        <dk>the Subscriber breaches the provisions of the contract.</dk>
+
+        <dk>the Subscriber uses webcheck.me service against its purpose and certain parameters.</dk>
+        <dk>the Subscriber acts to the detriment of other Customers of the Provider or the users of the Internet.</dk>
+
+<dd>Obligations and resposibility of the Provider</dd>
+
+    <dt>The Provider obliges himself to activate webcheck.me service in accordance with the contract.</dt>
+
+    <dt>The Provider is obliged to render webcheck.me service in a full range with due dilligence. The Provider does not bear responsibility for failure to configure or inappropriate configuring the service.</dt>
+
+    <dt>The Provider reserves the right to possibly short service breaks in rendering the service due to servicing and maintenance of the system as well as implementing new functionalities. The Subscriber shall be notified about this fact by means of e-mail. </dt>
+
+    <dt>The Provider is not responsible for possible damages that may occur as a result of:</dt>
+        <dk>lack of continuity in rendering services being a result of an action or negligence of third parties,</dk>
+        <dk>natural distaters, inappropriate use of the service, using information passed to the Customer authorizing access to the service by third parties, infringing the provisions of the contract by the Customer.</dk>
+
+
+<dd>Complaint proceedings</dd>
+
+    <dt>The complaint of the Subscriber due to non-performance or inappropriate performance of webcheck.me services shall be filed with the Provider in written form to the correspondence address. The complaint shall specify:</dt>
+
+        <dk>Subscriber’s personal details enabling the contact and identification of the Subscriber,</dk>
+        <dk>type of service pertaining to the complaint,</dk>
+        <dk>Subscriber’s complaints,</dk>
+        <dk>circumstances justifying the complaint,</dk>
+        <dk>potential demanded way of removing the alleged infringement.</dk>
+
+
+<dd>Final provisions</dd>
+
+    <dt>The governing law for this Contract between the Subscriber and the Provider shall be the Polish law.</dt>
+    <dt>The Provider reserves the right to terminate the contract with immediate effect in case the Customer breaches the provisions of the Regulations or the contract. In such event 7.11 shall be applicable.</dt>
+
+    <dt>The Regulations come into force on 1st January 2012.</dt>
+
+{% endblocktrans %}
+
+{% endblock %}
+
+
+
+
+
+
