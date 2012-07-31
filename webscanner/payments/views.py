@@ -14,14 +14,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from logging import getLogger
 from django.shortcuts import redirect
-
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None as gooN
-
 from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.forms import PayPalEncryptedPaymentsForm
-from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, subscription_signup, recurring_payment
-
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, subscription_signup, recurring_payment, subscription_cancel, subscription_eot
 from payments.models import Subscription, Payment, Coupon
 from django.contrib import messages
 from settings import PRODUCT_PRICE, STATIC_URL
@@ -37,10 +34,11 @@ def make_form(d):
     #if getattr(settings,'PAYPAL_ENCRYPTED',False):
         #t=PayPalEncryptedPaymentsForm
     form = t(initial = d)
-    if getattr(settings,'DEBUG', False):
-        return form.sandbox()
-    else:
-        return form.render()
+    return form.sandbox()
+    #if getattr(settings,'DEBUG', False):
+        #return form.sandbox()
+    #else:
+        #return form.render()
 
 @login_required
 @render_to('payments/payments.html')
@@ -57,14 +55,12 @@ def payments(req):
 
 
     # set Decimal calculation precision
-    getcontext().prec = 3
+    getcontext().prec = 2
     price = PRODUCT_PRICE - PRODUCT_PRICE*Decimal(coupon.percent)/Decimal("100.0")  if coupon else PRODUCT_PRICE
     if price < Decimal("0"): price = Decimal("0")
 
     # get empty subscription or reuse old one
-    subscription = Subscription.objects.get_or_create(user = req.user, date_subscribed = None)[0]
-    subscription.price = price
-    subscription.coupon = coupon
+    subscription = Subscription.objects.get_or_create(user = req.user, date_subscribed = None, price = price, coupon = coupon )[0]
     subscription.save()
 
     return dict(
@@ -106,13 +102,14 @@ def paypal_cancel(req):
 
 # signals
 def signup(sender, **kwargs):
-    log.debug("Payment signup")
+    log.debug("Subscription signup")
 
     sub = gooN(Subscription, code = sender.invoice)
     if not sub:
-        log.error("Coudnt find subscription for invoice %s" % sender.invoice )
+        log.error("Coudn't find subscription for invoice %s" % sender.invoice )
         return
 
+    print "DUPA"
     sub.date_subscribed = datetime.now()
     sub.is_subscribed = True
     sub.save()
@@ -121,7 +118,32 @@ def signup(sender, **kwargs):
         sub.coupon.set_used()
 
     log.info("User %s has subscribed at price %s" % (sub.user, sub.price))
-    print sender
+
+def sub_cancel(sender, **kwargs):
+    log.debug("Subscription cancel")
+
+    sub = gooN(Subscription, code = sender.invoice)
+    if not sub:
+        log.error("Coudn't find subscription for invoice %s" % sender.invoice )
+        return
+
+    sub.date_canceled = datetime.now()
+    sub.is_subscribed = False
+    sub.save()
+    log.info("User %s has unsubscribed code=%s" % (sub.user, sub.code))
+
+def sub_eot(sender, **kwargs):
+    log.debug("Subscription eot")
+
+    sub = gooN(Subscription, code = sender.invoice)
+    if not sub:
+        log.error("Coudn't find subscription for invoice %s" % sender.invoice )
+        return
+
+    sub.date_eot = datetime.now()
+    sub.is_subscribed = False
+    sub.save()
+    log.info("%s's subscription has reach it's EOT code=%s" % (sub.user, sub.code))
 
 def payment_ok(sender, **kwargs):
     log.debug("Payment OK")
@@ -141,12 +163,6 @@ def payment_ok(sender, **kwargs):
     #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 
 
-def testsig(sender, **kwargs):
-    print'------ tests -----------'
-    ipn=sender
-    print ipn
-
-
 def payment_flagged(sender, **kwargs):
     print'------ paypal flagged -----------'
     return payment_ok(sender, **kwargs)
@@ -154,4 +170,5 @@ def payment_flagged(sender, **kwargs):
 payment_was_successful.connect(payment_ok)
 payment_was_flagged.connect(payment_flagged)
 subscription_signup.connect(signup)
-recurring_payment.connect(testsig)
+subscription_cancel.connect(sub_cancel)
+subscription_eot.connect(sub_eot)

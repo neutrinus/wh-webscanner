@@ -17,6 +17,7 @@ MANAGERS = ADMINS
 
 ACCOUNT_ACTIVATION_DAYS=1
 DEFAULT_FROM_EMAIL = 'noreply@webcheck.me'
+SERVER_EMAIL = 'noreply@webcheck.me'
 EMAIL_HOST='localhost'
 EMAIL_PORT=587
 EMAIL_HOST_USER='root'

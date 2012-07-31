@@ -51,8 +51,8 @@ class Subscription(models.Model):
     date_created        =   models.DateTimeField(auto_now_add=True)
     date_subscribed     =   models.DateTimeField(null = True, default = None)
     date_canceled       =   models.DateTimeField(null = True, default = None)
-    is_canceled         =   models.BooleanField(_(u'has been cancel'), default=False)
-    is_subscribed       =   models.BooleanField(_(u'has been subscribed'), default=False)
+    date_eot            =   models.DateTimeField(null = True, default = None)
+    is_subscribed       =   models.BooleanField(_(u'user is subscribed'), default=False)
 
     price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2, null = True)
     coupon              =   models.ForeignKey("Coupon",blank=True, null=True, default=None)
