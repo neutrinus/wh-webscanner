@@ -5,11 +5,11 @@
 
 {% block content %}
 
-{% blocktrans %}
-<h1>Pricing</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eget ipsum lorem, in interdum metus. Ut rhoncus nulla ac sapien molestie eget mattis lacus pharetra. Maecenas volutpat, libero vitae bibendum rutrum, metus ligula ullamcorper purus, eu suscipit quam magna vel est. Etiam non purus massa, sit amet rhoncus orci. Suspendisse potenti. Pellentesque sed mollis massa. Sed vitae nibh sed justo fringilla consectetur. Sed condimentum posuere turpis, in blandit dui porttitor id. Aliquam erat volutpat. Sed sapien velit, volutpat eget tristique tempor, egestas eget purus. Donec ornare sollicitudin orci eu placerat. Etiam lacinia nulla sed purus vehicula eget mollis purus pharetra. Vivamus ac lectus ligula, consectetur rutrum dolor. In hac habitasse platea dictumst. Sed euismod leo sed ipsum accumsan nec volutpat mauris feugiat. In condimentum ante congue augue porta blandit. </p>
 
-<h2>Options</h2>
+<h1>Pricing</h1>
+
+{% blocktrans %}
+<h2>Features matrix</h2>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -20,6 +20,13 @@
         </tr>
     </thead>
     <tbody>
+        <tr>
+            <td>Monthly cost</td>
+            <td>free</td>
+            <td>free</td>
+            <td>$8.99</td>
+        </tr>
+
         <tr>
             <td>Website snapshots</td>
             <td><i class="icon-plus"></i></td>
@@ -48,13 +55,13 @@
         </tr>
         <tr>
             <td>Priority</td>
-            <td>low</td>
-            <td>medium</td>
-            <td>high</td>
+            <td><i class="icon-pause"></i> low</td>
+            <td><i class="icon-play"></i> normal</td>
+            <td><i class="icon-forward"></i> high</td>
         </tr>
 
         <tr>
-            <td>Unlimited scans per domain</td>
+            <td>Unlimited scans per website</td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
@@ -66,12 +73,35 @@
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
         </tr>
-
+        <tr>
+            <td>Repeat a test</td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-plus"></i></td>
+        </tr>
+        <tr>
+            <td>Additional hints and solutions</td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-plus"></i></td>
+        </tr>
     </tbody>
 </table>
-
-
 {% endblocktrans %}
+
+
+<div class="row">
+    <div class="span4">
+        <h2>Payment Method</h2>
+        Currently we offer payment via PayPal, but in near future we will add more options!
+    </div>
+
+    <div class="span4">
+        <h2>Qestions?</h2>
+        Please contact us using <a href="{% url scanner_contact %}">form</a>,
+    </div>
+</div>
+
 
 {% endblock %}
 
