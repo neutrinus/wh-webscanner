@@ -5,10 +5,40 @@
 
 {% block content %}
 
-{% blocktrans %}
 <h1>About webcheck.me</h1>
 
-{% endblocktrans %}
+<div class="row">
+    <div class="span6">
+        <h2>History</h2>
+        Webcheck.me has been started in very begining of 2012 as a project-branch at <a href="http://whitehats.pl">whitehats.pl</a>. It was like scrach own itch - we needed a tool to tests our products. When it was ready we realized that it's so briliant idea that we should share it with the World - so we are!
+    </div>
+
+    <div class="span6">
+        <h2>Mission</h2>
+        We aim to help fixing world wide web! As today's WEB has many technologies behind (in its backbone) its very hard to check every part. Webcheck is a compensive tool to easly scan websites for common bugs and problems. We believe that this will help webmaster everyday job.
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="span4">
+        <h2>Team</h2>
+        Webcheck.me team is part of the <a href="http://whitehats.pl">whitehats.pl</a> company - fanatics that develop cutting-edge tools and solutions.
+    </div>
+
+    <div class="span4">
+        <h2>Webcheck engine</h2>
+        It’s the best people who make our software so extraordinary. Most of us passionate about python, some others are linux administrators. Thanks to merging both those talents we have webcheck!   </a>
+    </div>
+
+    <div class="span4">
+        <h2>Get in touch!</h2>
+        We are waiting for your feedback! Use <a href="{% url scanner_contact %}">form</a> to inform us about sugestions and problems.
+    </div>
+</div>
+
+
 
 {% endblock %}
 

@@ -25,8 +25,13 @@ TEMPLATE_CONTEXT_PROCESSORS += [
 ]
 
 INSTALLED_APPS += (
-    'debug_toolbar',
+    #'debug_toolbar',
 )
+
+MIDDLEWARE_CLASSES += (
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
 
 #django-debug-toolbar
 DEBUG_TOOLBAR_PANELS = (
@@ -49,7 +54,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 SESSION_COOKIE_SECURE=0
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_HOST='localhost'

@@ -108,7 +108,6 @@ MIDDLEWARE_CLASSES = (
     'djangosecure.middleware.SecurityMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # TEST
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
