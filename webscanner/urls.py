@@ -16,6 +16,8 @@ urlpatterns += patterns('',   (r'^', include('account.urls')), )
 urlpatterns += patterns('',   (r'^', include('payments.urls')), )
 urlpatterns += patterns('',   (r'^', include('addonsapp.urls')), )
 urlpatterns += patterns('',   (r'^user/', include('registration.urls')), )
+#urlpatterns += patterns('',   (r'^account/', include('captcha.backends.default.urls')), )
+
 
 from django.conf.urls.static import static
 urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
