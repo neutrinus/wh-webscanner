@@ -13,12 +13,12 @@ django-debug-toolbar
 django-extensions==0.6
 django-autoroot
 django-model-utils==1.0.0
-South==0.7.3
-
 django-registration
 django-crispy-forms
+django-infinite-pagination
+django-recaptcha
 
-
+South==0.7.3
 M2Crypto
 django-wsgiserver
 django-secure
@@ -30,7 +30,6 @@ chardet
 beautifulsoup4
 
 PIL
-django-infinite-pagination
 
 -e git+git://github.com/dcramer/django-paypal.git#egg=paypal
 

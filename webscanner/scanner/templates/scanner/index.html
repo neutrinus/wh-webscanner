@@ -2,17 +2,13 @@
 {% load humanize %}
 {%load i18n%}
 
-
 {% block title %}{% trans "Free scan your website" %}{% endblock %}
 
 {% block extrahead %}
 {% endblock %}
 
 
-
-
 {% block content %}
-
 <div class="row" style="margin-top:9em;">
     <div class="span4 offset4"><a href="/"> <img src="{{ STATIC_URL }}images/logo2.png" /></a></div>
     <div>{% trans "let us check your website" %}</div>
@@ -25,14 +21,13 @@
 
 </form>
 
-
 <div class="section">
     <div class="row-fluid">
         <div class="row">
             <div class="span3">
                 <h2><b>{% trans "Welcome" %}</b></h2>
                 <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form below and let us check your site!</p>
-                <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url scanner_contact %}">get in touch</a>.</p>
+                <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
             </div>
             <div class="span3">
                 <h2>{% trans "It's Free!" %}</h2>
@@ -96,24 +91,28 @@
     </div>
 </div>
 
-
 <div class="section">
     <h1>{% trans "Want more?" %}</h1>
+    <h2>{% trans "VIP privileges:" %}</h2>
 
     <div class="row-fluid">
         <div class="span12">
             <div class="row">
-                <div class="span4">
+                <div class="span3">
                     <h2>{% trans "No limits!" %}</h2>
                     <p>There is no complicted tariffs table, no additional hidden payments, just pay <a href="{% url scanner_pricing %}">flat monthly fee</a> and use: the limit is the sky! (and the hardware). </p>
                 </div>
-                <div class="span4">
+                <div class="span3">
                     <h2>{% trans "Priority queue" %}</h2>
                     <p>We respect your bizness time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>
                 </div>
-                <div class="span4">
+                <div class="span3">
                     <h2>{% trans "Scan deeper" %}</h2>
                     <p>{% trans "We understand how important are results for your business. As VIP your webpages are checked deeper and with more care. Just to provide more acurate hints for your business!" %}</p>
+                </div>
+                <div class="span3">
+                    <h2>{% trans "...and more" %}</h2>
+                    <p>{% trans "Checkout our " %}<a href="{% url scanner_pricing %}">{% trans "feature matrix" %}</a> {% trans "to be familiar with all benefits of a VIP account" %}</p>
                 </div>
             </div>
         </div>

@@ -10,13 +10,12 @@ urlpatterns = patterns('',
 )
 
 
-urlpatterns += patterns('django.views.generic.simple',
-)
+urlpatterns += patterns('django.views.generic.simple',)
 urlpatterns += patterns('',   (r'^', include('scanner.urls')), )
 urlpatterns += patterns('',   (r'^', include('account.urls')), )
 urlpatterns += patterns('',   (r'^', include('payments.urls')), )
+urlpatterns += patterns('',   (r'^', include('addonsapp.urls')), )
 urlpatterns += patterns('',   (r'^user/', include('registration.urls')), )
-
 
 from django.conf.urls.static import static
 urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

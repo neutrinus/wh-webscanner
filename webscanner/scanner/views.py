@@ -33,10 +33,6 @@ def terms(request):
 def about(request):
     return dict()
 
-@render_to('contact.html')
-def contact(request):
-    return dict()
-
 @render_to('pricing.html')
 def pricing(request):
     return dict()

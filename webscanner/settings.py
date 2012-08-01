@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'scanner',
     'payments',
     'paypal.standard.ipn',
+    'addonsapp',
 
     #3rd party apps,
     'autoroot',
@@ -154,9 +155,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'south',
     'infinite_pagination',
-
-    #testing
-    'django_nose',
+    'captcha',
 )
 
 LOGGING = {
@@ -213,6 +212,10 @@ SECURE_HSTS_SECONDS = 1
 
 SESSION_COOKIE_SECURE=0
 SESSION_COOKIE_HTTPONLY =1
+
+RECAPTCHA_PUBLIC_KEY = '6LfmydQSAAAAAOHIqxQaBPr63pMr0XM23ummE4y1'
+RECAPTCHA_PRIVATE_KEY = '6LfmydQSAAAAAAU6Wmv9LDHyjnYupYkARmawIQ00 '
+#RECAPTCHA_USE_SSL = True
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [

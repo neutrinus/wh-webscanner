@@ -70,7 +70,7 @@ def payments(req):
         paypal =
             make_form(dict(
             bussiness = settings.PAYPAL_RECEIVER_EMAIL,
-            item_name = _("webcheck.me PRO membership"),
+            item_name = _("webcheck.me VIP membership"),
             item_number = 1,
             custom = "1337",
             invoice = "%s" % subscription.code,

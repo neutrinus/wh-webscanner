@@ -16,7 +16,7 @@
             <th>&nbsp;</th>
             <th>Unregistred</th>
             <th>Registred</th>
-            <th>PRO member (a VIP)</th>
+            <th>VIP member</th>
         </tr>
     </thead>
     <tbody>
@@ -59,6 +59,12 @@
             <td><i class="icon-play"></i> normal</td>
             <td><i class="icon-forward"></i> high</td>
         </tr>
+        <tr>
+            <td>Scan archive</td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-plus"></i></td>
+            <td><i class="icon-plus"></i></td>
+        </tr>
 
         <tr>
             <td>Unlimited scans per website</td>
@@ -66,7 +72,12 @@
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
         </tr>
-
+        <tr>
+            <td>Long scan archive</td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-minus"></i></td>
+            <td><i class="icon-plus"></i></td>
+        </tr>
         <tr>
             <td>Deep scans</td>
             <td><i class="icon-minus"></i></td>
@@ -100,6 +111,14 @@
         <h2>Qestions?</h2>
         Please contact us using <a href="{% url scanner_contact %}">form</a>,
     </div>
+
+
+    <div class="span4">
+        <h2>Start now!</h2>
+        <br />
+        <a href="{% if user.is_authenticated %}{% url payments_payments %}{% else %}{% url registration_register %}{% endif %}" class="btn btn-large btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Become a VIP" %}</a>
+    </div>
+
 </div>
 
 
