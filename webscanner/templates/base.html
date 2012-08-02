@@ -71,14 +71,8 @@
         </div>
 {% else %}
         <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> {% trans "Anonymous" %}
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#modal_login">{% trans "Login" %}</a></li>
-                <li><a href="{% url registration_register %}">{% trans "Register" %}</a></li>
-            </ul>
+            <a class="btn" data-toggle="modal" href="#modal_login" ><i class="icon-user"></i> {% trans "Login" %}</a>
+            <a class="btn" href="{% url registration_register %}"><i class="icon-plus"></i> {% trans "Register" %}</a>
         </div>
 {% endif %}
 

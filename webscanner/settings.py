@@ -55,7 +55,7 @@ CACHES = {
 
 TIME_ZONE = 'Europe/Warsaw'
 
-LANGUAGE_CODE = 'pl'
+LANGUAGE_CODE = 'en'
 
 SHOW_LANGUAGES = ('pl','en')
 
