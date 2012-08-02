@@ -1,27 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.views.generic.list_detail import object_list
-from django.contrib.auth.models import User
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from django.db.models import Q, Max
-from django.contrib.comments.models import Comment
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.contrib.sitemaps import ping_google
-from django.contrib.auth import logout, authenticate, login
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.db import transaction
 from urlparse import urlparse
-from datetime import datetime
 from annoying.decorators import render_to
 import json
 from logs import log
 from scanner.models import *
-from django.db import transaction
+
 
 def index(request):
 	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
@@ -42,8 +35,6 @@ def pricing(request):
 @login_required
 @render_to('scanner/scan_archive.html')
 def scan_archive(request):
-    """ Presents user his scans archive """
-
     return dict(
         tests = Tests.objects.filter(user = request.user).order_by('-creation_date'),
     )
@@ -71,7 +62,7 @@ def results(request):
 
         log.debug("User ordered report for url:%s, report_uuid:%s"%(url,test.uuid))
 
-        # order all posible commands
+        # order all posible commands in transaction - huge performance gain
         with transaction.commit_on_success():
             for testname,plugin in TESTDEF_PLUGINS:
                 oplugin = PLUGINS[ testname ]()
@@ -82,16 +73,13 @@ def results(request):
     else:
         return redirect(reverse('scanner_index'))
 
+
 def show_report(request, uuid):
-    #messages.info(request, 'Three credits remain in your account.')
-    #messages.success(request, 'Profile details updated.')
-    #messages.warning(request, 'Your account expires in three days.')
-    #messages.error(request, 'Document deleted.')
-    #get_object_or_404 ?
 
     try:
         test = Tests.objects.filter(uuid=uuid).get()
     except ObjectDoesNotExist:
+        messages.warning(request, _('Report not found, please check ID and URL'))
         return redirect('/')
 
     return render_to_response('scanner/results.html', {'test': test}, context_instance=RequestContext(request))
