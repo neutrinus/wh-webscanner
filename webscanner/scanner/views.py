@@ -21,6 +21,7 @@ from annoying.decorators import render_to
 import json
 from logs import log
 from scanner.models import *
+from django.db import transaction
 
 def index(request):
 	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
@@ -71,11 +72,11 @@ def results(request):
         log.debug("User ordered report for url:%s, report_uuid:%s"%(url,test.uuid))
 
         # order all posible commands
-        for testname,plugin in TESTDEF_PLUGINS:
-            oplugin = PLUGINS[ testname ]()
-            a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
-            a.save()
-
+        with transaction.commit_on_success():
+            for testname,plugin in TESTDEF_PLUGINS:
+                oplugin = PLUGINS[ testname ]()
+                a = CommandQueue(test=test, testname = testname, wait_for_download = oplugin.wait_for_download )
+                a.save()
         #TODO: please dont hardcode urls..
         return redirect('/reports/'+ test.uuid)
     else:
