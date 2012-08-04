@@ -23,6 +23,7 @@ from payments.models import Subscription, Payment, Coupon
 from django.contrib import messages
 from settings import PRODUCT_PRICE, STATIC_URL
 
+from account.models import UserProfile
 
 SITE_NAME = Site.objects.get_current()
 
@@ -77,7 +78,7 @@ def payments(req):
             cmd = "_xclick-subscriptions",
             a3 = price ,                      # monthly price
             p3 = 1,                           # duration of each unit (depends on unit)
-            t3 = "M",                         # duration unit ("M for Month")
+            t3 = "W",                         # duration unit ("M for Month")
             src = "1",                        # make payments recur
             sra = "1",                        # reattempt payment on payment error
             no_note = "1",                    # remove extra notes (req)
@@ -158,8 +159,9 @@ def payment_ok(sender, **kwargs):
     pay.save()
     log.info('Payment: user=%s price=%s invoice=%s' % (sub.user, pay.price, sub.code))
 
-    #pprofile.expire_date = datetime.now() + td(months=1)
-    #pprofile.save()
+    user_profile =  UserProfile.objects.get_or_create(user = sub.user)[0]
+    user_profile.paid_till_date = datetime.now() + td(weeks=1)
+    user_profile.save()
 
     #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 

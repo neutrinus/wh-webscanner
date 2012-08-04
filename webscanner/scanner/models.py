@@ -101,7 +101,7 @@ class Tests(models.Model):
 
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
-    uuid                =   UUIDField()
+    uuid                =   UUIDField(db_index=True)
     user                =   models.ForeignKey(User, null=1)
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
 
@@ -144,7 +144,7 @@ class CommandQueue(models.Model):
 
     run_date            =   models.DateTimeField(default=None,blank=1,null=1)
     finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
-    wait_for_download   =   models.BooleanField(default=True)
+    wait_for_download   =   models.BooleanField(default=True, db_index=True)
 
     def __unicode__(self):
         return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
@@ -170,7 +170,7 @@ class Results(models.Model):
 #: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
 #: them ;])
 class BadWord(models.Model):
-    word = models.CharField(max_length=128)
+    word = models.CharField(max_length=128, db_index=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

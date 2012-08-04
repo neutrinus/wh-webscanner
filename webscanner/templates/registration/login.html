@@ -8,14 +8,17 @@
 {% block content %}
 
 
-{% if form.errors %}
-<p>{% trans "Your username and password didn't match. Please try again." %}</p>
-{% endif %}
-
-
 {% if user.is_authenticated %}
 {% trans "You are already logged in" %}
 {% else %}
+
+
+{% if form.errors %}
+
+<div class="alert alert-block alert-error">
+                    {% trans "Your username and password didn't match. Please try again." %}
+</div>
+{% endif %}
 
 <section style="margin-top:3em">
     <form class="well form-horizontal" id="form_login" method="post" action="{% url django.contrib.auth.views.login %}" >

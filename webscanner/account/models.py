@@ -1,10 +1,18 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class UserProfile(models.Model):
-    # This field is required.
-    user        = models.OneToOneField(User)
+    user                = models.OneToOneField(User)
+    paid_till_date      =   models.DateTimeField(default=None,blank=1,null=1)
 
-    is_paid     =   models.BooleanField(_(u'has been paid'), default=False)
-    #paid_till   =
+    def is_paid(self):
+        if not self.paid_till_date:
+            return False
+
+        if datetime.now() > self.paid_till_date:
+            return False
+        else:
+            return True
+
