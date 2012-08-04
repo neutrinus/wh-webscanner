@@ -53,7 +53,6 @@ def payments(req):
     else:
         coupon = None
 
-
     # set Decimal calculation precision
     getcontext().prec = 2
     price = PRODUCT_PRICE - PRODUCT_PRICE*Decimal(coupon.percent)/Decimal("100.0")  if coupon else PRODUCT_PRICE
@@ -163,12 +162,13 @@ def payment_ok(sender, **kwargs):
     user_profile.paid_till_date = datetime.now() + td(weeks=1)
     user_profile.save()
 
+    if sub.price != pay.price:
+        log.error("Payment price is different than subscription price. Fraud warning!")
+
     #send_mail('Tariff changed', Template(open('./tariff.txt').read()).render(Context({'user':u})), settings.DEFAULT_FROM_EMAIL, [user.user.email], fail_silently=False)
 
-
 def payment_flagged(sender, **kwargs):
-    log.warning("Paypal flagged transaction %s" % sender.invoice )
-
+    log.warning("Paypal flagged transaction %s, please investigate!" % sender.invoice )
 
 payment_was_successful.connect(payment_ok)
 payment_was_flagged.connect(payment_flagged)
