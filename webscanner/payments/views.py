@@ -146,6 +146,10 @@ def sub_eot(sender, **kwargs):
     sub.save()
     log.info("%s's subscription has reach it's EOT code=%s" % (sub.user, sub.code))
 
+    user_profile =  UserProfile.objects.get_or_create(user = sub.user)[0]
+    user_profile.paid_till_date = datetime.now()
+    user_profile.save()
+
 def payment_ok(sender, **kwargs):
     log.debug("Payment OK")
     sub = gooN(Subscription, code = sender.invoice)

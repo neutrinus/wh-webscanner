@@ -26,26 +26,31 @@
         <div class="row">
             <div class="span3">
                 <h2><b>{% trans "Welcome" %}</b></h2>
+                {% blocktrans %}
                 <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form below and let us check your site!</p>
+                {% endblocktrans %}
                 <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
             </div>
             <div class="span3">
                 <h2>{% trans "It's Free!" %}</h2>
-                <p>We believe that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>
+                {% blocktrans %}
+                <p>We believe that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>{% endblocktrans %}
                 <p>There are, though, additional options available for pro members. <a href="{% url scanner_pricing %}">(learn more)</a></p>
             </div>
             <div class="span3">
                 <h2>{% trans "Lots of tests" %}</h2>
+                {% blocktrans %}
                 <p>Our tests database was created in response to requests from our customers. We make every
                 effort to cover all aspects of webpages problems (XSS, sql injecton) or misconfigurations
                 (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
-                of different technologies. We keep our technology updated - for you!</p>
+                of different technologies. We keep our technology updated - for you!</p>{% endblocktrans %}
             </div>
             <div class="span3">
                 <h2>{% trans "Lightning fast" %}</h2>
+                {% blocktrans %}
                 <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
                 You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
-                <p>In the near future there will be an option for pro members to recive reports by e-mail. You will save more of your precious time!</p>
+                <p>In the near future there will be an option for pro members to recive reports by e-mail. You will save more of your precious time!</p>{% endblocktrans %}
             </div>
         </div>
     </div>
@@ -57,35 +62,41 @@
         <div class="row">
             <div class="span4">
                 <h2>{% trans "Compatibility" %} <img alt="" class="align-right" src="{{ STATIC_URL }}images/services/webdesign.png" /></h2>
+                {% blocktrans %}
                 <p>The world of webbrowsers is huge and changing all the time. There is Mozilla Firefox, Google Chrome, Internet Explorer, Opera, Safari and many others. Wait - there are different versions of them!</p>
-                <p><b>Webcheck.me</b> allows you to check how your page behaves in different enviroments, by providing full-size <b>website snapshots</b>.</p>
+                <p><b>Webcheck.me</b> allows you to check how your page behaves in different enviroments, by providing full-size <b>website snapshots</b>.</p> {% endblocktrans %}
             </div>
             <div class="span4">
                 <h2>{% trans "Performance" %} <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/webdevelopment.png" /></h2>
+                {% blocktrans %}
                 <p>We measure how fast your webpage performs, then give it a note. You will know what should be changed to make it faster. Maybe your page size is too big? Maybe loadtime is too long as well? Let us check it!</p>
-                <p>Our algorithms will sugest to you what can be easily <b>minimalized</b> - images, css styles and html.  </p>
+                <p>Our algorithms will sugest to you what can be easily <b>minimalized</b> - images, css styles and html.  </p> {% endblocktrans %}
             </div>
             <div class="span4">
                 <h2>{% trans "Security" %} <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/seo-services.png" /></h2>
+                {% blocktrans %}
                 <p>Security problems lead to a decrease in your brand value. React fast on any malware, viruses or hackers attack before they hit your customers. webcheck.me is a perfect tool to monitor and check your website systematically.</p>
-                <p>We provide <b>malware check</b>, scan your website against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</b>.  </p>
+                <p>We provide <b>malware check</b>, scan your website against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</b>.  </p> {% endblocktrans %}
             </div>
         </div>
         <div class="row">
             <div class="span4">
                     <h2>{% trans "SEO" %} <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/print-design.png" /></h2>
+                    {% blocktrans %}
                     <p>We understand how important it is for your business to be easly found by search engines (like google or yahoo). This probably have direct connection with your profits.</p>
-                    <p><b>webcheck.me</b> checks parameters that influences on your position in google search. We want to help your customers to reach you! </p>
+                    <p><b>webcheck.me</b> checks parameters that influences on your position in google search. We want to help your customers to reach you! </p> {% endblocktrans %}
             </div>
             <div class="span4">
                     <h2>{% trans "Cloud-based" %} <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/logo-design-and-branding.png" /></h2>
+                    {% blocktrans %}
                     <p>All of our services are cloud-based. There is <b>no need to install</b> anything on your computer. You can reach it from any place in the world!</p>
 
-                    <p>Our distributed free website scanner gives you highest performance with high availability. <b>Webcheck.me</b> was created to be a handy tool. </p>
+                    <p>Our distributed free website scanner gives you highest performance with high availability. <b>Webcheck.me</b> was created to be a handy tool. </p> {% endblocktrans %}
             </div>
             <div class="span4">
                     <h2>{% trans "E-mail" %} <img class="align-right" alt="" src="{{ STATIC_URL }}images/services/newsletter.png" /></h2>
-                    <p>This monitoring tool checks not only websites but also other aspects of communication. <b>Webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p>
+                    {% blocktrans %}
+                    <p>This monitoring tool checks not only websites but also other aspects of communication. <b>Webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p> {% endblocktrans %}
             </div>
         </div>
     </div>
@@ -104,7 +115,8 @@
                 </div>
                 <div class="span3">
                     <h2>{% trans "Priority queue" %}</h2>
-                    <p>We respect your bizness time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>
+                    {% blocktrans %}
+                    <p>We respect your bizness time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>{% endblocktrans %}
                 </div>
                 <div class="span3">
                     <h2>{% trans "Scan deeper" %}</h2>
