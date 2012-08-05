@@ -94,16 +94,17 @@ SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
 
 
 class Tests(models.Model):
-    url                 =   models.CharField(max_length=600,blank=1,null=1,db_index=True)
+    url                 =   models.CharField(max_length=600,blank=1,null=1, db_index=True)
     priority            =   models.IntegerField(default=10)
 #   lang?
-    creation_date       =   models.DateTimeField(auto_now_add=True)
+    creation_date       =   models.DateTimeField(auto_now_add=True, db_index=True)
 
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
     uuid                =   UUIDField(db_index=True)
     user                =   models.ForeignKey(User, null=1)
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
+    vip_mode            =   models.BooleanField(_(u'VIP mode activated'), default=False)
 
     def __unicode__(self):
         return "%s"%(self.url)

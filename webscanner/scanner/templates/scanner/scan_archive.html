@@ -26,6 +26,7 @@
                         <th>{% trans "completion" %}</th>
                         <th>{% trans "duration" %}</th>
                         <th>{% trans "priority" %}</th>
+                        <th>{% trans "VIP mode" %}</th>
                         <th>{% trans "date" %}</th>
                     </tr>
                 </thead>
@@ -36,6 +37,7 @@
                         <td>{{ test.percent_done|floatformat:"0" }}%</td>
                         <td>{{ test.duration|floatformat:"0" }}s</td>
                         <td>{{ test.priority }}</td>
+                        <td>{{ test.vip_mode }}</td>
                         <td>{{ test.creation_date }}</td>
                     </tr>
                 {% endfor %}
