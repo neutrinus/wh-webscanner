@@ -232,7 +232,7 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-PRODUCT_PRICE = Decimal("2.80")
+PRODUCT_PRICE = Decimal("3.79")
 PAYPAL_RECEIVER_EMAIL = "marek_1343638038_biz@whitehats.pl"
 
 # This should be at the very end
