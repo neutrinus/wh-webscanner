@@ -127,7 +127,10 @@ class Tests(models.Model):
     def percent_done(self):
         done = float(self.commands_done_count())
         total = float(self.commands_count())
-        return (done/total) * 100
+        if total == 0:
+            return 0
+        else:
+            return (done/total) * 100
 
     def duration(self):
         if self.commands_count() == self.commands_done_count():
