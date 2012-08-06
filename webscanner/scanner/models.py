@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django_extensions.db.fields import UUIDField
 from django.core.cache import cache
 from django.db.models import Count
-
+from django.db.models import Max
 from django.conf import settings
 from datetime import datetime
 #3rd party import
