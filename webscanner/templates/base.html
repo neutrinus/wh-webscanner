@@ -129,7 +129,8 @@
                     <label class="control-label" for="input02">{% trans "Password" %}</label>
                     <div class="controls">
                         <input type="password" name="password" class="input-xlarge" id="input02" placeholder="**********" />
-                        <p class="help-block"><a href="#">{% trans "Forgot password?" %}</a></p>
+                        <p class="help-block"><a href="{% url auth_password_reset %}">{% trans "Forgot</a> your password?" %}  <a href="{% url registration_register %}">{% trans "Need an account?" %}</a></p>
+
                     </div>
                 </div>
             </fieldset>
@@ -149,7 +150,7 @@ $('#SubmitLogin').click(function() {
 </script>
 
 
-<div class="container">
+<div class="container" id="maincontent">
 {% block content %}
 {% trans "Something go wrong?" %}
 {% endblock %}

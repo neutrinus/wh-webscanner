@@ -2,14 +2,20 @@
 {% block title %}{% if account %}{% trans "Activation complete" %}{% else %}{% trans "Activation problem" %}{% endif %}{% endblock %}
 
 {% block content %}
-<div class="well">
-
 {% if account %}
-Thanks {{ account }}, activation complete!  You may now <a href='{% url auth_login %}'>login</a> using the username and password you set at registration.
-{% else %}
-{% trans "Oops &ndash; it seems that your activation key is invalid.  Please check the url again." %}
-{% endif %}
-
+<div class="section row">
+    <div class="span8 offset2 well">
+    <h1>Activation complete</h1>
+    <p>Thanks {{ account }}, activation complete!  You may now <a href='{% url auth_login %}'>login</a> using the username and password you set at registration.</p>
+    </div>
 </div>
+{% else %}
+<div class="section row">
+    <div class="span8 offset2 well">
+    <h1>Oops!</h1>
+    <p>{% trans "Oops &ndash; it seems that your activation key is invalid.  Please check the url again." %}</p>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 

@@ -1,8 +1,14 @@
+html {
+
+    height: 100%;
+}
+
 body {
 /*     color: #3B3B3B; */
     background: url(/static/images/bg.png) left top repeat ;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
     padding-top: 50px;
+    height: 90%;
 }
 
 
@@ -18,16 +24,15 @@ div.section {
 
 div.section h1 {
     margin-bottom: 0.8em;
-    
 }
 
 table.results {
-    width: 100%;    
-    vertical-align: top;   
+    width: 100%;
+    vertical-align: top;
     table-layout:fixed;
-    border-collapse:separate; 
+    border-collapse:separate;
     border-spacing:0px 3px;
-    
+
 }
 
 
@@ -67,9 +72,16 @@ code {
     display: block;
 }
 
+#maincontent {
+    min-height: 90%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto;
+}
 
 #footer {
     text-align:right;
     margin-right:7%;
-    clear: all;
+    margin-bottom:0.5em;
+    clear: both;
 }

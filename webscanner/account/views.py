@@ -10,7 +10,7 @@ from django.utils.translation import ugettext as _
 
 def ulogout(request):
     logout(request)
-    messages.success(request, _('You have ben logged-out. We will miss you!'))
+    messages.info(request, _('You have ben logged-out. We will miss you!'))
 
     next_page = request.REQUEST.get("next", '')
     if next_page:
