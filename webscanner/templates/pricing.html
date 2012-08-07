@@ -21,14 +21,14 @@
     </thead>
     <tbody>
         <tr>
-            <td>Monthly cost</td>
+            <td>Weekly cost</td>
             <td>free</td>
             <td>free</td>
-            <td>$8.99</td>
+            <td>$3.79</td>
         </tr>
 
         <tr>
-            <td>Website snapshots</td>
+            <td><a data-content="And here's some amazing content. It's very engaging. right?" rel="popover" href="#" data-original-title="A Title">Website full-page snapshots</a>             </td>
             <td><i class="icon-plus"></i></td>
             <td><i class="icon-plus"></i></td>
             <td><i class="icon-plus"></i></td>
@@ -67,19 +67,19 @@
         </tr>
 
         <tr>
-            <td>Unlimited scans per website</td>
+            <td><a data-content="We don't allow to scan same url too frequntly (once per month). VIP members do not have this limit!" rel="popover" href="#" data-original-title="No limits!">Unlimited scans per website</a></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
         </tr>
         <tr>
-            <td>Long scan archive</td>
+            <td><a data-content="We guarantee that your archive reports will be avalible at least 2 months back in history" rel="popover" href="#" data-original-title="Long term archive">Long scan archive</a></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
         </tr>
         <tr>
-            <td>Deep scans</td>
+            <td><a data-content="Our website spider/crawler moves recursivly. This option means that we go one level deeper - this means that more subpages will be scanned, reports will be more accurate." rel="popover" href="#" data-original-title="Deeper!">Deep scans</a></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-minus"></i></td>
             <td><i class="icon-plus"></i></td>
@@ -133,6 +133,17 @@
 
 </div>
 
+<script>
+$(document).ready(function() {
+    $("a[rel=popover]")
+        .popover({
+            offset: 10
+        })
+        .click(function(e) {
+            e.preventDefault()
+        })
+});
+</script>
 
 {% endblock %}
 
