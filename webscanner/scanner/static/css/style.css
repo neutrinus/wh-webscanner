@@ -58,6 +58,8 @@ table.results td.status {
     text-align: center;
 }
 
+
+
 tr.status_warning td.status {
     color: #c09853;
 }
@@ -69,6 +71,12 @@ tr.status_error td.status {
 tr.status_ok td.status {
     color: #468847;
 }
+
+tr.status_info td.status {
+    color: #3a87ad;
+}
+
+
 
 
 code {
