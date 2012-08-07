@@ -208,7 +208,7 @@ function add_result(status, output_desc, output_full, group, importance) {
     }
     if (status == 1) {
         element.setAttribute('class','status_error');
-        a.innerHTML += '<i class="icon-bell icon-large"></i> ';
+        a.innerHTML += '<i class="icon-bolt icon-large"></i> ';
         a.sork = 9;
         statuses_error += 1;
         rate_curr += 0;
@@ -319,7 +319,7 @@ var status_plot = jQuery.jqplot ('chart', [data],
         drawGridLines: false,
         shadow: false,
     },
-    seriesColors: [ "#ffcccc", "#feffcc", "#ccffd1"],
+    seriesColors: [ "#9d261d", "#ffc40d", "#46a546"],
     });
 
     $('.carousel').carousel({
