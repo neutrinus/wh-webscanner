@@ -6,107 +6,108 @@
 {% block content %}
 
 
-<h1>Pricing</h1>
+<div class="section">
+    <h1>Pricing</h1>
 
-{% blocktrans %}
-<h2>Features matrix</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th>Unregistred</th>
-            <th>Registred</th>
-            <th>VIP member</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><a data-content="We use paypal subscriptions to allow easy and secure payments. You will need a valid credit card to pay." rel="popover" href="#" data-original-title="pay easily and secure">Weekly cost</td>
-            <td>free</td>
-            <td>free</td>
-            <td>$3.79</td>
-        </tr>
+    {% blocktrans %}
+    <h2>Features matrix</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Unregistred</th>
+                <th>Registred</th>
+                <th>VIP member</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a data-content="We use paypal subscriptions to allow easy and secure payments. You will need a valid credit card to pay." rel="popover" href="#" data-original-title="pay easily and secure">Weekly cost</td>
+                <td>free</td>
+                <td>free</td>
+                <td>$3.79</td>
+            </tr>
 
-        <tr>
-            <td><a data-content="We have developed a software that is able to do a full snapshoot of a page - without browser limiting frame." rel="popover" href="#" data-original-title="Full page">Website full-page snapshots</a>             </td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td>Website virus scan</td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
+            <tr>
+                <td><a data-content="We have developed a software that is able to do a full snapshoot of a page - without browser limiting frame." rel="popover" href="#" data-original-title="Full page">Website full-page snapshots</a>             </td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td>Website virus scan</td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
 
-        <tr>
-            <td>Security tests</td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
+            <tr>
+                <td>Security tests</td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
 
-        <tr>
-            <td>SEO tests</td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td><a data-content="Scanning and processing at webcheck is queued. You choose the lane.." rel="popover" href="#" data-original-title="Priority queues">Priority</a></td>
-            <td><i class="icon-pause"></i> low</td>
-            <td><i class="icon-play"></i> normal</td>
-            <td><i class="icon-forward"></i> high</td>
-        </tr>
-        <tr>
-            <td><a data-content="In your profile you can find 'scan archive' - subpage with historical scans, so you can check progress of your websites." rel="popover" href="#" data-original-title="Private archive">Scan archive</a></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
+            <tr>
+                <td>SEO tests</td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td><a data-content="Scanning and processing at webcheck is queued. You choose the lane.." rel="popover" href="#" data-original-title="Priority queues">Priority</a></td>
+                <td><i class="icon-pause icon-large"></i> low</td>
+                <td><i class="icon-play icon-large"></i> normal</td>
+                <td><i class="icon-forward icon-large"></i> high</td>
+            </tr>
+            <tr>
+                <td><a data-content="In your profile you can find 'scan archive' - subpage with historical scans, so you can check progress of your websites." rel="popover" href="#" data-original-title="Private archive">Scan archive</a></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
 
-        <tr>
-            <td><a data-content="We don't allow to scan same url too frequntly (once per month). VIP members do not have this limit!" rel="popover" href="#" data-original-title="No limits!">Unlimited scans per website</a></td>
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td><a data-content="We guarantee that your archive reports will be avalible at least 2 months back in history" rel="popover" href="#" data-original-title="Long term archive">Long scan archive</a></td>
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td><a data-content="Our website spider/crawler moves recursivly. This option means that we go one level deeper - this means that more subpages will be scanned, reports will be more accurate." rel="popover" href="#" data-original-title="Deeper!">Deep scans</a></td>
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td>HTTPS site scan</td>
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td><a data-content="If your website is hosted on port different than 80 - you will need this feature to scan such site. Very usefull for test websites." rel="popover" href="#" data-original-title="!80">Website on custom port</a></td>
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-        <tr>
-            <td><a data-content="To some of results will be added more informatian, ex: 'how to fix this problem' or 'hints to improve something'." rel="popover" href="#" data-original-title="Know more">Additional hints and solutions</a></td>
+            <tr>
+                <td><a data-content="We don't allow to scan same url too frequntly (once per month). VIP members do not have this limit!" rel="popover" href="#" data-original-title="No limits!">Unlimited scans per website</a></td>
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td><a data-content="We guarantee that your archive reports will be avalible at least 2 months back in history" rel="popover" href="#" data-original-title="Long term archive">Long scan archive</a></td>
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td><a data-content="Our website spider/crawler moves recursivly. This option means that we go one level deeper - this means that more subpages will be scanned, reports will be more accurate." rel="popover" href="#" data-original-title="Deeper!">Deep scans</a></td>
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td>HTTPS site scan</td>
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td><a data-content="If your website is hosted on port different than 80 - you will need this feature to scan such site. Very usefull for test websites." rel="popover" href="#" data-original-title="!80">Website on custom port</a></td>
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+            <tr>
+                <td><a data-content="To some of results will be added more informatian, ex: 'how to fix this problem' or 'hints to improve something'." rel="popover" href="#" data-original-title="Know more">Additional hints and solutions</a></td>
 
-            <td></td>
-            <td></td>
-            <td><i class="icon-plus"></i></td>
-        </tr>
-    </tbody>
-</table>
-{% endblocktrans %}
-
+                <td></td>
+                <td></td>
+                <td><i class="icon-ok icon-large"></i></td>
+            </tr>
+        </tbody>
+    </table>
+    {% endblocktrans %}
+</div>
 
 <div class="row">
     <div class="span4">

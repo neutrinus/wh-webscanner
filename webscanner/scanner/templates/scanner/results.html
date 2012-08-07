@@ -201,28 +201,28 @@ function add_result(status, output_desc, output_full, group, importance) {
 
     if (status == 0) {
         element.setAttribute('class','status_ok');
-        a.innerHTML += '<i class="icon-ok-sign"></i> '
+        a.innerHTML += '<i class="icon-ok-sign icon-large"></i> '
         a.sork = 1;
         statuses_ok += 1;
         rate_curr += importance;
     }
     if (status == 1) {
         element.setAttribute('class','status_error');
-        a.innerHTML += '<img src="{{ STATIC_URL }}status_unsuccess.png" /> ';
+        a.innerHTML += '<i class="icon-bell icon-large"></i> ';
         a.sork = 9;
         statuses_error += 1;
         rate_curr += 0;
     }
     if (status == 2) {
         element.setAttribute('class','status_warning');
-        a.innerHTML += '<img src="{{ STATIC_URL }}status_warning.png" /> ';
+        a.innerHTML += '<i class="icon-warning-sign icon-large"></i> ';
         a.sork = 7;
         statuses_warning += 1;
         rate_curr += (importance/4);
         }
     if (status == 3) {
         element.setAttribute('class','status_info');
-        a.innerHTML += '<i class="icon-info-sign"></i> ';
+        a.innerHTML += '<i class="icon-info-sign icon-large"></i> ';
         a.sork = 3;
         statuses_info += 1;
         rate_max -= importance;
