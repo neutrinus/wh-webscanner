@@ -40,14 +40,13 @@ class PluginMail(PluginMixin):
 
 
         try:
+            # TODO: keep this in list and then use template to render
             nopostmaster = ""
             postmaster = ""
-
             noabuse = ""
             abuse = ""
             noconnect = ""
             noconnect_count = 0
-
             openrelay = ""
             noopenrelay = ""
 
@@ -103,14 +102,24 @@ class PluginMail(PluginMixin):
             res = Results(test=command.test,group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("accept mail to postmaster@"))
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to postmaster.</p> "))
+
             if not nopostmaster:
                 res.status = RESULT_STATUS.success
-                res.output_full += unicode(_("<p>All of your mailservers accept mail to postmaster@%(domain)s: <code>%s</code></p>"%(domain,postmaster ) ))
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to postmaster@%(domain)s: <code>%(postmaster)s</code></p>" % {
+                    "domain" :domain,
+                    "postmaster": postmaster
+                } ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>%s</code> </p>"%(domain,nopostmaster ) ))
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>%(nopostmaster)s</code> </p>"% {
+                    "domain": domain,
+                    "nopostmaster" :nopostmaster
+                } ))
                 if postmaster:
-                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%(domain)s:<code>%s</code> </p>"%(domain,postmaster ) ))
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%(domain)s:<code>%s</code> </p>" % {
+                        "domain" : domain,
+                        "postmaster" : postmaster
+                    } ))
             res.save()
 
 
@@ -119,12 +128,21 @@ class PluginMail(PluginMixin):
             res.output_full = unicode(_("<p>According to RFC 822, RFC 1123 and RFC 2821 all mailservers should accept mail to abuse.</p> "))
             if not noabuse:
                 res.status = RESULT_STATUS.success
-                res.output_full += unicode(_("<p>All of your mailservers accept mail to abuse@%(domain)s: <code>%s</code></p>"%(domain,abuse ) ))
+                res.output_full += unicode(_("<p>All of your mailservers accept mail to abuse@%(domain)s: <code>%(abuse)s</code></p>"% {
+                    "domain" : domain,
+                    "abuse" :abuse
+                } ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>%s</code> </p>"%(domain,noabuse ) ))
+                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>%(noabuse)s</code> </p>"% {
+                    "domain": domain,
+                    "noabuse" :noabuse
+                } ))
                 if abuse:
-                    res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%(domain)s:<code>%s</code> </p>"%(domain,abuse ) ))
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%(domain)s:<code>%(abbuse)s</code> </p>"% {
+                        "domain": domain,
+                        "abuse" : abuse
+                    } ))
             res.save()
 
 
@@ -154,7 +172,7 @@ class PluginMail(PluginMixin):
                 res.status = RESULT_STATUS.error
                 res.output_full += unicode(_("<p>Mailservers that are open-relays:<code>%s</code> </p>"%(openrelay ) ))
                 if noopenrelay:
-                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%s</code> </p>"%(noopenrelay ) ))
+                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%(noopenrelay)s</code> </p>"%(noopenrelay ) ))
 
             res.output_full += unicode(_("<p>Mailservers should not allow relaying, except for authenticated users and trusted IPs.  </p>" ))
 

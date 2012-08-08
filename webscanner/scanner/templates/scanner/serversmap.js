@@ -1,4 +1,5 @@
 {% load l10n %}
+{% load i18n %}
 
 <p>{% trans "We use GeoIP database to estimate geolocation of your servers, please note that locations are approximated." %}</p>
 <div id="{{ id }}" style="height:250px"></div>

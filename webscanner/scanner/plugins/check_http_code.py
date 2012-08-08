@@ -48,7 +48,10 @@ class PluginCheckHTTPCode(PluginMixin):
         res.output_desc = unicode(_("HTTP return code"))
 
         if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
-            res.output_full = unicode(_("<p>Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - it safe</p>"%(unicode(httpstatus),httplib.responses[int(httpstatus)] ) ))
+            res.output_full = unicode(_("<p>Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - it safe</p>"% {
+                "status_code" : unicode(httpstatus),
+                "status_code_name" :httplib.responses[int(httpstatus)]
+                }) )
             res.status = RESULT_STATUS.success
         else:
             res.output_full = unicode(_("<p>Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - please check it</p>"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
