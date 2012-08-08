@@ -10,46 +10,44 @@
 
 {% block content %}
 
-
-{% autopaginate tests per_page=30 as ptests %}
-
-<h1>{% trans "Scan archive" %}</h1>
-{% trans "Here you can find your old scans performed by webcheck.me" %}
-<div class="row-fluid">
-    {% if tests %}
-    <div class="span6">
-        <div class="container">
-            <table class="table table-striped " style="width:auto;">
-                <thead>
-                    <tr>
-                        <th>{% trans "url" %}</th>
-                        <th>{% trans "completion" %}</th>
-                        <th>{% trans "duration" %}</th>
-                        <th>{% trans "priority" %}</th>
-                        <th>{% trans "VIP mode" %}</th>
-                        <th>{% trans "date" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for test in ptests %}
-                    <tr>
-                        <td><a href="{% url scanner_report test.uuid %} ">{{ test.url }}</a></td>
-                        <td>{{ test.percent_done|floatformat:"0" }}%</td>
-                        <td>{{ test.duration|floatformat:"0" }}s</td>
-                        <td>{{ test.priority }}</td>
-                        <td>{{ test.vip_mode }}</td>
-                        <td>{{ test.creation_date }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+<div class="section">
+    {% autopaginate tests per_page=30 as ptests %}
+    <h1>{% trans "Scan archive" %}</h1>
+    {% trans "Here you can find your old scans performed by webcheck.me" %}
+    <div class="row-fluid">
+        {% if tests %}
+        <div class="span6">
+            <div class="container">
+                <table class="table table-striped " style="width:auto;">
+                    <thead>
+                        <tr>
+                            <th>{% trans "url" %}</th>
+                            <th>{% trans "completion" %}</th>
+                            <th>{% trans "duration" %}</th>
+                            <th>{% trans "priority" %}</th>
+                            <th>{% trans "VIP mode" %}</th>
+                            <th>{% trans "date" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for test in ptests %}
+                        <tr>
+                            <td><a href="{% url scanner_report test.uuid %} ">{{ test.url }}</a></td>
+                            <td>{{ test.percent_done|floatformat:"0" }}%</td>
+                            <td>{{ test.duration|floatformat:"0" }}s</td>
+                            <td>{{ test.priority }}</td>
+                            <td>{{ test.vip_mode }}</td>
+                            <td>{{ test.creation_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
+    {% paginate %}
 </div>
-
-{% paginate %}
-
 
 
 {% endblock content %}
