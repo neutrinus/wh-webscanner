@@ -31,8 +31,8 @@ log = getLogger('plugin')
 
 def make_form(d):
     t = PayPalPaymentsForm
-    #if getattr(settings,'PAYPAL_ENCRYPTED',False):
-        #t=PayPalEncryptedPaymentsForm
+    if getattr(settings,'PAYPAL_ENCRYPTED',False):
+        t = PayPalEncryptedPaymentsForm
     form = t(initial = d)
     return form.sandbox()
     #if getattr(settings,'DEBUG', False):

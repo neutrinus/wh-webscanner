@@ -234,6 +234,12 @@ NOSE_ARGS = [
 
 PRODUCT_PRICE = Decimal("3.79")
 PAYPAL_RECEIVER_EMAIL = "marek_1343638038_biz@whitehats.pl"
+PAYPAL_ENCRYPTED = True
+PAYPAL_PRIVATE_CERT = apath('paypal.pem')
+PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
+PAYPAL_CERT = apath('paypal_cert.pem')
+PAYPAL_CERT_ID = 'PN8CSHBEXNPYE'
+
 
 # This should be at the very end
 #execfile(apath('settings_local.py'))
