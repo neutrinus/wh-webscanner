@@ -17,21 +17,18 @@ from scanner.models import *
 from account.models import UserProfile
 from django.views.decorators.cache import cache_page
 
-@cache_page(60 * 15)
+
 def index(request):
 	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
 
-@cache_page(60 * 30)
 @render_to('terms.html')
 def terms(request):
     return dict()
 
-@cache_page(60 * 30)
 @render_to('about.html')
 def about(request):
     return dict()
 
-@cache_page(60 * 30)
 @render_to('pricing.html')
 def pricing(request):
     return dict()
@@ -105,7 +102,6 @@ def results(request):
     else:
         return redirect(reverse('scanner_index'))
 
-@cache_page(60 * 5)
 def show_report(request, uuid):
     try:
         test = Tests.objects.filter(uuid=uuid).get()
