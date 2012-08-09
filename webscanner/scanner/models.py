@@ -107,7 +107,7 @@ class Tests(models.Model):
     vip_mode            =   models.BooleanField(_(u'VIP mode activated'), default=False)
 
     def __unicode__(self):
-        return "%s"%(self.url)
+        return "%s by %s(vip:%s)"%(self.url,self.user, self.vip_mode )
 
     def domain(self):
         return urlparse(self.url).hostname
