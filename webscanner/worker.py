@@ -45,7 +45,7 @@ def worker():
             #log.debug('Try to fetch some fresh stuff')
             with transaction.commit_on_success():
                 try:
-                    ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('?')[:1].get()
+                    ctest = CommandQueue.objects.filter(status = STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status = STATUS.success) ).order_by('-test__priority', '?')[:1].get()
 
                     #this should dissallow two concurrent workers for the same commandqueue object
                     commandschanged = CommandQueue.objects.filter(status = STATUS.waiting).filter(pk = ctest.pk).update(status=STATUS.running)
