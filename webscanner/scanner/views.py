@@ -47,7 +47,7 @@ def scan_archive(request):
 def results(request):
     """ page with scann results """
     if request.method == 'POST':
-        url = request.POST.get("url")
+        url = request.POST.get("url").lower()
 
         #basic url validiation
         if not urlparse(url).scheme:
