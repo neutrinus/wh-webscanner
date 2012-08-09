@@ -27,8 +27,7 @@ class Coupon(models.Model):
                                              unique=True,
                                              default=make_coupon_code)
     percent             =   models.IntegerField(_(u'Discount size'),
-                                                help_text=_(u'Wyrażona w'
-                                                u'procentach, przykład: 20'),
+                                                help_text=_(u'in percent! ex: 20'),
                                                )
     used_date           =   models.DateTimeField(default=None,
                                                  blank=True,

@@ -1,18 +1,19 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}{% if account %}{% trans "Activation complete" %}{% else %}{% trans "Activation problem" %}{% endif %}{% endblock %}
 
 {% block content %}
 {% if account %}
 <div class="section row">
     <div class="span8 offset2 well">
-    <h1>Activation complete</h1>
+    <h1>{% trans "Activation complete" %}</h1>
     <p>Thanks {{ account }}, activation complete!  You may now <a href='{% url auth_login %}'>login</a> using the username and password you set at registration.</p>
     </div>
 </div>
 {% else %}
 <div class="section row">
     <div class="span8 offset2 well">
-    <h1>Oops!</h1>
+    <h1>{% trans "Oops!" %}</h1>
     <p>{% trans "Oops &ndash; it seems that your activation key is invalid.  Please check the url again." %}</p>
     </div>
 </div>

@@ -8,12 +8,9 @@
 {% trans "You are already logged in, why would you like to register?" %}
 {% else %}
 
-
-
-
 <section style="margin-top:3em">
     <form class="well form-horizontal" id="form_login" method="post" action="" >
-        <h2>Register <i class="icon-plus"></i></h2>
+        <h2>{% trans "Register" %} <i class="icon-plus"></i></h2>
         {% csrf_token %}
         {{ form.non_field_errors }}
         <fieldset>
@@ -35,6 +32,4 @@
     </form>
 {% endif %}
 </section>
-
-
 {% endblock %}
