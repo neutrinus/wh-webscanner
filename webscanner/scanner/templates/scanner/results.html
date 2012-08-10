@@ -28,6 +28,7 @@
 {% block content %}
 <div class="page-header">
     <h1>{% trans "Website scan results for " %}<a href="{{ test.url }}">{{ test.url }}</a></h1>
+    <h3><small>{% trans "Scan started: " %}{{ test.creation_date }}{% if test.vip_mode %}, in VIP mode{% endif %}</small></h3>
 </div>
 
 
@@ -41,7 +42,7 @@
             <div class="row">
                 <div class="span4">
                     <h3>{% trans "Scan time" %}</h3>
-                    <p>{% trans "Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. VIP members just got .pdf report in their mailbox (option avalible in near future - we are working on it!)." %}</p>
+                    <p>{% trans "Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. VIP members just got .pdf report in their mailbox (option available in near future - we are working on it!)." %}</p>
                 </div>
                 <div class="span4">
                     <h3>{% trans "Overall note" %}</h3>

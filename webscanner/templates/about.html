@@ -16,7 +16,7 @@
 
         <div class="span6">
             <h2>{% trans "Mission" %}</h2>
-            {% trans "We aim to help fixing world wide web! As today's WEB has many technologies behind (in its backbone) its very hard to check every part. Webcheck is a compensive tool to easily scan websites for common bugs and problems. We believe that this will help webmaster everyday job." %}
+            {% trans "We aim to help fixing world wide web! As today's WEB has many technologies behind (in its backbone) its very hard to check every part. Webcheck.me is a compensive tool to easily scan websites for common bugs and problems. We believe that this will help webmaster everyday job." %}
         </div>
     </div>
 
@@ -27,14 +27,14 @@
         </div>
 
         <div class="span4">
-            <h2>{% trans "Webcheck engine" %}</h2>
+            <h2>{% trans "Webcheck.me engine" %}</h2>
             {% trans "It’s the best people who make our software so extraordinary. Most of us passionate about python, some others are linux administrators. Thanks to merging both those talents we have webcheck!" %}</a>
         </div>
 
         <div class="span4">
             <h2>{% trans "Get in touch!" %}</h2>
-            {% url 'contact' as url_contact %}
-            {% blocktrans %}We are waiting for your feedback! Use <a href="{{ url_contact }}">form</a> to inform us about sugestions and problems.{% endblocktrans %}
+            {% url contact as url_contact %}
+            {% blocktrans %}We are waiting for your feedback! Use a <a href="{{ url_contact }}">form</a> to inform us about suggestions and problems.{% endblocktrans %}
         </div>
     </div>
 
