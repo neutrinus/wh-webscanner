@@ -15,8 +15,7 @@ import shutil
 import signal
 
 from time import sleep
-from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
+
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
@@ -26,6 +25,8 @@ from pyvirtualdisplay import Display
 from PIL import Image
 
 from scanner.plugins.optiimg import gentmpfilename, optimize_png, select_smallest_file
+from scanner.plugins.plugin import PluginMixin
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
 from logs import log
 
@@ -35,7 +36,6 @@ class Alarm(Exception):
 
 def alarm_handler(signum, frame):
     raise Alarm
-
 
 def crop_screenshot(inputfile):
 
@@ -66,28 +66,19 @@ class PluginMakeScreenshots(PluginMixin):
         url = command.test.url
         from scanner.models import Results
 
-
-
-
         display = Display(visible=0,size=SCREENSHOT_SIZE)
         display.start()
         log.debug("VDisplay started: %s "%(str(display)))
-        jscode = ""
         timing = {}
+        max_loadtime = 0
 
         browsernames = ["firefox", "chrome"]
-
-        jscode += "var browsernames = [ "
-        for browsername in browsernames:
-            jscode += '"%s",'%(browsername)
-        jscode += "]; \n"
 
         for browsername in browsernames:
             filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
 
-
             signal.signal(signal.SIGALRM, alarm_handler)
-            signal.alarm(2*60)  # 2 minutes
+            signal.alarm(3*60)  # 3 minutes
 
             try:
                 if browsername == "firefox":
@@ -107,26 +98,32 @@ class PluginMakeScreenshots(PluginMixin):
                 browser.save_screenshot(MEDIA_ROOT+"/"+filename)
                 thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)[len(MEDIA_ROOT)+1:]
 
-                timing[browsername] = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
-                #build javascript table with timing values
-                jscode += "var timingdata_%s = [ "%(browsername)
+                # TODO: optimize images!
+
+                timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+
+                timing[browsername] = dict()
+
                 for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                    jscode += "['%s',%s ],"%(time, timing[browsername][time]-timing[browsername]["navigationStart"])
-                jscode += "]; \n"
+                    timing[browsername][time] = timing_data[time] - timing_data["navigationStart"]
+
+                tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
+                if tmp_timing > max_loadtime:
+                    max_loadtime = tmp_timing
 
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-
                 res.output_full = template.render(Context({'filename':filename,
                                                             'thumb': thumb,
                                                             'browsername': browsername,
                                                             'browserversion':browser.capabilities['version']}))
                 res.save()
+
                 log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
                 browser.quit()
                 signal.alarm(0)
 
-                if browsername == "firefox":
+                if browsername == "firefox" and os.path.exists(browser.profile.path):
                     # if alarm was raised, profile could not be deleted
                     shutil.rmtree(browser.profile.path)
 
@@ -134,64 +131,28 @@ class PluginMakeScreenshots(PluginMixin):
                 log.warning("shoot timeout")
 
 
-        #template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
-
         res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
         res.output_desc = unicode(_("Webpage load time"))
+        template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
+        template_data = {
+            'browsernames' : browsernames,
+            'timing' : timing,
+            'max_loadtime': max_loadtime,
+        }
 
-        #res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals}))
-
-        res.output_full = unicode(_("<p>We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.</p>"))
-
-        res.output_full += "<div id='timing_plot' style='height:400px;width:580px;'></div><script>\n"
-
-        jscode += "var timing_plot =  jQuery.jqplot('timing_plot', ["
-        for browsername in browsernames:
-            jscode += "timingdata_%s,"%(browsername)
-        jscode += "],    \
-            {   \
-            title: 'Loadtime - events', \
-            axesDefaults: { \
-                tickRenderer: $.jqplot.CanvasAxisTickRenderer , \
-                tickOptions: { \
-                angle: -70, \
-                fontSize: '10pt' \
-                } \
-            }, \
-            legend: { show:true, location: 'w', labels: browsernames}, \
-            axes: { \
-            xaxis: { \
-                renderer: $.jqplot.CategoryAxisRenderer, \
-            }, \
-            yaxis: { \
-                pad: 0, \
-                label: 'time [milisecs]', \
-            } \
-            }, \
-            }); \
-            </script> \
-            "
+        #print(type(timing))
+        #for key,value in timing:
+            #print("key: %s value %s" % (key,value))
 
 
-        loadtime=0
-        for browsername in browsernames:
-            tmp =  timing[browsername]["loadEventEnd"]-timing[browsername]["navigationStart"]
-            if tmp > loadtime:
-                loadtime = tmp
+        res.output_full = template.render(Context(template_data))
 
-        res.output_full += jscode
-        res.output_full += "<p>Loading your website took <b>%s</b> milisecs (at maximum).</p>"%(loadtime)
-        if loadtime > 5000:
+        if max_loadtime > 5000:
             res.status = RESULT_STATUS.warning
-        if loadtime > 15000:
+        if max_loadtime > 15000:
             res.status = RESULT_STATUS.error
         res.save()
 
-
-
         display.sendstop()
-
-
         #there was no exception - test finished with success
         return STATUS.success
-

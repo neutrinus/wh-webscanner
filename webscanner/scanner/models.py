@@ -227,8 +227,8 @@ class BadWord(models.Model):
             log.debug('Bad words saved to cache (%d bad words)'%len(bad_words))
             log.debug(' * %s '%bad_words)
         else:
-            log.debug('Bad words loaded from cache')
-            log.debug(' * %s'%bad_words)
+            log.debug('Bad words loaded from cache (%d)'%len(bad_words))
+            #log.debug(' * %s'%bad_words)
 
         ok_words = list(( w for w in words if w.strip().lower() not in bad_words ))
 

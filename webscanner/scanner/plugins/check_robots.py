@@ -19,19 +19,19 @@ from logs import log
 
 
 class PluginCheckRobots(PluginMixin):
-    
+
     name = unicode(_('Check robots.txt'))
     wait_for_download = False
-    
+
     def run(self, command):
         robotsurl = urlparse.urlparse(command.test.url).scheme + "://" + urlparse.urlparse(command.test.url).netloc +"/robots.txt"
         log.debug("Looking for: %s "%(robotsurl))
-        
+
         try:
             from scanner.models import Results
             res = Results(test=command.test, group = RESULT_GROUP.general,importance=2)
 
-            res.output_desc = unicode(_("robots.txt"))            
+            res.output_desc = unicode(_("robots.txt"))
             res.output_full = '<p><a href="http://www.robotstxt.org/">robots.txt</a> file is used to control automatic software (like Web Wanderers, Crawlers, or Spiders). Address of your robots.txt for your domain should be: <code>%s</code> </p> '%(robotsurl)
             res.status = RESULT_STATUS.success
             output = ""
@@ -39,7 +39,7 @@ class PluginCheckRobots(PluginMixin):
                 req = urllib2.Request(robotsurl)
                 req.add_header('Referer', 'http://webcheck.me/')
                 result = urllib2.urlopen(req)
-                
+
                 linecounter=0
                 for line in result.readlines():
                     linecounter += 1
@@ -50,21 +50,17 @@ class PluginCheckRobots(PluginMixin):
                     #empty lines
                     if re.match(r'^(\s)+',line):
                         continue
-                    
+
                     if re.match(r'^\s*(user-agent)|(disallow)|(allow)|(sitemap)|(crawl-delay)|(noarchive)|(noindex)|(nofollow)|(nopreview)|(nosnippet)|(index):\s.*',line.lower()):
                         output +=  "%s<br />"%(line)
                     else:
                         res.output_full += '<p>There was an error while parsing your robots.txt: <b>bad syntax</b> in line %s:<code>%s</code> </p>'%(linecounter,cgi.escape(line))
                         res.status = RESULT_STATUS.error
-                        print line
-                        break    
+                        break
                 else:
                     res.output_full += '<p>robots.txt is present:<code>%s</code></p>'%(output)
-                
+
             except urllib2.HTTPError, e:
-                
-                print 'The server couldn\'t fulfill the request.'
-                print 'Error code: ', e.code
                 res.status = RESULT_STATUS.warning
                 res.output_full += '<p>There was no robots.txt. HTTP code was:%s.</p>'%(e.code)
             except urllib2.URLError, e:
@@ -72,11 +68,10 @@ class PluginCheckRobots(PluginMixin):
                 res.output_full += '<p>There was problem while connecting to server:%s.</p>'%(e.reason)
 
             res.save()
-            
+
             #there was no exception - test finished with success
             return STATUS.success
         except Exception,e:
             log.exception(_("No validation can be done: %s "%(e)))
             return STATUS.exception
 
-            

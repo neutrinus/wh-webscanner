@@ -1,0 +1,45 @@
+{% load i18n %}
+<p>{% blocktrans %}We measure how long it takes to load webpage in our test webbrowser. Bellow you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.{% endblocktrans %}</p>
+
+<div id='timing_plot' style='height:400px;width:580px;'></div>
+<p>Loading your website took <b>{{ max_loadtime }}</b> milisecs (at maximum).</p>
+
+
+
+<script>
+{% for browsername, timingdata in timing.items %}
+var timing_{{ browsername }} = [{% for timingtype,timevalue in timingdata.items %}["{{ timingtype }}",{{ timevalue }}],{% endfor %}];
+{% endfor %}
+
+var timing_plot =  jQuery.jqplot('timing_plot', [ {% for browsername, timingdata in timing.items %}timing_{{ browsername }},{% endfor %} ],
+{
+    title: 'Loadtime - events',
+    axesDefaults:
+    {
+        tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+        tickOptions:
+        {
+            angle: -70,
+            fontSize: '10pt'
+        }
+    },
+    legend:
+    {
+        show:true,
+        location: 'w',
+        labels: [{% for browsername, timingdata in timing.items %}"{{ browsername }}",{% endfor %}]
+    },
+    axes:
+    {
+        xaxis:
+        {
+            renderer: $.jqplot.CategoryAxisRenderer,
+        },
+        yaxis:
+        {
+            pad: 0,
+            label: 'time [milisecs]',
+        }
+    },
+});
+</script>

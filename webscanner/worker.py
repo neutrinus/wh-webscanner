@@ -132,7 +132,7 @@ def downloader():
 
             if test:
                 domain = test.url
--                wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
+                wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
                 if test.vip_mode:
                     cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=320 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*"%(str(tmppath),wwwdomain, domain)
                 else:
@@ -163,7 +163,7 @@ def downloader():
 if __name__ == '__main__':
     pool = Pool()
 
-    for x in xrange(0,cpu_count()):
+    for x in xrange(0, cpu_count() ):
         pool.apply_async(worker)
         pool.apply_async(downloader)
 

@@ -59,9 +59,9 @@ class PluginDomainExpireDate(PluginMixin):
             exceptionCandidate = "!"+candidate
 
             # match tlds:
-            if (exceptionCandidate in tlds):
+            if (str(exceptionCandidate) in tlds):
                 return ".".join(urlElements[i:])
-            if (candidate in tlds or wildcardCandidate in tlds):
+            if (str(candidate) in tlds or str(wildcardCandidate) in tlds):
                 return ".".join(urlElements[i-1:])
                 # returns "abcde.co.uk"
         raise ValueError("Domain not in global list of TLDs")
@@ -90,10 +90,13 @@ class PluginDomainExpireDate(PluginMixin):
 
                     res.output_desc = unicode(_("Domain expiration date") )
                     if dt - date.today() > timedelta(days=20):
-                        res.output_full = unicode(_("<p>Your domain will be valid till %(date)s. There is still %s days to renew it.</p>"%(dt, (dt - date.today()).days )) )
+                        res.output_full = unicode(_("<p>Your domain will be valid till %(date)s. There is still %(days)s days to renew it.</p>"% {"date":dt,
+                                         "days":(dt - date.today()).days
+                                         }))
                         res.status = RESULT_STATUS.success
                     else:
-                        res.output_full = unicode(_("<p>Better renew your domain, its valid till %(date)s! There is only %s days left.</p>"%(dt, (dt - date.today()).days ) ))
+                        res.output_full = unicode(_("<p>Better renew your domain, its valid till %(date)s! There is only %(days)s days left.</p>"% { "date" :dt,
+                                           "days": (dt - date.today()).days } ))
                         res.status = RESULT_STATUS.error
 
                     res.output_full += unicode(_("<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to check domain expiration date. Depending on your domain registrar this date may be inaccurate or outdated.</p> "))
