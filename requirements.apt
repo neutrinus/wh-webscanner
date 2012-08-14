@@ -1,2 +1,2 @@
-clamav xvfb httrack optipng jpegoptim gifsicle html2ps pngcrush imagemagick pngnq libjpeg-progs  gettext python2.7 python-virtualenv python-pip python-openssl swig python-m2crypto libssl-dev gcc python-dev geoip-database-contrib libpq-dev
+clamav xvfb httrack optipng jpegoptim gifsicle html2ps pngcrush imagemagick pngnq libjpeg-progs  gettext python2.7 python-virtualenv python-pip python-openssl swig python-m2crypto libssl-dev gcc python-dev geoip-database-contrib libpq-dev enchant
 
