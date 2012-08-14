@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from settings import PATH_TMPSCAN, MEDIA_ROOT
+from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
 from logs import log
 
 
@@ -65,7 +65,7 @@ def optimize_jpg(filename):
 def optimize_png(filename):
     file1 = PATH_TMPSCAN +gentmpfilename()
     file2 = PATH_TMPSCAN +gentmpfilename()
-    files = [filename,file1, file2]
+    files = [filename, file1, file2]
 
     shutil.copyfile(filename, file1)
 
@@ -86,7 +86,7 @@ def optimize_gif(filename):
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     (output, stderrdata) = p.communicate()
 
-    flist = [optimize_png(file1), filename]
+    flist = optimize_png(file1).append(filename)
 
     return flist
 
@@ -167,11 +167,11 @@ class PluginOptiimg(PluginMixin):
 
                 log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
 
-                a = {   "ifile":fpath[(len(path)+1):],
-                        "ofile":ofile[len(PATH_TMPSCAN):],
-                        "ifilesize":os.path.getsize(fpath),
-                        "ofilesize":os.path.getsize(ofile),
-                        "bytessaved":bytes_saved,
+                a = {   "ifile": fpath[(len(path)+1):],
+                        "ofile": "/" + MEDIA_URL + ofile[len(MEDIA_ROOT+"/")+1:],
+                        "ifilesize": os.path.getsize(fpath),
+                        "ofilesize": os.path.getsize(ofile),
+                        "bytessaved": bytes_saved,
                         "decrease": ( float(bytes_saved) / os.path.getsize(fpath) )*100,
                         }
                 optiimgs.append(a)

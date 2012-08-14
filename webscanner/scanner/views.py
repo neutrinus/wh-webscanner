@@ -49,7 +49,7 @@ def results(request):
         url = request.POST.get("url").lower()
 
 
-        #basic url validiation
+        #basic url validiation and normalization
         url = re.sub(r'\s+$', '', url)
         url = re.sub(r'^\s+', '', url)
 
