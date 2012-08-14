@@ -13,9 +13,7 @@ import re
 import shlex
 import shutil
 import signal
-
 from time import sleep
-
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
@@ -24,7 +22,7 @@ from selenium import webdriver
 from pyvirtualdisplay import Display
 from PIL import Image
 
-from scanner.plugins.optiimg import gentmpfilename, optimize_png, select_smallest_file
+from scanner.plugins.optiimg import gentmpfilename, optimize_image
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
@@ -38,18 +36,12 @@ def alarm_handler(signum, frame):
     raise Alarm
 
 def crop_screenshot(inputfile):
-
-    # size is width/height
     img = Image.open(inputfile)
     box = (0, 0, 940, 400)
     area = img.crop(box)
-
     ofile = MEDIA_ROOT+"/screenshots/thumb_"+gentmpfilename()+".png"
     area.save(ofile, 'png')
-
     return(ofile)
-
-
 
 #http://pypi.python.org/pypi/selenium
 #https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
@@ -96,16 +88,18 @@ class PluginMakeScreenshots(PluginMixin):
                 #give a bit time for loading async-js
                 sleep(3)
                 browser.save_screenshot(MEDIA_ROOT+"/"+filename)
-                thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)[len(MEDIA_ROOT)+1:]
+                thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)
 
-                # TODO: optimize images!
+                #optimize snapshot
+                screenshot = optimize_image(MEDIA_ROOT+"/"+filename, MEDIA_ROOT+"/screenshots/", True)
+                screenshot_thumb = optimize_image(thumb, MEDIA_ROOT+"/screenshots/", True)
 
                 timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
-                timing[browsername] = dict()
+                timing[browsername] = []
 
                 for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                    timing[browsername][time] = timing_data[time] - timing_data["navigationStart"]
+                    timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
 
                 tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
                 if tmp_timing > max_loadtime:
@@ -113,8 +107,8 @@ class PluginMakeScreenshots(PluginMixin):
 
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-                res.output_full = template.render(Context({'filename':filename,
-                                                            'thumb': thumb,
+                res.output_full = template.render(Context({'filename':screenshot[len(MEDIA_ROOT)+1:],
+                                                            'thumb': screenshot_thumb[len(MEDIA_ROOT)+1:],
                                                             'browsername': browsername,
                                                             'browserversion':browser.capabilities['version']}))
                 res.save()
@@ -139,10 +133,6 @@ class PluginMakeScreenshots(PluginMixin):
             'timing' : timing,
             'max_loadtime': max_loadtime,
         }
-
-        #print(type(timing))
-        #for key,value in timing:
-            #print("key: %s value %s" % (key,value))
 
 
         res.output_full = template.render(Context(template_data))

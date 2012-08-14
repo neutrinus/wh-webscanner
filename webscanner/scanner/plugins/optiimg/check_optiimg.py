@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from settings import PATH_TMPSCAN
+from settings import PATH_TMPSCAN, MEDIA_ROOT
 from logs import log
 
 
@@ -109,6 +109,33 @@ def identify_imagetype(filename):
 
     return output.strip()
 
+def optimize_image(input_file, output_path, remove_original=False ):
+
+    ftype = identify_imagetype(input_file)
+    if ftype == 'JPEG' :
+        ofiles = optimize_jpg(input_file)
+    elif ftype == 'PNG':
+        ofiles = optimize_png(input_file)
+    elif ftype == 'GIF':
+        ofiles = optimize_gif(input_file)
+    elif ftype == 'AGIF':
+        ofiles = optimize_agif(input_file)
+    else:
+        ofiles = [input_file]
+
+    ofile = select_smallest_file(ofiles)
+    otype = identify_imagetype(ofile)
+    final_file = output_path + "/" + gentmpfilename() +"." + otype.lower()
+    shutil.copyfile(ofile, final_file)
+
+    #remove not needed tmp files
+    for filename in ofiles:
+        if (filename == input_file) and not remove_original:
+            continue
+        os.remove(filename)
+
+    return(final_file)
+
 class PluginOptiimg(PluginMixin):
     name = unicode(_('OptiIMG'))
     wait_for_download = True
@@ -132,28 +159,7 @@ class PluginOptiimg(PluginMixin):
 
                 log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
 
-                ftype = identify_imagetype(fpath)
-                if ftype == 'JPEG' :
-                    ofiles = optimize_jpg(fpath)
-                elif ftype == 'PNG':
-                    ofiles = optimize_png(fpath)
-                elif ftype == 'GIF':
-                    ofiles = optimize_gif(fpath)
-                elif ftype == 'AGIF':
-                    ofiles = optimize_agif(fpath)
-                else:
-                    log.debug("Unknown image filetype %s" % ftype)
-                    continue
-
-                ofile = select_smallest_file(ofiles)
-
-                #remove not needed tmp files
-                for filename2 in ofiles:
-                    if (filename2 ==  fpath) or (filename2 == ofile):
-                        continue
-                    else:
-                        os.remove(filename2)
-                        log.debug("Removed temporary file %s" % filename2)
+                ofile = optimize_image(fpath, MEDIA_ROOT+"/", False)
 
                 bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
                 if bytes_saved == 0:

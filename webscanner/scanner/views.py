@@ -9,9 +9,11 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.db import transaction
-from urlparse import urlparse
+from urlparse import urlparse, urlunparse
+from urllib import unquote_plus
 from annoying.decorators import render_to
 import json
+import re
 from logs import log
 from scanner.models import *
 from account.models import UserProfile
@@ -46,7 +48,11 @@ def results(request):
     if request.method == 'POST':
         url = request.POST.get("url").lower()
 
+
         #basic url validiation
+        url = re.sub(r'\s+$', '', url)
+        url = re.sub(r'^\s+', '', url)
+
         if not urlparse(url).scheme:
             url = "http://"+url
         if (urlparse(url).scheme not in ["http","https"]) or \
@@ -54,8 +60,13 @@ def results(request):
            len(urlparse(url).netloc) < 3:
             messages.warning(request, _('Invalid website address (URL), please try again.'))
             return redirect(reverse('scanner_index'))
+        url = unquote_plus(url)
 
-        urlk = urlparse(url)
+        if not urlparse(url).path:
+            url += "/"
+
+        # loop over to run unparse
+        urlk = urlparse(urlunparse(urlparse(url)))
 
         if request.user.is_authenticated():
             user_profile =  UserProfile.objects.get_or_create(user = request.user)[0]
