@@ -30,7 +30,7 @@ def select_smallest_file(filelist):
     minfile = filelist[0]
 
     for filek in filelist:
-        if  (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
+        if (os.path.exists(filek)) and (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
             minfile = filek
 
     return minfile
