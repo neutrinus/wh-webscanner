@@ -84,7 +84,7 @@ PLUGINS = dict((
     ('plainemail', PluginPlainTextEmail ),
     ('optiimg', PluginOptiimg ),
     ('spellcheck', PluginCheckSpelling),
-    ('googlesite', PluginGoogleSite ),
+    #('googlesite', PluginGoogleSite ),
 ))
 
 TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]

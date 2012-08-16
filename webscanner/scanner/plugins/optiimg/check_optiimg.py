@@ -127,6 +127,7 @@ def optimize_image(input_file, output_path, remove_original=False ):
         ofile = select_smallest_file(ofiles)
     else:
         ofile = input_file
+        ofiles = []
 
     otype = identify_imagetype(ofile)
     final_file = output_path + "/" + gentmpfilename() +"." + otype.lower()
