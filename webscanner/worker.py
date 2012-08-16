@@ -17,6 +17,7 @@ import urllib
 import urlparse
 import string
 import re
+import shutil
 from time import sleep
 from datetime import datetime
 from datetime import timedelta
@@ -103,6 +104,17 @@ def downloader():
     #main program loop
     while(True):
         try:
+            # once a time clean up old tests
+            if random.randint(1,100) == 42:
+                log.debug("Cleaning time!")
+                dirtytests = Tests.objects.filter(is_deleted=False)
+                for dtest in dirtytests:
+                    if dtest.percent_done() == 100:
+                        log.debug("Cleanup old test %s (path: %s)"%(dtest.uuid, dtest.download_path))
+                        shutil.rmtree(dtest.download_path)
+                        dtest.is_deleted = True
+                        dtest.save()
+
             tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
 
 
