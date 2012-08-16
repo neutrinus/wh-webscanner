@@ -137,7 +137,8 @@ def optimize_image(input_file, output_path, remove_original=False ):
     for filename in ofiles:
         if (filename == input_file) and not remove_original:
             continue
-        os.remove(filename)
+        if os.path.exists(filename):
+            os.remove(filename)
 
     return(final_file)
 
