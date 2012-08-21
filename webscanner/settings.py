@@ -243,7 +243,7 @@ PAYPAL_ENCRYPTED = True
 PAYPAL_PRIVATE_CERT = apath('paypal.pem')
 PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
 PAYPAL_CERT = apath('paypal_cert.pem')
-PAYPAL_CERT_ID = 'PN8CSHBEXNPYE'
+PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
 
 
 # This should be at the very end
