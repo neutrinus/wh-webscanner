@@ -211,16 +211,16 @@ GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'
 ################################
 ### Third party apps options ###
 ################################
-SECURE_SSL_REDIRECT = 0
+SECURE_SSL_REDIRECT = 1
 SECURE_FRAME_DENY = 1
 SECURE_HSTS_SECONDS = 1
 
-SESSION_COOKIE_SECURE=0
+SESSION_COOKIE_SECURE=1
 SESSION_COOKIE_HTTPONLY =1
 
 RECAPTCHA_PUBLIC_KEY = '6LfmydQSAAAAAOHIqxQaBPr63pMr0XM23ummE4y1'
 RECAPTCHA_PRIVATE_KEY = '6LfmydQSAAAAAAU6Wmv9LDHyjnYupYkARmawIQ00 '
-#RECAPTCHA_USE_SSL = True
+RECAPTCHA_USE_SSL = True
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
@@ -238,7 +238,7 @@ NOSE_ARGS = [
             ] # arguments to nose for testing
 
 PRODUCT_PRICE = Decimal("3.79")
-PAYPAL_RECEIVER_EMAIL = "marek_1343638038_biz@whitehats.pl"
+PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 PAYPAL_ENCRYPTED = True
 PAYPAL_PRIVATE_CERT = apath('paypal.pem')
 PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
