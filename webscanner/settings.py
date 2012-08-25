@@ -31,13 +31,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/user/login/'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'webcheck',                      # Or path to database file if using sqlite3.
-        'USER': 'webcheck',                      # Not used with sqlite3.
-        'PASSWORD': 'eepa6aez9OoS',                  # Not used with sqlite3.
-        'HOST': '10.239.1.11',                      # Set to empty string for localhost. Not
-    }
 }
 
 DATABASE_ENGINE = ""
@@ -248,3 +241,5 @@ PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
 
 # This should be at the very end
 #execfile(apath('settings_local.py'))
+#execfile(apath('settings_prod.py'))
+
