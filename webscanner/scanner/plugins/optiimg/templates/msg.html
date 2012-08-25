@@ -6,7 +6,7 @@
 <ul>
 {% for image in optiimgs %}
     <li>
-        <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize }}B, <a href="http://{{ image.ofile }}">optimized</a> {{ image.ofilesize }}B, <b>{{ image.bytessaved }}B ({{ image.decrease|floatformat:0 }}%)</b> decrease
+        <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize }}B, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a> {{ image.ofilesize }}B, <b>{{ image.bytessaved }}B ({{ image.decrease|floatformat:0 }}%)</b> decrease
     </li>
 {% endfor %}
 </ul>
