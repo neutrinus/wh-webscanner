@@ -34,11 +34,10 @@ def make_form(d):
     if getattr(settings,'PAYPAL_ENCRYPTED',False):
         t = PayPalEncryptedPaymentsForm
     form = t(initial = d)
-    return form.sandbox()
-    #if getattr(settings,'DEBUG', False):
-        #return form.sandbox()
-    #else:
-        #return form.render()
+    if getattr(settings,'DEBUG', False):
+        return form.sandbox()
+    else:
+        return form.render()
 
 @login_required
 @render_to('payments/payments.html')
