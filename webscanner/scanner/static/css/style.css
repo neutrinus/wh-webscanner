@@ -7,7 +7,7 @@ body {
 /*     color: #3B3B3B; */
     background: url(/static/images/bg.png) left top repeat ;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
-    padding-top: 50px;
+/*     padding-top: 50px; */
     height: 90%;
 }
 
