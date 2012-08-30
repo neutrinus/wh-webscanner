@@ -168,7 +168,7 @@ class Results(models.Model):
     creation_date       =   models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "%s: name=%s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
+        return "%s: %s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
 
 #: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
