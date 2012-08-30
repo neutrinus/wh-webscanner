@@ -1,11 +1,16 @@
 import urlparse
 from logs import log
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.sites.models import get_current_site
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from django.core.mail import send_mail
+from django.template import Template, Context
+
+from settings import DEFAULT_FROM_EMAIL
 
 
 def ulogout(request):
@@ -32,49 +37,12 @@ def ulogout(request):
 
     return redirect('/')
 
+def welcome_email(sender, user, request, **kwargs):
+    template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
+    text template.render(Context({'optiimgs':optiimgs, 'btotals':btotals}))
 
-#def ulogin(request):
-
-    #if request.method == "POST":
-        #username = request.POST['username']
-        #password = request.POST['password']
-
-        #user = authenticate(username=username, password=password)
-        #if user is not None:
-            #if user.is_active:
-                #login(request, user)
-                #messages.success(request, _('Welcome %s!'%(user)) )
-                #return redirect('/')
-            #else:
-                #messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
-                #return redirect('/')
-        #else:
-            ## Return an 'invalid login' error message.
-            #messages.error(request, _('Invalid login data. Please try again.'))
-            #return render_to_response('login.html', {}, context_instance=RequestContext(request))
-    #else:
-        #return render_to_response('login.html', {}, context_instance=RequestContext(request))
+    send_mail(_('Welcome at webcheck.me!'), text, settings.DEFAULT_FROM_EMAIL, [ user.email ] )
 
 
-#def uregister(request):
-
-    #if request.method == "POST":
-        #username = request.POST['username']
-        #password = request.POST['password']
-
-        #user = authenticate(username=username, password=password)
-        #if user is not None:
-            #if user.is_active:
-                #login(request, user)
-                #messages.success(request, _('Welcome %s!'%(user)) )
-                #return redirect('/')
-            #else:
-                #messages.error(request, _('Your account is locked, if this is a mistake please contact our support.'))
-                #return redirect('/')
-        #else:
-            ## Return an 'invalid login' error message.
-            #messages.error(request, _('Invalid login data. Please try again.'))
-            #return render_to_response('register.html', {}, context_instance=RequestContext(request))
-    #else:
-        #return render_to_response('register.html', {}, context_instance=RequestContext(request))
-
+from registration.signals import user_activated
+user_activated.connect(welcome_email)
