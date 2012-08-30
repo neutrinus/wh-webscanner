@@ -71,9 +71,9 @@ def optimize_png(filename):
     files = [filename, file1, file1nq, file2]
 
 
-    log.debug("File input %s" % filename)
-    log.debug("File file1 %s" % file1)
-    log.debug("File file2 %s" % file2)
+    #log.debug("File input %s" % filename)
+    #log.debug("File file1 %s" % file1)
+    #log.debug("File file2 %s" % file2)
 
     shutil.copyfile(filename, file1)
 

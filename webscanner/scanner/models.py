@@ -225,7 +225,7 @@ class BadWord(models.Model):
             cache.set('scanner.bad_words', bad_words, 60*60*24)
 
             log.debug('Bad words saved to cache (%d bad words)'%len(bad_words))
-            log.debug(' * %s '%bad_words)
+            #log.debug(' * %s '%bad_words)
         else:
             log.debug('Bad words loaded from cache (%d)'%len(bad_words))
             #log.debug(' * %s'%bad_words)
