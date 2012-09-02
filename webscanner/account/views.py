@@ -38,8 +38,8 @@ def ulogout(request):
     return redirect('/')
 
 def welcome_email(sender, user, request, **kwargs):
-    template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
-    text template.render(Context({'optiimgs':optiimgs, 'btotals':btotals}))
+    template = Template(open(os.path.join(os.path.dirname(__file__),'templates/account/welcome.html')).read())
+    text template.render(Context({'user':user}))
 
     send_mail(_('Welcome at webcheck.me!'), text, settings.DEFAULT_FROM_EMAIL, [ user.email ] )
 
