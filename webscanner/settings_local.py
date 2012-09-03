@@ -55,8 +55,12 @@ DEBUG_TOOLBAR_CONFIG = {
 SESSION_COOKIE_SECURE=0
 SECURE_SSL_REDIRECT = 0
 PAYPAL_RECEIVER_EMAIL = "marek_1343638038_biz@whitehats.pl"
+PAYPAL_ENCRYPTED = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+#EMAIL_FILE_PATH = '/tmp/djangosz'
+
 #EMAIL_HOST='localhost'
 #EMAIL_PORT=1025
 #EMAIL_HOST_USER=''

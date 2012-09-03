@@ -30,10 +30,11 @@ SITE_NAME = Site.objects.get_current()
 log = getLogger('plugin')
 
 def make_form(d):
-    t = PayPalPaymentsForm
     if getattr(settings,'PAYPAL_ENCRYPTED',False):
-        t = PayPalEncryptedPaymentsForm
-    form = t(initial = d)
+        form = PayPalEncryptedPaymentsForm(initial = d)
+    else:
+        form = PayPalPaymentsForm(initial = d)
+
     if getattr(settings,'DEBUG', False):
         return form.sandbox()
     else:

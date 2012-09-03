@@ -1,4 +1,7 @@
 import urlparse
+import os
+from settings import DEFAULT_FROM_EMAIL
+
 from logs import log
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -39,9 +42,9 @@ def ulogout(request):
 
 def welcome_email(sender, user, request, **kwargs):
     template = Template(open(os.path.join(os.path.dirname(__file__),'templates/account/welcome.html')).read())
-    text template.render(Context({'user':user}))
+    text = template.render(Context({'user':user}))
 
-    send_mail(_('Welcome at webcheck.me!'), text, settings.DEFAULT_FROM_EMAIL, [ user.email ] )
+    send_mail(_('Welcome at webcheck.me!'), text, DEFAULT_FROM_EMAIL, [ user.email ] )
 
 
 from registration.signals import user_activated
