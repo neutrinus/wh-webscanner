@@ -57,7 +57,7 @@
 
         <div class="pull-right">
             <ul class="nav">
-                <li><a href="{% url payments_payments %}">{% trans "Payments" %}</a></li>
+                <li><a id="menu_payments" href="{% url payments_payments %}" >{% trans "Payments" %} </a></li>
                 <li><a href="{% url scanner_scan_archive %}">{% trans "Scan archive" %}</a></li>
             </ul>
         </div>
@@ -78,6 +78,24 @@
     </div>
 </div>
 
+{% if user.is_authenticated %}
+    {% if not request.user.get_profile.is_paid  %}
+    <script type="text/javascript">
+    if ( Math.random() < 0.18 ) {
+        $('#menu_payments').popover({
+            html:       true,
+            title:      "<h4>VIPs got more!</h4>",
+            content:    "Additional benefits are ready for you for only $3.79 weekly. <b>Let's give it a try!</b> ",
+            placement:  "bottom",
+            trigger:    "manual",
+        })
+        setTimeout(function(){ $('#menu_payments').popover("show") },1500);
+        setTimeout(function(){ $('#menu_payments').popover("hide") },10000);
+        $('html').click(function() {   $('#menu_payments').popover('hide'); });
+    }
+    </script>
+    {% endif %}
+{% endif %}
 
 {% if messages %}
 <div class="container">
