@@ -6,8 +6,6 @@
 {% block title %}{% trans "Webscan results for " %}{{ test.domain }} {% endblock %}
 
 {% block extrahead %}
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
-
 <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
 
@@ -16,12 +14,14 @@
 
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}openlayers/OpenLayers.js"></script>
 
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/results-mix.min.js"></script>
+
+<!--<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pieRenderer.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.dateAxisRenderer.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasTextRenderer.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasAxisTickRenderer.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.categoryAxisRenderer.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.categoryAxisRenderer.min.js"></script>-->
 {% endblock %}
 
 
