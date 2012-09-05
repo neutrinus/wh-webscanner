@@ -10,7 +10,7 @@
         </li>
     {% endfor %}
     </ul>
-    <p>Total <b>{{ btotals|filesizeformat }}</b> could be saved by optimizing those images.</p>
+    <p>A total <b>{{ btotals|filesizeformat }}</b> could be saved by optimizing those images.</p>
 
     {% if not request.user.get_profile.is_paid  %}
         <div class="alert alert-info">

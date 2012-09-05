@@ -18,7 +18,7 @@ advanced level:
 - make list of mispelled words [done]
 - find it in html
 - change css for it
-- do screenshot (subtask: check wheter is posible to do screenshot site in tmp, 
+- do screenshot (subtask: check wheter is posible to do screenshot site in tmp,
                  or to dynamic in browser add css to elements)
 '''
 
@@ -59,6 +59,7 @@ import chardet
 
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
+from account.models import UserProfile
 
 from logs import log
 
@@ -102,7 +103,7 @@ class BetterURLFilter(Filter):
 
             #log.debug(" * match !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
-            tld = matching.groups()[-1] 
+            tld = matching.groups()[-1]
             tld = tld.tounicode()
             stld=tld
 
@@ -120,9 +121,9 @@ class PluginCheckSpelling(PluginMixin):
     wait_for_download = True
     max_file_size = 1024*1024 # in bytes
 
-    #: how many occurences of bad word should be in DB to 
+    #: how many occurences of bad word should be in DB to
     #: classify word as good word
-    bad_word_limit = 5 
+    bad_word_limit = 5
 
     #: remove bad words (under the limit from 'bad_word_limit') older than
     #: X days
@@ -131,7 +132,7 @@ class PluginCheckSpelling(PluginMixin):
 
     def spellcheck(self, text):
         from scanner.models import (Results, CommandQueue, BadWord)
-        # guess language code 
+        # guess language code
         lang_code, lang_num, lang_name = guess_language.\
                                             guessLanguageInfo(text)
         log.debug('    * check spelling, detected lang: %s (%s)'%(lang_name,
@@ -139,7 +140,7 @@ class PluginCheckSpelling(PluginMixin):
 
         if lang_code == 'UNKNOWN':
             log.warning('    * Cannot detect language of page - end')
-            # 
+            #
             # raise CannotGuessLanguage()
             return None,set()
 
@@ -159,7 +160,7 @@ class PluginCheckSpelling(PluginMixin):
         log.debug('    * check spelling')
         checker.set_text(text)
 
-        errors = [ er.word for er in checker ] 
+        errors = [ er.word for er in checker ]
         log.debug('      * found %d errors (%s)'%(len(errors),errors))
         log.debug('    * filtering bad words')
 
@@ -229,7 +230,7 @@ class PluginCheckSpelling(PluginMixin):
             # - noooooooo, nltk works not well with different encodings
             log.debug('    * cleaning from html to txt')
             try:
-                #text = nltk.clean_html(orig) 
+                #text = nltk.clean_html(orig)
                 text = '\n'.join(strip_script_tags(
                             bs4.BeautifulSoup(orig).html.body
                 ))
@@ -253,6 +254,12 @@ class PluginCheckSpelling(PluginMixin):
 
         log.debug("Search html files in %s "%(dirs))
 
+        limited = True
+        if command.test.user.is_authenticated():
+            user_profile =  UserProfile.objects.get_or_create(user = command.test.user)[0]
+            if user_profile.is_paid():
+                limited = False
+
         files_with_errors = []
         was_errors = False
         for dir in dirs:
@@ -267,13 +274,16 @@ class PluginCheckSpelling(PluginMixin):
                         was_errors=True
                         continue
                     if errors:
+                        errors = list(errors)
+                        if limited:
+                            errors = errors[:10]
+
                         files_with_errors.append( [os.path.join(
                                 os.path.relpath(file_path,path),
                             ),
                             lang,
                             errors,
                         ])
-
 
         template = Template(open(os.path.join(os.path.dirname(__file__),
                                               'templates/msg.html')).read())
@@ -291,7 +301,4 @@ class PluginCheckSpelling(PluginMixin):
         if was_errors:
             return STATUS.unsuccess
         return STATUS.success
-
-
-
 
