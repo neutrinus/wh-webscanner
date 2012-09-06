@@ -83,7 +83,7 @@ def results(request):
             # non-VIP - check last scan.date for this url
             last_tests = Tests.objects.filter(url=url).order_by("-creation_date")
             if len(last_tests) >0:
-                if last_tests[0].creation_date > dt.now() - td(days=1):
+                if last_tests[0].creation_date > dt.now() - td(days=30):
                     return render_to_response('scanner/scan_denied.html',
                                               {
                                                 'last_test': last_tests[0],
