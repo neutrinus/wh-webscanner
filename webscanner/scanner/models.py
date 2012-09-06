@@ -103,7 +103,7 @@ class Tests(models.Model):
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
 
     user                =   models.ForeignKey(User, null=1)
-    user_ip             =   models.IPAddressField(null=True, default=False)
+    user_ip             =   models.IPAddressField(null=True)
 
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
     vip_mode            =   models.BooleanField(_(u'VIP mode activated'), default=False)
