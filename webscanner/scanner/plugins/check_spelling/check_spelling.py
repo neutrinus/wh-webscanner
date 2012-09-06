@@ -161,7 +161,7 @@ class PluginCheckSpelling(PluginMixin):
         checker.set_text(text)
 
         errors = [ er.word for er in checker ]
-        log.debug('      * found %d errors (%s)'%(len(errors),errors))
+        log.debug('      * found %d errors'%(len(errors)))
         log.debug('    * filtering bad words')
 
         for bad_word in errors:
@@ -255,7 +255,7 @@ class PluginCheckSpelling(PluginMixin):
         log.debug("Search html files in %s "%(dirs))
 
         limited = True
-        if command.test.user.is_authenticated():
+        if command.test.user and command.test.user.is_authenticated():
             user_profile =  UserProfile.objects.get_or_create(user = command.test.user)[0]
             if user_profile.is_paid():
                 limited = False
