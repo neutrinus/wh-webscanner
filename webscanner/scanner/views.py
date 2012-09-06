@@ -18,7 +18,8 @@ from logs import log
 from scanner.models import *
 from account.models import UserProfile
 from django.views.decorators.cache import cache_page
-
+from datetime import datetime as dt, timedelta as td
+from scanner.forms import FormCaptcha
 
 def index(request):
 	return render_to_response('scanner/index.html', {}, context_instance=RequestContext(request))
@@ -48,6 +49,14 @@ def results(request):
     if request.method == 'POST':
         url = request.POST.get("url").lower()
 
+        # check if there was many tests from this ip recently and provide a captcha
+        captcha = FormCaptcha(request.POST)
+        if not captcha.is_valid():
+            if Tests.objects.filter(user_ip=request.META['REMOTE_ADDR'], creation_date__gt = dt.now() - td(hours=1)).count() > 11:
+                log.debug("Limit per ip %s reached" % request.META['REMOTE_ADDR'])
+                return render_to_response('scanner/scan_captcha.html',
+                                        {'url': url, 'recaptcha':captcha},
+                                        context_instance=RequestContext(request))
 
         #basic url validiation and normalization
         url = re.sub(r'\s+$', '', url)
@@ -98,9 +107,11 @@ def results(request):
                 test = Tests(url=url, user=request.user, priority=20)
         else:
             test = Tests(url=url)
+
+        test.user_ip = request.META['REMOTE_ADDR']
         test.save()
 
-        log.debug("User ordered report for url %s report_uuid %s"%(url,test.uuid))
+        log.debug("User %s(%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, url, test.uuid))
 
         # order all posible commands in transaction - huge performance gain
         with transaction.commit_on_success():

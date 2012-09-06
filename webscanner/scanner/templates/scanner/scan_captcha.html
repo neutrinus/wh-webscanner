@@ -6,41 +6,30 @@
 {% block title %}{% trans "Confirmation needed" %}{% endblock %}
 
 {% block content %}
-
-
+<br />
 <div class="row">
     <div class="span8 offset2 well">
-        {% blocktrans %}
-
-        <h1>We're sorry..</h1>
-        <p>...but your query looks similar to automated requests from a computer virus or spyware application. To protect our users, we can’t process your request right now.</p>
-
-        <h2>Confirmation needed</h2>
-        <p>
-        Please fill following captcha codes to confirm that it wasn't an automated request. Your request will be processed imedietly.
-            <form class="form-vertical" action="{% url scanner.results %}" method="POST" style="text-align:center; margin-top:4em;">
+        <h1>{% trans "Confirmation needed" %}</h1>
+        <div>{% trans "Please fill following captcha codes to confirm that it wasn't an automated request. Your request will be then processed imedietly." %}
+            <form class="form-horizontal" action="{% url scanner.results %}" method="POST">
                 {% csrf_token %}
-                CAPTCHA
-                <input type="text" id="domain" name="url" style="width:60%; height:30px; font-size: 24px;" placeholder="{% trans 'enter your website url: http://example.org' %}" autocomplete="off"  />
-                <input type="submit"  value="{% trans "Confirm!" %}" class="btn-large btn-primary"> </input>
-
+                {% for field in recaptcha %}
+                    {{ field }}
+                {% endfor %}
+                <input type="hidden" value="{{ url }}" name="url" />
+                <input type="submit"  value="{% trans "Confirm!" %}" class="btn-large btn-primary" />
             </form>
-        </p>
+        </div>
 
-        <h1>Need HELP?</h1>
-        <p>Our support will be happy to provide answers for your questions. Please use our <a href="{% url contact %}">contact form</a> to get help.</p>
-
-
+        {% url contact as url_contact %}
+        {% blocktrans %}
+        <h2>We're sorry..</h2>
+        <p>...but your query looks similar to automated requests from a computer virus or spyware application. To protect our users, we can’t process your request without recaptcha validation.</p>
+        <h3>Need HELP?</h3>
+        <p>Our support will be happy to provide answers for your questions. Please use our <a href="{{ url_contact }}">contact form</a> to get help.</p>
+        {% endblocktrans %}
     </div>
 </div>
-
-
-
-<div class="section">
-
-
-</div>
-
 
 {% endblock content %}
 
