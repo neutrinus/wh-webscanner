@@ -1,0 +1,11 @@
+{% load i18n %}
+<div>
+    <p>{% trans "Social actions on facebook have big influence on seo. Bellow you can find current statistics from facebook:" %}</p>
+    <ul>
+        <li title="{% trans 'The number of times Facebook users have Liked the page, or liked any comments or re-shares of this page..' %}"><b>{% trans "likes:" %}</b> {{ fb_data.like_count }} </li>
+        <li title="{% trans 'The number of times users have shared the page on Facebook.' %}"><b>{% trans "shares:" %}</b> {{ fb_data.share_count }} </li>
+        <li title="{% trans 'The number of comments users have made on the shared story.' %}"><b>{% trans "comments:" %}</b> {{ fb_data.comment_count }} </li>
+        <li title="{% trans 'The number of times Facebook users have clicked a link to the page from a share or like.' %}"><b>{% trans "clicks:" %}</b> {{ fb_data.click_count }} </li>
+        <li title="{% trans 'The total number of times the URL has been shared, liked, or commented on.' %}"><b>{% trans "total:" %}</b> {{ fb_data.total_count }} </li>
+    </ul>
+</div>
