@@ -59,8 +59,11 @@ from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
 from scanner.plugins.optiimg import PluginOptiimg
+from scanner.plugins.optiyui import PluginOptiYUI
 from scanner.plugins.check_spelling import PluginCheckSpelling
 from scanner.plugins.check_google_site import PluginGoogleSite
+
+
 
 #not finished
 #from scanner.plugins.plagiarism import PluginPlagiarism
@@ -84,6 +87,7 @@ PLUGINS = dict((
     ('plainemail', PluginPlainTextEmail ),
     ('optiimg', PluginOptiimg ),
     ('spellcheck', PluginCheckSpelling),
+    ('optiyui', PluginOptiYUI),
     #('googlesite', PluginGoogleSite ),
 ))
 
