@@ -62,12 +62,7 @@ from scanner.plugins.optiimg import PluginOptiimg
 from scanner.plugins.optiyui import PluginOptiYUI
 from scanner.plugins.check_spelling import PluginCheckSpelling
 from scanner.plugins.check_google_site import PluginGoogleSite
-
-
-
-#not finished
-#from scanner.plugins.plagiarism import PluginPlagiarism
-
+from scanner.plugins.social import PluginSocial
 
 
 PLUGINS = dict((
@@ -88,6 +83,7 @@ PLUGINS = dict((
     ('optiimg', PluginOptiimg ),
     ('spellcheck', PluginCheckSpelling),
     ('optiyui', PluginOptiYUI),
+    ('social', PluginSocial),
     #('googlesite', PluginGoogleSite ),
 ))
 

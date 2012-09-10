@@ -43,7 +43,7 @@ class PluginSocial(PluginMixin):
 
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.seo,importance=4)
-        res.output_desc = unicode(_("Facebook"))
+        res.output_desc = unicode(_("Facebook stats"))
         res.output_full = template.render(Context({'fb_data':fb_data}))
 
         if fb_data["total_count"] < 10:
@@ -54,10 +54,69 @@ class PluginSocial(PluginMixin):
             res.status = RESULT_STATUS.success
         res.save()
 
+    def check_twitter(self, command):
+        api_url = "http://urls.api.twitter.com/1/urls/count.json"
+        args = {
+            'url' : command.test.url,
+        }
+
+        template = Template(open(os.path.join(os.path.dirname(__file__),'templates/twitter.html')).read())
+
+        args_enc = urllib.urlencode(args)
+        rawdata = urllib.urlopen(api_url, args_enc).read()
+        tw_data = json.loads(rawdata)
+
+        from scanner.models import Results
+        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=3)
+        res.output_desc = unicode(_("Twitter stats"))
+        res.output_full = template.render(Context({'tw_data':tw_data}))
+
+        if tw_data["count"] < 10:
+            res.status = RESULT_STATUS.error
+        elif tw_data["count"] < 50:
+            res.status = RESULT_STATUS.warning
+        else:
+            res.status = RESULT_STATUS.success
+        res.save()
+
+
+    def check_gplus(self, command):
+        template = Template(open(os.path.join(os.path.dirname(__file__),'templates/gplus.html')).read())
+
+        url = "https://plusone.google.com/u/0/_/+1/fastbutton?count=true&url=%s" % command.test.url
+
+        rawdata = urllib2.urlopen(url).read()
+        #<div id="aggregateCount" class="V1">1\xc2\xa0936</div>
+
+        #remove non-breaking space
+        rawdata = rawdata.replace("\xc2\xa0","")
+
+        gplus1 = int(re.search(r"id\=\"aggregateCount\"[^>]*>([\d\s ]+)",rawdata).group(1))
+
+        from scanner.models import Results
+        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=3)
+        res.output_desc = unicode(_("Google+ stats"))
+        res.output_full = template.render(Context({'gplus1':gplus1}))
+
+        if gplus1 < 10:
+            res.status = RESULT_STATUS.error
+        elif gplus1 < 50:
+            res.status = RESULT_STATUS.warning
+        else:
+            res.status = RESULT_STATUS.success
+        res.save()
+
+
+
+
+
     def run(self, command):
         from scanner.models import Results
 
         self.check_facebook(command)
+        self.check_twitter(command)
+        self.check_gplus(command)
+
 
         #as plugin finished - its success
         return STATUS.success
