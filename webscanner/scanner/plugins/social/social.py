@@ -42,7 +42,7 @@ class PluginSocial(PluginMixin):
         fb_data = json.loads(rawdata)[0]
 
         from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=4)
+        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=3)
         res.output_desc = unicode(_("Facebook stats"))
         res.output_full = template.render(Context({'fb_data':fb_data}))
 
@@ -67,7 +67,7 @@ class PluginSocial(PluginMixin):
         tw_data = json.loads(rawdata)
 
         from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=3)
+        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=2)
         res.output_desc = unicode(_("Twitter stats"))
         res.output_full = template.render(Context({'tw_data':tw_data}))
 
@@ -94,7 +94,7 @@ class PluginSocial(PluginMixin):
         gplus1 = int(re.search(r"id\=\"aggregateCount\"[^>]*>([\d\s ]+)",rawdata).group(1))
 
         from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=3)
+        res = Results(test=command.test, group=RESULT_GROUP.seo,importance=2)
         res.output_desc = unicode(_("Google+ stats"))
         res.output_full = template.render(Context({'gplus1':gplus1}))
 

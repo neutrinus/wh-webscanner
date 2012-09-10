@@ -70,23 +70,15 @@ def optimize_png(filename):
     file2 = PATH_TMPSCAN +gentmpfilename() + ".png"
     files = [filename, file1, file1nq, file2]
 
-
-    #log.debug("File input %s" % filename)
-    #log.debug("File file1 %s" % file1)
-    #log.debug("File file2 %s" % file2)
-
     shutil.copyfile(filename, file1)
 
     command =  'pngnq -n 256  -f %s '%(file1)
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     (output, stderrdata) = p.communicate()
 
-    command = 'pngcrush -no_cc -rem alla -brute -l 9 -reduce -q   %s %s'%(file1nq, file2)
+    command = 'pngcrush -no_cc -rem alla -brute -l 9 -z 1 -reduce -q   %s %s'%(file1nq, file2)
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     (output, stderrdata) = p.communicate()
-    print output
-    print stderrdata
-
 
     return files
 

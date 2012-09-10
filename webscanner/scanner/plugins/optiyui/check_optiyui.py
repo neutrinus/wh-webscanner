@@ -112,7 +112,7 @@ class PluginOptiYUI(PluginMixin):
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("JavaScript optimalization"))
         res.output_full = template.render(Context({'optijses': optifiles["js"], 'btotals':btotals["js"]}))
-        if btotals["js"] < 500*1024:
+        if btotals["js"] < 100*1024:
             res.status = RESULT_STATUS.success
         else:
             res.status = RESULT_STATUS.warning
@@ -123,7 +123,7 @@ class PluginOptiYUI(PluginMixin):
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("CSS optimalization"))
         res.output_full = template.render(Context({'opticsses': optifiles["css"], 'btotals':btotals["css"]}))
-        if btotals["css"] < 500*1024:
+        if btotals["css"] < 20*1024:
             res.status = RESULT_STATUS.success
         else:
             res.status = RESULT_STATUS.warning

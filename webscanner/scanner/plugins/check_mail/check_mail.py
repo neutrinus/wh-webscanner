@@ -150,7 +150,7 @@ class PluginMail(PluginMixin):
 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=4)
             res.output_desc = unicode(_("connect to mailservers"))
-            res.output_full = unicode(_("<p>Mailservers should accept TCP connections on port 25. Its needed to accept emails from other servers</p> "))
+            res.output_full = unicode(_("<p>Mailservers should accept TCP connections on port 25. It is needed to accept emails from other servers</p> "))
             if not noconnect:
                 #all servers responds
                 res.status = RESULT_STATUS.success
