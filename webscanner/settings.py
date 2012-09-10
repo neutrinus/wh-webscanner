@@ -45,10 +45,10 @@ CACHES = {
         },
     }
 }
-
-#CACHE_MIDDLEWARE_KEY_PREFIX = ""
-#CACHE_MIDDLEWARE_SECONDS = 60*5
-#CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+CACHE_MIDDLEWARE_KEY_PREFIX = "ali_"
+CACHE_MIDDLEWARE_SECONDS = 60*5
+CACHE_MIDDLEWARE_ALIAS = "default"
 
 TIME_ZONE = 'Europe/Warsaw'
 
@@ -99,7 +99,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    #'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -107,7 +107,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = [

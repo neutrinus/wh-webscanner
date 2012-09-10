@@ -114,7 +114,7 @@ class PluginDNSmailRBL(PluginMixin):
                 except dns.resolver.Timeout:
                     log.debug("DNSWL Timeout: %s while checking: %s"%(bl))
 
-            res = Results(test=command.test, group = RESULT_GROUP.mail, importance=2)
+            res = Results(test=command.test, group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("Mailservers on DNSWL whitelist"))
             res.output_full = unicode(_("<p>DNSWL is a community driven whitelist of mailservers aim to prevent false-positives in spam filtering.</p> "))
             if not whitelisted:
