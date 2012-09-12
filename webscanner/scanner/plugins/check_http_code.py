@@ -54,7 +54,7 @@ class PluginCheckHTTPCode(PluginMixin):
                 }) )
             res.status = RESULT_STATUS.success
         else:
-            res.output_full = unicode(_("<p>Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - please check it</p>"%(unicode(httpstatus),httplib.responses[int(httpstatus)]) ))
+            res.output_full = unicode(_("<p>Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - please check it</p>" % { "status_code" : unicode(httpstatus) , "status_code_name": httplib.responses[int(httpstatus)], } ))
             res.status = RESULT_STATUS.error
 
         res.output_full += unicode(_("<p>This is very low level check - it checks if webserver is reachable and answering</p> "))
