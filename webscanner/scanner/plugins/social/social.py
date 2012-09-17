@@ -47,8 +47,6 @@ class PluginSocial(PluginMixin):
         res.output_full = template.render(Context({'fb_data':fb_data}))
 
         if fb_data["total_count"] < 10:
-            res.status = RESULT_STATUS.error
-        elif fb_data["total_count"] < 50:
             res.status = RESULT_STATUS.warning
         else:
             res.status = RESULT_STATUS.success
@@ -72,8 +70,6 @@ class PluginSocial(PluginMixin):
         res.output_full = template.render(Context({'tw_data':tw_data}))
 
         if tw_data["count"] < 10:
-            res.status = RESULT_STATUS.error
-        elif tw_data["count"] < 50:
             res.status = RESULT_STATUS.warning
         else:
             res.status = RESULT_STATUS.success
@@ -99,15 +95,10 @@ class PluginSocial(PluginMixin):
         res.output_full = template.render(Context({'gplus1':gplus1}))
 
         if gplus1 < 10:
-            res.status = RESULT_STATUS.error
-        elif gplus1 < 50:
             res.status = RESULT_STATUS.warning
         else:
             res.status = RESULT_STATUS.success
         res.save()
-
-
-
 
 
     def run(self, command):

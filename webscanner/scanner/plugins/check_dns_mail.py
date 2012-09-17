@@ -127,10 +127,10 @@ class PluginDNSmail(PluginMixin):
         except dns.resolver.NoAnswer,e:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
             res.output_desc = unicode(_("MX records") )
-            res.output_full = unicode(_("<p>There are no MX records defined for your domain. Having them is essencial to be able to recieve emails for this domain.</p>"))
+            res.output_full = unicode(_("<p>There are no MX records defined for your domain. Having them is essential to be able to recieve emails for this domain.</p>"))
 
             if re.search("www\.", command.test.url):
-                res.output_full += unicode(_(" <div class='alert'>Please try to run this test again <b>whithout www prefix</b>.</div>" ))
+                res.output_full += unicode(_(" <div class='alert'>Please try to run this test again <b>without www prefix</b>.</div>" ))
             res.status = RESULT_STATUS.error
             res.save()
             log.debug("NoAnswer while asking for MX records: %s"%str(e))

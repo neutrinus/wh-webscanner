@@ -66,20 +66,20 @@ class PluginCheckHTTPCode(PluginMixin):
         encoding = response.getheader("Content-Encoding")
 
         res = Results(test=command.test, group = RESULT_GROUP.performance, importance=1)
-        res.output_desc = unicode(_("HTTP compresion"))
+        res.output_desc = unicode(_("HTTP compression"))
         if encoding:
             res.status = RESULT_STATUS.success
             res.output_full = unicode(_("<p>Server agreed to compress http data using %s method.</p>"%(unicode(encoding) ) ))
         else:
             res.status = RESULT_STATUS.warning
-            res.output_full = unicode(_("<p>Server didnt agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading.</p>" ))
+            res.output_full = unicode(_("<p>Server didn't agree to compress http data using any method. HTTP compression can lower your site traffic volume and speedup page loading.</p>" ))
 
         headers = ""
         for header in response.getheaders():
             (a,b) = header
             headers += "%s: %s <br>"%(a,b)
 
-        res.output_full += unicode(_("<p>There are different types of compression avalible, <a href='http://en.wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this theme nicly. Headers sent by your webserver: <code>%s</code> </p> "%(headers )))
+        res.output_full += unicode(_("<p>There are different types of compression avalible, <a href='http://en.wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this theme nicely. Headers sent by your webserver: <code>%s</code> </p> "%(headers )))
 
         res.save()
 
