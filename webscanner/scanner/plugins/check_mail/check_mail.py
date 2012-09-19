@@ -118,7 +118,7 @@ class PluginMail(PluginMixin):
                     "nopostmaster" :nopostmaster
                 } ))
                 if postmaster:
-                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%(domain)s:<code>%s</code> </p>" % {
+                    res.output_full += unicode(_("<p>Mailservers that accept mail to postmaster@%(domain)s:<code>%(postmaster)s</code> </p>" % {
                         "domain" : domain,
                         "postmaster" : postmaster
                     } ))
