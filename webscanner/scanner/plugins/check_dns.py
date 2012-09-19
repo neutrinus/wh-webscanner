@@ -73,7 +73,7 @@ class PluginDNS(PluginMixin):
             records = ""
             for rdata in answers:
                 if IP(rdata.address).iptype() == "PRIVATE":
-                    records += "%s <br"%rdate.address
+                    records += "%s <br"%rdata.address
 
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
             res.output_desc = unicode(_("No private IP in A records ") )
