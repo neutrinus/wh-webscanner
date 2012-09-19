@@ -133,6 +133,8 @@ def optimize_image(input_file, output_path, remove_original=False ):
         ofiles = []
 
     otype = identify_imagetype(ofile)
+    if not otype:
+        return None
     final_file = output_path + "/" + gentmpfilename() +"." + otype.lower()
     shutil.copyfile(ofile, final_file)
 
@@ -169,6 +171,8 @@ class PluginOptiimg(PluginMixin):
                 log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
 
                 ofile = optimize_image(fpath, MEDIA_ROOT+"/", False)
+                if not ofile:
+                    continue
 
                 bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
                 if bytes_saved == 0:
