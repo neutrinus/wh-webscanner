@@ -86,7 +86,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full = unicode(_("<p>All your MX records have reverse records: <code>%s</code></p>"%(reversemxes) ))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>Following MX records for dont have reverse entries: <code>%(noreversemxes)s</code>. Folowing MX records have reverse entries: <code>%s</code>. </p>"%(noreversemxes,reversemxes) ))
+                res.output_full = unicode(_("<p>Following MX records for dont have reverse entries: <code>%(noreversemxes)s</code>. Folowing MX records have reverse entries: <code>%(reversemxes)s</code>. </p>" % { "noreversemxes" : noreversemxes, "reversemxes" : reversemxes} ))
                 res.status = RESULT_STATUS.error
 
             res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
