@@ -49,6 +49,7 @@ class PluginDNSmailRBL(PluginMixin):
             13 : "Manufacturing/Industrial",
             14 : "Retail/Wholesale/Services",
             15 : "Email Marketing Providers",
+            255: "unknown",
         }
 
         dnswl_score = {
@@ -56,8 +57,7 @@ class PluginDNSmailRBL(PluginMixin):
             1: "low <small>(reduce chance of false positives)</small>",
             2: "medium <small>(make sure to avoid false positives but allow override for clear cases)</small>",
             3: "high <small>(avoid override)</small>",
-            4: "unknown",
-
+            255: "unknown",
         }
 
         try:
