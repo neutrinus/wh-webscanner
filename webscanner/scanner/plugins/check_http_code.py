@@ -79,7 +79,7 @@ class PluginCheckHTTPCode(PluginMixin):
             (a,b) = header
             headers += "%s: %s <br>"%(a,b)
 
-        res.output_full += unicode(_("<p>There are different types of compression avalible, <a href='http://en.wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this theme nicely. Headers sent by your webserver: <code>%s</code> </p> "%(headers )))
+        res.output_full += unicode(_("<p>There are different types of compression avalible, <a href='http://en.wikipedia.org/wiki/HTTP_compression'>wikipedia article</a> covers this theme nicly. Headers sent by your webserver: <code>%s</code> </p> "%(headers )))
 
         res.save()
 
