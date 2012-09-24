@@ -240,6 +240,6 @@ PAYPAL_CERT = apath('paypal_cert.pem')
 
 
 # This should be at the very end
-execfile(apath('settings_local.py'))
+#execfile(apath('settings_local.py'))
 #execfile(apath('settings_prod.py'))
 
