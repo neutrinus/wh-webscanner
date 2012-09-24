@@ -257,7 +257,7 @@ class PluginCheckSpelling(PluginMixin):
         limited = True
         if command.test.user and command.test.user.is_authenticated():
             user_profile =  UserProfile.objects.get_or_create(user = command.test.user)[0]
-            if user_profile.is_paid():
+            if command.test.vip_mode:
                 limited = False
 
         files_with_errors = []
@@ -293,7 +293,7 @@ class PluginCheckSpelling(PluginMixin):
                     status=RESULT_STATUS.warning if files_with_errors else\
                            RESULT_STATUS.success)
         r.output_desc = unicode(self.name)
-        r.output_full = template.render(Context({'files':files_with_errors}))
+        r.output_full = template.render(Context({'files':files_with_errors, 'vip_mode': command.test.vip_mode}))
         r.save()
 
         log.info(' * check spelling: END')
