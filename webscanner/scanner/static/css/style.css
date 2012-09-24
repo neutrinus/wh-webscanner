@@ -4,14 +4,10 @@ html {
 }
 
 body {
-/*     color: #3B3B3B; */
     background: url(/static/images/bg.png) left top repeat ;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
-/*     padding-top: 50px; */
     height: 90%;
 }
-
-
 
 .row {
     margin-bottom: 30px;
@@ -35,15 +31,11 @@ table.results {
 
 }
 
-
-
 table.results td {
     margin: 10px;
     padding: 10px;
     vertical-align: top;
 }
-
-
 
 table.results tr td.output_desc {
     width: 150px;
@@ -78,9 +70,6 @@ tr.status_ok td.status {
 tr.status_info td.status {
     color: #3a87ad;
 }
-
-
-
 
 code {
     background-color: #EFEBEC;
