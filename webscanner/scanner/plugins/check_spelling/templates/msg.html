@@ -14,8 +14,12 @@
         </li>
     {% endfor %}
     </ul>
+{% empty %}
+    {% trans "There were no spelling errors." %}
+{% endfor %}
 
-    {% if not request.user.get_profile.is_paid  %}
+
+    {% if not vip_mode  %}
         <div class="alert alert-info">
         {% blocktrans %}
         <b>VIP benefits avalible!</b> As normal user you can see only first 10 errors, while VIP members have full access.
@@ -23,7 +27,4 @@
         </div>
     {% endif %}
 
-{% empty %}
-    {% trans "There were no spelling errors." %}
-{% endfor %}
 </div>

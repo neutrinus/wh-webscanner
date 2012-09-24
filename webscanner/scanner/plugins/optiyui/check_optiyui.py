@@ -111,7 +111,7 @@ class PluginOptiYUI(PluginMixin):
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("JavaScript optimalization"))
-        res.output_full = template.render(Context({'optijses': optifiles["js"], 'btotals':btotals["js"]}))
+        res.output_full = template.render(Context({'optijses': optifiles["js"], 'btotals':btotals["js"], 'vip_mode': command.test.vip_mode}))
         if btotals["js"] < 100*1024:
             res.status = RESULT_STATUS.success
         else:
@@ -122,7 +122,7 @@ class PluginOptiYUI(PluginMixin):
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("CSS optimalization"))
-        res.output_full = template.render(Context({'opticsses': optifiles["css"], 'btotals':btotals["css"]}))
+        res.output_full = template.render(Context({'opticsses': optifiles["css"], 'btotals':btotals["css"], 'vip_mode': command.test.vip_mode}))
         if btotals["css"] < 20*1024:
             res.status = RESULT_STATUS.success
         else:
