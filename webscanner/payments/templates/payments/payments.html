@@ -46,7 +46,7 @@
             <h2>{% trans "Status" %}</h2>
             {% if request.user.get_profile.is_paid %}
                     <p> {% trans "Your VIP membership is paid till " %}{{ request.user.get_profile.paid_till_date }}</p>
-            {% elseif %}
+            {% else %}
                     <p> {% trans "Your VIP membership is not paid." %}</p>
             {% endif %}
 
