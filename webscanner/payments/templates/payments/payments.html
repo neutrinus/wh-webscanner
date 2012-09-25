@@ -43,6 +43,13 @@
 
     <div class="span6">
         <div class="well">
+            <h2>{% trans "Status" %}</h2>
+            {% if request.user.get_profile.is_paid %}
+                    <p> {% trans "Your VIP membership is paid till " %}{{ request.user.get_profile.paid_till_date }}</p>
+            {% elseif %}
+                    <p> {% trans "Your VIP membership is not paid." %}</p>
+            {% endif %}
+
             <h2>{% trans "Subscribe" %}</h2>
             <b>{% trans "Discount" %}:</b>
             {% if coupon %} {{ coupon.percent }}% {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
