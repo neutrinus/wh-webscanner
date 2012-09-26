@@ -142,7 +142,15 @@ def optimize_image(input_file, output_path, remove_original=False ):
         return None
 
     final_file = os.path.join(output_path, gentmpfilename() + "." + otype.lower())
+    log.debug("ofile: %s" % ofile)
+    log.debug("final_file: %s" % final_file)
     shutil.copyfile(ofile, final_file)
+
+    if os.path.exists(ofile):
+        print "ofile jest"
+
+    if os.path.exists(final_file):
+        print "final_file jest"
 
     #remove not needed tmp files
     for filename in ofiles:
@@ -160,8 +168,11 @@ class PluginOptiimg(PluginMixin):
     def run(self, command):
         domain = command.test.domain
         path = command.test.download_path
-
         log.debug("Recursive check image files size in %s "%(path))
+
+        if not (os.path.exists(MEDIA_ROOT) and os.path.isdir(MEDIA_ROOT)):
+            log.error("no such directory: MEDIA_ROOT")
+            return
 
         optiimgs = []
         btotals = 0
@@ -176,7 +187,7 @@ class PluginOptiimg(PluginMixin):
 
                 log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
 
-                ofile = optimize_image(fpath, MEDIA_ROOT+"/", False)
+                ofile = optimize_image(fpath, MEDIA_ROOT, False)
                 if not ofile:
                     continue
 
@@ -187,7 +198,7 @@ class PluginOptiimg(PluginMixin):
                 log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
 
                 a = {   "ifile": fpath[(len(path)+1):],
-                        "ofile": "/" + MEDIA_URL + ofile[len(MEDIA_ROOT+"/")+1:],
+                        "ofile": MEDIA_URL + ofile[len(MEDIA_ROOT+"/")+1:],
                         "ifilesize": os.path.getsize(fpath),
                         "ofilesize": os.path.getsize(ofile),
                         "bytessaved": bytes_saved,
@@ -195,7 +206,6 @@ class PluginOptiimg(PluginMixin):
                         }
                 optiimgs.append(a)
                 btotals += bytes_saved
-
 
         template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
 
