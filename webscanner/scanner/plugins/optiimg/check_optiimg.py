@@ -141,15 +141,15 @@ def optimize_image(input_file, output_path, remove_original=False ):
         log.warning("No otype!")
         return None
 
-    final_file = os.path.join(output_path,  gentmpfilename() +"." + otype.lower())
+    final_file = os.path.join(output_path, gentmpfilename() + "." + otype.lower())
     shutil.copyfile(ofile, final_file)
 
     #remove not needed tmp files
     for filename in ofiles:
         if (filename == input_file) and not remove_original:
             continue
-        if os.path.exists(filename):
-            os.remove(filename)
+        #if os.path.exists(filename):
+            #os.remove(filename)
 
     return(final_file)
 
