@@ -11,9 +11,10 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
     ('neutrinus', 'admin@neutrinus.com'),
-
 )
-MANAGERS = ADMINS
+MANAGERS = (
+    ('neutrinus', 'marek@whitehats.pl'),
+)
 
 ACCOUNT_ACTIVATION_DAYS=1
 DEFAULT_FROM_EMAIL = 'noreply@webcheck.me'
