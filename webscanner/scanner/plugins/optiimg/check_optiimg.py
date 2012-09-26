@@ -132,18 +132,24 @@ def optimize_image(input_file, output_path, remove_original=False ):
         ofile = input_file
         ofiles = []
 
+    if ofile:
+        log.warning("No ofile!")
+        return None
+
     otype = identify_imagetype(ofile)
     if not otype:
+        log.warning("No otype!")
         return None
-    final_file = output_path + "/" + gentmpfilename() +"." + otype.lower()
+
+    final_file = os.path.join(output_path,  gentmpfilename() +"." + otype.lower())
     shutil.copyfile(ofile, final_file)
 
     #remove not needed tmp files
     for filename in ofiles:
         if (filename == input_file) and not remove_original:
             continue
-        #if os.path.exists(filename):
-            #os.remove(filename)
+        if os.path.exists(filename):
+            os.remove(filename)
 
     return(final_file)
 
@@ -196,7 +202,7 @@ class PluginOptiimg(PluginMixin):
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("Images optimalization"))
-        res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals, 'vip_mode': command.test.vip_mode}))
+        res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals, 'vip_mode': command.test.vip_mode }))
 
         if btotals < 500*1024:
             res.status = RESULT_STATUS.success
