@@ -198,7 +198,7 @@ class PluginOptiimg(PluginMixin):
                 log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
 
                 a = {   "ifile": fpath[(len(path)+1):],
-                        "ofile": MEDIA_URL + ofile[len(MEDIA_ROOT+"/")+1:],
+                        "ofile": MEDIA_URL + os.path.basename(ofile),
                         "ifilesize": os.path.getsize(fpath),
                         "ofilesize": os.path.getsize(ofile),
                         "bytessaved": bytes_saved,
