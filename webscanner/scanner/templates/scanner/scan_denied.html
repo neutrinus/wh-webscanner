@@ -12,22 +12,23 @@
 
 <div class="row">
     <div class="span8 offset2 well">
-
 {% blocktrans %}
 <h1>Scan request denied</h1>
-<h3>Non VIP users have limited posibility of frequently scaning websites.</h3>{% endblocktrans %}
+<h3>Non VIP users have limited posibility of frequently scaning websites.</h3>
 
-<p>Unfortunetly we have to cancel your request to perform scan of <a href="{{ url }}">{{ url }}</a>, because we limit frequency of scanning same page by non-VIP users. This limit is aimed to provide best experience to our VIP users. You can be interested in following options:</p>
+<p>Unfortunetly we have to cancel your request to perform scan of <a href="{{ url }}">{{ url }}</a>, because we limit frequency of scanning same page by non-VIP users. This limit is aimed to provide best experience to our VIP users. You can be interested in following options:</p>{% endblocktrans %}
 
 <ul>
 <li style="margin:1em">check out a <a href="{% url scanner_report last_test.uuid %}">archive report</a> for {{ url }} done at {{ last_test.creation_date }} </li>
 <li style="margin:1em"><a href="{% url scanner_index %}">request webcheck scan for <b>another</b> site</a>!</li>
 <li style="margin:1em"><a href="{% if user.is_authenticated %}{% url payments_payments %}{% else %}{% url registration_register %}{% endif %}" class="btn btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Become a VIP" %}</a></li>
 </ul>
-<p>Only VIP members can scan one site without set limit, please check our <a href="{% url scanner_pricing %}">pricing page</a> to know other benefits of membership.</p>
+{% url scanner_pricing as url_scanner_pricing %}
+{% blocktrans %}
+<p>Only VIP members can scan one site without set limit, please check our <a href="{{ url scanner_pricing }}">pricing page</a> to know other benefits of membership.</p>
+{% endblocktrans %}
     </div>
 </div>
-
 
 {% endblock content %}
 
