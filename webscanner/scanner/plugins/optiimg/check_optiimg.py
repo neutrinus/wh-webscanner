@@ -132,7 +132,7 @@ def optimize_image(input_file, output_path, remove_original=False ):
         ofile = input_file
         ofiles = []
 
-    if ofile:
+    if not ofile:
         log.warning("No ofile!")
         return None
 
