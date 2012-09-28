@@ -108,6 +108,11 @@ class Tests(models.Model):
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
     vip_mode            =   models.BooleanField(_(u'VIP mode activated'), default=False)
 
+    check_seo           =   models.BooleanField(_(u'Run SEO checks?'), default=True)
+    check_security      =   models.BooleanField(_(u'Run security checks?'), default=True)
+    check_performance   =   models.BooleanField(_(u'Run performance checks?'), default=True)
+    check_mail          =   models.BooleanField(_(u'Run mail checks?'), default=True)
+
     def __unicode__(self):
         return "%s by %s(vip:%s)"%(self.url,self.user, self.vip_mode )
 

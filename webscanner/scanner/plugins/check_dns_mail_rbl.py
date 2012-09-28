@@ -22,6 +22,10 @@ class PluginDNSmailRBL(PluginMixin):
 
 
     def run(self, command):
+
+        if not command.test.check_mail:
+            return STATUS.success
+
         from scanner.models import Results
         domain = urlparse(command.test.url).hostname
 

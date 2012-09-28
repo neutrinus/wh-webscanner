@@ -125,23 +125,22 @@ class PluginMakeScreenshots(PluginMixin):
                 log.warning("shoot timeout")
 
 
-        res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
-        res.output_desc = unicode(_("Webpage load time"))
-        template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
-        template_data = {
-            'browsernames' : browsernames,
-            'timing' : timing,
-            'max_loadtime': max_loadtime,
-        }
 
-
-        res.output_full = template.render(Context(template_data))
-
-        if max_loadtime > 5000:
-            res.status = RESULT_STATUS.warning
-        if max_loadtime > 15000:
-            res.status = RESULT_STATUS.error
-        res.save()
+        if command.test.check_seo:
+            res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
+            res.output_desc = unicode(_("Webpage load time"))
+            template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
+            template_data = {
+                'browsernames' : browsernames,
+                'timing' : timing,
+                'max_loadtime': max_loadtime,
+            }
+            res.output_full = template.render(Context(template_data))
+            if max_loadtime > 5000:
+                res.status = RESULT_STATUS.warning
+            if max_loadtime > 15000:
+                res.status = RESULT_STATUS.error
+            res.save()
 
         display.sendstop()
         #there was no exception - test finished with success

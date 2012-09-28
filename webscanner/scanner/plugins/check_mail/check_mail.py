@@ -21,6 +21,10 @@ class PluginMail(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
+
+        if not command.test.check_mail:
+            return
+
         from scanner.models import Results
         domain = command.test.domain()
 

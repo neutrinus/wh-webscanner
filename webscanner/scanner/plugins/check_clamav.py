@@ -31,7 +31,8 @@ class PluginClamav(PluginMixin):
     name = unicode(_('Clamscan'))
 
     def run(self, command):
-
+        if not command.test.check_security:
+            return STATUS.success
         try:
             #scan website
             cmd = PATH_CLAMSCAN + " "+ command.test.download_path

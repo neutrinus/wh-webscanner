@@ -30,6 +30,8 @@ class PluginGoogleSafeBrowsing(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
+        if not command.test.check_security:
+            return STATUS.success
         domain = command.test.url
 
         conn = httplib.HTTPSConnection("sb-ssl.google.com")

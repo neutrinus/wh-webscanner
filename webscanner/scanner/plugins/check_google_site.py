@@ -32,6 +32,8 @@ class PluginGoogleSite(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
+        if not command.test.check_seo:
+            return STATUS.success
         domain = command.test.url
 
         query = urllib.urlencode({'q' : 'link:%s'%(domain)})

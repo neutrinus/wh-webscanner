@@ -166,13 +166,16 @@ class PluginOptiimg(PluginMixin):
     wait_for_download = True
 
     def run(self, command):
+        if not command.test.check_performance:
+            return STATUS.success
+
         domain = command.test.domain
         path = command.test.download_path
         log.debug("Recursive check image files size in %s "%(path))
 
         if not (os.path.exists(MEDIA_ROOT) and os.path.isdir(MEDIA_ROOT)):
             log.error("no such directory: MEDIA_ROOT")
-            return
+            return STATUS.exception
 
         optiimgs = []
         btotals = 0

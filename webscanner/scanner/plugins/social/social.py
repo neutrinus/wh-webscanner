@@ -104,6 +104,8 @@ class PluginSocial(PluginMixin):
     def run(self, command):
         from scanner.models import Results
 
+        if not command.test.check_seo:
+            return STATUS.success
         self.check_facebook(command)
         self.check_twitter(command)
         self.check_gplus(command)

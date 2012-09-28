@@ -24,7 +24,8 @@ class PluginDNSmail(PluginMixin):
         from scanner.models import Results
         domain = urlparse(command.test.url).hostname
 
-
+        if not command.test.check_mail:
+            return STATUS.success
         try:
             mxes = ""
             answers = dns.resolver.query(domain, 'MX')

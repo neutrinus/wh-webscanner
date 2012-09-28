@@ -113,6 +113,16 @@ def results(request):
 
         log.debug("User %s(%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, url, test.uuid))
 
+        if not request.POST.get("select_seo"):
+            test.check_seo = False
+        if not request.POST.get("select_security"):
+            test.check_security = False
+        if not request.POST.get("select_performance"):
+            test.check_performance = False
+        if not request.POST.get("select_mail"):
+            test.check_mail = False
+        test.save()
+
         # order all posible commands in transaction - huge performance gain
         with transaction.commit_on_success():
             for testname,plugin in TESTDEF_PLUGINS:

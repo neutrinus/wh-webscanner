@@ -24,6 +24,7 @@ class PluginCheckRobots(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
+
         robotsurl = urlparse.urlparse(command.test.url).scheme + "://" + urlparse.urlparse(command.test.url).netloc +"/robots.txt"
         log.debug("Looking for: %s "%(robotsurl))
 

@@ -63,6 +63,10 @@ class PluginOptiYUI(PluginMixin):
     wait_for_download = True
 
     def run(self, command):
+
+        if not command.test.check_performance:
+            return
+
         domain = command.test.domain
         path = command.test.download_path
         log.debug("Recursive check js/css files size in %s "%(path))
