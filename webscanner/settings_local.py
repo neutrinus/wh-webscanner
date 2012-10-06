@@ -69,4 +69,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_USE_TLS=False
 
 
-
+SELENIUM_HUB = '127.0.0.1'

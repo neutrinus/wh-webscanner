@@ -17,9 +17,10 @@ from time import sleep
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
-from settings import SCREENSHOT_SIZE, MEDIA_ROOT
+from settings import MEDIA_ROOT, SELENIUM_HUB
 from selenium import webdriver
-from pyvirtualdisplay import Display
+from selenium.common.exceptions import WebDriverException
+
 from PIL import Image
 
 from scanner.plugins.optiimg import gentmpfilename, optimize_image
@@ -36,10 +37,11 @@ def alarm_handler(signum, frame):
     raise Alarm
 
 def crop_screenshot(inputfile):
+    """ produce a thumb of screenshot """
     img = Image.open(inputfile)
     box = (0, 0, 940, 400)
     area = img.crop(box)
-    ofile = MEDIA_ROOT+"/screenshots/thumb_"+gentmpfilename()+".png"
+    ofile = os.path.join(MEDIA_ROOT,"/screenshots/", "thumb_"+gentmpfilename()+".png")
     area.save(ofile, 'png')
     return(ofile)
 
@@ -54,45 +56,115 @@ class PluginMakeScreenshots(PluginMixin):
     name = unicode(_('Screenshots'))
     wait_for_download = False
 
+    browsers = [
+        #{
+            #"version": "",
+            #"browseName": "opera",
+            #"platform": "LINUX",
+        #},
+        {
+            "version": "",
+            "browseName": "opera",
+            "platform": "WINDOWS",
+        },
+        {
+            "version": "",
+            "browseName": "chrome",
+            "platform": "LINUX",
+        },
+        {
+            "version": "",
+            "browseName": "chrome",
+            "platform": "WINDOWS",
+        },
+        {
+            "version": "4.0",
+            "browseName": "firefox",
+            "platform": "WINDOWS",
+        },
+        {
+            "version": "4.0",
+            "browseName": "firefox",
+            "platform": "LINUX",
+        },
+        {
+            "version": "7.0",
+            "browseName": "firefox",
+            "platform": "LINUX",
+        },
+        {
+            "version": "7.0",
+            "browseName": "firefox",
+            "platform": "WINDOWS",
+        },
+        {
+            "version": "10.0",
+            "browseName": "firefox",
+            "platform": "LINUX",
+        },
+        {
+            "version": "10.0",
+            "browseName": "firefox",
+            "platform": "WINDOWS",
+        },
+        {
+            "version": "8",
+            "browseName": "iexplore",
+        },
+    ]
+
     def run(self, command):
         url = command.test.url
         from scanner.models import Results
 
-        display = Display(visible=0,size=SCREENSHOT_SIZE)
-        display.start()
-        log.debug("VDisplay started: %s "%(str(display)))
         timing = {}
         max_loadtime = 0
 
-        browsernames = ["firefox", "chrome"]
+        for browser in browsers:
+            filename = os.path.join ('screenshots/', ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png")
 
-        for browsername in browsernames:
-            filename = 'screenshots/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png"
+            browsename =""
+            for key in browser:
+                browsename += "_" + str(browser[key])
+
+            log.debug("Make screenshot with %s" % browser)
 
             signal.signal(signal.SIGALRM, alarm_handler)
             signal.alarm(3*60)  # 3 minutes
 
             try:
-                if browsername == "firefox":
-                    browser = webdriver.Firefox()
-                if browsername == "chrome":
-                    browser = webdriver.Chrome()
+                if browser["browseName"] == "iexplore":
+                    desired_capabilities = webdriver.DesiredCapabilities.INTERNETEXPLORER
+                elif browser["browseName"] == "firefox":
+                    desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
+                elif browser["browseName"] == "chrome":
+                    desired_capabilities = webdriver.DesiredCapabilities.CHROME
+                elif browser["browseName"] == "opera":
+                    desired_capabilities = webdriver.DesiredCapabilities.OPERA
+                else:
+                    print "browser unknown"
+                    continue
 
-                log.debug("Browser %s started: %s "%(browsername, str(browser)))
+                if "version" in browser:
+                    desired_capabilities['version'] =  browser["version"]
+
+                if "platform" in browser:
+                    desired_capabilities['platform'] =  browser["platform"]
+
+                dbrowser = webdriver.Remote(
+                    desired_capabilities=desired_capabilities,
+                    command_executor=SELENIUM_HUB,
+                )
 
                 #http://seleniumhq.org/docs/04_webdriver_advanced.html
-                browser.implicitly_wait(30)
-                sleep(4)
-                browser.get(url)
+                dbrowser.implicitly_wait(30)
+                sleep(1)
+                dbrowser.get(url)
 
                 #give a bit time for loading async-js
-                sleep(3)
-                browser.save_screenshot(MEDIA_ROOT+"/"+filename)
-                thumb = crop_screenshot(MEDIA_ROOT+"/"+filename)
+                sleep(2)
 
-                #optimize snapshot
-                screenshot = optimize_image(MEDIA_ROOT+"/"+filename, MEDIA_ROOT+"/screenshots/", True)
-                screenshot_thumb = optimize_image(thumb, MEDIA_ROOT+"/screenshots/", True)
+                dbrowser.get_screenshot_as_file(os.path.join(MEDIA_ROOT,filename))
 
                 timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
@@ -105,26 +177,25 @@ class PluginMakeScreenshots(PluginMixin):
                 if tmp_timing > max_loadtime:
                     max_loadtime = tmp_timing
 
+                dbrowser.quit()
+                signal.alarm(0)
+
+                thumb = crop_screenshot(os.path.join(MEDIA_ROOT, filename))
+
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
                 res.output_full = template.render(Context({'filename':screenshot[len(MEDIA_ROOT)+1:],
                                                             'thumb': screenshot_thumb[len(MEDIA_ROOT)+1:],
                                                             'browsername': browsername,
-                                                            'browserversion':browser.capabilities['version']}))
+                                                            'browserversion': dbrowser.capabilities['version']}))
                 res.save()
+                log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(MEDIA_ROOT,filename)))
 
-                log.debug("Saving screenshot (result:%s)) in: %s "%(res.pk,MEDIA_ROOT+"/"+filename))
-                browser.quit()
-                signal.alarm(0)
-
-                if browsername == "firefox" and os.path.exists(browser.profile.path):
-                    # if alarm was raised, profile could not be deleted
-                    shutil.rmtree(browser.profile.path)
+            except WebDriverException:
+                log.warning("WebDriverException")
 
             except Alarm:
-                log.warning("shoot timeout")
-
-
+                log.warning("Shoot timeout")
 
         if command.test.check_seo:
             res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
@@ -142,6 +213,5 @@ class PluginMakeScreenshots(PluginMixin):
                 res.status = RESULT_STATUS.error
             res.save()
 
-        display.sendstop()
         #there was no exception - test finished with success
         return STATUS.success
