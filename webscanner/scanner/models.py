@@ -106,7 +106,6 @@ class Tests(models.Model):
     user_ip             =   models.IPAddressField(null=True)
 
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
-    vip_mode            =   models.BooleanField(_(u'VIP mode activated'), default=False)
 
     check_seo           =   models.BooleanField(_(u'Run SEO checks?'), default=True)
     check_security      =   models.BooleanField(_(u'Run security checks?'), default=True)

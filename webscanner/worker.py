@@ -146,10 +146,7 @@ def downloader():
             if test:
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc +urlparse.urlparse(test.url).path
-                if test.vip_mode:
-                    cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*"%(str(tmppath),wwwdomain, domain)
-                else:
-                    cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r1 --max-time=60 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*"%(str(tmppath),wwwdomain, domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*"%(str(tmppath),wwwdomain, domain)
 
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
