@@ -19,16 +19,14 @@ def expdate():
 
 class Coupon(models.Model):
     class Meta:
-        verbose_name = _("one-use coupon code")
+        verbose_name = _("single use coupon code")
 
     used                =   models.BooleanField(_(u'has been used'), default=False)
     code                =   models.CharField(_(u'code'),
                                              max_length=256,
                                              unique=True,
                                              default=make_coupon_code)
-    percent             =   models.IntegerField(_(u'Discount size'),
-                                                help_text=_(u'in percent! ex: 20'),
-                                               )
+    percent             =   models.IntegerField(_(u'Siscount percentage'))
     used_date           =   models.DateTimeField(default=None,
                                                  blank=True,
                                                  null=True)
@@ -51,7 +49,7 @@ class Subscription(models.Model):
     date_subscribed     =   models.DateTimeField(null = True, default = None)
     date_canceled       =   models.DateTimeField(null = True, default = None)
     date_eot            =   models.DateTimeField(null = True, default = None)
-    is_subscribed       =   models.BooleanField(_(u'user is subscribed'), default=False)
+    is_subscribed       =   models.BooleanField(_(u'user has subscribed'), default=False)
 
     price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2, null = True)
     coupon              =   models.ForeignKey("Coupon",blank=True, null=True, default=None)

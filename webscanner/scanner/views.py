@@ -47,6 +47,12 @@ def scan_archive(request):
 def results(request):
     """ page with scann results """
     if request.method == 'POST':
+
+        if not request.user.is_authenticated():
+            return("DUPA")
+
+
+        user_profile =  UserProfile.objects.get_or_create(user = request.user)[0]
         url = request.POST.get("url").lower()
 
         # check if there was many tests from this ip recently and provide a captcha
@@ -77,8 +83,6 @@ def results(request):
         # loop over to run unparse
         urlk = urlparse(urlunparse(urlparse(url)))
 
-        if request.user.is_authenticated():
-            user_profile =  UserProfile.objects.get_or_create(user = request.user)[0]
 
         if request.user.is_authenticated() and user_profile.is_paid():
             url = urlk.geturl()
@@ -100,14 +104,7 @@ def results(request):
                                               },
                                               context_instance=RequestContext(request))
 
-        if request.user.is_authenticated():
-            if user_profile.is_paid():
-                test = Tests(url=url, user=request.user, priority=40, vip_mode=True)
-            else:
-                test = Tests(url=url, user=request.user, priority=20)
-        else:
-            test = Tests(url=url)
-
+        test = Tests(url=url, user=request.user, priority=10)
         test.user_ip = request.META['REMOTE_ADDR']
         test.save()
 

@@ -122,7 +122,7 @@ class PluginDNSmailRBL(PluginMixin):
 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("Mailservers on DNSWL whitelist"))
-            res.output_full = unicode(_("<p>DNSWL is a community driven whitelist of mailservers aim to prevent false-positives in spam filtering.</p> "))
+            res.output_full = unicode(_("<p>DNSWL is a community driven whitelist of mailservers aiming to prevent false-positives in spam filtering.</p> "))
             if not whitelisted:
                 res.output_full += unicode(_("<p>None of your mailservers are listed on <a href='http://www.dnswl.org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please considier <a href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL to improve your success mail delivery rate.</p>"%(results) ))
                 res.status = RESULT_STATUS.warning

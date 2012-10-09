@@ -1,8 +1,4 @@
 
-#: account/views.py:21
-msgid "You have ben logged-out. We will miss you!"
-msgstr "You have been logged out. We will miss you!"
-
 #: account/templates/account/welcome.html:3
 msgid ""
 "Welcome at webcheck! Your registration process is completed. As registred "
@@ -39,23 +35,6 @@ msgstr ""
 
 msgstr ""
 
-#: payments/models.py:22
-msgid "one-use coupon code"
-msgstr "single use coupon code"
-
-
-#: payments/models.py:29
-msgid "Discount size"
-msgstr "Your discount percentage"
-
-#: payments/models.py:30
-msgid "in percent! ex: 20"
-msgstr "niepotrzebne"
-
-
-#: payments/models.py:54
-msgid "user is subscribed"
-msgstr "user has subscribed"
 
 #: payments/views.py:94
 msgid ""
@@ -65,25 +44,6 @@ msgstr ""
 "Thank you! Your payment has been <b>completed</b>! You will get an email "
 "with payment details. Please wait a few seconds while the payment is "
 "processed."
-
-#: payments/templates/payments/payments.html:47
-msgid "Unsubscribe"
-msgstr "Cancel your subscription"
-
-
-#: scanner/models.py:24
-msgid "unsuccess"
-msgstr "failure"
-
-#: scanner/views.py:89
-msgid "Only VIP members are allowed to use non-standart port or https!"
-msgstr "Only VIP members are allowed to use non-standard port or https!"
-
-
-#: scanner/plugins/check_clamav.py:56 scanner/plugins/check_sqlmap.py:55
-msgid "Our antivirus claims that there is no infected files on your website."
-msgstr ""
-"Our antivirus claims that there are none infected files on your website."
 
 
 #: scanner/plugins/check_dns.py:51
@@ -138,14 +98,6 @@ msgstr ""
 "will have your mail in SPAM folder</p>"
 
 
-#: scanner/plugins/check_dns_mail_rbl.py:121
-msgid ""
-"<p>DNSWL is a community driven whitelist of mailservers aim to prevent false-"
-"positives in spam filtering.</p> "
-msgstr ""
-"<p>DNSWL is a community driven whitelist of mailservers aiming to prevent "
-"false positives in spam filtering.</p> "
-
 #: scanner/plugins/check_dns_mail_rbl.py:123
 #, python-format
 msgid ""
@@ -158,34 +110,6 @@ msgstr ""
 "org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please consider <a "
 "href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL "
 "to improve your mail delivery success rate.</p>"
-
-#: scanner/plugins/check_domainexpdate.py:93
-#, python-format
-msgid ""
-"<p>Your domain will be valid till %(date)s. There is still %(days)s days to "
-"renew it.</p>"
-msgstr ""
-"<p>Your domain will be valid untill %(date)s. There are still %(days)s days "
-"to renew it.</p>"
-
-#: scanner/plugins/check_domainexpdate.py:98
-#, python-format
-msgid ""
-"<p>Better renew your domain, its valid till %(date)s! There is only %(days)s "
-"days left.</p>"
-msgstr ""
-"<p>Better renew your domain, it is valid till %(date)s! There are only "
-"%(days)s days left.</p>"
-
-#: scanner/plugins/check_domainexpdate.py:102
-msgid ""
-"<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to "
-"check domain expiration date. Depending on your domain registrar this date "
-"may be inaccurate or outdated.</p> "
-msgstr ""
-"<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to "
-"check domain expiration date. Depending on your domain registration, this "
-"date may be inaccurate or outdated.</p> "
 
 #: scanner/plugins/check_google_site.py:49
 #, python-format
@@ -266,30 +190,6 @@ msgstr ""
 "email as plaintext on your webpage. Use some of cloaking techniques instead."
 "</p>"
 
-#: scanner/plugins/check_plainemail.py:56
-#, python-format
-msgid "<p>We have found folowing email addreses: <code>%s</code> </p>"
-msgstr "<p>We have found following email addreses: <code>%s</code> </p>"
-
-#: scanner/plugins/check_plainemail.py:59
-msgid ""
-"<p>OK, we didnt found any plaintext e-mail addreses on your website.</p>"
-msgstr ""
-"<p>OK, we did not found any plaintext e-mail addreses on your website.</p>"
-
-
-#: scanner/plugins/check_w3c_valid.py:26
-msgid "Check wheter site is in w3c code"
-msgstr "Check whether site is in w3c code"
-
-
-#: scanner/plugins/check_w3c_valid.py:52
-msgid ""
-"<p>Comply with web standards enchances interoperity and may result in better "
-"google positon </p> "
-msgstr ""
-"<p>Complying with web standards enchances interoperity and may result in "
-"better google positon </p> "
 
 
 #: scanner/plugins/check_mail/check_mail.py:116
@@ -484,45 +384,6 @@ msgstr ""
 "performance with highest availability. <b>Webcheck.me</b> was created to be "
 "a handy tool. </p> "
 
-#: scanner/templates/scanner/index.html:97
-msgid "E-mail"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:98
-msgid ""
-"\n"
-"                    <p>This monitoring tool checks not only websites but "
-"also other aspects of communication. <b>Webcheck.me</b> cares about e-mails "
-"too - checks availability of your mailservers, their compliance with "
-"standards and  if they are listed or not on any <b>blacklists (RBL)</b></p> "
-msgstr ""
-
-#: scanner/templates/scanner/index.html:106
-msgid "Want more?"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:107
-msgid "VIP privileges:"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:113 templates/pricing.html:69
-msgid "No limits!"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:117
-msgid "Priority queue"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:118
-msgid ""
-"\n"
-"                    <p>We respect your business time, all your checks and "
-"scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:122
-msgid "Scan deeper"
-msgstr ""
 
 #: scanner/templates/scanner/index.html:123
 msgid ""
@@ -534,133 +395,6 @@ msgstr ""
 "webpages are checked more profoundly and carefully. Just to provide more "
 "acurate hints for your business!"
 
-#: scanner/templates/scanner/index.html:126
-msgid "...and more"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:127
-msgid "Checkout our "
-msgstr ""
-
-#: scanner/templates/scanner/index.html:127
-msgid "features table"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:127
-msgid "to be familiar with all benefits of a VIP account"
-msgstr ""
-
-#: scanner/templates/scanner/index.html:135
-#: scanner/templates/scanner/scan_denied.html:24 templates/pricing.html:124
-msgid "Become a VIP"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:6
-msgid "Webscan results for "
-msgstr ""
-
-#: scanner/templates/scanner/results.html:30
-msgid "Website scan results for "
-msgstr ""
-
-#: scanner/templates/scanner/results.html:31
-msgid "Scan started: "
-msgstr ""
-
-#: scanner/templates/scanner/results.html:44
-msgid "Scan time"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:45
-msgid ""
-"Average website check takes 200 seconds. If your site is particularly slow "
-"it could be even more than 10 minutes. VIP members just got .pdf report in "
-"their mailbox (option available in near future - we are working on it!)."
-msgstr ""
-
-#: scanner/templates/scanner/results.html:48
-msgid "Overall note"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:50
-msgid "basing on all checks below we give your website an overall note:"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:52
-msgid "congratulations!"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:55
-msgid "The numbers!"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:57
-msgid "Scan time: "
-msgstr ""
-
-#: scanner/templates/scanner/results.html:66
-msgid "Siteshots"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:66
-msgid "click on to see fullsize"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:100
-msgid "Mail"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:273
-msgid "Could be better.."
-msgstr ""
-
-#: scanner/templates/scanner/results.html:274
-msgid "Not so bad.."
-msgstr ""
-
-#: scanner/templates/scanner/results.html:275
-msgid "Good!"
-msgstr ""
-
-#: scanner/templates/scanner/results.html:276
-msgid "Congratulations"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:9
-#: scanner/templates/scanner/scan_archive.html:15 templates/base.html:62
-#: templates/pricing.html:62
-msgid "Scan archive"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:16
-msgid "Here you can find your old scans performed by webcheck.me"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:24
-msgid "url"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:25
-msgid "completion"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:26
-msgid "duration"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:27
-msgid "priority"
-msgstr ""
-
-#: scanner/templates/scanner/scan_archive.html:28
-msgid "VIP mode"
-msgstr ""
-
-#: scanner/templates/scanner/scan_captcha.html:6
-#: scanner/templates/scanner/scan_captcha.html:12
-msgid "Confirmation needed"
-msgstr ""
-
 #: scanner/templates/scanner/scan_captcha.html:13
 msgid ""
 "Please fill following captcha codes to confirm that it wasn't an automated "
@@ -669,9 +403,6 @@ msgstr ""
 "Please fill following captcha codes to confirm that it was not an automated "
 "request. Your request will be then processed immediately."
 
-#: scanner/templates/scanner/scan_captcha.html:20
-msgid "Confirm!"
-msgstr ""
 
 #: scanner/templates/scanner/scan_captcha.html:25
 #, python-format
@@ -698,9 +429,6 @@ msgstr ""
 "p>\n"
 "        "
 
-#: scanner/templates/scanner/scan_denied.html:6
-msgid "Scan request denied"
-msgstr ""
 
 #: scanner/templates/scanner/scan_denied.html:15
 #, python-format
@@ -725,33 +453,6 @@ msgstr ""
 "page by non-VIP users. This limit is aimed to provide best experience to our "
 "VIP users. You can be interested in following options:</p>"
 
-#: scanner/templates/scanner/scan_denied.html:27
-#, python-format
-msgid ""
-"\n"
-"<p>Only VIP members can scan one site without set limit, please check our <a "
-"href=\"%(url scanner_pricing)s\">pricing page</a> to know other benefits of "
-"membership.</p>\n"
-msgstr ""
-
-#: templates/403.html:4
-msgid "Error [403] Server error"
-msgstr ""
-
-#: templates/403.html:8
-#, python-format
-msgid ""
-"\n"
-"<h1>Error <b>403</b></h1>\n"
-"<h2>While processing your request(%(request_path)s) there was a server "
-"error</h2>\n"
-"<p>We are sorry for any troubles, we are working to fix this issue as soon "
-"as possible.</p>\n"
-msgstr ""
-
-#: templates/404.html:4
-msgid "[404] Not found"
-msgstr ""
 
 #: templates/404.html:8
 #, python-format
@@ -782,29 +483,6 @@ msgstr ""
 "more careful next time :)</li>\n"
 "</ul>\n"
 
-#: templates/500.html:4
-msgid "Error [500] Server error"
-msgstr ""
-
-#: templates/500.html:8
-#, python-format
-msgid ""
-"\n"
-"<h1>Error <b>500</b></h1>\n"
-"<h2>While processing your request(%(request_path)s) there was a server "
-"error</h2>\n"
-"<p>We are sorry for any troubles, we are working to fix this issue as soon "
-"as possible.</p>\n"
-msgstr ""
-
-#: templates/about.html:4 templates/about.html.py:9
-msgid "About webcheck.me"
-msgstr ""
-
-#: templates/about.html:13
-msgid "History"
-msgstr ""
-
 #: templates/about.html:14
 msgid ""
 "Webcheck.me has been started in very begining of 2012 as a project-branch at "
@@ -818,10 +496,6 @@ msgstr ""
 "our own itch - we needed a tool to test our products. When it was ready we "
 "realized that it is such a brilliant idea that we should share it with the "
 "World - so we are!"
-
-#: templates/about.html:18
-msgid "Mission"
-msgstr ""
 
 #: templates/about.html:19
 msgid ""
@@ -859,90 +533,7 @@ msgstr ""
 "are passionate about python, some others are linux administrators. Thanks to "
 "merging both those talents we have webcheck!"
 
-#: templates/about.html:35
-msgid "Get in touch!"
-msgstr ""
 
-#: templates/about.html:37
-#, python-format
-msgid ""
-"We are waiting for your feedback! Use a <a href=\"%(url_contact)s\">form</a> "
-"to inform us about suggestions and problems."
-msgstr ""
-
-#: templates/base.html:4
-msgid "&laquo; webcheck.me - test a website!"
-msgstr ""
-
-#: templates/base.html:54 templates/registration/password_change_form.html:3
-#: templates/registration/password_change_form.html:9
-msgid "Change password"
-msgstr ""
-
-#: templates/base.html:55
-msgid "Logout"
-msgstr ""
-
-#: templates/base.html:67 templates/registration/registration_form.html:13
-msgid "Register"
-msgstr ""
-
-#: templates/base.html:68 templates/base.html.py:128 templates/base.html:145
-#: templates/registration/login.html:5 templates/registration/login.html:23
-#: templates/registration/login.html:28 templates/registration/login.html:42
-msgid "Login"
-msgstr ""
-
-#: templates/base.html:73
-msgid "Home"
-msgstr ""
-
-#: templates/base.html:74
-msgid "About"
-msgstr ""
-
-#: templates/base.html:75 templates/pricing.html:10
-msgid "Tariffs"
-msgstr ""
-
-#: templates/base.html:76
-msgid "Terms"
-msgstr ""
-
-#: templates/base.html:77
-msgid "Contact"
-msgstr ""
-
-#: templates/base.html:88
-msgid "VIPs got more!"
-msgstr ""
-
-#: templates/base.html:89
-msgid ""
-"Additional benefits are ready for you for only $3.79 weekly. <b>Let's give "
-"it a try!</b>"
-msgstr ""
-
-#: templates/base.html:135 templates/registration/login.html:35
-msgid "Password"
-msgstr ""
-
-#: templates/base.html:138 templates/registration/login.html:38
-msgid "Forgot</a> your password?"
-msgstr ""
-
-#: templates/base.html:138 templates/registration/login.html:38
-msgid "Need an account?"
-msgstr ""
-
-#: templates/base.html:146 templates/registration/login.html:43
-#: templates/registration/registration_form.html:29
-msgid "Cancel"
-msgstr ""
-
-#: templates/base.html:158
-msgid "Something go wrong?"
-msgstr "Something went wrong?"
 
 
 #: templates/pricing.html:30
@@ -953,60 +544,6 @@ msgstr ""
 "We have developed software that is able to do a full snapshot of a page - "
 "without browser limiting frame."
 
-#: templates/pricing.html:30
-msgid "Full page"
-msgstr ""
-
-#: templates/pricing.html:30
-msgid "Website full-page snapshots"
-msgstr ""
-
-#: templates/pricing.html:36
-msgid "Website virus scan"
-msgstr ""
-
-#: templates/pricing.html:43
-msgid "Security tests"
-msgstr ""
-
-#: templates/pricing.html:50
-msgid "SEO tests"
-msgstr ""
-
-#: templates/pricing.html:56
-msgid "Scanning and processing at webcheck is queued. You choose the lane.."
-msgstr ""
-
-#: templates/pricing.html:56
-msgid "Priority queues"
-msgstr ""
-
-#: templates/pricing.html:56
-msgid "Priority"
-msgstr ""
-
-#: templates/pricing.html:57
-msgid "low"
-msgstr ""
-
-#: templates/pricing.html:58
-msgid "normal"
-msgstr ""
-
-#: templates/pricing.html:59
-msgid "high"
-msgstr ""
-
-#: templates/pricing.html:62
-msgid ""
-"In your profile you can find 'scan archive' - subpage with historical scans, "
-"so you can check progress of your websites."
-msgstr ""
-
-#: templates/pricing.html:62
-msgid "Private archive"
-msgstr ""
-
 #: templates/pricing.html:69
 msgid ""
 "We don't allow to scan same url too often (once per month). VIP members do "
@@ -1015,56 +552,6 @@ msgstr ""
 "We do not allow to scan same url too often (once per month). VIP members do "
 "not have this limit!"
 
-#: templates/pricing.html:69
-msgid "Unlimited scans per website"
-msgstr ""
-
-#: templates/pricing.html:75
-msgid ""
-"We guarantee that your archive reports will be available at least 2 months "
-"back in history"
-msgstr ""
-
-#: templates/pricing.html:75
-msgid "Long term archive"
-msgstr ""
-
-#: templates/pricing.html:75
-msgid "Long scan archive"
-msgstr ""
-
-#: templates/pricing.html:81
-msgid ""
-"Our website spider/crawler moves recursivly. This option means that we go "
-"one level deeper - this means that more subpages will be scanned, reports "
-"will be more accurate."
-msgstr ""
-
-#: templates/pricing.html:81
-msgid "Deeper!"
-msgstr ""
-
-#: templates/pricing.html:81
-msgid "Deep scans"
-msgstr ""
-
-#: templates/pricing.html:87
-msgid "HTTPS site scan"
-msgstr ""
-
-#: templates/pricing.html:93
-msgid ""
-"If your website is hosted on port different than 80 - you will need this "
-"feature to scan such site. Very useful for test websites."
-msgstr ""
-
-#: templates/pricing.html:93
-msgid "!80"
-msgstr ""
-
-#: templates/pricing.html:93
-msgid "Website on custom port"
-msgstr ""
 
 #: templates/pricing.html:99
 msgid ""
@@ -1074,43 +561,6 @@ msgstr ""
 "Some results will be provided with more information, ex: 'how to fix this "
 "problem' or 'hints to improve something'"
 
-#: templates/pricing.html:99
-msgid "Know more"
-msgstr ""
-
-#: templates/pricing.html:99
-msgid "Additional hints and solutions"
-msgstr ""
-
-#: templates/pricing.html:111
-msgid "Payment method"
-msgstr ""
-
-#: templates/pricing.html:112
-msgid ""
-"Currently we offer payment via PayPal, but in near future we will add more "
-"options!"
-msgstr ""
-
-#: templates/pricing.html:116
-msgid "Questions?"
-msgstr ""
-
-#: templates/pricing.html:117
-msgid "Please contact us using "
-msgstr ""
-
-#: templates/pricing.html:117
-msgid "contact form"
-msgstr ""
-
-#: templates/pricing.html:122
-msgid "Start now!"
-msgstr ""
-
-#: templates/terms.html:4
-msgid "Terms of service"
-msgstr ""
 
 #: templates/terms.html:45
 msgid ""
@@ -1572,16 +1022,3 @@ msgstr ""
 "\n"
 "</div>\n"
 
-#: templates/registration/login.html:17
-msgid "Your username and password didn't match. Please try again."
-msgstr "Your username and password did not match. Please try again."
-
-#: templates/registration/registration_complete.html:11
-msgid ""
-"A confirmation email has been sent to you. Please <b>check your email</b> "
-"and click on the link to activate your account."
-msgstr ""
-
-#: templates/registration/registration_complete.html:13
-msgid "Haven't got?"
-msgstr "Did you get it?"

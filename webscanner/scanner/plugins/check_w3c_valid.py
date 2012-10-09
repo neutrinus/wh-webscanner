@@ -23,7 +23,7 @@ from logs import log
 class PluginCheckW3CValid(PluginMixin):
 
     name = unicode(_('W3C Validator'))
-    description = unicode(_('Check wheter site is in w3c code'))
+    description = unicode(_('Check whether site is in w3c code'))
     wait_for_download = False
 
     def run(self, command):
@@ -49,7 +49,7 @@ class PluginCheckW3CValid(PluginMixin):
             res.output_full = '<p>W3C Validator marks your website as <b>Invalid</b>. %s <a href="%s">Check details at W3C</a></p>'%(output,checklink)
 
         #TODO
-        res.output_full += unicode(_("<p>Comply with web standards enchances interoperity and may result in better google positon </p> "))
+        res.output_full += unicode(_("<p>Complying with web standards enchances interoperity and may result in better google positon </p> "))
 
         res.save()
 

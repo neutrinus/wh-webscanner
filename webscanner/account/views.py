@@ -18,7 +18,7 @@ from settings import DEFAULT_FROM_EMAIL
 
 def ulogout(request):
     logout(request)
-    messages.info(request, _('You have ben logged-out. We will miss you!'))
+    messages.info(request, _('You have been logged out. We will miss you!'))
 
     next_page = request.REQUEST.get("next", '')
     if next_page:
