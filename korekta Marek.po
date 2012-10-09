@@ -1,90 +1,4 @@
 
-#: account/templates/account/welcome.html:3
-msgid ""
-"Welcome at webcheck! Your registration process is completed. As registred "
-"user you will get features like medium priority queue and scan archive.\n"
-"\n"
-"There are only two steps left to become a VIP:\n"
-"    * visit payments site:"
-msgstr ""
-"Welcome at webcheck! Your registration process is completed. As a registred "
-"user you will get features like medium priority queue and scan archive.\n"
-"\n"
-"There are only two steps left to become a VIP:\n"
-"    * visit payments site:"
-
-#: account/templates/account/welcome.html:6
-msgid ""
-"\n"
-"    * securly pay by Paypal, just click on \"buy now\" button\n"
-"\n"
-"Some of VIP privileges are:\n"
-"    * Unlimited scans per website\n"
-"    * Deeper scans\n"
-"    * Additional hints and solutions\n"
-"    * ... and many more! please visit: "
-msgstr ""
-"\n"
-"    * make secure  payment by Paypal, just click on \"buy now\" button\n"
-"\n"
-"Some of VIP privileges are:\n"
-"    * Unlimited scans per website\n"
-"    * More profound scans\n"
-"    * Additional hints and solutions\n"
-"    * ... and many more! please visit: "
-
-msgstr ""
-
-
-#: payments/views.py:94
-msgid ""
-"Your payment is <b>completed</b>, thank you! You will get an email with "
-"payment details. Please wait a few seconds while the payment is processed"
-msgstr ""
-"Thank you! Your payment has been <b>completed</b>! You will get an email "
-"with payment details. Please wait a few seconds while the payment is "
-"processed."
-
-
-#: scanner/plugins/check_dns.py:51
-msgid ""
-"<p>There are no A records for this domain! It means that nobody can reach "
-"your website.</p>"
-msgstr ""
-"<p>There are none A records for this domain! It means that nobody can reach "
-"your website.</p>"
-
-
-#: scanner/plugins/check_dns.py:67 scanner/plugins/check_dns_mail.py:68
-msgid ""
-"<p>Its important to have servers in different geographic locations, to "
-"increase reliability of your services.</p>"
-msgstr ""
-"<p>It is important to have servers in different geographic locations, to "
-"increase reliability of your services.</p>"
-
-
-
-#: scanner/plugins/check_dns_mail.py:92
-msgid ""
-"<p>All mail servers should have a reverse DNS (PTR) entry for each IP "
-"address (RFC 1912). Missing reverse DNS entries will make many mailservers "
-"to reject your e-mails or mark them as SPAM. </p>"
-msgstr ""
-"<p>All mail servers should have a reverse DNS (PTR) entry for each IP "
-"address (RFC 1912). Missing reverse DNS entries will make many mailservers "
-"reject your e-mails or mark them as SPAM. </p>"
-
-
-#: scanner/plugins/check_dns_mail.py:130
-msgid ""
-"<p>There are no MX records defined for your domain. Having them is essential "
-"to be able to recieve emails for this domain.</p>"
-msgstr ""
-"<p>There are none MX records defined for your domain. Having them is "
-"essential to be able to receive emails for this domain.</p>"
-
-
 
 #: scanner/plugins/check_dns_mail_rbl.py:95
 #, python-format
@@ -135,34 +49,6 @@ msgstr ""
 "%(httpbody)s\">Check it at google</a>. Please check your website because it "
 "is possible that there is %(httpbody)s.</p> "
 
-
-#: scanner/plugins/check_http_code.py:60
-msgid ""
-"<p>This is very low level check - it checks if webserver is reachable and "
-"answering</p> "
-msgstr ""
-"<p>This is very low level check - it checks whether webserver is available "
-"and answering</p> "
-
-#: scanner/plugins/check_http_code.py:75
-msgid ""
-"<p>Server didn't agree to compress http data using any method. HTTP "
-"compression can lower your site traffic volume and speedup page loading.</p>"
-msgstr ""
-"<p>Server didn't agree to compress http data using any method. HTTP "
-"compression can lower your site traffic volume and speed up page loading.</p>"
-
-#: scanner/plugins/check_http_code.py:82
-#, python-format
-msgid ""
-"<p>There are different types of compression avalible, <a href='http://en."
-"wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this "
-"theme nicely. Headers sent by your webserver: <code>%s</code> </p> "
-msgstr ""
-"<p>There are different types of compression avalible, <a href='http://en."
-"wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this "
-"subject sufficiently. Headers sent by your webserver: <code>%s</code> </p> "
-
 #: scanner/plugins/check_pagerank.py:143
 #, python-format
 msgid ""
@@ -190,35 +76,6 @@ msgstr ""
 "email as plaintext on your webpage. Use some of cloaking techniques instead."
 "</p>"
 
-
-
-#: scanner/plugins/check_mail/check_mail.py:116
-#, python-format
-msgid ""
-"<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>"
-"%(nopostmaster)s</code> </p>"
-msgstr ""
-"<p>Mailservers that do not accept mail to postmaster@%(domain)s:<code>"
-"%(nopostmaster)s</code> "
-
-#: scanner/plugins/check_mail/check_mail.py:139
-#, python-format
-msgid ""
-"<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>"
-"%(noabuse)s</code> </p>"
-msgstr ""
-"<p>Mailservers that do not accept mail to abuse@%(domain)s:<code>"
-"%(noabuse)s</code> </p>"
-
-
-#: scanner/plugins/check_mail/check_mail.py:161
-#, python-format
-msgid ""
-"<p>Some(%(number)s) of your %(mx_number)s mailservers didnt accept "
-"connection from our check, details:<code>%(details)s</code></p>"
-msgstr ""
-"<p>Some(%(number)s) of your %(mx_number)s mailservers did not accept "
-"connection from our check, details:<code>%(details)s</code></p>"
 
 
 #: scanner/plugins/check_spelling/templates/msg.html:20

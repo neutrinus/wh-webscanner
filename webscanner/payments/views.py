@@ -91,7 +91,7 @@ def payments(req):
 
 @csrf_exempt
 def paypal_return(req):
-    messages.success(req, _('Your payment is <b>completed</b>, thank you! You will get an email with payment details. Please wait a few seconds while the payment is processed'))
+    messages.success(req, _('Thank You! Your payment has been <b>completed</b>. You will get an email with payment details. Please wait a few seconds while the payment is processed'))
     return redirect(reverse('payments_payments'))
 
 @csrf_exempt
