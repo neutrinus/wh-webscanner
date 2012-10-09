@@ -1,0 +1,1587 @@
+
+#: account/views.py:21
+msgid "You have ben logged-out. We will miss you!"
+msgstr "You have been logged out. We will miss you!"
+
+#: account/templates/account/welcome.html:3
+msgid ""
+"Welcome at webcheck! Your registration process is completed. As registred "
+"user you will get features like medium priority queue and scan archive.\n"
+"\n"
+"There are only two steps left to become a VIP:\n"
+"    * visit payments site:"
+msgstr ""
+"Welcome at webcheck! Your registration process is completed. As a registred "
+"user you will get features like medium priority queue and scan archive.\n"
+"\n"
+"There are only two steps left to become a VIP:\n"
+"    * visit payments site:"
+
+#: account/templates/account/welcome.html:6
+msgid ""
+"\n"
+"    * securly pay by Paypal, just click on \"buy now\" button\n"
+"\n"
+"Some of VIP privileges are:\n"
+"    * Unlimited scans per website\n"
+"    * Deeper scans\n"
+"    * Additional hints and solutions\n"
+"    * ... and many more! please visit: "
+msgstr ""
+"\n"
+"    * make secure  payment by Paypal, just click on \"buy now\" button\n"
+"\n"
+"Some of VIP privileges are:\n"
+"    * Unlimited scans per website\n"
+"    * More profound scans\n"
+"    * Additional hints and solutions\n"
+"    * ... and many more! please visit: "
+
+msgstr ""
+
+#: payments/models.py:22
+msgid "one-use coupon code"
+msgstr "single use coupon code"
+
+
+#: payments/models.py:29
+msgid "Discount size"
+msgstr "Your discount percentage"
+
+#: payments/models.py:30
+msgid "in percent! ex: 20"
+msgstr "niepotrzebne"
+
+
+#: payments/models.py:54
+msgid "user is subscribed"
+msgstr "user has subscribed"
+
+#: payments/views.py:94
+msgid ""
+"Your payment is <b>completed</b>, thank you! You will get an email with "
+"payment details. Please wait a few seconds while the payment is processed"
+msgstr ""
+"Thank you! Your payment has been <b>completed</b>! You will get an email "
+"with payment details. Please wait a few seconds while the payment is "
+"processed."
+
+#: payments/templates/payments/payments.html:47
+msgid "Unsubscribe"
+msgstr "Cancel your subscription"
+
+
+#: scanner/models.py:24
+msgid "unsuccess"
+msgstr "failure"
+
+#: scanner/views.py:89
+msgid "Only VIP members are allowed to use non-standart port or https!"
+msgstr "Only VIP members are allowed to use non-standard port or https!"
+
+
+#: scanner/plugins/check_clamav.py:56 scanner/plugins/check_sqlmap.py:55
+msgid "Our antivirus claims that there is no infected files on your website."
+msgstr ""
+"Our antivirus claims that there are none infected files on your website."
+
+
+#: scanner/plugins/check_dns.py:51
+msgid ""
+"<p>There are no A records for this domain! It means that nobody can reach "
+"your website.</p>"
+msgstr ""
+"<p>There are none A records for this domain! It means that nobody can reach "
+"your website.</p>"
+
+
+#: scanner/plugins/check_dns.py:67 scanner/plugins/check_dns_mail.py:68
+msgid ""
+"<p>Its important to have servers in different geographic locations, to "
+"increase reliability of your services.</p>"
+msgstr ""
+"<p>It is important to have servers in different geographic locations, to "
+"increase reliability of your services.</p>"
+
+
+
+#: scanner/plugins/check_dns_mail.py:92
+msgid ""
+"<p>All mail servers should have a reverse DNS (PTR) entry for each IP "
+"address (RFC 1912). Missing reverse DNS entries will make many mailservers "
+"to reject your e-mails or mark them as SPAM. </p>"
+msgstr ""
+"<p>All mail servers should have a reverse DNS (PTR) entry for each IP "
+"address (RFC 1912). Missing reverse DNS entries will make many mailservers "
+"reject your e-mails or mark them as SPAM. </p>"
+
+
+#: scanner/plugins/check_dns_mail.py:130
+msgid ""
+"<p>There are no MX records defined for your domain. Having them is essential "
+"to be able to recieve emails for this domain.</p>"
+msgstr ""
+"<p>There are none MX records defined for your domain. Having them is "
+"essential to be able to receive emails for this domain.</p>"
+
+
+
+#: scanner/plugins/check_dns_mail_rbl.py:95
+#, python-format
+msgid ""
+"<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</"
+"code></p> <p> Beeing listed on those lists may cause that your reciptiens "
+"will have your mail in SPAM folder</p>"
+msgstr ""
+"<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</"
+"code></p> <p> Being listed on those lists may cause that your recipietns "
+"will have your mail in SPAM folder</p>"
+
+
+#: scanner/plugins/check_dns_mail_rbl.py:121
+msgid ""
+"<p>DNSWL is a community driven whitelist of mailservers aim to prevent false-"
+"positives in spam filtering.</p> "
+msgstr ""
+"<p>DNSWL is a community driven whitelist of mailservers aiming to prevent "
+"false positives in spam filtering.</p> "
+
+#: scanner/plugins/check_dns_mail_rbl.py:123
+#, python-format
+msgid ""
+"<p>None of your mailservers are listed on <a href='http://www.dnswl."
+"org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please considier <a "
+"href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL "
+"to improve your success mail delivery rate.</p>"
+msgstr ""
+"<p>None of your mailservers are listed on <a href='http://www.dnswl."
+"org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please consider <a "
+"href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL "
+"to improve your mail delivery success rate.</p>"
+
+#: scanner/plugins/check_domainexpdate.py:93
+#, python-format
+msgid ""
+"<p>Your domain will be valid till %(date)s. There is still %(days)s days to "
+"renew it.</p>"
+msgstr ""
+"<p>Your domain will be valid untill %(date)s. There are still %(days)s days "
+"to renew it.</p>"
+
+#: scanner/plugins/check_domainexpdate.py:98
+#, python-format
+msgid ""
+"<p>Better renew your domain, its valid till %(date)s! There is only %(days)s "
+"days left.</p>"
+msgstr ""
+"<p>Better renew your domain, it is valid till %(date)s! There are only "
+"%(days)s days left.</p>"
+
+#: scanner/plugins/check_domainexpdate.py:102
+msgid ""
+"<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to "
+"check domain expiration date. Depending on your domain registrar this date "
+"may be inaccurate or outdated.</p> "
+msgstr ""
+"<p> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to "
+"check domain expiration date. Depending on your domain registration, this "
+"date may be inaccurate or outdated.</p> "
+
+#: scanner/plugins/check_google_site.py:49
+#, python-format
+msgid ""
+"<p>There is about %(number_of_sites)s sites linking to your site. <a href="
+"\"%(url)s\">See them!</a></p> <p><small>This data is provided by google and "
+"may be inaccurate.</small></p> "
+msgstr ""
+"<p>There are about %(number_of_sites)s sites linking to your site. <a href="
+"\"%(url)s\">See them!</a></p> <p><small>This data is provided by google and "
+"may be inaccurate.</small></p> "
+
+#: scanner/plugins/check_googlesb.py:52
+#, python-format
+msgid ""
+"<p>Your domain is listed at Google Safe Browsing Blacklist because of "
+"%(httpbody)s. <a href=\"http://www.google.com/safebrowsing/diagnostic?site="
+"%(httpbody)s\">Check it at google</a>. Please check your website because its "
+"possible that there is %(httpbody)s.</p> "
+msgstr ""
+"<p>Your domain is listed at Google Safe Browsing Blacklist because of "
+"%(httpbody)s. <a href=\"http://www.google.com/safebrowsing/diagnostic?site="
+"%(httpbody)s\">Check it at google</a>. Please check your website because it "
+"is possible that there is %(httpbody)s.</p> "
+
+
+#: scanner/plugins/check_http_code.py:60
+msgid ""
+"<p>This is very low level check - it checks if webserver is reachable and "
+"answering</p> "
+msgstr ""
+"<p>This is very low level check - it checks whether webserver is available "
+"and answering</p> "
+
+#: scanner/plugins/check_http_code.py:75
+msgid ""
+"<p>Server didn't agree to compress http data using any method. HTTP "
+"compression can lower your site traffic volume and speedup page loading.</p>"
+msgstr ""
+"<p>Server didn't agree to compress http data using any method. HTTP "
+"compression can lower your site traffic volume and speed up page loading.</p>"
+
+#: scanner/plugins/check_http_code.py:82
+#, python-format
+msgid ""
+"<p>There are different types of compression avalible, <a href='http://en."
+"wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this "
+"theme nicely. Headers sent by your webserver: <code>%s</code> </p> "
+msgstr ""
+"<p>There are different types of compression avalible, <a href='http://en."
+"wikipedia.org/wiki/HTTP_compression>'>wikipedia article</a> covers this "
+"subject sufficiently. Headers sent by your webserver: <code>%s</code> </p> "
+
+#: scanner/plugins/check_pagerank.py:143
+#, python-format
+msgid ""
+"<p>Alexa collects statistics about visits by internet users to websites "
+"through the Alexa Toolbar. Based on the collected data, Alexa computes site "
+"ranking.</p> <ul> <li>Popularity rank: %(pop_rank)s</li> <li>Reachability "
+"rank: %(reach_rank)s</li></ul>"
+msgstr ""
+"<p>Alexa collects statistics about visits to websites through the Alexa "
+"Toolbar. Based on the collected data, Alexa computes site ranking.</p> <ul> "
+"<li>Popularity rank: %(pop_rank)s</li> <li>Reachability rank: "
+"%(reach_rank)s</li></ul>"
+
+#: scanner/plugins/check_plainemail.py:52
+msgid ""
+"<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/"
+"Email_address_harvesting'>email harvesters</a> to send SPAM to email "
+"addresses found on websites. To avoid being spammed you shoudn't put your "
+"email as plaintext on your webpage. Use some of cloaking techniques instead."
+"</p>"
+msgstr ""
+"<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/"
+"Email_address_harvesting'>email harvesters</a> to send SPAM to email "
+"addresses found on websites. To avoid being spammed you shoud not put your "
+"email as plaintext on your webpage. Use some of cloaking techniques instead."
+"</p>"
+
+#: scanner/plugins/check_plainemail.py:56
+#, python-format
+msgid "<p>We have found folowing email addreses: <code>%s</code> </p>"
+msgstr "<p>We have found following email addreses: <code>%s</code> </p>"
+
+#: scanner/plugins/check_plainemail.py:59
+msgid ""
+"<p>OK, we didnt found any plaintext e-mail addreses on your website.</p>"
+msgstr ""
+"<p>OK, we did not found any plaintext e-mail addreses on your website.</p>"
+
+
+#: scanner/plugins/check_w3c_valid.py:26
+msgid "Check wheter site is in w3c code"
+msgstr "Check whether site is in w3c code"
+
+
+#: scanner/plugins/check_w3c_valid.py:52
+msgid ""
+"<p>Comply with web standards enchances interoperity and may result in better "
+"google positon </p> "
+msgstr ""
+"<p>Complying with web standards enchances interoperity and may result in "
+"better google positon </p> "
+
+
+#: scanner/plugins/check_mail/check_mail.py:116
+#, python-format
+msgid ""
+"<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>"
+"%(nopostmaster)s</code> </p>"
+msgstr ""
+"<p>Mailservers that do not accept mail to postmaster@%(domain)s:<code>"
+"%(nopostmaster)s</code> "
+
+#: scanner/plugins/check_mail/check_mail.py:139
+#, python-format
+msgid ""
+"<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>"
+"%(noabuse)s</code> </p>"
+msgstr ""
+"<p>Mailservers that do not accept mail to abuse@%(domain)s:<code>"
+"%(noabuse)s</code> </p>"
+
+
+#: scanner/plugins/check_mail/check_mail.py:161
+#, python-format
+msgid ""
+"<p>Some(%(number)s) of your %(mx_number)s mailservers didnt accept "
+"connection from our check, details:<code>%(details)s</code></p>"
+msgstr ""
+"<p>Some(%(number)s) of your %(mx_number)s mailservers did not accept "
+"connection from our check, details:<code>%(details)s</code></p>"
+
+
+#: scanner/plugins/check_spelling/templates/msg.html:20
+msgid ""
+"\n"
+"        <b>VIP benefits avalible!</b> As normal user you can see only first "
+"10 errors, while VIP members have full access.\n"
+"        "
+msgstr ""
+"\n"
+"        <b>VIP benefits avalible!</b> As a standard user you can only see "
+"first 10 errors, while VIP members have full access.\n"
+
+#: scanner/plugins/optiimg/templates/msg.html:3
+msgid ""
+"Using proved methods, we analize photos and images on your site if there is "
+"possibility to losslossly  shrink them. As images make most of the website "
+"traffic, optimizing them is a easy way to make your site much faster."
+msgstr ""
+"Using proven methods, we analize photos and images on your site if there is "
+"possibility to losslessly  shrink them. As images make most of the website "
+"traffic, optimizing them is an easy way to make your site much faster."
+
+
+#: scanner/plugins/optiyui/templates/css.html:3
+msgid ""
+"Using proven methods, we analize css files on your site if there is "
+"possibility to losslossly minify them. Smaller files means faster loading "
+"your site!"
+msgstr ""
+"Using proven methods, we analize css files on your site if there is "
+"possibility to losslessly decrease their size. Smaller files mean loading "
+"your site faster!"
+
+
+#: scanner/plugins/optiyui/templates/js.html:3
+msgid ""
+"Using advanced methods, we analize javascript files on your site if there is "
+"possibility to losslossly optimize them. Smaller files means faster loading "
+"your site!"
+msgstr ""
+"Using advanced methods, we analize javascript files on your site if there is "
+"possibility to losslessly optimize them. Smaller files mean loading your "
+"site faster !"
+
+
+#: scanner/templates/scanner/index.html:50
+msgid ""
+"\n"
+"                <p>We understand that your time is valuable! We use Bleeding-"
+"Edge-Cloud technology to provide the results to you as fast as possible.\n"
+"                You get your results immediately on your PC. You don't have "
+"to wait untill all the tests are done.</p>\n"
+"                <p>In the near future there will be an option for VIP "
+"members to recive reports by e-mail. You will save more of your precious "
+"time!</p>"
+msgstr ""
+"\n"
+"                <p>We understand that your time is valuable! We use Bleeding-"
+"Edge-Cloud technology to provide you with the results as fast as possible.\n"
+"                You get your results immediately on your PC. You do not have "
+"to wait untill all the tests are completed.</p>\n"
+"                <p>In the near future there will be an option for VIP "
+"members to recive reports by e-mail. You will save more of your precious "
+"time!</p>"
+
+
+#: scanner/templates/scanner/index.html:65
+msgid ""
+"\n"
+"                <p>The world of webbrowsers is huge and changing all the "
+"time. There is Mozilla Firefox, Google Chrome, Internet Explorer, Opera, "
+"Safari and many others. Wait - there are different versions of them!</p>\n"
+"                <p><b>Webcheck.me</b> allows you to check how your page "
+"behaves in different enviroments, by providing full-size <b>website "
+"snapshots</b>.</p> "
+msgstr ""
+"\n"
+"                <p>The world of webbrowsers is huge and everchanging. There "
+"is Mozilla Firefox, Google Chrome, Internet Explorer, Opera, Safari and many "
+"others. Wait - there are different versions of them!</p>\n"
+"                <p><b>Webcheck.me</b> allows you to check how your page "
+"behaves in different environments, by providing full-size <b>website "
+"snapshots</b>.</p> "
+
+#: scanner/templates/scanner/index.html:71
+msgid ""
+"\n"
+"                <p>We measure how fast your webpage performs, then give it a "
+"note. You will know what should be changed to make it faster. Maybe your "
+"page size is too big? Maybe loadtime is too long as well? Let us check it!</"
+"p>\n"
+"                <p>Our algorithms will sugest to you what can be easily "
+"<b>minimalized</b> - images, css styles and html.  </p> "
+msgstr ""
+"\n"
+"                <p>We measure how fast your webpage performs, then give it a "
+"note. You will know what should be changed to make it faster. Maybe your "
+"page size is too big? Maybe loadtime is too long as well? Let us check it!</"
+"p>\n"
+"                <p>Our algorithms will sugest you what can be easily "
+"<b>minimized</b> - images, css styles and html.  </p> "
+
+#: scanner/templates/scanner/index.html:77
+msgid ""
+"\n"
+"                <p>Security problems lead to a decrease in your brand value. "
+"React fast on any malware, viruses or hackers attack before they hit your "
+"customers. Webcheck.me is a perfect tool to monitor and check your website "
+"systematically.</p>\n"
+"                <p>We provide <b>malware check</b>, scan your website "
+"against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</"
+"b>.  </p> "
+msgstr ""
+"\n"
+"                <p>Security problems lead to a decrease in your brand's "
+"value. React fast on any malware, viruses or hackers attack before they "
+"affect your customers. Webcheck.me is a perfect tool to monitor and check "
+"your website systematically.</p>\n"
+"                <p>We provide <b>malware check</b>, scan your website "
+"against <b>viruses</b>, look for <b>XSS</b> holes and <b>SQL injections</"
+"b>.  </p> "
+
+#: scanner/templates/scanner/index.html:85
+msgid ""
+"\n"
+"                    <p>We understand how important it is for your business "
+"to be easily found by search engines (like google or yahoo). This probably "
+"has direct connection with your profits.</p>\n"
+"                    <p><b>webcheck.me</b> checks parameters that influences "
+"on your position in google search. We want to help your customers to reach "
+"you! </p> "
+msgstr ""
+"\n"
+"                    <p>We understand how important it is for your business "
+"to be easily found by search engines (like google or yahoo). This probably "
+"has direct connection to your profits.</p>\n"
+"                    <p><b>webcheck.me</b> checks parameters that influence "
+"your position in google search. We want to help your customers to reach you! "
+"</p> "
+
+#: scanner/templates/scanner/index.html:90
+msgid "Cloud-based"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:91
+msgid ""
+"\n"
+"                    <p>All of our services are cloud-based. There is <b>no "
+"need to install</b> anything on your computer. You can reach it from any "
+"place in the world!</p>\n"
+"\n"
+"                    <p>Our distributed free website scanner gives you "
+"highest performance with high availability. <b>Webcheck.me</b> was created "
+"to be a handy tool. </p> "
+msgstr ""
+"\n"
+"                    <p>All of our services are cloud-based. There is <b>no "
+"need to install</b> anything on your computer. You can reach it from any "
+"place in the world!</p>\n"
+"\n"
+"                    <p>Our distributed free website scanner gives you top "
+"performance with highest availability. <b>Webcheck.me</b> was created to be "
+"a handy tool. </p> "
+
+#: scanner/templates/scanner/index.html:97
+msgid "E-mail"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:98
+msgid ""
+"\n"
+"                    <p>This monitoring tool checks not only websites but "
+"also other aspects of communication. <b>Webcheck.me</b> cares about e-mails "
+"too - checks availability of your mailservers, their compliance with "
+"standards and  if they are listed or not on any <b>blacklists (RBL)</b></p> "
+msgstr ""
+
+#: scanner/templates/scanner/index.html:106
+msgid "Want more?"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:107
+msgid "VIP privileges:"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:113 templates/pricing.html:69
+msgid "No limits!"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:117
+msgid "Priority queue"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:118
+msgid ""
+"\n"
+"                    <p>We respect your business time, all your checks and "
+"scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:122
+msgid "Scan deeper"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:123
+msgid ""
+"We understand how important are results for your business. As VIP your "
+"webpages are checked deeper and with more care. Just to provide more acurate "
+"hints for your business!"
+msgstr ""
+"We understand how important results are for your business. As VIP your "
+"webpages are checked more profoundly and carefully. Just to provide more "
+"acurate hints for your business!"
+
+#: scanner/templates/scanner/index.html:126
+msgid "...and more"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:127
+msgid "Checkout our "
+msgstr ""
+
+#: scanner/templates/scanner/index.html:127
+msgid "features table"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:127
+msgid "to be familiar with all benefits of a VIP account"
+msgstr ""
+
+#: scanner/templates/scanner/index.html:135
+#: scanner/templates/scanner/scan_denied.html:24 templates/pricing.html:124
+msgid "Become a VIP"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:6
+msgid "Webscan results for "
+msgstr ""
+
+#: scanner/templates/scanner/results.html:30
+msgid "Website scan results for "
+msgstr ""
+
+#: scanner/templates/scanner/results.html:31
+msgid "Scan started: "
+msgstr ""
+
+#: scanner/templates/scanner/results.html:44
+msgid "Scan time"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:45
+msgid ""
+"Average website check takes 200 seconds. If your site is particularly slow "
+"it could be even more than 10 minutes. VIP members just got .pdf report in "
+"their mailbox (option available in near future - we are working on it!)."
+msgstr ""
+
+#: scanner/templates/scanner/results.html:48
+msgid "Overall note"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:50
+msgid "basing on all checks below we give your website an overall note:"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:52
+msgid "congratulations!"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:55
+msgid "The numbers!"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:57
+msgid "Scan time: "
+msgstr ""
+
+#: scanner/templates/scanner/results.html:66
+msgid "Siteshots"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:66
+msgid "click on to see fullsize"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:100
+msgid "Mail"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:273
+msgid "Could be better.."
+msgstr ""
+
+#: scanner/templates/scanner/results.html:274
+msgid "Not so bad.."
+msgstr ""
+
+#: scanner/templates/scanner/results.html:275
+msgid "Good!"
+msgstr ""
+
+#: scanner/templates/scanner/results.html:276
+msgid "Congratulations"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:9
+#: scanner/templates/scanner/scan_archive.html:15 templates/base.html:62
+#: templates/pricing.html:62
+msgid "Scan archive"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:16
+msgid "Here you can find your old scans performed by webcheck.me"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:24
+msgid "url"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:25
+msgid "completion"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:26
+msgid "duration"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:27
+msgid "priority"
+msgstr ""
+
+#: scanner/templates/scanner/scan_archive.html:28
+msgid "VIP mode"
+msgstr ""
+
+#: scanner/templates/scanner/scan_captcha.html:6
+#: scanner/templates/scanner/scan_captcha.html:12
+msgid "Confirmation needed"
+msgstr ""
+
+#: scanner/templates/scanner/scan_captcha.html:13
+msgid ""
+"Please fill following captcha codes to confirm that it wasn't an automated "
+"request. Your request will be then processed imedietly."
+msgstr ""
+"Please fill following captcha codes to confirm that it was not an automated "
+"request. Your request will be then processed immediately."
+
+#: scanner/templates/scanner/scan_captcha.html:20
+msgid "Confirm!"
+msgstr ""
+
+#: scanner/templates/scanner/scan_captcha.html:25
+#, python-format
+msgid ""
+"\n"
+"        <h2>We're sorry..</h2>\n"
+"        <p>...but your query looks similar to automated requests from a "
+"computer virus or spyware application. To protect our users, we can’t "
+"process your request without recaptcha validation.</p>\n"
+"        <h3>Need HELP?</h3>\n"
+"        <p>Our support will be happy to provide answers for your questions. "
+"Please use our <a href=\"%(url_contact)s\">contact form</a> to get help.</"
+"p>\n"
+"        "
+msgstr ""
+"\n"
+"        <h2>We are sorry..</h2>\n"
+"        <p>...but your query looks similar to automated requests from a "
+"computer virus or spyware application. To protect our users, we can not "
+"process your request without recaptcha validation.</p>\n"
+"        <h3>Need HELP?</h3>\n"
+"        <p>Our support will be happy to provide answers for your questions. "
+"Please use our <a href=\"%(url_contact)s\">contact form</a> to get help.</"
+"p>\n"
+"        "
+
+#: scanner/templates/scanner/scan_denied.html:6
+msgid "Scan request denied"
+msgstr ""
+
+#: scanner/templates/scanner/scan_denied.html:15
+#, python-format
+msgid ""
+"\n"
+"<h1>Scan request denied</h1>\n"
+"<h3>Non VIP users have limited posibility of frequently scaning websites.</"
+"h3>\n"
+"\n"
+"<p>Unfortunetly we have to cancel your request to perform scan of <a href="
+"\"%(url)s\">%(url)s</a>, because we limit frequency of scanning same page by "
+"non-VIP users. This limit is aimed to provide best experience to our VIP "
+"users. You can be interested in following options:</p>"
+msgstr ""
+"\n"
+"<h1>Scan request denied</h1>\n"
+"<h3>Non VIP users have limited possibility of scaning websites frequently .</"
+"h3>\n"
+"\n"
+"<p>Unfortunately we have to cancel your request to perform scan of <a href="
+"\"%(url)s\">%(url)s</a>, because we limit scanning frequency of the same "
+"page by non-VIP users. This limit is aimed to provide best experience to our "
+"VIP users. You can be interested in following options:</p>"
+
+#: scanner/templates/scanner/scan_denied.html:27
+#, python-format
+msgid ""
+"\n"
+"<p>Only VIP members can scan one site without set limit, please check our <a "
+"href=\"%(url scanner_pricing)s\">pricing page</a> to know other benefits of "
+"membership.</p>\n"
+msgstr ""
+
+#: templates/403.html:4
+msgid "Error [403] Server error"
+msgstr ""
+
+#: templates/403.html:8
+#, python-format
+msgid ""
+"\n"
+"<h1>Error <b>403</b></h1>\n"
+"<h2>While processing your request(%(request_path)s) there was a server "
+"error</h2>\n"
+"<p>We are sorry for any troubles, we are working to fix this issue as soon "
+"as possible.</p>\n"
+msgstr ""
+
+#: templates/404.html:4
+msgid "[404] Not found"
+msgstr ""
+
+#: templates/404.html:8
+#, python-format
+msgid ""
+"\n"
+"<h1>Error <b>404</b></h1>\n"
+"<h2>There is no such address like:  %(request_path)s</h2>\n"
+"<p>But this may help you:</p>\n"
+"<ul>\n"
+"<li>Please check if you have correctly typed website address;</li>\n"
+"<li>Use <a href=\"http://google.com\">google.com</a> to find content you "
+"were looking for;</li>\n"
+"<li>Visit our <a href=\"http://webcheck.me\">main page</a>;</li>\n"
+"<li><a href = \"javascript:history.back()\">Move back in time </a> and be "
+"more carefull for next time :)</li>\n"
+"</ul>\n"
+msgstr ""
+"\n"
+"<h1>Error <b>404</b></h1>\n"
+"<h2>There is no such address like:  %(request_path)s</h2>\n"
+"<p>But this may help you:</p>\n"
+"<ul>\n"
+"<li>Please check if you have correctly typed website address;</li>\n"
+"<li>Use <a href=\"http://google.com\">google.com</a> to find content you "
+"were looking for;</li>\n"
+"<li>Visit our <a href=\"http://webcheck.me\">main page</a>;</li>\n"
+"<li><a href = \"javascript:history.back()\">Move back in time </a> and be "
+"more careful next time :)</li>\n"
+"</ul>\n"
+
+#: templates/500.html:4
+msgid "Error [500] Server error"
+msgstr ""
+
+#: templates/500.html:8
+#, python-format
+msgid ""
+"\n"
+"<h1>Error <b>500</b></h1>\n"
+"<h2>While processing your request(%(request_path)s) there was a server "
+"error</h2>\n"
+"<p>We are sorry for any troubles, we are working to fix this issue as soon "
+"as possible.</p>\n"
+msgstr ""
+
+#: templates/about.html:4 templates/about.html.py:9
+msgid "About webcheck.me"
+msgstr ""
+
+#: templates/about.html:13
+msgid "History"
+msgstr ""
+
+#: templates/about.html:14
+msgid ""
+"Webcheck.me has been started in very begining of 2012 as a project-branch at "
+"<a href=\"http://whitehats.pl\">whitehats.pl</a>. It was like scrach own "
+"itch - we needed a tool to tests our products. When it was ready we realized "
+"that it's so briliant idea that we should share it with the World - so we "
+"are!"
+msgstr ""
+"Webcheck.me has been started in a very begining of 2012 as a project-branch "
+"at <a href=\"http://whitehats.pl\">whitehats.pl</a>. It was like scraching "
+"our own itch - we needed a tool to test our products. When it was ready we "
+"realized that it is such a brilliant idea that we should share it with the "
+"World - so we are!"
+
+#: templates/about.html:18
+msgid "Mission"
+msgstr ""
+
+#: templates/about.html:19
+msgid ""
+"We aim to help fixing world wide web! As today's WEB has many technologies "
+"behind (in its backbone) its very hard to check every part. Webcheck.me is a "
+"compensive tool to easily scan websites for common bugs and problems. We "
+"believe that this will help webmaster everyday job."
+msgstr ""
+"We aim to help fixing world wide web! As today's WEB has many technologies "
+"behind (in its backbone) it is very hard to check every part. Webcheck.me is "
+"a comprehensive tool to easily scan websites for common bugs and problems. "
+"We believe that this will help any webmaster do her/his everyday job."
+
+#: templates/about.html:25
+msgid "Team"
+msgstr ""
+
+#: templates/about.html:26
+msgid ""
+"Webcheck.me team is part of the <a href=\"http://whitehats.pl\">whitehats."
+"pl</a> company - fanatics that develop cutting-edge tools and solutions."
+msgstr ""
+
+#: templates/about.html:30
+msgid "Webcheck.me engine"
+msgstr ""
+
+#: templates/about.html:31
+msgid ""
+"It’s the best people who make our software so extraordinary. Most of us "
+"passionate about python, some others are linux administrators. Thanks to "
+"merging both those talents we have webcheck!"
+msgstr ""
+"These are the best people who make our software so extraordinary. Most of us "
+"are passionate about python, some others are linux administrators. Thanks to "
+"merging both those talents we have webcheck!"
+
+#: templates/about.html:35
+msgid "Get in touch!"
+msgstr ""
+
+#: templates/about.html:37
+#, python-format
+msgid ""
+"We are waiting for your feedback! Use a <a href=\"%(url_contact)s\">form</a> "
+"to inform us about suggestions and problems."
+msgstr ""
+
+#: templates/base.html:4
+msgid "&laquo; webcheck.me - test a website!"
+msgstr ""
+
+#: templates/base.html:54 templates/registration/password_change_form.html:3
+#: templates/registration/password_change_form.html:9
+msgid "Change password"
+msgstr ""
+
+#: templates/base.html:55
+msgid "Logout"
+msgstr ""
+
+#: templates/base.html:67 templates/registration/registration_form.html:13
+msgid "Register"
+msgstr ""
+
+#: templates/base.html:68 templates/base.html.py:128 templates/base.html:145
+#: templates/registration/login.html:5 templates/registration/login.html:23
+#: templates/registration/login.html:28 templates/registration/login.html:42
+msgid "Login"
+msgstr ""
+
+#: templates/base.html:73
+msgid "Home"
+msgstr ""
+
+#: templates/base.html:74
+msgid "About"
+msgstr ""
+
+#: templates/base.html:75 templates/pricing.html:10
+msgid "Tariffs"
+msgstr ""
+
+#: templates/base.html:76
+msgid "Terms"
+msgstr ""
+
+#: templates/base.html:77
+msgid "Contact"
+msgstr ""
+
+#: templates/base.html:88
+msgid "VIPs got more!"
+msgstr ""
+
+#: templates/base.html:89
+msgid ""
+"Additional benefits are ready for you for only $3.79 weekly. <b>Let's give "
+"it a try!</b>"
+msgstr ""
+
+#: templates/base.html:135 templates/registration/login.html:35
+msgid "Password"
+msgstr ""
+
+#: templates/base.html:138 templates/registration/login.html:38
+msgid "Forgot</a> your password?"
+msgstr ""
+
+#: templates/base.html:138 templates/registration/login.html:38
+msgid "Need an account?"
+msgstr ""
+
+#: templates/base.html:146 templates/registration/login.html:43
+#: templates/registration/registration_form.html:29
+msgid "Cancel"
+msgstr ""
+
+#: templates/base.html:158
+msgid "Something go wrong?"
+msgstr "Something went wrong?"
+
+
+#: templates/pricing.html:30
+msgid ""
+"We have developed a software that is able to do a full snapshoot of a page - "
+"without browser limiting frame."
+msgstr ""
+"We have developed software that is able to do a full snapshot of a page - "
+"without browser limiting frame."
+
+#: templates/pricing.html:30
+msgid "Full page"
+msgstr ""
+
+#: templates/pricing.html:30
+msgid "Website full-page snapshots"
+msgstr ""
+
+#: templates/pricing.html:36
+msgid "Website virus scan"
+msgstr ""
+
+#: templates/pricing.html:43
+msgid "Security tests"
+msgstr ""
+
+#: templates/pricing.html:50
+msgid "SEO tests"
+msgstr ""
+
+#: templates/pricing.html:56
+msgid "Scanning and processing at webcheck is queued. You choose the lane.."
+msgstr ""
+
+#: templates/pricing.html:56
+msgid "Priority queues"
+msgstr ""
+
+#: templates/pricing.html:56
+msgid "Priority"
+msgstr ""
+
+#: templates/pricing.html:57
+msgid "low"
+msgstr ""
+
+#: templates/pricing.html:58
+msgid "normal"
+msgstr ""
+
+#: templates/pricing.html:59
+msgid "high"
+msgstr ""
+
+#: templates/pricing.html:62
+msgid ""
+"In your profile you can find 'scan archive' - subpage with historical scans, "
+"so you can check progress of your websites."
+msgstr ""
+
+#: templates/pricing.html:62
+msgid "Private archive"
+msgstr ""
+
+#: templates/pricing.html:69
+msgid ""
+"We don't allow to scan same url too often (once per month). VIP members do "
+"not have this limit!"
+msgstr ""
+"We do not allow to scan same url too often (once per month). VIP members do "
+"not have this limit!"
+
+#: templates/pricing.html:69
+msgid "Unlimited scans per website"
+msgstr ""
+
+#: templates/pricing.html:75
+msgid ""
+"We guarantee that your archive reports will be available at least 2 months "
+"back in history"
+msgstr ""
+
+#: templates/pricing.html:75
+msgid "Long term archive"
+msgstr ""
+
+#: templates/pricing.html:75
+msgid "Long scan archive"
+msgstr ""
+
+#: templates/pricing.html:81
+msgid ""
+"Our website spider/crawler moves recursivly. This option means that we go "
+"one level deeper - this means that more subpages will be scanned, reports "
+"will be more accurate."
+msgstr ""
+
+#: templates/pricing.html:81
+msgid "Deeper!"
+msgstr ""
+
+#: templates/pricing.html:81
+msgid "Deep scans"
+msgstr ""
+
+#: templates/pricing.html:87
+msgid "HTTPS site scan"
+msgstr ""
+
+#: templates/pricing.html:93
+msgid ""
+"If your website is hosted on port different than 80 - you will need this "
+"feature to scan such site. Very useful for test websites."
+msgstr ""
+
+#: templates/pricing.html:93
+msgid "!80"
+msgstr ""
+
+#: templates/pricing.html:93
+msgid "Website on custom port"
+msgstr ""
+
+#: templates/pricing.html:99
+msgid ""
+"To some of results will be added more informations, ex: 'how to fix this "
+"problem' or 'hints to improve something'"
+msgstr ""
+"Some results will be provided with more information, ex: 'how to fix this "
+"problem' or 'hints to improve something'"
+
+#: templates/pricing.html:99
+msgid "Know more"
+msgstr ""
+
+#: templates/pricing.html:99
+msgid "Additional hints and solutions"
+msgstr ""
+
+#: templates/pricing.html:111
+msgid "Payment method"
+msgstr ""
+
+#: templates/pricing.html:112
+msgid ""
+"Currently we offer payment via PayPal, but in near future we will add more "
+"options!"
+msgstr ""
+
+#: templates/pricing.html:116
+msgid "Questions?"
+msgstr ""
+
+#: templates/pricing.html:117
+msgid "Please contact us using "
+msgstr ""
+
+#: templates/pricing.html:117
+msgid "contact form"
+msgstr ""
+
+#: templates/pricing.html:122
+msgid "Start now!"
+msgstr ""
+
+#: templates/terms.html:4
+msgid "Terms of service"
+msgstr ""
+
+#: templates/terms.html:45
+msgid ""
+"\n"
+"<div class=\"section\">\n"
+"<h1>Webcheck.me Service Regulations</h1>\n"
+"\n"
+"<dd>General provisions</dd>\n"
+"<dt>These Regulations define the conditions of the provision of webcheck.me "
+"service by\n"
+"the Provider which is WHITE HATS Marek Hobler with its registered office in "
+"Wrocław,\n"
+"Poland, address: ul. Powstańców Sląskich 5/206, Wrocław, Poland, hereinafter "
+"reffered to\n"
+"as the Provider.\n"
+"\n"
+"The terms used in the Regulations mean:</dt>\n"
+"\n"
+"<dk >\"subscription\" – a service allowing the Subscriber to use webcheck.me "
+"service rendered by the Provider in VIP mode;</dk>\n"
+"\n"
+"<dk>\"Subscriber\" – a person using the subscription bound with the Provider "
+"by means of the contract for the provision of webcheck.me service;</dk>\n"
+"\n"
+"<dk>\"tariffs\" – an annex to the contract defining the amount of fees which "
+"is not a part of the contract and may be updated according to the rules "
+"stipulated in the regulations;</dk>\n"
+"\n"
+"<dk>\"subscription period\" – a week – long period for which the settlement "
+"of the subscription is made on the grounds of rendering webcheck.me service, "
+"which begins and finishes on certain days of calendar months indicated by "
+"the Provider of the service;</dk>\n"
+"\n"
+"<dk>\"package\" – a group of rules available to define which constitute "
+"webcheck.me service rendered by the Provider for the Subscriber at certain "
+"price and under certain conditions;</dk>\n"
+"\n"
+"<dk>\"webcheck.me system\" – the Provider’s technology by means of which he "
+"renders webcheck.me service which includes software and computer "
+"infrastructure belonging to the Provider of the service. webcheck.me system "
+"comprises monitoring center monitoring stations, graphic interface, "
+"reporting system and notifying system;</dk>\n"
+"\n"
+"<dk>\"webcheck.me service\" – the service of monitoring internet services "
+"and applications rendered through the Internet by means of webcheck.me "
+"service;</dk>\n"
+"\n"
+"<br />\n"
+"<dt>webcheck.me service requires having a computer connected to the "
+"Internet, with a web browser;</dt>\n"
+"\n"
+"<dt>In order to ensure proper operation of the Services it is necessary to "
+"install the following browsers: Internet Explorer, Firefox, Opera, Chrome, "
+"Safari, with a recommendation that they are the latest stable versions of "
+"these browsers.</dt>\n"
+"\n"
+"\n"
+"<dt>Customer who is a consumer has the right to rescind the contract without "
+"giving a reason within 10 days from the date on which the contract was "
+"concluded, by submitting an appropriate declaration in writing</dt>\n"
+"\n"
+"<dt>The provider reserves the right to change the Regulations. The changes "
+"start being valid from the moment of publication of the new version of the "
+"Regulations on the website: WWW <a href=\"http://webcheck.me\">http://"
+"webcheck.me</a>. In case of the change in Regulations, Customer has the "
+"right to rescind the contract under the condition that he sends written "
+"declaration within 14 days from the date on which the new version of the "
+"Regulations was published, in according to the rules specified in the "
+"section \" Complaint proceedings\" of these Regulations.</dt>\n"
+"\n"
+"<dd>Personal data protection</dd>\n"
+"\n"
+"    <dt>From the moment of registration and activation of the profile the "
+"User gives consent to process his e-mail address and other personal details "
+"given in oder to register for the purposes specified in the preceding and "
+"the information section; in particular the User gives consent to receive "
+"reports or information from the Provider or other subjects (with the "
+"knowledge and explicit acceptance of the Provider) and information "
+"considering products or services of the Provider as well as other subjects "
+"(with the knowledge and explicit acceptance of the Provider).</dt>\n"
+"    <dt>The User has the right to inspect his personal data and to correct "
+"it.</dt>\n"
+"\n"
+"<dd>The obligation to comply with the law</dd>\n"
+"    <dt>If the Provider obtains information that the Customer uses webcheck."
+"me service against the provisions of the law, the Provider has the right to "
+"deprive the Customer of the access to webcheck.me service and process his "
+"personal data in order to establish his responsibility as well as to pass "
+"the data to appropriate public authorities.</dt>\n"
+"\n"
+"<dd>Concluding a contract and activating webcheck.me service</dd>\n"
+"\n"
+"    <dt>webcheck.me service shall be ordered through registration on the "
+"website: <a href=\"http://webcheck.me\">webcheck.me</a>, then  making "
+"payment of the amount of the subscription;</dt>\n"
+"\n"
+"    <dt>Concluding a contract for webcheck.me service is possible by means "
+"of the contract form in administrator’s panel.</dt>\n"
+"\n"
+"    <dt>Upon conclusion of the contract the person becomes Subscriber.</dt>\n"
+"\n"
+"    <dt>The contract may be concluded for the specified period of time.</"
+"dt>\n"
+"\n"
+"    <dt>The contract for the specified period of time is concluded for the "
+"period of a month from the date on which the service was activated.</dt>\n"
+"\n"
+"    <dt>After a period of time for which the contract was valid, the "
+"contract is automatically renewed for the indefinite period, unless the "
+"Subscriber declares in written form at least a\n"
+"    month before the end of period of the duration of the contract ( the "
+"date of the postmark shall be decisive) under pain of nullity.</dt>\n"
+"\n"
+"    <dt>The date of termination of the contract shall be the date after "
+"which new subscription fee shall be paid. In case of a lack of booked "
+"payment on the bank account to the time of the termination of the previous "
+"subscription, the contract shall be considered terminated.</dt>\n"
+"\n"
+"    <dt>Activation of the service happens after the payment of the "
+"activation fee.</dt>\n"
+"\n"
+"    <dt>First day of rendering webcheck.me service to the Subscriber shall "
+"be the first working day after the day on which the activation fee was paid "
+"to the Provider’s bank account unless the Contract concluded in written form "
+"stipulates otherwise.</dt>\n"
+"\n"
+"<dd>Payments</dd>\n"
+"\n"
+"    <dt>The amount of the payments is enclosed in the price list on the "
+"subwebsite <a href=\"http://www.webcheck.me\">www.webcheck.me</a>.</dt>\n"
+"\n"
+"    <dt>The payment shall be made in advance for the subscription period and "
+"the type of the subscription chosen by the Customer.</dt>\n"
+"\n"
+"    <dt>The payment for the service relates to the subcription period "
+"pursuant to the order placed by the Customer. </dt>\n"
+"\n"
+"    <dt>We do not accept refunds</dt>\n"
+"\n"
+"<dd>Invoices for webcheck.me service</dd>\n"
+"\n"
+"    <dt>The Subscriber receives an invoice at request choosing appropriate "
+"option in the settings of the service or sending e-mail to the address <a "
+"href=\"mailto:support@webcheck.me\">support@webcheck.me</a>.</dt>\n"
+"\n"
+"    <dt>The day of making payment shall be the day on which the fee is noted "
+"on the Provider’s bank account.</dt>\n"
+"\n"
+"<dd>Obligations and responsibility of the Customer</dd>\n"
+"\n"
+"    <dt>The Customer shall be obliged to inform the Provider about all the "
+"changes that may influence the performance of the Contract.</dt>\n"
+"\n"
+"    <dt>The Customer is obliged to give true personal details in the process "
+"of ordering the service.</dt>\n"
+"\n"
+"    <dt>The Customer is obliged to make payments on time.</dt>\n"
+"\n"
+"    <dt>Scanned website cannot have more than 100 subwebsites. Limits of the "
+"subwebsites are fixed individually and are dependent on the choice of the "
+"test.</dt>\n"
+"\n"
+"    <dt>The Customer bears entire responsibility for using webcheck.me "
+"service rendered by the Provider. </dt>\n"
+"\n"
+"    <dt>The Customer agrees to use the service in a manner compatible with "
+"the rights of third-parties (personal rights, copyrights), morals or laws.</"
+"dt>\n"
+"\n"
+"    <dt>The Provider has the right to cease rendering the service "
+"immediately or terminate the contract with the Subscriber without the right "
+"to obtain the repayment of the unused subscription fee, if:</dt>\n"
+"\n"
+"        <dk>the Subscriber breaches the provisions of the contract.</dk>\n"
+"        <dk>the Subscriber uses webcheck.me service against its purpose and "
+"certain parameters.</dk>\n"
+"        <dk>the Subscriber acts to the detriment of other Customers of the "
+"Provider or the users of the Internet.</dk>\n"
+"\n"
+"<dd>Obligations and resposibility of the Provider</dd>\n"
+"\n"
+"    <dt>The Provider obliges himself to activate webcheck.me service in "
+"accordance with the contract.</dt>\n"
+"\n"
+"    <dt>The Provider is obliged to render webcheck.me service in a full "
+"range with due dilligence. The Provider does not bear responsibility for "
+"failure to configure or inappropriate configuring the service.</dt>\n"
+"\n"
+"    <dt>The Provider reserves the right to possibly short service breaks in "
+"rendering the service due to servicing and maintenance of the system as well "
+"as implementing new functionalities.</dt>\n"
+"\n"
+"    <dt>The Provider is not responsible for possible damages that may occur "
+"as a result of:</dt>\n"
+"        <dk>lack of continuity in rendering services being a result of an "
+"action or negligence of third parties,</dk>\n"
+"        <dk>data loss as a result from technical failures, force majeure or "
+"natural disasters</dk>\n"
+"        <dk>natural distaters, inappropriate use of the service, using "
+"information passed to the Customer authorizing access to the service by "
+"third parties, infringing the provisions of the contract by the Customer.</"
+"dk>\n"
+"\n"
+"\n"
+"<dd>Complaint proceedings</dd>\n"
+"\n"
+"    <dt>The complaint of the Subscriber due to non-performance or "
+"inappropriate performance of webcheck.me services shall be filed with the "
+"Provider in written form to the correspondence address. The complaint shall "
+"specify:</dt>\n"
+"\n"
+"        <dk>Subscriber’s personal details enabling the contact and "
+"identification of the Subscriber,</dk>\n"
+"        <dk>type of service pertaining to the complaint,</dk>\n"
+"        <dk>Subscriber’s complaints,</dk>\n"
+"        <dk>circumstances justifying the complaint,</dk>\n"
+"        <dk>potential demanded way of removing the alleged infringement.</"
+"dk>\n"
+"\n"
+"\n"
+"<dd>Final provisions</dd>\n"
+"\n"
+"    <dt>The governing law for this Contract between the Subscriber and the "
+"Provider shall be the Polish law.</dt>\n"
+"    <dt>The Provider reserves the right to terminate the contract with "
+"immediate effect in case the Customer breaches the provisions of the "
+"Regulations or the contract.</dt>\n"
+"\n"
+"    <dt>The Regulations come into force on 1st January 2012.</dt>\n"
+"\n"
+"</div>\n"
+msgstr ""
+"\n"
+"<div class=\"section\">\n"
+"<h1>Webcheck.me Service Regulations</h1>\n"
+"\n"
+"<dd>General provisions</dd>\n"
+"<dt>These Regulations define the conditions of the provision of webcheck.me "
+"service by\n"
+"the Provider which is WHITE HATS Marek Hobler with its registered office in "
+"Wrocław,\n"
+"Poland, address: ul. Powstańców Sląskich 5/206, Wrocław, Poland, hereinafter "
+"reffered to\n"
+"as the Provider.\n"
+"\n"
+"The terms used in the Regulations mean:</dt>\n"
+"\n"
+"<dk >\"subscription\" – a service allowing the Subscriber to use webcheck.me "
+"service rendered by the Provider in VIP mode;</dk>\n"
+"\n"
+"<dk>\"Subscriber\" – a person using the subscription bound with the Provider "
+"by means of the contract for the provision of webcheck.me service;</dk>\n"
+"\n"
+"<dk>\"tariffs\" – an annex to the contract defining the amount of fees which "
+"is not a part of the contract and may be updated according to the rules "
+"stipulated in the regulations;</dk>\n"
+"\n"
+"<dk>\"subscription period\" – a week – long period for which the settlement "
+"of the subscription is made on the grounds of rendering webcheck.me service, "
+"which begins and finishes on certain days of calendar months indicated by "
+"the Provider of the service;</dk>\n"
+"\n"
+"<dk>\"package\" – a group of rules available to define which constitute "
+"webcheck.me service rendered by the Provider for the Subscriber at certain "
+"price and under certain conditions;</dk>\n"
+"\n"
+"<dk>\"webcheck.me system\" – the Provider’s technology by means of which he "
+"renders webcheck.me service which includes software and computer "
+"infrastructure belonging to the Provider of the service. webcheck.me system "
+"comprises monitoring center, monitoring stations, graphic interface, "
+"reporting system and notifying system;</dk>\n"
+"\n"
+"<dk>\"webcheck.me service\" – the service of monitoring internet services "
+"and applications rendered through the Internet by means of webcheck.me "
+"service;</dk>\n"
+"\n"
+"<br />\n"
+"<dt>webcheck.me service requires having a computer connected to the "
+"Internet, with a web browser;</dt>\n"
+"\n"
+"<dt>In order to ensure proper operation of the Services it is necessary to "
+"install the following browsers: Internet Explorer, Firefox, Opera, Chrome, "
+"Safari, with a recommendation that they are the latest stable versions of "
+"these browsers.</dt>\n"
+"\n"
+"\n"
+"<dt>Customer who is a consumer has the right to rescind the contract without "
+"giving a reason within 10 days from the date on which the contract was "
+"concluded, by submitting an appropriate declaration in writing</dt>\n"
+"\n"
+"<dt>The provider reserves the right to change the Regulations. The changes "
+"start being valid from the moment of publication of the new version of the "
+"Regulations on the website: WWW <a href=\"http://webcheck.me\">http://"
+"webcheck.me</a>. In case of the change in Regulations, Customer has the "
+"right to rescind the contract under the condition that he sends written "
+"declaration within 14 days from the date on which the new version of the "
+"Regulations was published, in according to the rules specified in the "
+"section \" Complaint proceedings\" of these Regulations.</dt>\n"
+"\n"
+"<dd>Personal data protection</dd>\n"
+"\n"
+"    <dt>From the moment of registration and activation of the profile the "
+"User gives consent to process his e-mail address and other personal details "
+"given in oder to register for the purposes specified in the preceding and "
+"the information section; in particular the User gives consent to receive "
+"reports or information from the Provider or other subjects (with the "
+"knowledge and explicit acceptance of the Provider) and information "
+"considering products or services of the Provider as well as other subjects "
+"(with the knowledge and explicit acceptance of the Provider).</dt>\n"
+"    <dt>The User has the right to inspect his personal data and to correct "
+"it.</dt>\n"
+"\n"
+"<dd>The obligation to comply with the law</dd>\n"
+"    <dt>If the Provider obtains information that the Customer uses webcheck."
+"me service against the provisions of the law, the Provider has the right to "
+"deprive the Customer of the access to webcheck.me service and process his "
+"personal data in order to establish his responsibility as well as to pass "
+"the data to appropriate public authorities.</dt>\n"
+"\n"
+"<dd>Concluding a contract and activating webcheck.me service</dd>\n"
+"\n"
+"    <dt>webcheck.me service shall be ordered through registration on the "
+"website: <a href=\"http://webcheck.me\">webcheck.me</a>, then  making "
+"payment of the amount of the subscription;</dt>\n"
+"\n"
+"    <dt>Concluding a contract for webcheck.me service is possible by means "
+"of the contract form in administrator’s panel.</dt>\n"
+"\n"
+"    <dt>Upon conclusion of the contract the person becomes Subscriber.</dt>\n"
+"\n"
+"    <dt>The contract may be concluded for the specified period of time.</"
+"dt>\n"
+"\n"
+"    <dt>The contract for the specified period of time is concluded for the "
+"period of a month from the date on which the service was activated.</dt>\n"
+"\n"
+"    <dt>After a period of time for which the contract was valid, the "
+"contract is automatically renewed for the indefinite period, unless the "
+"Subscriber declares in written form at least a\n"
+"    month before the end of period of the duration of the contract ( the "
+"date of the postmark shall be decisive) under pain of nullity.</dt>\n"
+"\n"
+"    <dt>The date of termination of the contract shall be the date after "
+"which new subscription fee shall be paid. In case of a lack of booked "
+"payment on the bank account to the time of the termination of the previous "
+"subscription, the contract shall be considered terminated.</dt>\n"
+"\n"
+"    <dt>Activation of the service happens after the payment of the "
+"activation fee.</dt>\n"
+"\n"
+"    <dt>First day of rendering webcheck.me service to the Subscriber shall "
+"be the first working day after the day on which the activation fee was paid "
+"to the Provider’s bank account unless the Contract concluded in written form "
+"stipulates otherwise.</dt>\n"
+"\n"
+"<dd>Payments</dd>\n"
+"\n"
+"    <dt>The amount of the payments is enclosed in the price list on the "
+"subwebsite <a href=\"http://www.webcheck.me\">www.webcheck.me</a>.</dt>\n"
+"\n"
+"    <dt>The payment shall be made in advance for the subscription period and "
+"the type of the subscription chosen by the Customer.</dt>\n"
+"\n"
+"    <dt>The payment for the service relates to the subcription period "
+"pursuant to the order placed by the Customer. </dt>\n"
+"\n"
+"    <dt>We do not accept refunds</dt>\n"
+"\n"
+"<dd>Invoices for webcheck.me service</dd>\n"
+"\n"
+"    <dt>The Subscriber receives an invoice at request choosing appropriate "
+"option in the settings of the service or sending e-mail to the address <a "
+"href=\"mailto:support@webcheck.me\">support@webcheck.me</a>.</dt>\n"
+"\n"
+"    <dt>The day of making payment shall be the day on which the fee is noted "
+"on the Provider’s bank account.</dt>\n"
+"\n"
+"<dd>Obligations and responsibility of the Customer</dd>\n"
+"\n"
+"    <dt>The Customer shall be obliged to inform the Provider about all the "
+"changes that may influence the performance of the Contract.</dt>\n"
+"\n"
+"    <dt>The Customer is obliged to give true personal details in the process "
+"of ordering the service.</dt>\n"
+"\n"
+"    <dt>The Customer is obliged to make payments on time.</dt>\n"
+"\n"
+"    <dt>Scanned website cannot have more than 100 subwebsites. Limits of the "
+"subwebsites are fixed individually and are dependent on the choice of the "
+"test.</dt>\n"
+"\n"
+"    <dt>The Customer bears entire responsibility for using webcheck.me "
+"service rendered by the Provider. </dt>\n"
+"\n"
+"    <dt>The Customer agrees to use the service in a manner compatible with "
+"the rights of third-parties (personal rights, copyrights), morals or laws.</"
+"dt>\n"
+"\n"
+"    <dt>The Provider has the right to cease rendering the service "
+"immediately or terminate the contract with the Subscriber without the right "
+"to obtain the repayment of the unused subscription fee, if:</dt>\n"
+"\n"
+"        <dk>the Subscriber breaches the provisions of the contract.</dk>\n"
+"        <dk>the Subscriber uses webcheck.me service against its purpose and "
+"certain parameters.</dk>\n"
+"        <dk>the Subscriber acts to the detriment of other Customers of the "
+"Provider or the users of the Internet.</dk>\n"
+"\n"
+"<dd>Obligations and resposibility of the Provider</dd>\n"
+"\n"
+"    <dt>The Provider obliges himself to activate webcheck.me service in "
+"accordance with the contract.</dt>\n"
+"\n"
+"    <dt>The Provider is obliged to render webcheck.me service in a full "
+"range with due dilligence. The Provider does not bear responsibility for "
+"failure to configure or inappropriate configuring the service.</dt>\n"
+"\n"
+"    <dt>The Provider reserves the right to possibly short service breaks in "
+"rendering the service due to servicing and maintenance of the system as well "
+"as implementing new functionalities.</dt>\n"
+"\n"
+"    <dt>The Provider is not responsible for possible damages that may occur "
+"as a result of:</dt>\n"
+"        <dk>lack of continuity in rendering services being a result of an "
+"action or negligence of third parties,</dk>\n"
+"        <dk>data loss as a result from technical failures, force majeure or "
+"natural disasters</dk>\n"
+"        <dk>natural distaters, inappropriate use of the service, using "
+"information passed to the Customer authorizing access to the service by "
+"third parties, infringing the provisions of the contract by the Customer.</"
+"dk>\n"
+"\n"
+"\n"
+"<dd>Complaint proceedings</dd>\n"
+"\n"
+"    <dt>The complaint of the Subscriber due to non-performance or "
+"inappropriate performance of webcheck.me services shall be filed with the "
+"Provider in written form to the correspondence address. The complaint shall "
+"specify:</dt>\n"
+"\n"
+"        <dk>Subscriber’s personal details enabling the contact and "
+"identification of the Subscriber,</dk>\n"
+"        <dk>type of service pertaining to the complaint,</dk>\n"
+"        <dk>Subscriber’s complaints,</dk>\n"
+"        <dk>circumstances justifying the complaint,</dk>\n"
+"        <dk>potential demanded way of removing the alleged infringement.</"
+"dk>\n"
+"\n"
+"\n"
+"<dd>Final provisions</dd>\n"
+"\n"
+"    <dt>The governing law for this Contract between the Subscriber and the "
+"Provider shall be the Polish law.</dt>\n"
+"    <dt>The Provider reserves the right to terminate the contract with "
+"immediate effect in case the Customer breaches the provisions of the "
+"Regulations or the contract.</dt>\n"
+"\n"
+"    <dt>The Regulations come into force on 1st January 2012.</dt>\n"
+"\n"
+"</div>\n"
+
+#: templates/registration/login.html:17
+msgid "Your username and password didn't match. Please try again."
+msgstr "Your username and password did not match. Please try again."
+
+#: templates/registration/registration_complete.html:11
+msgid ""
+"A confirmation email has been sent to you. Please <b>check your email</b> "
+"and click on the link to activate your account."
+msgstr ""
+
+#: templates/registration/registration_complete.html:13
+msgid "Haven't got?"
+msgstr "Did you get it?"
