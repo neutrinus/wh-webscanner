@@ -44,13 +44,11 @@
     <div class="span6">
         <div class="well">
             <h2>{% trans "Status" %}</h2>
-            {% if request.user.get_profile.is_paid %}
-                    <p> {% trans "Your VIP membership is paid till " %}{{ request.user.get_profile.paid_till_date }}</p>
-            {% else %}
-                    <p> {% trans "Your VIP membership is not paid." %}</p>
+            {% if request.user.get_profile.credits %}
+                    <p> {% trans "Your accountis " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}</p>
             {% endif %}
 
-            <h2>{% trans "Subscribe" %}</h2>
+            <h2>{% trans "Buy more points" %}</h2>
             <b>{% trans "Discount" %}:</b>
             {% if coupon %} {{ coupon.percent }}% {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
             <b>Price:</b> ${{ price }} per week <br />
@@ -71,11 +69,6 @@
                 </form>
             </div>
                         {{paypal}}
-<br /><br />
-            <h2>{% trans "Unsubscribe" %}</h2>
-            <a HREF="https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=marek%40whitehats%2epl">
-                   <IMG BORDER="0" SRC="https://www.paypal.com/en_US/i/btn/btn_unsubscribe_LG.gif">
-            </a>
         </div>
 
     </div>

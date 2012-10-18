@@ -8,10 +8,7 @@ from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
 
 
-def make_coupon_code(max=20):
-    return sha256(str(getrandbits(8*100))).hexdigest()[:max]
-
-def make_sub_code(max=20):
+def make_code(max=20):
     return sha256(str(getrandbits(8*100))).hexdigest()[:max]
 
 def expdate():
@@ -25,45 +22,33 @@ class Coupon(models.Model):
     code                =   models.CharField(_(u'code'),
                                              max_length=256,
                                              unique=True,
-                                             default=make_coupon_code)
+                                             default=make_code)
     percent             =   models.IntegerField(_(u'Discount size'),
                                                 help_text=_(u'in percent! ex: 20'),
                                                )
     used_date           =   models.DateTimeField(default=None,
                                                  blank=True,
                                                  null=True)
-
     def set_used(self):
         self.used=True
         self.used_date=dt.now()
         self.save()
 
-class Subscription(models.Model):
 
-    code                = models.CharField(_(u'Subscription uuid'),
+class Payment(models.Model):
+    user                = models.ForeignKey(User)
+    coupon              = models.ForeignKey("Coupon",blank=True, null=True, default=None)
+
+    price               = models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2)
+    date_created        = models.DateTimeField(auto_now_add=True)
+    date_paid           = models.DateTimeField(auto_now_add=True)
+
+    code                = models.CharField(_(u'Payment uuid'),
                                         max_length=512,
-                                        default=make_sub_code,
+                                        default=make_code,
                                         unique=True,
                                         primary_key=True)
 
-    user                =   models.ForeignKey(User)
-    date_created        =   models.DateTimeField(auto_now_add=True)
-    date_subscribed     =   models.DateTimeField(null = True, default = None)
-    date_canceled       =   models.DateTimeField(null = True, default = None)
-    date_eot            =   models.DateTimeField(null = True, default = None)
-    is_subscribed       =   models.BooleanField(_(u'user is subscribed'), default=False)
-
-    price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2, null = True)
-    coupon              =   models.ForeignKey("Coupon",blank=True, null=True, default=None)
-
-
-class Payment(models.Model):
-    subscription        =   models.ForeignKey(Subscription)
-    price               =   models.DecimalField(_(u'Price'), max_digits=10, decimal_places=2)
-    date_created        =   models.DateTimeField(auto_now_add=True)
-    #status
-    #idn
-
-    #on save: check if price and sub.price are the same!
+    is_paid             =   models.BooleanField(_(u'has been paid'), default=False)
 
 

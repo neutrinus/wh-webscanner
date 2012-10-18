@@ -52,7 +52,7 @@ def results(request):
         # check if there was many tests from this ip recently and provide a captcha
         captcha = FormCaptcha(request.POST)
         if not captcha.is_valid():
-            if Tests.objects.filter(user_ip=request.META['REMOTE_ADDR'], creation_date__gt = dt.now() - td(hours=1)).count() > 11:
+            if Tests.objects.filter(user_ip=request.META['REMOTE_ADDR'], creation_date__gt = dt.now() - td(hours=1)).count() > 30:
                 log.debug("Limit per ip %s reached" % request.META['REMOTE_ADDR'])
                 return render_to_response('scanner/scan_captcha.html',
                                         {'url': url, 'recaptcha':captcha},
@@ -80,33 +80,15 @@ def results(request):
         if request.user.is_authenticated():
             user_profile =  UserProfile.objects.get_or_create(user = request.user)[0]
 
-        if request.user.is_authenticated() and user_profile.is_paid():
+        if user_profile.credits > 0:
             url = urlk.geturl()
+            user_profile.credits -= 1
         else:
-            if urlk.scheme == "http" and  ( urlk.port == 80 or urlk.port == None):
-                url = urlk.scheme + '://' + urlk.netloc + urlk.path
-            else:
-                messages.warning(request, _('Only VIP members are allowed to use non-standart port or https!'))
-                return redirect(reverse('scanner_index'))
+            messages.warning(request, _('Not enought credits, please buy more!'))
+            redirect(reverse('scanner_index'))
 
-            # non-VIP - check last scan.date for this url
-            last_tests = Tests.objects.filter(url=url).order_by("-creation_date")
-            if len(last_tests) >0:
-                if last_tests[0].creation_date > dt.now() - td(days=30):
-                    return render_to_response('scanner/scan_denied.html',
-                                              {
-                                                'last_test': last_tests[0],
-                                                'url': url,
-                                              },
-                                              context_instance=RequestContext(request))
 
-        if request.user.is_authenticated():
-            if user_profile.is_paid():
-                test = Tests(url=url, user=request.user, priority=40, vip_mode=True)
-            else:
-                test = Tests(url=url, user=request.user, priority=20)
-        else:
-            test = Tests(url=url)
+        test = Tests(url=url, user=request.user, priority=20)
 
         test.user_ip = request.META['REMOTE_ADDR']
         test.save()
@@ -170,4 +152,3 @@ def check_results(request, uuid):
     }
 
     return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
-
