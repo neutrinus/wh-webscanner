@@ -113,7 +113,7 @@ class Tests(models.Model):
     check_mail          =   models.BooleanField(_(u'Run mail checks?'), default=True)
 
     def __unicode__(self):
-        return "%s by %s(vip:%s)"%(self.url,self.user, self.vip_mode )
+        return "%s by %s"%(self.url,self.user )
 
     def domain(self):
         return urlparse(self.url).hostname

@@ -5,7 +5,6 @@ from django.contrib.admin import site
 from django.contrib import admin
 from django import forms
 
-
 from models import *
 
 class CouponAdmin(admin.ModelAdmin):
@@ -13,6 +12,8 @@ class CouponAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_display = ('code', 'percent', 'used', 'used_date')
     ordering = ('-used_date',)
+    list_filter = ('used', 'used_date')
+    search_fields = ['code', 'percent']
 
 class PaymentAdmin(admin.ModelAdmin):
     model = Payment
@@ -20,7 +21,10 @@ class PaymentAdmin(admin.ModelAdmin):
 
     list_per_page = 25
     date_hierarchy = 'date_created'
+    ordering = ('-date_created',)
+
     list_filter = ('date_created', 'date_paid')
+    search_fields = ['coupon__code', 'code']
 
 site.register(Coupon, CouponAdmin)
 site.register(Payment, PaymentAdmin)
