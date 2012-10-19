@@ -9,7 +9,7 @@ from models import *
 
 class CouponAdmin(admin.ModelAdmin):
     model = Coupon
-    list_per_page = 25
+    list_per_page = 100
     list_display = ('code', 'percent', 'used', 'used_date')
     ordering = ('-used_date',)
     list_filter = ('used', 'used_date')
@@ -18,11 +18,9 @@ class CouponAdmin(admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     model = Payment
     readonly_fields = ('code', 'user', 'price', 'coupon', 'date_created', 'date_paid')
-
-    list_per_page = 25
+    list_per_page = 100
     date_hierarchy = 'date_created'
     ordering = ('-date_created',)
-
     list_filter = ('date_created', 'date_paid')
     search_fields = ['coupon__code', 'code']
 

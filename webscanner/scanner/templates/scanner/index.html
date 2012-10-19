@@ -38,7 +38,7 @@
                 <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
             </div>
             <div class="span3">
-                <h2>{% trans "It's Free!" %}</h2>
+                <h2>{% trans "Try it for free!" %}</h2>
                 {% blocktrans %}
                 <p>We believe that information should be free - we allow everybody to use our scanner for free (even for commercial use).</p>{% endblocktrans %}
                 <p>There are, however, additional options available for VIP members. <a href="{% url scanner_pricing %}">(learn more)</a></p>
@@ -55,8 +55,7 @@
                 <h2>{% trans "Lightning fast" %}</h2>
                 {% blocktrans %}
                 <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide the results to you as fast as possible.
-                You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>
-                <p>In the near future there will be an option for VIP members to recive reports by e-mail. You will save more of your precious time!</p>{% endblocktrans %}
+                You get your results immediately on your PC. You don't have to wait untill all the tests are done.</p>{% endblocktrans %}
             </div>
         </div>
     </div>
@@ -104,41 +103,6 @@
                     {% blocktrans %}
                     <p>This monitoring tool checks not only websites but also other aspects of communication. <b>Webcheck.me</b> cares about e-mails too - checks availability of your mailservers, their compliance with standards and  if they are listed or not on any <b>blacklists (RBL)</b></p> {% endblocktrans %}
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <h1>{% trans "Want more?" %}</h1>
-    <h2>{% trans "VIP privileges:" %}</h2>
-
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="row">
-                <div class="span3">
-                    <h2>{% trans "No limits!" %}</h2>
-                    <p>There is no complicated tariffs table, no additional hidden payments, just pay <a href="{% url scanner_pricing %}">flat weekly fee</a> and use: the limit is the sky! (and the hardware). </p>
-                </div>
-                <div class="span3">
-                    <h2>{% trans "Priority queue" %}</h2>
-                    {% blocktrans %}
-                    <p>We respect your business time, all your checks and scans will be proceded as fast as possible (ASAP). Feel like a VIP!</p>{% endblocktrans %}
-                </div>
-                <div class="span3">
-                    <h2>{% trans "Scan deeper" %}</h2>
-                    <p>{% trans "We understand how important are results for your business. As VIP your webpages are checked deeper and with more care. Just to provide more acurate hints for your business!" %}</p>
-                </div>
-                <div class="span3">
-                    <h2>{% trans "...and more" %}</h2>
-                    <p>{% trans "Checkout our " %}<a href="{% url scanner_pricing %}">{% trans "features table" %}</a> {% trans "to be familiar with all benefits of a VIP account" %}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="span3 offset10">
-            <a href="{% if user.is_authenticated %}{% url payments_payments %}{% else %}{% url registration_register %}{% endif %}" class="btn btn-large btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Become a VIP" %}</a>
         </div>
     </div>
 </div>

@@ -59,10 +59,11 @@ def payments(req):
     if price < Decimal("0"): price = Decimal("0")
 
     # get empty payment or reuse old one
-    payment = Payment.objects.get_or_create(user = req.user, price = price, coupon = coupon, is_paid = False )[0].save()
+    payment = Payment.objects.get_or_create(user = req.user, price = price, coupon = coupon, is_paid = False )[0]
+    payment.save()
 
     return dict(
-        payments = Payment.objects.filter(subscription__user = req.user).order_by('-date_created'),
+        payments = Payment.objects.filter(user = req.user).order_by('-date_created'),
         payment = payment,
         coupon = coupon,
         price = price,

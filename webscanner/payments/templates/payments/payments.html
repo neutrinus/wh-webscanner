@@ -44,14 +44,12 @@
     <div class="span6">
         <div class="well">
             <h2>{% trans "Status" %}</h2>
-            {% if request.user.get_profile.credits %}
-                    <p> {% trans "Your accountis " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}</p>
-            {% endif %}
+                <p> {% trans "Your account is: " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}</p>
 
             <h2>{% trans "Buy more points" %}</h2>
             <b>{% trans "Discount" %}:</b>
             {% if coupon %} {{ coupon.percent }}% {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
-            <b>Price:</b> ${{ price }} per week <br />
+            <b>Price:</b> ${{ price }} per 100 scans <br />
             <br /><br />
             <div class="modal hide fade" id="modal_coupon_form">
                 <form action='' method='get'>

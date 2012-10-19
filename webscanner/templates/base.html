@@ -78,26 +78,6 @@
         </ul>
     </div>
 </div>
-
-{% if user.is_authenticated %}
-    {% if not request.user.get_profile.is_paid  %}
-    <script type="text/javascript">
-    if ( Math.random() < 0.18 ) {
-        $('#menu_payments').popover({
-            html:       true,
-            title:      "<h4>{% trans "VIPs got more!" %}</h4>",
-            content:    "{% trans "Additional benefits are ready for you for only $3.79 weekly. <b>Let's give it a try!</b>" %} ",
-            placement:  "bottom",
-            trigger:    "manual",
-        })
-        setTimeout(function(){ $('#menu_payments').popover("show") },1500);
-        setTimeout(function(){ $('#menu_payments').popover("hide") },10000);
-        $('html').click(function() {   $('#menu_payments').popover('hide'); });
-    }
-    </script>
-    {% endif %}
-{% endif %}
-
 {% if messages %}
 <div class="container">
     <div class="row">
