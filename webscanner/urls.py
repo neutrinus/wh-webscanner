@@ -10,12 +10,13 @@ urlpatterns = patterns('',
 )
 
 
-urlpatterns += patterns('django.views.generic.simple',)
-urlpatterns += patterns('',   (r'^', include('scanner.urls')), )
-urlpatterns += patterns('',   (r'^', include('account.urls')), )
-urlpatterns += patterns('',   (r'^', include('payments.urls')), )
-urlpatterns += patterns('',   (r'^', include('addonsapp.urls')), )
-urlpatterns += patterns('',   (r'^user/', include('registration.urls')), )
+urlpatterns += patterns('',
+    (r'^', include('scanner.urls')),
+    (r'^', include('account.urls')),
+    (r'^', include('payments.urls')),
+    (r'^', include('addonsapp.urls')),
+    (r'^user/', include('registration.urls')),
+)
 #urlpatterns += patterns('',   (r'^account/', include('captcha.backends.default.urls')), )
 
 
