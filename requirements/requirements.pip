@@ -13,10 +13,15 @@ django-debug-toolbar
 django-extensions==0.6
 django-autoroot
 django-model-utils==1.0.0
-django-registration
 django-crispy-forms
 django-infinite-pagination
 django-recaptcha
+django-registration
+django-registration-email
+fancy_tag=0.2.0
+django-spurl==0.6
+
+furl
 
 South==0.7.3
 M2Crypto
