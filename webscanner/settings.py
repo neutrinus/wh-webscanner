@@ -152,9 +152,12 @@ INSTALLED_APPS = (
     'djangosecure',
     'django_wsgiserver',
     'crispy_forms',
-    'south',
     'infinite_pagination',
     'captcha',
+    'spurl',
+    
+
+    'south',  # keep it as last as possible
 )
 
 LOGGING = {
