@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load spurl %}
+
+{% block content %}
+<div class="row">
+    <div class="span5">
+        {% include "forms/login.html" with inline=True %}
+    </div>
+    <div class="well span6">
+        <form class='form-horizontal' action="{% spurl base=request.path add_query_from=request.get_full_path %}" method='post'>
+            <h2>Register to see results for:</h2>
+            <h3>{{url}}</h3>
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% trans "Send activation email" %}</button>&nbsp;
+                <a href="/" class="btn">{% trans "Cancel" %}</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

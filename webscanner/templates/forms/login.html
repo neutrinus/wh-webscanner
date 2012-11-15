@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load spurl %}
+
+{% url auth_login as auth_login %}
+<form class="{% if not inline %}well{%endif%} form-horizontal" id="{% firstof form_id "form_login"%}" method="post" action="{% spurl base=auth_login add_query_from=request.get_full_path %}" >
+
+    {% if not inline %}
+        <h2>{% trans "Login" context "login form title"%} <i class="icon-user"></i></h2>
+    {% endif %}
+
+    {% if form.errors %}
+    <div class="alert alert-block alert-error">
+        {% trans "Your username and password didn't match. Please try again." %}
+    </div>
+    {% endif %}
+
+    {% csrf_token %}
+    {# TODO: sign next? #}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+
+    <fieldset>
+
+        <div class="control-group">
+            <label class="control-label" for="id_username">{% trans "Email" %}</label>
+            <div class="controls">
+                <input type="text" class="input-large" id="id_username" name="username" placeholder="johndoe@example.org" />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="id_password">{% trans "Password" %}</label>
+            <div class="controls">
+                <input type="password" class="input-large" id="id_password" name="password" placeholder="**********">  </input>
+                <p class="help-block">
+                <a href="{% url auth_password_reset %}">{% trans "Forgot</a> your password?" %}<br/>
+                    <a href="{% url registration_register %}">{% trans "Need an account?" %}</a>
+                </p>
+            </div>
+        </div>
+
+        {% if buttons or not inline %}
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{% trans "Login" %}</button>&nbsp;
+            <a href="{% firstof cancel "/" %}" class="btn">{% trans "Cancel" %}</a>
+        </div>
+        {% endif %}
+    </fieldset>
+</form>
+

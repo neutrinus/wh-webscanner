@@ -14,12 +14,12 @@ body {
 }
 
 div.section {
-    margin-bottom: 2em;
-    margin-top: 2em;
+/*    margin-bottom: 2em;
+    margin-top: 2em; */
 }
 
 div.section h1 {
-    margin-bottom: 0.8em;
+    /*margin-bottom: 0.8em;*/
 }
 
 table.results {
@@ -88,11 +88,5 @@ code {
     height: auto !important;
     height: 100%;
     margin: 0 auto;
-}
-
-#footer {
-    text-align:right;
-    margin-right:7%;
-    margin-bottom:0.5em;
-    clear: both;
+    margin-top: 1em;
 }

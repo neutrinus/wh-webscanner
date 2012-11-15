@@ -1,0 +1,19 @@
+{% extends "base.html"%}
+{% load i18n %}
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+    <h2>
+        {% trans "You are already logged in" %}
+    </h2>
+{% else %}
+<div class="row">
+    <div class="span6 offset3">
+        {% include "forms/login.html" %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock content %}

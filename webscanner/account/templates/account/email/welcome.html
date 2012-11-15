@@ -1,0 +1,27 @@
+{%load i18n%}
+{%load set %}
+{% set "https://webcheck.me" as link %}
+{% url payments_payments as payments_query %}
+{% url scanner_pricing as pricing_query %}
+{% blocktrans with user=user link=link parments_query=payments_query pricing_query=pricing_query %}
+Dear {{user}},
+
+Welcome at webcheck! Your registration process is completed. As
+registred user you will get features like medium priority queue and scan
+archive.
+
+There are only two steps left to become a VIP:
+* visit payments site: {{link}}{{payments_query}}
+    * securly pay by Paypal, just click on "buy now" button
+
+Some of VIP privileges are:
+    * Unlimited scans per website
+    * Deeper scans
+    * Additional hints and solutions
+    * ... and many more! please visit: {{link}}{{pricing_query}}
+
+If you have any questions please contact our support <support@webcheck.me>!
+
+Sincerely,
+webcheck.me Team
+{% endblocktrans %}

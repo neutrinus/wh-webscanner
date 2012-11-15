@@ -5,6 +5,8 @@ from django.db import models
 from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_language)
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.core import signing
 from django_extensions.db.fields import UUIDField
 from django.core.cache import cache
 from django.db.models import Count
@@ -15,8 +17,8 @@ from datetime import datetime
 from urlparse import urlparse
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
-from logs import log
 #local imports
+from logs import log
 
 STATUS = Choices(
     (-3, 'waiting',  _(u'wait for processing')),
@@ -87,14 +89,33 @@ PLUGINS = dict((
     #('googlesite', PluginGoogleSite ),
 ))
 
-TESTDEF_PLUGINS = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
+PLUGIN_NAMES = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
 
 
 class Tests(models.Model):
-    uuid                =   UUIDField(db_index=True, unique=True )
+    TEST_STATUS = Choices(
+        ('not_started', _("Not started")),
+        ('started', _("Scheduled")),
+        ('stopped', _("Stopped")),
+    )
+    TEST_GROUPS = {
+        'seo': {'verbose_name':_('SEO checks'),
+                'test_codes':('social','spellcheck')},
+        'performance': {'verbose_name':_('SEO checks'),
+                'test_codes':('social','spellcheck')},
+        'security': {'verbose_name':_('SEO checks'),
+                'test_codes':('social','spellcheck')},
+        'mail': {'verbose_name': _("Mail checks"),
+                'test_codes':('social',)},
+    }
+    '''
+    Fields with _ prefix should not be used for queries, there are only
+    some kind of `calculated cache`.
+    '''
+    uuid                =   UUIDField(db_index=True,auto=True, unique=True)
     url                 =   models.CharField(max_length=600,blank=1,null=1, db_index=True)
     priority            =   models.IntegerField(default=10)
     creation_date       =   models.DateTimeField(auto_now_add=True, db_index=True)
@@ -107,13 +128,24 @@ class Tests(models.Model):
 
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
 
-    check_seo           =   models.BooleanField(_(u'Run SEO checks?'), default=True)
-    check_security      =   models.BooleanField(_(u'Run security checks?'), default=True)
-    check_performance   =   models.BooleanField(_(u'Run performance checks?'), default=True)
-    check_mail          =   models.BooleanField(_(u'Run mail checks?'), default=True)
+    #: Cache for: status
+    _status           =   models.CharField(_(u'status'),
+                                           max_length=16,
+                                           choices=TEST_STATUS,
+                                           default=TEST_STATUS.not_started)
+
+    #: Cache for `CommandQueue` duration
+    _total_duration     =   models.PositiveIntegerField(blank=True, null=True)
+
+
 
     def __unicode__(self):
         return "%s by %s"%(self.url,self.user )
+
+    @models.permalink
+    def get_absolute_url(self):
+        ''' link to results'''
+        return 'scanner_report', (), {'uuid':self.uuid}
 
     def domain(self):
         return urlparse(self.url).hostname
@@ -124,37 +156,174 @@ class Tests(models.Model):
         else:
             return(80)
 
-    def commands_count(self):
-        return CommandQueue.objects.filter(test=self).count()
+    def percent_progress(self):
+        '''
+        Show in percentage, how much test's commands are active now.
+        '''
+        if self._status == self.TEST_STATUS.not_started: return 0.0
+        if self._status == self.TEST_STATUS.stopped: return 100.0
 
-    def commands_done_count(self):
-        return CommandQueue.objects.filter(test=self).exclude(status=STATUS.waiting).exclude(status=STATUS.running).count()
+        done = float(self.commands.not_active().count())
+        total = float(self.commands.count())
 
-    def percent_done(self):
-        done = float(self.commands_done_count())
-        total = float(self.commands_count())
-        if total == 0:
-            return 0
+        if total <= 0.1:
+            return 0.0
         else:
-            return (done/total) * 100
+            percent = (done/total) * 100.0
+            return percent
 
     def duration(self):
-        if self.commands_count() == self.commands_done_count():
+        if self._status == self.TEST_STATUS.not_started: return 0
+        elif self._status == self.TEST_STATUS.started:
+            return (datetime.now() - self.creation_date).total_seconds()
+        elif self._status == self.TEST_STATUS.stopped:
             #all test finished
-            last_command = CommandQueue.objects.filter(test=self).aggregate(Max('finish_date'))['finish_date__max']
-        else:
-            last_command = datetime.now()
+            if not self._total_duration:
+                # if there is no cache, fill it
+                self._total_duration = (self.commands.last_finish_date()\
+                                       - self.creation_date).total_seconds()
+                self.save()
+            return self._total_duration
 
-        return (last_command - self.creation_date).total_seconds()
+        log.error('duration assertion: this error should never exist!')
+        return 0
+
+    def start(self, test_codes=None, test_groups=None):
+        # TODO: make usable of `test_names` and `test_groups`
+        if self._status in (self.TEST_STATUS.started, self.TEST_STATUS.stopped):
+            return False
+
+        # commands to schedule (command codes)
+        codes = set(code for code in PLUGINS.keys())
+        commands = set()
+
+        if test_codes is None and test_groups is None:
+            # if nothing selected, do all tests
+            commands = codes
+        else:
+            if test_codes:
+                test_codes = set(test_codes)
+                if test_codes.difference(codes):
+                    raise ValueError("You passed invalid test codes: %s"%
+                        ', '.join(test_codes.difference(codes)))
+                commands.update(test_codes)
+            if test_groups:
+                test_groups = set(test_groups)
+                if test_groups.difference(self.TEST_GROUPS.keys()):
+                    raise ValueError("You passed invalid test group codes: %s"%
+                        ', '.join(test_groups.difference(self.TEST_GROUPS.keys())))
+                for group_code in test_groups:
+                    commands.update(self.TEST_GROUPS[group_code]['test_codes'])
+
+        try:
+            command_queue = []
+            for code in commands:
+                oplugin = PLUGINS[code]()
+                command_queue.append(
+                    CommandQueue(test=self,
+                                 testname=code,
+                                 wait_for_download=oplugin.wait_for_download)
+                )
+
+            with transaction.commit_on_success():
+                self._status = self.TEST_STATUS.started
+                self.save()
+                [ cmd.save() for cmd in command_queue ]
+            return True
+        except Exception:
+            log.exception("Error during starting test: %s"%self.uuid)
+            raise
+
+
+    @classmethod
+    def unsign_url(cls, signed_url):
+        '''
+        Check signature of signed url and return
+        url and groups (signed with :meth:`sign_url`)
+
+        :param signed_url: signed url
+        :type signed_url: str
+        :returns: list with url and list of test group names (ex: url, (gr1, gr2))
+        :rtype: list
+        :raises: BadSignature (from django signing)
+        '''
+        item = signing.loads(signed_url)
+        if not isinstance(item, list) and len(item) == 2:
+            raise signing.BadSignature
+        url, groups = item
+        if not isinstance(url, basestring):
+            raise signing.BadSignature
+        if not isinstance(groups, list):
+            raise signing.BadSignature
+        return url, groups
+        
+
+    @classmethod
+    def sign_url(cls, url, groups=None):
+        '''
+        Sign url with selected test groups and return as string
+        with signature
+
+        :param url: url
+        :type url: str
+        :param groups: tuple of strings from TEST_GROUP
+        :type groups: tuple
+        :returns: encoded string
+        :rtype: str
+
+        List can be tuples as well.
+        '''
+        if not isinstance(url, basestring):
+            raise TypeError
+        if not isinstance(groups, (tuple, list)):
+            raise TypeError
+        return signing.dumps((url, groups))
+
+    @classmethod
+    def create_from_signed_url(cls, signed_url, user, user_ip=None):
+        '''
+        Creates test and commands for signed_url url and groups
+        '''
+        if signed_url is None:
+            return None
+        url, groups = cls.unsign_url(signed_url)
+        ctx = dict(
+            url=url,
+            user=user,
+        )
+        if user_ip:
+            ctx['user_ip']=user_ip
+
+        test = Tests.objects.create(**ctx)
+        test.start(test_groups=groups)
+        return test
+
+class CommandQueueManager(models.Manager):
+    def last_finish_date(self):
+        return self.get_query_set()\
+            .aggregate(Max('finish_date'))['finish_date__max']
+
+    def active(self):
+        return self.get_query_set()\
+            .filter(status__in=[STATUS.waiting, STATUS.running])
+
+    def not_active(self):
+        return self.get_query_set()\
+            .filter(status__in=[STATUS.success, STATUS.unsuccess,
+                    STATUS.exception])
+
 
 class CommandQueue(models.Model):
+
     test                =   models.ForeignKey(Tests, related_name="commands")
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
-    testname            =   models.CharField(max_length=50, choices=TESTDEF_PLUGINS)
+    testname            =   models.CharField(max_length=50, choices=PLUGIN_NAMES)
 
     run_date            =   models.DateTimeField(default=None,blank=1,null=1)
     finish_date         =   models.DateTimeField(default=None,blank=1,null=1)
     wait_for_download   =   models.BooleanField(default=True, db_index=True)
+
+    objects = CommandQueueManager()
 
     def __unicode__(self):
         return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))

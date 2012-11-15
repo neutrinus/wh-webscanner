@@ -1,12 +1,12 @@
 {% load i18n %}<!DOCTYPE html>
-<html lang="en">
+<html lang="{{LANGUAGE_CODE}}">
 <head>
     <title>{% block title %}{% endblock %} {% trans "&laquo; webcheck.me - test a website!" %}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="utf-8"/>
 
     <meta name="description" content="webcheck.me {% block meta-desc %}Free online website scanner. Tests security, SEO, mail problems and sugest solutions.. {% endblock %}" />
-    <meta name="keywords" content="webcheck, {% block meta-keywords %}free, online, security, www, webpage, internet page, seo, mail, http code, antivirus, malware check, loadtime, page size, sql injecton, xss atack, screenshots, website snapshot, css optimize, image optimize, spf check, website spellcheck, robots.txt, http compression, website blacklists, plain-text emails, webpage validiation, pagerank, http compresion, webpage spellcheck  {% endblock %} {% block meta-keywords-add %}{% endblock %}" />
+    <meta name="keywords" content="webcheck, {% block meta-keywords %}free, online, security, www, webpage, internet page, seo, mail, http code, antivirus, malware check, loadtime, page size, sql injecton, xss atack, screenshots, website snapshot, css optimize, image optimize, spf check, website spellcheck, robots.txt, http compression, website blacklists, plain-text emails, webpage validiation, pagerank, http compresion, webpage spellcheck  {% endblock %}" />
     <meta name="author" content="whitehats.pl Team" />
     <meta name="robots" content="index,follow" />
     <meta name="revisit-after" content="1 day" />
@@ -17,16 +17,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <script src="{{ STATIC_URL }}js/bootstrap-mix.min.js"></script>
-<!--    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    {% comment %}
+    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>-->
+    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+    {% endcomment %}
 
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
 
+{% if not debug %}
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-29131705-1']);
@@ -38,6 +41,7 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
     </script>
+{% endif %}
 
     {% block extrahead %} {% endblock %}
 </head>
@@ -47,12 +51,12 @@
 {% if user.is_authenticated %}
         <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> {{ user }}
+                <i class="icon-user"></i> {{ user.email }}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{% url django.contrib.auth.views.password_change %}">{% trans "Change password" %}</a></li>
-                <li><a href="{% url django.contrib.auth.views.logout %}">{% trans "Logout" %}</a></li>
+                <li><a href="{% url auth_password_change %}">{% trans "Change password" %}</a></li>
+                <li><a href="{% url auth_logout %}">{% trans "Logout" %}</a></li>
             </ul>
         </div>
 
@@ -100,34 +104,15 @@
         <h3>Login <i class="icon-user"></i></h3>
     </div>
     <div class="modal-body">
-        <form class="form-horizontal" id="form_modal_login" method="post" action="{% url django.contrib.auth.views.login %}">
-            {% csrf_token %}
-            <input type="hidden" value="{{ request.path }}" name="next">
-            <fieldset>
-                <div class="control-group">
-                    <label class="control-label" for="input01">{% trans "Login" %}</label>
-                    <div class="controls">
-                        <input type="text" name="username" class="input-xlarge" id="input01" placeholder="john" />
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="input02">{% trans "Password" %}</label>
-                    <div class="controls">
-                        <input type="password" name="password" class="input-xlarge" id="input02" placeholder="**********" />
-                        <p class="help-block"><a href="{% url auth_password_reset %}">{% trans "Forgot</a> your password?" %}  <a href="{% url registration_register %}">{% trans "Need an account?" %}</a></p>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+        {% include "forms/login.html" with inline=1 form_id="form_modal_login"%}
     </div>
     <div class="modal-footer">
-        <a href="#" id="SubmitLogin" class="btn btn-primary">{% trans "Login" %}</a>&nbsp;
+        <a href="#" id="form_modal_submit" class="btn btn-primary">{% trans "Login" %}</a>&nbsp;
         <a href="#" class="btn close"  data-dismiss="modal" >{% trans "Cancel" %}</a>
     </div>
 </div>
 <script type="text/javascript">
-$('#SubmitLogin').click(function() {
+$('#form_modal_submit').click(function() {
   $('#form_modal_login').submit();
 });
 </script>
@@ -135,20 +120,25 @@ $('#SubmitLogin').click(function() {
 
     <div class="container" id="maincontent">
     {% block content %}
-    {% trans "Something go wrong?" %}
+    <h2>{% trans "Something went wrong! Please contact with administrator." %}</h2>
     {% endblock %}
-    </div>
+
 
     <!-- footer -->
     <hr />
-    <div id="footer" >
+    <div class='footer pull-right'>
         {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
     </div>
 
+    </div>
+
+
+{% if not debug %}
     <script type="text/javascript">
         _s1='https://s3-eu-west-1.amazonaws.com/app.sugester.pl/webcheck/widget_ssl';
         document.write('<script src=\''+_s1+'.js\' type=\'text/javascript\'><\/script>')
     </script>
+{% endif %}
 
 
 </body>

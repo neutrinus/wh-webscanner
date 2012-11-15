@@ -25,7 +25,7 @@ class TestsAdmin(admin.ModelAdmin):
     model = Tests
     list_per_page = 100
     readonly_fields = ( 'user_ip', 'user', 'creation_date' ,'download_path')
-    list_display = ('url','priority', 'percent_done', 'user', 'is_deleted', 'creation_date')
+    list_display = ('url','priority', 'percent_progress', 'user', 'is_deleted', 'creation_date')
     ordering = ('-creation_date',)
     list_filter = ('creation_date', 'is_deleted')
     search_fields = ['uuid', 'url', 'user_ip', 'download_path']

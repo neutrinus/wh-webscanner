@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="span8 offset2">
+
+{% if user.is_authenticated %}
+<h2>{% trans "You are already logged in, why would you like to register?" %}</h2>
+<a href="/" class='btn btn-large btn-primary pull-right'>Go to Dashboard</a>
+{% else %}
+
+    <form class="well form-horizontal" id="form_register" method="post" action="" >
+        {% csrf_token %}
+        <h2>{% trans "Register" %} <i class="icon-plus"></i></h2>
+        {{form|crispy}}
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{% trans "Send activation email" %}</button>&nbsp;
+            <a href="/" class="btn">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+{% endif %}
+    </div>
+</div>
+
+{% endblock %}
