@@ -1,28 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 {% block title %}{% trans "Contact Us" %}{% endblock %}
 
 
 {% block content %}
-<h1>{% trans "Contact Form" %}</h1>
-<p>{% trans "Your opinion is very important to us." %}</p>
+<div class="row">
+    <div class="span6 offset3 well">
+        <h1>{% trans "Contact Form" %}</h1>
+        <p>{% trans "Your opinion is very important to us." %}</p>
 
 
-<form action="" method="post" class="form-horizontal">{% csrf_token %}
-    {{ form.non_field_errors }}
-    {% for field in form %}
-    <fieldset class="control-group {% if field.errors %}error{% endif %}">
-        <label class="control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-        <div class="controls">
-            {{ field }}
-            {% if field.errors %}<span class="help-inline">{{ field.errors }}</span>{% endif %}
-        </div>
-    </fieldset>
-    {% endfor %}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{% trans "Contact Us" %}</button>
+        <form action="" method="post" class="form-horizontal">{% csrf_token %}
+            {{ form|crispy }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-large btn-primary">{% trans "Contact Us" %}</button>
+            </div>
+
+        </form>
     </div>
-
-</form>
+</div>
 {% endblock %}
 
