@@ -198,7 +198,6 @@ LOGGING = {
 # remember to remove old data and check disk usage!
 PATH_TMPSCAN = '/tmp/webscanner/'
 PATH_OPTIPNG = '/usr/bin/optipng'
-SCREENSHOT_SIZE = (1280,1024)
 
 GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'
 

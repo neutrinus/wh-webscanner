@@ -23,3 +23,6 @@ PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 
 
 PATH_TMPSCAN = '/home/webcheck/www/tmp/'
+
+
+SELENIUM_HUB = "http://localhost:4444/wd/hub"

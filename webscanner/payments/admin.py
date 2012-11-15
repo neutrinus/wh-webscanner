@@ -21,8 +21,9 @@ class PaymentAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'date_created'
     ordering = ('-date_created',)
-    list_filter = ('date_created', 'date_paid')
-    search_fields = ['coupon__code', 'code']
+    list_filter = ('date_paid', 'is_paid')
+    search_fields = ['coupon__code', 'code', 'user__email', 'user__username', 'price']
+    list_display = ('user', 'price', 'code', 'coupon', 'is_paid', 'date_paid')
 
 site.register(Coupon, CouponAdmin)
 site.register(Payment, PaymentAdmin)
