@@ -16,6 +16,9 @@ DATABASES = {
 }
 
 DATABASE_OPTIONS = {'timeout': 200}
+CACHES={'default':{
+    'BACKEND':'django.core.cache.backends.dummy.DummyCache'
+    }}
 
 
 TEMPLATE_CONTEXT_PROCESSORS += [
@@ -23,12 +26,13 @@ TEMPLATE_CONTEXT_PROCESSORS += [
 ]
 
 INSTALLED_APPS += (
-    #'debug_toolbar',
+    'debug_toolbar',
     'django_nose',
+    'autoroot',
 )
 
 MIDDLEWARE_CLASSES += (
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 
@@ -45,7 +49,7 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.logger.LoggingPanel',
 )
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': 0,
+    'INTERCEPT_REDIRECTS': 1,
 #    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
 #    'EXTRA_SIGNALS': ['myproject.signals.MySignal'],
 #    'HIDE_DJANGO_SQL': True,
@@ -62,11 +66,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 #EMAIL_FILE_PATH = '/tmp/djangosz'
 
-#EMAIL_HOST='localhost'
-#EMAIL_PORT=1025
-#EMAIL_HOST_USER=''
-#EMAIL_HOST_PASSWORD=''
-#EMAIL_USE_TLS=False
+LOGGING['loggers']['']={
+    'handlers':['console'],
+    'level':'DEBUG',
+    'propagate':1,
+}
 
 
 SELENIUM_HUB = '127.0.0.1'
+
+AUTOROOT_EMAIL='q@q.pl'
