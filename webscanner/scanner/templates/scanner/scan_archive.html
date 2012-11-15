@@ -22,10 +22,11 @@
                     <thead>
                         <tr>
                             <th>{% trans "url" %}</th>
-                            <th>{% trans "completion" %}</th>
-                            <th>{% trans "duration" %}</th>
-                            <th>{% trans "priority" %}</th>
-                            <th>{% trans "VIP mode" %}</th>
+                            {#<th>{% trans "completion" %}</th>#}
+                            {#<th>{% trans "duration" %}</th>#}
+                            {#<th>{% trans "priority" %}</th>#}
+                            {#<th>{% trans "VIP mode" %}</th>#}
+                            {# TODO <th>{% trans "score" %}</th>#}
                             <th>{% trans "date" %}</th>
                         </tr>
                     </thead>
@@ -33,10 +34,11 @@
                     {% for test in ptests %}
                         <tr>
                             <td><a href="{% url scanner_report test.uuid %} ">{{ test.url }}</a></td>
-                            <td>{{ test.percent_done|floatformat:"0" }}%</td>
-                            <td>{{ test.duration|floatformat:"0" }}s</td>
-                            <td>{{ test.priority }}</td>
-                            <td>{{ test.vip_mode }}</td>
+                            {#<td>{{ test.percent_done|floatformat:"0" }}%</td>#}
+                            {#<td>{{ test.duration|floatformat:"0" }}s</td>#}
+                            {#<td>{{ test.priority }}</td>#}
+                            {#<td>{{ test.vip_mode }}</td>#}
+                            {#<td>{{ test.score }} </td>#}
                             <td>{{ test.creation_date }}</td>
                         </tr>
                     {% endfor %}

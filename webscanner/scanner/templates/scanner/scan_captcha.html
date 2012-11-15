@@ -6,18 +6,20 @@
 {% block title %}{% trans "Confirmation needed" %}{% endblock %}
 
 {% block content %}
-<br />
 <div class="row">
     <div class="span8 offset2 well">
         <h1>{% trans "Confirmation needed" %}</h1>
         <div>{% trans "Please fill following captcha codes to confirm that it wasn't an automated request. Your request will be then processed imedietly." %}
-            <form class="form-horizontal" action="{% url scanner.results %}" method="POST">
+            <form class="form-horizontal" action=".{#{% url scanner.results %}#}" method="POST">
                 {% csrf_token %}
+                {{recaptcha_form}}
+                {% comment %}
                 {% for field in recaptcha %}
                     {{ field }}
                 {% endfor %}
                 <input type="hidden" value="{{ url }}" name="url" />
-                <input type="submit"  value="{% trans "Confirm!" %}" class="btn-large btn-primary" />
+                {% endcomment %}
+                <input type="submit"  value="{% trans "Confirm!" %}" class="btn btn-large btn-primary" />
             </form>
         </div>
 
