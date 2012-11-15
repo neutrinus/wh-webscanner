@@ -1,21 +1,16 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
-import registration
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-)
-
-
-urlpatterns += patterns('',
-    (r'^', include('scanner.urls')),
-    (r'^', include('account.urls')),
-    (r'^', include('payments.urls')),
-    (r'^', include('addonsapp.urls')),
-    (r'^user/', include('registration.urls')),
+    url(r'^user/', include('account.urls')),
+    url(r'^', include('scanner.urls')),
+    url(r'^', include('payments.urls')),
+    url(r'^', include('addonsapp.urls')),
 )
 #urlpatterns += patterns('',   (r'^account/', include('captcha.backends.default.urls')), )
 

@@ -1,0 +1,12 @@
+You (or someone pretending to be you) have asked to register an account at {{ site.name }}.  If this wasn't you, please ignore this email and your address will be removed from our records.
+
+To activate your account, please click the following link within the next {{ expiration_days }} day: {{site.domain}}{% url registration_activate activation_key=activation_key %}.
+
+You can login using this password: {{password}}.
+To change password after activation, you can visit {{site.domain}}{% url auth_password_change %}.
+
+To see test results for {{user.tests_set.all.0.url}} please visit {{site.domain}}{{user.tests_set.all.0.get_absolute_url }}.
+
+Sincerely,
+webcheck.me Team
+{{ site.name }}

@@ -1,9 +1,22 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls.defaults import patterns, include, url
 
+#from .forms import EmailRegistrationInlineForm
+
 urlpatterns = patterns('',
-        url(r'^user/logout/?$', 'account.views.ulogout'),
-        url(r'^user/login/?$', 'django.contrib.auth.views.login'),
+    #url(r'^logout/$', '', name='logout'),
+    #url(r'^login/$', 'account.views.login', name='login'),
+
+    url(r'^', include('registration_email.backends.default.urls')),
+    url(r'^', include('django.contrib.auth.urls')),
+
+    url(r'^register/inline/', 
+        'account.registration.views.register_inline', 
+        {'backend': 'account.registration.backends.inline.InlineBackend',
+         'template_name': 'registration/registration_inline.html',
+        },
+        name='registration_inline'),
+
 )
 
 

@@ -82,6 +82,10 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
+AUTHENTICATION_BACKENDS = (
+    'registration_email.auth.EmailBackend',
+)
+
 STATICFILES_DIRS = (
 
 )
@@ -129,7 +133,14 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    #apps
+    'account',
+    'scanner',
+    'payments',
+    'addonsapp',
+    'registration_email',
     'registration',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -139,15 +150,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
 
-    #apps
-    'account',
-    'scanner',
-    'payments',
-    'paypal.standard.ipn',
-    'addonsapp',
 
     #3rd party apps,
-    'autoroot',
+    'paypal.standard.ipn',
     'django_extensions',
     'model_utils',
     'djangosecure',
