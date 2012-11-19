@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import logging
 #django import
 from django.db import models
 from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_language)
@@ -18,7 +19,8 @@ from urlparse import urlparse
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
 #local imports
-from logs import log
+
+log = logging.getLogger(__name__)
 
 STATUS = Choices(
     (-3, 'waiting',  _(u'wait for processing')),

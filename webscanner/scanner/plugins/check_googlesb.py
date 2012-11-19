@@ -18,8 +18,6 @@ import sys
 import time
 from time import sleep
 
-from logs import log
-
 
 sburl = '/safebrowsing/api/lookup?client=webscanner&apikey=ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw&appver=0.1&pver=3.0&url='
 # my key: ABQIAAAAcHK-fy7eQw0ew14dgrixiRTuuUEoCbs4nG8IiJX3yqHHfBuDtw
@@ -54,7 +52,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
             res.output_full = unicode(_('<p>Your domain is listed at Google Safe Browsing Blacklist because of %(httpbody)s. <a href="http://www.google.com/safebrowsing/diagnostic?site=%(httpbody)s">Check it at google</a>. Please check your website because its possible that there is %(httpbody)s.</p> '  % { 'domain': domain, 'httpbody': httpbody } + message))
             res.status = RESULT_STATUS.error
         else:
-            log.exception("Google sent non expected http code:%s body:%s "%(httpstatus,httpbody) )
+            self.log.exception("Google sent non expected http code:%s body:%s "%(httpstatus,httpbody) )
             return STATUS.exception
         res.save()
 

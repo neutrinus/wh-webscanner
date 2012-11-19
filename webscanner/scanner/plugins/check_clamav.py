@@ -18,8 +18,6 @@ from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-from logs import log
-
 
 #PATH_KASPERSKY = '/'
 PATH_CLAMSCAN = '/usr/bin/clamscan'
@@ -40,7 +38,7 @@ class PluginClamav(PluginMixin):
             p = subprocess.Popen(args, stdout=subprocess.PIPE)
             (output, stderrdata2) = p.communicate()
             if p.returncode != 0:
-                log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
+                self.log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
                 return STATUS.exception
 
             numberofthreats = int(re.search('Infected files: (?P<kaczka>[0-9]*)',output).group('kaczka'))
@@ -60,11 +58,6 @@ class PluginClamav(PluginMixin):
             #as plugin finished - its success
             return STATUS.success
         except OSError,e:
-            log.error("OSError, check if clamscan file is present. Details %s "%(e))
+            self.log.error("OSError, check if clamscan file is present. Details %s "%(e))
             return STATUS.exception
 
-
-
-
-if __name__ == '__main__':
-    main()

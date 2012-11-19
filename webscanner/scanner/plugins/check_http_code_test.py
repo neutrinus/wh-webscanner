@@ -19,7 +19,7 @@ class TestCode(TestCase):
                         testname='???')
         cmd.save()
 
-        log.info('check site %s'%test)
+        self.log.info('check site %s'%test)
         assert self.plugin.run(cmd) == STATUS.exception
 
 

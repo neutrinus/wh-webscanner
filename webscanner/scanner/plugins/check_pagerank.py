@@ -21,8 +21,6 @@ from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-from logs import log
-
 
 def get_pagerank(url):
     hsh = check_hash(hash_url(url))

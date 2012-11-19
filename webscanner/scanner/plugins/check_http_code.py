@@ -14,7 +14,6 @@ from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from urlparse import urlparse
-from logs import log
 
 
 #http://wiki.openstreetmap.org/wiki/OpenLayers_Simple_Example
@@ -35,11 +34,11 @@ class PluginCheckHTTPCode(PluginMixin):
 
 
         if not httpstatus:
-            log.exception(_("Error: Empty httpstatus provided "))
+            self.log.exception(_("Error: Empty httpstatus provided "))
             return STATUS.exception
 
         if not (httpstatus.isdigit()):
-            log.exception(_("Error: Non numerical httpstatus code "))
+            self.log.exception(_("Error: Non numerical httpstatus code "))
             return STATUS.unsuccess
 
         #check http_status 200>X>300

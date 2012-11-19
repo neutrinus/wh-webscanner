@@ -10,7 +10,6 @@ import dns.resolver
 import dns.reversename
 from IPy import IP
 from urlparse import urlparse
-from logs import log
 
 #TODO: add explanationry url
 #http://www.spamhaus.org/query/bl?ip=87.206.13.41
@@ -18,8 +17,6 @@ class PluginDNSmailRBL(PluginMixin):
     name = unicode(_("Check dns MAIL RBL"))
     description = unicode(_("Check dns MAIL RBL"))
     wait_for_download = False
-
-
 
     def run(self, command):
 
@@ -87,7 +84,7 @@ class PluginDNSmailRBL(PluginMixin):
                     except dns.resolver.NXDOMAIN:
                         results += "%s not listed on %s <br>"%(ip,bl)
                     except dns.resolver.Timeout:
-                        log.debug("RBL Timeout: %s while checking: %s"%(bl,ip) )
+                        self.log.debug("RBL Timeout: %s while checking: %s"%(bl,ip) )
                 results += "<br />"
 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=4)
@@ -118,7 +115,7 @@ class PluginDNSmailRBL(PluginMixin):
                 except dns.resolver.NXDOMAIN:
                     results += "%s <b>not listed</b><br>"%(ip)
                 except dns.resolver.Timeout:
-                    log.debug("DNSWL Timeout: %s while checking: %s"%(bl))
+                    self.log.debug("DNSWL Timeout: %s while checking: %s"%(bl))
 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("Mailservers on DNSWL whitelist"))
@@ -133,13 +130,9 @@ class PluginDNSmailRBL(PluginMixin):
 
             return STATUS.success
         except (dns.resolver.Timeout,dns.resolver.NoAnswer,dns.resolver.NXDOMAIN),e:
-            log.debug("dns problem when asking for MX records: %s"%str(e))
+            self.log.debug("dns problem when asking for MX records: %s"%str(e))
             return STATUS.unsuccess
         except StandardError,e:
-            log.exception("%s"%str(e))
+            self.log.exception("%s"%str(e))
             return STATUS.exception
 
-
-
-if __name__ == '__main__':
-    main()

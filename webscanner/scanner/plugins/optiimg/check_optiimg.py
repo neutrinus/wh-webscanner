@@ -8,6 +8,7 @@ import urllib
 import urlparse
 import random
 import string
+import logging
 import re
 import shlex, subprocess
 import mimetypes
@@ -20,8 +21,8 @@ from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
-from logs import log
 
+log = logging.getLogger(__name__)
 
 def gentmpfilename():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
@@ -171,10 +172,10 @@ class PluginOptiimg(PluginMixin):
 
         domain = command.test.domain
         path = command.test.download_path
-        log.debug("Recursive check image files size in %s "%(path))
+        self.log.debug("Recursive check image files size in %s "%(path))
 
         if not (os.path.exists(MEDIA_ROOT) and os.path.isdir(MEDIA_ROOT)):
-            log.error("no such directory: MEDIA_ROOT")
+            self.log.error("no such directory: MEDIA_ROOT")
             return STATUS.exception
 
         optiimgs = []
@@ -188,7 +189,7 @@ class PluginOptiimg(PluginMixin):
                 if 'image' not in str(mimetypes.guess_type(fpath)[0]):
                     continue
 
-                log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
+                self.log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
 
                 ofile = optimize_image(fpath, MEDIA_ROOT, False)
                 if not ofile:
@@ -198,7 +199,7 @@ class PluginOptiimg(PluginMixin):
                 if bytes_saved == 0:
                     continue
 
-                log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
+                self.log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
 
                 a = {   "ifile": fpath[(len(path)+1):],
                         "ofile": MEDIA_URL + os.path.basename(ofile),

@@ -15,8 +15,6 @@ from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-from logs import log
-
 
 class PluginCheckRobots(PluginMixin):
 
@@ -26,7 +24,7 @@ class PluginCheckRobots(PluginMixin):
     def run(self, command):
 
         robotsurl = urlparse.urlparse(command.test.url).scheme + "://" + urlparse.urlparse(command.test.url).netloc +"/robots.txt"
-        log.debug("Looking for: %s "%(robotsurl))
+        self.log.debug("Looking for: %s "%(robotsurl))
 
         try:
             from scanner.models import Results
@@ -73,6 +71,6 @@ class PluginCheckRobots(PluginMixin):
             #there was no exception - test finished with success
             return STATUS.success
         except Exception,e:
-            log.exception(_("No validation can be done: %s "%(e)))
+            self.log.exception(_("No validation can be done: %s "%(e)))
             return STATUS.exception
 

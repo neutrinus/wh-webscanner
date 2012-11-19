@@ -20,7 +20,6 @@ from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
-from logs import log
 
 
 def gentmpfilename():
@@ -69,7 +68,7 @@ class PluginOptiYUI(PluginMixin):
 
         domain = command.test.domain
         path = command.test.download_path
-        log.debug("Recursive check js/css files size in %s "%(path))
+        self.log.debug("Recursive check js/css files size in %s "%(path))
 
         optifiles = dict()
         optifiles["css"] = []
@@ -90,14 +89,14 @@ class PluginOptiYUI(PluginMixin):
                 else:
                     continue
 
-                log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
+                self.log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
                 ofile = optimize_yui(fpath, ftype, MEDIA_ROOT+"/", False)
 
                 bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
                 if bytes_saved == 0:
                     continue
 
-                log.debug("Optimized %s to %s" % (ofile,os.path.getsize(ofile) ))
+                self.log.debug("Optimized %s to %s" % (ofile,os.path.getsize(ofile) ))
 
                 optifiles[ftype].append({
                         "ifile": fpath[(len(path)+1):],

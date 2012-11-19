@@ -17,9 +17,6 @@ from django.utils.translation import ugettext_lazy as _
 w3c_validator = 'http://validator.w3.org/'
 
 
-from logs import log
-
-
 class PluginCheckW3CValid(PluginMixin):
 
     name = unicode(_('W3C Validator'))

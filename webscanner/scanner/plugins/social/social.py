@@ -11,8 +11,6 @@ from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
-from logs import log
-
 
 
 class PluginSocial(PluginMixin):

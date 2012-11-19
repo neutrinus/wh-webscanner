@@ -3,16 +3,18 @@
 import sys
 import os
 import re
-from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
+from urlparse import urlparse
+
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
+
+from IPy import IP
 import dns.resolver
 import dns.reversename
-from IPy import IP
-from urlparse import urlparse
-from logs import log
-from django.template.loader import render_to_string
+
+from plugin import PluginMixin
+from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
 
 class PluginDNSmail(PluginMixin):
@@ -123,7 +125,7 @@ class PluginDNSmail(PluginMixin):
             res.output_full = unicode(_("<p>There was timeout while asking your nameservers for MX records.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
-            log.debug("Timeout while asking for MX records: %s"%str(e))
+            self.log.debug("Timeout while asking for MX records: %s"%str(e))
 
         except dns.resolver.NoAnswer,e:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
@@ -134,7 +136,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full += unicode(_(" <div class='alert'>Please try to run this test again <b>without www prefix</b>.</div>" ))
             res.status = RESULT_STATUS.error
             res.save()
-            log.debug("NoAnswer while asking for MX records: %s"%str(e))
+            self.log.debug("NoAnswer while asking for MX records: %s"%str(e))
 
         except dns.resolver.NXDOMAIN:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
@@ -142,15 +144,10 @@ class PluginDNSmail(PluginMixin):
             res.output_full = unicode(_("<p>The query name does not exist. Probably you should define MX entries in your DNS configuration.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
-            log.debug("NXDOMAIN while asking for MX records. ")
+            self.log.debug("NXDOMAIN while asking for MX records. ")
 
         except StandardError,e:
-            log.exception("%s"%str(e))
+            self.log.exception("%s"%str(e))
 
         return STATUS.unsuccess
 
-
-
-
-if __name__ == '__main__':
-    main()

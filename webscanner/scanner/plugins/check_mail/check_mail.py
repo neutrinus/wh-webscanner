@@ -13,7 +13,6 @@ import smtplib
 
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
-from logs import log
 
 
 class PluginMail(PluginMixin):
@@ -35,10 +34,10 @@ class PluginMail(PluginMixin):
             for mxdata in answers:
                 mxes.append(mxdata.exchange)
         except (dns.resolver.Timeout,dns.resolver.NoAnswer),e:
-            log.debug("dns problem when asking for MX records: %s"%str(e))
+            self.log.debug("dns problem when asking for MX records: %s"%str(e))
             return STATUS.unsuccess
         except StandardError,e:
-            log.exception("%s"%str(e))
+            self.log.exception("%s"%str(e))
             return STATUS.exception
         except dns.resolver.NXDOMAIN:
             #log is already produced in check_mail_dns
@@ -58,7 +57,7 @@ class PluginMail(PluginMixin):
 
             for mx in mxes:
                 try:
-                    log.debug("Checking mail for MX: %s"%str(mx))
+                    self.log.debug("Checking mail for MX: %s"%str(mx))
 
                     #postmaster
                     foo = smtplib.SMTP(str(mx),timeout=10)
@@ -189,7 +188,7 @@ class PluginMail(PluginMixin):
 
             return STATUS.success
         except StandardError,e:
-            log.exception("%s"%str(e))
+            self.log.exception("%s"%str(e))
             return STATUS.exception
 
 

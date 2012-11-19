@@ -27,8 +27,6 @@ from scanner.plugins.optiimg import gentmpfilename, optimize_image
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
-from logs import log
-
 
 class Alarm(Exception):
     pass
@@ -127,7 +125,7 @@ class PluginMakeScreenshots(PluginMixin):
             for key in browser:
                 browsename += "_" + str(browser[key])
 
-            log.debug("Make screenshot with %s" % browser)
+            self.log.debug("Make screenshot with %s" % browser)
 
             signal.signal(signal.SIGALRM, alarm_handler)
             signal.alarm(3*60)  # 3 minutes
@@ -189,13 +187,13 @@ class PluginMakeScreenshots(PluginMixin):
                                                             'browsername': browsername,
                                                             'browserversion': dbrowser.capabilities['version']}))
                 res.save()
-                log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(MEDIA_ROOT,filename)))
+                self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(MEDIA_ROOT,filename)))
 
             except WebDriverException:
-                log.warning("WebDriverException")
+                self.log.warning("WebDriverException")
 
             except Alarm:
-                log.warning("Shoot timeout")
+                self.log.warning("Shoot timeout")
 
         if command.test.check_seo:
             res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)

@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 import dns.resolver
 from IPy import IP
 from urlparse import urlparse
-from logs import log
 
 from django.template.loader import render_to_string
 
@@ -96,7 +95,3 @@ class PluginDNS(PluginMixin):
 
         return STATUS.success
 
-
-
-if __name__ == '__main__':
-    main()

@@ -177,6 +177,9 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'marek': {
+            'format': '%(asctime)s %(name)s(%(process)d) %(levelname)s %(message)s',
+        }
     },
 
     'handlers': {
@@ -193,6 +196,12 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter':'verbose',
          },
+        'logfile':{
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'webscanner.log',
+            'formatter': 'marek',
+        }
     },
     'loggers': {
         'django.request': {

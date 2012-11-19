@@ -24,7 +24,6 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 from urlparse import urlparse
-from logs import log
 from settings   import apath
 
 
@@ -41,7 +40,7 @@ class PluginDomainExpireDate(PluginMixin):
             with open(apath("scanner/plugins/effective_tld_names.dat.txt")) as tldFile:
                 self.tlds = [line.strip() for line in tldFile if line[0] not in "/\n"]
         except IOError:
-            log.error("Could not find file effective_tld_names.dat.txt")
+            self.log.error("Could not find file effective_tld_names.dat.txt")
 
     #http://stackoverflow.com/questions/1066933/how-to-extract-domain-name-from-url/1069780#1069780
     def getDomain(self,url, tlds):
@@ -72,7 +71,7 @@ class PluginDomainExpireDate(PluginMixin):
 
     def run(self, command):
         domain = self.getDomain(command.test.url,self.tlds)
-        log.debug("Checking whois data for %s"%(domain))
+        self.log.debug("Checking whois data for %s"%(domain))
 
         try:
             data = pywhois.whois(domain)
@@ -103,22 +102,17 @@ class PluginDomainExpireDate(PluginMixin):
 
                     res.save()
                 except StandardError,e:
-                    log.exception("output:%s exception:%s "%(str(output),str(e)) )
+                    self.log.exception("output:%s exception:%s "%(str(output),str(e)) )
                     return STATUS.exception
 
 
                 return res.status
             else:
-                log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
+                self.log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
                 return STATUS.exception
-        except ValueError,e:
-            log.exception("%s"%str(e))
+        except (StandardError, ValueError) as e:
+            self.log.exception("%s"%str(e))
             return STATUS.exception
-        except StandardError,e:
-            log.exception("%s"%str(e))
-            return STATUS.exception
-
-
 
     def cast_date(self,date_str):
         """Convert any date string found in WHOIS to a time object.

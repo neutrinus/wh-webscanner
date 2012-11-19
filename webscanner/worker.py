@@ -10,6 +10,7 @@ setup_environ(settings)
 
 import os
 import random
+import logging
 import subprocess
 import shlex
 import HTMLParser
@@ -29,8 +30,9 @@ from django.db.models import Q
 from multiprocessing import Pool, cpu_count
 from scanner.models import Tests,CommandQueue,STATUS, PLUGINS
 
+log = logging.getLogger('webscanner.worker')
 
-from logs import log
+#from logs import log
 
 PATH_HTTRACK = '/usr/bin/httrack'
 from settings import PATH_TMPSCAN

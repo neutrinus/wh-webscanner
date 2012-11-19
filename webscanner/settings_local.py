@@ -67,7 +67,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_FILE_PATH = '/tmp/djangosz'
 
 LOGGING['loggers']['']={
-    'handlers':['console'],
+    'handlers':['console','logfile'],
     'level':'DEBUG',
     'propagate':1,
 }

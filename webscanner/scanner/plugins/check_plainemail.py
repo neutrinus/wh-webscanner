@@ -12,8 +12,6 @@ from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-from logs import log
-
 
 class PluginPlainTextEmail(PluginMixin):
     '''
@@ -27,7 +25,7 @@ class PluginPlainTextEmail(PluginMixin):
         efound = ""
         
         try:
-            log.debug("Recursive search for plaintext emails in %s "%(path))
+            self.log.debug("Recursive search for plaintext emails in %s "%(path))
             
             # We want to recurslivly grep all html files and look for something looking like email address
             filelist = []
@@ -62,7 +60,7 @@ class PluginPlainTextEmail(PluginMixin):
             #as plugin finished - its success
             return STATUS.success
         except Exception,e:
-            log.exception("No check can be done: %s "%(e))
+            self.log.exception("No check can be done: %s "%(e))
             return STATUS.exception
     
 

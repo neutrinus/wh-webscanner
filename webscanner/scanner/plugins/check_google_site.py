@@ -19,8 +19,6 @@ import time
 import json
 from time import sleep
 
-from logs import log
-
 class PluginGoogleSite(PluginMixin):
     '''
     This Plugin uses google API:
@@ -42,7 +40,7 @@ class PluginGoogleSite(PluginMixin):
         jdata = json.loads(search_results.read())
 
         if 'estimatedResultCount' not in jdata['responseData']['cursor']:
-            log.debug("no estimatedResultCount")
+            self.log.debug("no estimatedResultCount")
             return STATUS.exception
 
         from scanner.models import Results

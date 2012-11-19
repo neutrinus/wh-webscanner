@@ -18,6 +18,17 @@ DATABASES = {
     }
 }
 
+LOGGING['loggers']['webscanner']={
+    'handlers':['logfile'],
+    'level':'DEBUG',
+    'propagate':1,
+}
+LOGGING['loggers']['scanner']={
+    'handlers':['logfile'],
+    'level':'DEBUG',
+    'propagate':1,
+}
+
 PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 
