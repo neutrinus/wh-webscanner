@@ -11,7 +11,7 @@ def send_welcome_email(sender, user, request, **kwargs):
     try:
         template = loader.find_template('account/email/welcome.html')[0]
         text = template.render(Context({'user':user}))
-        user.send_mail(_('Welcome at webcheck.me!'), text, settings.DEFAULT_FROM_EMAIL)
+        user.email_user(_('Welcome at webcheck.me!'), text, settings.DEFAULT_FROM_EMAIL)
         log.info('Welcome mail sent to user: %s (email:%s)'%(user, user.email))
     except Exception:
         log.exception('Error sending welcome mail to user: %s (email: %s)'%(user, user.email))
