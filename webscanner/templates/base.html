@@ -46,6 +46,15 @@
     {% block extrahead %} {% endblock %}
 </head>
 <body>
+<noscript>
+    <div id='no-javascript' class="alert alert-error">
+    You have no javascript enabled.
+
+    Please turn it on to get better user experience.
+    </div>
+</noscript>
+
+
 <div class="navbar navbar-static-top navbar-inverse">
     <div class="navbar-inner">
 {% if user.is_authenticated %}
