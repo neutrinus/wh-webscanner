@@ -134,6 +134,9 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     #apps
+    'grappelli.dashboard',
+    'grappelli',
+
     'account',
     'scanner',
     'payments',
@@ -255,6 +258,8 @@ PAYPAL_PRIVATE_CERT = apath('paypal.pem')
 PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
 PAYPAL_CERT = apath('paypal_cert.pem')
 
+
+GRAPPELLI_INDEX_DASHBOARD = 'webscanner.dashboard.CustomIndexDashboard'
 
 
 # This should be at the very end
