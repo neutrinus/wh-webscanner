@@ -48,19 +48,10 @@ def scan_archive(request):
     )
 
 
-class ScanURLForm(forms.Form):
-    url = forms.CharField()
-    #select_seo = forms.BooleanField(required=False)
-    #select_security = forms.BooleanField(required=False)
-    #select_performance = forms.BooleanField(required=False)
-    #select_mail = forms.BooleanField(required=)
-
-    def __init__(self, *a, **b):
-        super(ScanURLForm, self).__init__(*a, **b)
-        for group_code, opt_dict in Tests.TEST_GROUPS.items():
-            self.fields['select_%s'%group_code] = forms.BooleanField(
-                label=opt_dict['verbose_name'],
-                required=False)
+class ScanURLForm(forms.ModelForm):
+    class Meta:
+        model = Tests
+        fields = 'url', 'check_seo', 'check_security', 'check_performance', 'check_mail'
 
     def clean_url(self):
         url = self.cleaned_data['url']
@@ -114,7 +105,7 @@ def index(request):
                     'recaptcha_form':captcha}
 
     def get_test_group_codes():
-        return [ x[7:] for x in request.POST if 'select_' in x]
+        return [ x[6:] for x in request.POST if 'check_' in x]
 
 
     # if user is not authenticated, do inline registration 
@@ -124,18 +115,19 @@ def index(request):
         redirect_url.args['u']=pass_url
         return redirect(redirect_url.url)
 
-    user_profile = request.user.get_profile()
+    user_profile = request.user.userprofile  #get_profile()
 
     if user_profile.credits > 0:
         user_profile.credits = F('credits') - 1
         user_profile.save()
 
-        test = Tests.objects.create(url=form.cleaned_data['url'],
-                     user=request.user,
-                     user_ip=request.META['REMOTE_ADDR'],
-                     priority=20)
-        test.start(test_groups=get_test_group_codes())
-        log.debug("User %s(%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, form.cleaned_data['url'], test.uuid))
+        test = form.save(commit=False)
+        test.user = request.user
+        test.user_up = request.META['REMOTE_ADDR']
+        test.priority=20
+        test.save()
+        test.start()
+        log.debug("User %s(%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, test.url, test.uuid))
 
     else:
         messages.warning(request, _('Not enought credits, please buy more!'))

@@ -96,6 +96,16 @@ PLUGIN_NAMES = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES ]
 
+def validate_groups(groups):
+    'create validator that checks item is string of comma semarated group codes'
+    def validator(value):
+        item_groups = set(i for i in value.split(',') if i.strip())
+        diff = item_groups.difference(set(groups))
+        if diff:
+            raise ValidationError(_('You selected groups "%s" which are not '
+                                    'recognized by the system.'%', '.join(diff)))
+    return validator
+
 
 class Tests(models.Model):
     TEST_STATUS = Choices(
@@ -103,32 +113,40 @@ class Tests(models.Model):
         ('started', _("Scheduled")),
         ('stopped', _("Stopped")),
     )
-    TEST_GROUPS = {
-        'seo': {'verbose_name':_('SEO checks'),
-                'test_codes':('social','spellcheck')},
-        'performance': {'verbose_name':_('SEO checks'),
-                'test_codes':('social','spellcheck')},
-        'security': {'verbose_name':_('SEO checks'),
-                'test_codes':('social','spellcheck')},
-        'mail': {'verbose_name': _("Mail checks"),
-                'test_codes':('social',)},
-    }
     '''
     Fields with _ prefix should not be used for queries, there are only
     some kind of `calculated cache`.
     '''
-    uuid                =   UUIDField(db_index=True,auto=True, unique=True)
-    url                 =   models.CharField(max_length=600,blank=1,null=1, db_index=True)
+
+    ####
+    # Attributes set during scan creation
+    ####
+    uuid                =   UUIDField(db_index=True, auto=True, unique=True)
+    url                 =   models.CharField(max_length=600, blank=1, null=1, db_index=True)
     priority            =   models.IntegerField(default=10)
     creation_date       =   models.DateTimeField(auto_now_add=True, db_index=True)
-
-    download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
-    download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
+    #: comma separated group codes from TEST_GROUPS
+    check_security      =   models.BooleanField(default=True)
+    check_seo           =   models.BooleanField(default=True)
+    check_performance   =   models.BooleanField(default=True)
+    check_mail          =   models.BooleanField(default=True)
 
     user                =   models.ForeignKey(User, null=1)
     user_ip             =   models.IPAddressField(null=True)
 
+    ####
+    # Attributes that can be changed during checks
+    ####
+
+    download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
+    download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
+
+
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
+
+    ####
+    # Attributes which should be only changed by model instance itself
+    ####
 
     #: Cache for: status
     _status           =   models.CharField(_(u'status'),
@@ -190,47 +208,19 @@ class Tests(models.Model):
         log.error('duration assertion: this error should never exist!')
         return 0
 
-    def start(self, test_codes=None, test_groups=None):
+    def start(self):
         # TODO: make usable of `test_names` and `test_groups`
         if self._status in (self.TEST_STATUS.started, self.TEST_STATUS.stopped):
             return False
 
-        # commands to schedule (command codes)
-        codes = set(code for code in PLUGINS.keys())
-        commands = set()
-
-        if test_codes is None and test_groups is None:
-            # if nothing selected, do all tests
-            commands = codes
-        else:
-            if test_codes:
-                test_codes = set(test_codes)
-                if test_codes.difference(codes):
-                    raise ValueError("You passed invalid test codes: %s"%
-                        ', '.join(test_codes.difference(codes)))
-                commands.update(test_codes)
-            if test_groups:
-                test_groups = set(test_groups)
-                if test_groups.difference(self.TEST_GROUPS.keys()):
-                    raise ValueError("You passed invalid test group codes: %s"%
-                        ', '.join(test_groups.difference(self.TEST_GROUPS.keys())))
-                for group_code in test_groups:
-                    commands.update(self.TEST_GROUPS[group_code]['test_codes'])
-
         try:
-            command_queue = []
-            for code in commands:
-                oplugin = PLUGINS[code]()
-                command_queue.append(
-                    CommandQueue(test=self,
-                                 testname=code,
-                                 wait_for_download=oplugin.wait_for_download)
-                )
-
             with transaction.commit_on_success():
+                for plugin_code, plugin_class in PLUGINS.items():
+                    CommandQueue.objects.create(test=self,
+                         testname=plugin_code,
+                         wait_for_download=plugin_class.wait_for_download)
                 self._status = self.TEST_STATUS.started
                 self.save()
-                [ cmd.save() for cmd in command_queue ]
             return True
         except Exception:
             log.exception("Error during starting test: %s"%self.uuid)
@@ -293,11 +283,14 @@ class Tests(models.Model):
             url=url,
             user=user,
         )
+        for key in ['seo','performance','mail','security']:
+            ctx['check_%s'%key]=True if key in groups else False
+
         if user_ip:
             ctx['user_ip']=user_ip
 
         test = Tests.objects.create(**ctx)
-        test.start(test_groups=groups)
+        test.start()
         return test
 
 class CommandQueueManager(models.Manager):

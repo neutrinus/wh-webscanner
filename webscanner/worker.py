@@ -111,7 +111,7 @@ def downloader():
                 log.debug("Cleaning time!")
                 dirtytests = Tests.objects.filter(is_deleted=False)
                 for dtest in dirtytests:
-                    if dtest.percent_done() == 100:
+                    if dtest.percent_progress() == 100:
                         log.debug("Cleanup old test %s (path: %s)"%(dtest.uuid, dtest.download_path))
                         if os.path.exists(dtest.download_path):
                             shutil.rmtree(dtest.download_path)
