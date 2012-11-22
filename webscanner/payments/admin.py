@@ -25,7 +25,11 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ['coupon__code', 'code', 'user__email', 'user__username', 'price']
     list_display = ('user', 'price', 'code', 'coupon', 'is_paid', 'date_paid')
 
+class CreditsPricingPlanAdmin(admin.ModelAdmin):
+    model = CreditsPricingPlan
+
 site.register(Coupon, CouponAdmin)
 site.register(Payment, PaymentAdmin)
+site.register(CreditsPricingPlan, CreditsPricingPlanAdmin)
 
 

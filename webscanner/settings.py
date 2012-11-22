@@ -251,7 +251,7 @@ NOSE_ARGS = [
              #'--profile-stats-file=tests/profile',
             ] # arguments to nose for testing
 
-PRODUCT_PRICE = Decimal("3.79")
+PRODUCT_PRICE = "3.79"  # USD
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 PAYPAL_ENCRYPTED = True
 PAYPAL_PRIVATE_CERT = apath('paypal.pem')

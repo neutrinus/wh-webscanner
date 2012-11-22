@@ -1,13 +1,29 @@
 {% extends 'base.html' %}
 {%load i18n%}
+{%load l10n%}
 {% load infinite_pagination %}
 
 {% block title %}{% trans "Payments" %}{% endblock %}
 
 
 {% block content %}
+<div class="modal hide fade" id="modal_coupon_form">
+    <form action='' method='get'>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{% trans "Please enter your discount coupon code" %}</h3>
+        </div>
+        <div class="modal-body">
+            <label class="control-label" for="coupon">{% trans "Coupon code" %}</label>
+            <input type=text name='coupon' />
+        </div>
+        <div class="modal-footer">
+            <button type=submit class="btn btn-primary">{% trans "Check coupon" %}</button>
+        </div>
+    </form>
+</div>
 
-<h1>{% trans "Payments" %}</h1>
+<h1 class='page-header'>{% trans "Payments" %}</h1>
 
 <div class="row-fluid">
     {% if payments %}
@@ -25,9 +41,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for payment in ppayments %}
+                {% for payment in payments %}
                     <tr>
-                        <td>{{ payment.date_created }}</td>
+                        <td>{{ payment.date_created|localize }}</td>
                         <td>${{ payment.price }}</td>
                         <td>{% if payment.subscription.coupon %}{{ payment.subscription.coupon.percent }}% {% endif %}</td>
                     </tr>
@@ -41,32 +57,30 @@
 
     {% endif %}
 
-    <div class="span6">
+    <div class="span4">
         <div class="well">
             <h2>{% trans "Status" %}</h2>
-                <p> {% trans "Your account is: " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}</p>
+            <p> 
+            {#{% trans "Your have " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}#}
+            {% blocktrans count points=request.user.get_profile.credits %}
+                You have {{points}} credit point.
+            {% plural %}
+                You have {{points}} credit points.
+            {% endblocktrans %}
+            </p>
 
             <h2>{% trans "Buy more points" %}</h2>
             <b>{% trans "Discount" %}:</b>
             {% if coupon %} {{ coupon.percent }}% {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
-            <b>Price:</b> ${{ price }} per 100 scans <br />
-            <br /><br />
-            <div class="modal hide fade" id="modal_coupon_form">
-                <form action='' method='get'>
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                        <h3>{% trans "Please enter your discount coupon code" %}</h3>
-                    </div>
-                    <div class="modal-body">
-                        <label class="control-label" for="coupon">{% trans "Coupon code" %}</label>
-                        <input type=text name='coupon' />
-                    </div>
-                    <div class="modal-footer">
-                        <button type=submit class="btn btn-primary">{% trans "Get coupon" %}</button>
-                    </div>
-                </form>
-            </div>
-                        {{paypal}}
+
+
+            <form class='form-horizontal' action="{{request.get_full_path}}" method=post>
+                {% csrf_token %}
+                {% for plan in pricing_plans %}
+                    <button class="btn btn-primary btn-large" type=submit name="plan" value="{{plan.pk}}">„{{plan.name}}” – {{plan.price}} = {{plan.credits}} credits</button>
+                {% endfor %}
+            </form>
+
         </div>
 
     </div>

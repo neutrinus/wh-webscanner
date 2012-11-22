@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="row">
+    <div class="span4 offset4 well">
+        Redirection to PayPal.
+        <div id='paypal_redirection' class='hide'>
+            {{paypal_form}}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+            $('#paypal_redirection>form').submit();
+    });
+</script>
+{% endblock content %}

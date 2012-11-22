@@ -82,20 +82,6 @@
         </ul>
     </div>
 </div>
-{% if messages %}
-<div class="container">
-    <div class="row">
-        <div class="span8 offset2">
-            {% for message in messages %}
-                <div class="alert alert-block {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    {{ message|safe }}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endif %}
 
 {% if not user.is_authenticated %}
 <div class="modal fade" id="modal_login">
@@ -119,16 +105,31 @@ $('#form_modal_submit').click(function() {
 {% endif %}
 
     <div class="container" id="maincontent">
-    {% block content %}
-    <h2>{% trans "Something went wrong! Please contact with administrator." %}</h2>
-    {% endblock %}
+
+        {% if messages %}
+            <div class="row">
+                <div class="span8 offset2">
+                    {% for message in messages %}
+                        <div class="alert alert-block {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            <a class="close" data-dismiss="alert" href="#">×</a>
+                            {{ message|safe }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
 
 
-    <!-- footer -->
-    <hr />
-    <div class='footer pull-right'>
-        {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
-    </div>
+
+        {% block content %}
+        <h2>{% trans "Something went wrong! Please contact with administrator." %}</h2>
+        {% endblock %}
+
+        <hr />
+
+        <div class='footer pull-right'>
+            {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
+        </div>
 
     </div>
 
