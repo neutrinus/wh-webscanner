@@ -26,58 +26,73 @@
 <h1 class='page-header'>{% trans "Payments" %}</h1>
 
 <div class="row-fluid">
-    {% if payments %}
-    {% autopaginate payments per_page=30 as ppayments %}
 
     <div class="span6">
         <h2>{% trans "Payments archive" %}</h2>
-        <div class="container">
-            <table class="table" style="width:auto;">
+            {% if payments %}
+            <table class="table table-striped table-bordered " style="margin:0 auto;">
                 <thead>
                     <tr>
-                        <th>{% trans "date" %}</th>
-                        <th>{% trans "price" %}</th>
-                        <th>{% trans "discount" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Price ($)" %}</th>
+                        <th>{% trans "Discount (in %)" %}</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for payment in payments %}
+                {% autopaginate payments per_page=30 as payments_page %}
+                {% for payment in payments_page %}
                     <tr>
                         <td>{{ payment.date_created|localize }}</td>
                         <td>${{ payment.price }}</td>
-                        <td>{% if payment.subscription.coupon %}{{ payment.subscription.coupon.percent }}% {% endif %}</td>
+                        <td>{% if payment.coupon %}{{ payment.coupon.percent }}%{%else%}-{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
+
+            {% else %} {# if no payments #}
+            <h2>No paymants so far.</h2>
+            {% endif %}
+        {% paginate %}
     </div>
 
-    {% paginate %}
 
-    {% endif %}
 
-    <div class="span4">
+    <div class="span6">
         <div class="well">
             <h2>{% trans "Status" %}</h2>
             <p> 
             {#{% trans "Your have " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}#}
             {% blocktrans count points=request.user.get_profile.credits %}
-                You have {{points}} credit point.
+                You have <b>{{points}}</b> credit point.
             {% plural %}
-                You have {{points}} credit points.
+                You have <b>{{points}}</b> credit points.
             {% endblocktrans %}
             </p>
 
-            <h2>{% trans "Buy more points" %}</h2>
-            <b>{% trans "Discount" %}:</b>
-            {% if coupon %} {{ coupon.percent }}% {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
-
+            <h2>{% trans "Buy more credits" %}</h2>
+            <p>
+                <b>{% trans "Discount" %}:</b>
+                {% if coupon %}
+                <b>
+                {% blocktrans with discount=coupon.percent %}
+                {{ discount }}% OFF
+                {% endblocktrans %}
+                </b>
+                
+                {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
+            </p>
 
             <form class='form-horizontal' action="{{request.get_full_path}}" method=post>
                 {% csrf_token %}
                 {% for plan in pricing_plans %}
-                    <button class="btn btn-primary btn-large" type=submit name="plan" value="{{plan.pk}}">„{{plan.name}}” – {{plan.price}} = {{plan.credits}} credits</button>
+                <div class="control-group">
+                <button style="width:100%" class="btn btn-primary btn-large" type=submit name="plan" value="{{plan.pk}}">
+                    {% blocktrans with plan_name=plan.name price=plan.price credits=plan.credits context "buy button" %}
+                    Buy "{{plan_name}}" plan <br/> ${{price}} for <b>{{credits}}</b> credits
+                    {% endblocktrans %}
+                </button>
+                </div>
                 {% endfor %}
             </form>
 
