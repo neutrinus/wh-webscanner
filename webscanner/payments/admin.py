@@ -17,7 +17,7 @@ class CouponAdmin(admin.ModelAdmin):
 
 class PaymentAdmin(admin.ModelAdmin):
     model = Payment
-    readonly_fields = ('code', 'user', 'price', 'coupon', 'date_created', 'date_paid')
+    readonly_fields = ('code', 'user', 'price', 'credits', 'coupon', 'date_created', 'is_paid', 'date_paid')
     list_per_page = 100
     date_hierarchy = 'date_created'
     ordering = ('-date_created',)
