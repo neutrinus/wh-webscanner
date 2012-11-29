@@ -17,7 +17,7 @@ from time import sleep
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
-from settings import MEDIA_ROOT, SELENIUM_HUB
+from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
@@ -26,6 +26,7 @@ from PIL import Image
 from scanner.plugins.optiimg import gentmpfilename, optimize_image
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
+
 
 
 class Alarm(Exception):
@@ -39,7 +40,7 @@ def crop_screenshot(inputfile):
     img = Image.open(inputfile)
     box = (0, 0, 940, 400)
     area = img.crop(box)
-    ofile = os.path.join(MEDIA_ROOT,"/screenshots/", "thumb_"+gentmpfilename()+".png")
+    ofile = os.path.join(settings.MEDIA_ROOT,"/screenshots/", "thumb_"+gentmpfilename()+".png")
     area.save(ofile, 'png')
     return(ofile)
 
@@ -151,7 +152,7 @@ class PluginMakeScreenshots(PluginMixin):
 
                 dbrowser = webdriver.Remote(
                     desired_capabilities=desired_capabilities,
-                    command_executor=SELENIUM_HUB,
+                    command_executor=settings.SELENIUM_HUB,
                 )
 
                 #http://seleniumhq.org/docs/04_webdriver_advanced.html
@@ -162,7 +163,7 @@ class PluginMakeScreenshots(PluginMixin):
                 #give a bit time for loading async-js
                 sleep(2)
 
-                dbrowser.get_screenshot_as_file(os.path.join(MEDIA_ROOT,filename))
+                dbrowser.get_screenshot_as_file(os.path.join(settings.MEDIA_ROOT,filename))
 
                 timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
@@ -178,16 +179,16 @@ class PluginMakeScreenshots(PluginMixin):
                 dbrowser.quit()
                 signal.alarm(0)
 
-                thumb = crop_screenshot(os.path.join(MEDIA_ROOT, filename))
+                thumb = crop_screenshot(os.path.join(settings.MEDIA_ROOT, filename))
 
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-                res.output_full = template.render(Context({'filename':screenshot[len(MEDIA_ROOT)+1:],
-                                                            'thumb': screenshot_thumb[len(MEDIA_ROOT)+1:],
+                res.output_full = template.render(Context({'filename':screenshot[len(settings.MEDIA_ROOT)+1:],
+                                                            'thumb': screenshot_thumb[len(settings.MEDIA_ROOT)+1:],
                                                             'browsername': browsername,
                                                             'browserversion': dbrowser.capabilities['version']}))
                 res.save()
-                self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(MEDIA_ROOT,filename)))
+                self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
 
             except WebDriverException:
                 self.log.warning("WebDriverException")
