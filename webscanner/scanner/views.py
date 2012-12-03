@@ -143,7 +143,10 @@ def check_results(request, uuid):
     """
     ajax requests handler - suply information about tests
     """
-    test = Tests.objects.filter(uuid=uuid).get()
+    try:
+        test = Tests.objects.filter(uuid=uuid).get()
+    except ObjectDoesNotExist:
+        return redirect('/')
 
     last = request.GET.get("last")
     if not last:
