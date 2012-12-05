@@ -116,7 +116,7 @@ class PluginMail(PluginMixin):
                 } ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to postmaster@%(domain)s:<code>%(nopostmaster)s</code> </p>"% {
+                res.output_full += unicode(_("<p>Mailservers that do not accept mail to postmaster@%(domain)s:<code>%(nopostmaster)s</code> </p>"% {
                     "domain": domain,
                     "nopostmaster" :nopostmaster
                 } ))
@@ -139,7 +139,7 @@ class PluginMail(PluginMixin):
                 } ))
             else:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Mailservers that doesnt accept mail to abuse@%(domain)s:<code>%(noabuse)s</code> </p>"% {
+                res.output_full += unicode(_("<p>Mailservers that do not accept mail to abuse@%(domain)s:<code>%(noabuse)s</code> </p>"% {
                     "domain": domain,
                     "noabuse" :noabuse
                 } ))
@@ -161,7 +161,7 @@ class PluginMail(PluginMixin):
             elif (noconnect_count< len(mxes)):
                 #some servers didnt respond
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>Some(%(number)s) of your %(mx_number)s mailservers didnt accept connection from our check, details:<code>%(details)s</code></p>"%{"noconnect_count" : noconnect_count, "mx_number":len(mxes), "details" :noconnect } ))
+                res.output_full += unicode(_("<p>Some(%(number)s) of your %(mx_number)s mailservers did not accept connection from our check, details:<code>%(details)s</code></p>"%{"noconnect_count" : noconnect_count, "mx_number":len(mxes), "details" :noconnect } ))
             else:
                 #none server responded
                 res.status = RESULT_STATUS.error

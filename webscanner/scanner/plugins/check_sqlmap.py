@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 import sys
 import os
-#http://code.google.com/p/pywhois/ 
+#http://code.google.com/p/pywhois/
 import random
 import HTMLParser
 import urllib
@@ -26,17 +26,17 @@ PATH_SQLMAP = '/usr/bin/sqlmap'
 
 class PluginSQLMap(PluginMixin):
     name = unicode(_('SQLMap'))
-    
+
     def run(self, command):
-      
-        try:           
+
+        try:
             #scan website
             cmd = PATH_CLAMSCAN + " "+ command.test.download_path
             args = shlex.split(cmd)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE)          
+            p = subprocess.Popen(args, stdout=subprocess.PIPE)
             (output, stderrdata2) = p.communicate()
             if p.returncode != 0:
-                self.log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))    
+                self.log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
                 return STATUS.exception
 
             numberofthreats = int(re.search('Infected files: (?P<kaczka>[0-9]*)',output).group('kaczka'))
@@ -50,7 +50,7 @@ class PluginSQLMap(PluginMixin):
                 res.output_full = unicode(_("Our antivirus found <b>%s</b> infected files on your website"%(numberofthreats)))
             else:
                 res.status = RESULT_STATUS.success
-                res.output_full = unicode(_("Our antivirus claims that there is no infected files on your website."))           
+                res.output_full = unicode(_("Our antivirus claims that there are none infected files on your website."))
             res.save()
 
             #as plugin finished - its success
@@ -61,5 +61,4 @@ class PluginSQLMap(PluginMixin):
         except Exception,e:
             self.log.exception("No check can be done: %s "%(e))
             return STATUS.exception
-
 

@@ -92,7 +92,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full = unicode(_("<p>Following MX records for dont have reverse entries: <code>%(noreversemxes)s</code>. Folowing MX records have reverse entries: <code>%(reversemxes)s</code>. </p>" % { "noreversemxes" : noreversemxes, "reversemxes" : reversemxes} ))
                 res.status = RESULT_STATUS.error
 
-            res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers to reject your e-mails or mark them as SPAM. </p>"))
+            res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers reject your e-mails or mark them as SPAM. </p>"))
             res.save()
 
 
@@ -130,7 +130,7 @@ class PluginDNSmail(PluginMixin):
         except dns.resolver.NoAnswer,e:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
             res.output_desc = unicode(_("MX records") )
-            res.output_full = unicode(_("<p>There are no MX records defined for your domain. Having them is essential to be able to recieve emails for this domain.</p>"))
+            res.output_full = unicode(_("<p>There are none MX records defined for your domain. Having them is essential to be able to recieve emails for this domain.</p>"))
 
             if re.search("www\.", command.test.url):
                 res.output_full += unicode(_(" <div class='alert'>Please try to run this test again <b>without www prefix</b>.</div>" ))

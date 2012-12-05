@@ -84,7 +84,6 @@ def index(request):
     if not request.POST:
         return {}
 
-
     if not form.is_valid():
         return {'form':form}
 

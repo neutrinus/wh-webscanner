@@ -52,7 +52,7 @@ class PluginClamav(PluginMixin):
                 res.output_full = unicode(_("Our antivirus found <b>%s</b> infected files on your website"%(numberofthreats)))
             else:
                 res.status = RESULT_STATUS.success
-                res.output_full = unicode(_("Our antivirus claims that there is no infected files on your website."))
+                res.output_full = unicode(_("Our antivirus claims that there are none infected files on your website."))
             res.save()
 
             #as plugin finished - its success

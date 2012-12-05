@@ -12,6 +12,9 @@ from annoying.decorators import render_to
 
 from scanner.models import Tests
 
+def ulogout(request):
+    logout(request)
+    messages.info(request, _('You have been logged out. We will miss you!'))
 
 '''
 def logout(request):

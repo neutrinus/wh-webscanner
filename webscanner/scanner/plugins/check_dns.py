@@ -47,7 +47,7 @@ class PluginDNS(PluginMixin):
                 }))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>There are no A records for this domain! It means that nobody can reach your website.</p>" ))
+                res.output_full = unicode(_("<p>There are none A records for this domain! It means that nobody can reach your website.</p>" ))
                 res.status = RESULT_STATUS.error
             res.save()
 
@@ -63,7 +63,7 @@ class PluginDNS(PluginMixin):
 
             res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Web server(s) geo-location") )
-            res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>"))
+            res.output_full = rendered + unicode(_("<p>It is important to have servers in different geographic locations, to increase reliability of your services.</p>"))
             res.status = RESULT_STATUS.info
             res.save()
 
