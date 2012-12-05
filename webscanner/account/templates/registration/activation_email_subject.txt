@@ -1,1 +1,1 @@
-Account registration for {{ site.name }}
+[{{ site.name }}] Please verify this email address

@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Tarrifs" %}{% endblock %}
+{% block title %}{% trans "Features" %}{% endblock %}
 
 {% block content %}
 
 
 <div class="section">
-    <h1>{% trans "Tariffs" %}</h1>
-    <h2>{% trans "Features table" %}</h2>
+    <h1>{% trans "Features" %}</h1>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -113,15 +112,24 @@
     </div>
 
     <div class="span4">
-        <h2>{% trans "Questions?" %}</h2>
-        {% trans "Please contact us using " %}<a href="{% url contact %}">{% trans "contact form" %}</a>
+        <h2>{% trans "Payment method" %}</h2>
+        {% trans "Currently we offer payment via PayPal, but in near future we will add more options!" %}
     </div>
 
 
     <div class="span4">
+        {% if user.is_authenticated %}
+
+        <h2>{% trans "Questions?" %}</h2>
+        {% trans "Please contact us using " %}<a href="{% url contact %}">{% trans "contact form" %}</a>
+
+        {% else %}
         <h2>{% trans "Start now!" %}</h2>
+        <p>Create a account and get free 10 tests!</p>
         <br />
-        <a href="{% if user.is_authenticated %}{% url payments_payments %}{% else %}{% url registration_register %}{% endif %}" class="btn btn-large btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Become a VIP" %}</a>
+        <a href="{% url registration_register %}" class="btn btn-large btn-inverse"> <i class="icon-star icon-white"></i> {% trans "Create a free trial" %}</a>
+        {% endif %}
+
     </div>
 
 </div>

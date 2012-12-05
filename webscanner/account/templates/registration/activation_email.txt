@@ -1,23 +1,30 @@
-You (or someone pretending to be you) have asked to register an account at
-{{ site.name }}.  If this wasn't you, please ignore this email
-and your address will be removed from our records.
+Welcome!
+
+Hi {{user}},
 
 {% if registration_inline %}
+Your webcheck.me report for {{user.registration_inline.test.url}} is prepared and almost ready. But before we let to use our gregorus tools  we just have one question for you:
 {% else %}
-To activate your account, please click the following link within the next
-{{ expiration_days }} day:
+Your webcheck.me account is prepared and almost ready to go. But before we let to use our gregorus tools  we just have one question for you:
 {% endif %}
+
+Are you really who you say you are? Can you prove it?
+
+It's simple, just click the link below to verify your email.  You have {{ expiration_days }} days to do this but if you've read up to this point, you should probably just click it now.
 
 {{site.domain}}{% url registration_activate activation_key=activation_key %}
 
 {% if registration_inline %}
 To see test results for {{user.registration_inline.test.url}} please visit {{user.registration_inline.test.get_absolute_url }}.
 
-You can login using this password: {{password}}.
-To change password after activation, you can visit {% url auth_password_change %}.
-{% else %}
+We have generated a password for you: {{password}}
+If you do not love remebering random stuff, you could just change it at {% url auth_password_change %}.
 {% endif %}
+
+Enjoy and thank you for joining our ever-growing webcheck.me family.
 
 Sincerely,
 webcheck.me Team
 {{ site.name }}
+
+Please note that entering this link means that you agree to our Terms of use ({% url scanner_terms %}).
