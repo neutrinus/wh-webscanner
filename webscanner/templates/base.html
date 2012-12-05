@@ -65,7 +65,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li><a href="{% url auth_password_change %}">{% trans "Change password" %}</a></li>
-                <li><a href="{% url auth_logout %}">{% trans "Logout" %}</a></li>
+                <li><a href="{% url auth_logout %}?next={{request.path}}">{% trans "Logout" %}</a></li>
             </ul>
         </div>
 

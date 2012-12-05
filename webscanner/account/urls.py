@@ -4,8 +4,8 @@ from django.conf.urls.defaults import patterns, include, url
 #from .forms import EmailRegistrationInlineForm
 
 urlpatterns = patterns('',
-    #url(r'^logout/$', '', name='logout'),
-    #url(r'^login/$', 'account.views.login', name='login'),
+    # override django.contrib.auth.urls for logout
+    url(r'^logout/$', 'account.views.logout', name='logout'),
 
     url(r'^', include('registration_email.backends.default.urls')),
     url(r'^', include('django.contrib.auth.urls')),
