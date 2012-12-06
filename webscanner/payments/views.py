@@ -95,7 +95,7 @@ def payments(req):
         # current coupon
         coupon=coupon,
         payments=req.user.payment_set.filter(is_paid=True).order_by('-date_created'),
-        pricing_plans=CreditsPricingPlan.objects.filter(is_active=True),
+        pricing_plans=CreditsPricingPlan.objects.filter(is_active=True).order_by('credits'),
     )
 
 
