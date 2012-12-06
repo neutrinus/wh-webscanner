@@ -10,9 +10,9 @@ It's simple, just click the link below to verify your email.  You have {{ expira
 
 https://{{site.domain}}{% url registration_activate activation_key=activation_key %}
 
+Please note that entering this link means that you agree to our Terms of use (https://{{site.domain}}{% url scanner_terms %}).
+
 Enjoy and thank you for joining our ever-growing webcheck.me family.
 
 Sincerely,
 {{ site.name }} Team
-
-Please note that entering this link means that you agree to our Terms of use (https://{{site.domain}}{% url scanner_terms %}).

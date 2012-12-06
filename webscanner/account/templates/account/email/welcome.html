@@ -1,31 +1,23 @@
 {%load i18n%}
 {%load set %}
 {% set "https://webcheck.me" as link %}
-{% url payments_payments as payments_query %}
-{% url scanner_pricing as pricing_query %}
-{% blocktrans with user=user link=link payments_query=payments_query pricing_query=pricing_query %}
+{% url contact as contact_query %}
+{% blocktrans with user=user link=link contact_query=contact_query  %}
 
-Dear {{user}},
+Dear {{user.email}},
 
-Thank you for taking the time to evaluate webcheck.me.  I will be your initial contact and would be happy to answer any questions.  We want you to have a successful trial so please don't hesitate to reach out should you have any problems navigating the application or getting set up.
+Thank you for taking the time to evaluate webcheck.me.  Our support would be happy to answer any questions.  We want you to have a successful trial so please don't hesitate to reach out should you have any problems navigating the application or getting set up.
 
-A few questions regarding your Webcheck.me Review:
+I have a few questions regarding your webcheck.me review:
 
 - What performance issues or general webpage scenario brought you to webcheck?
-- How many websites you want to test ?
 - What determines a successful trial for you?
+- What could we do to make webcheck experience even better?
 
-I can help you take advantage of some of our special offers if you are thinking of licensing your current environment.  We appreciate your consideration of webcheck!
+We appreciate your consideration of webcheck!
 
-Thanks,
-
-
-
-Need a little help? Have questions?
-
-    We've got a really excellent support site that has tons of answers.
-    We also have one of the best support crews in the game that is happy to help.
+Need a little help? Have questions? Please contact <support@webcheck.me> or reach us using our contact form {{link}}{{ contact_query }}.
 
 Sincerely,
-webcheck.me Team
+webcheck.me Support Team
 {% endblocktrans %}
