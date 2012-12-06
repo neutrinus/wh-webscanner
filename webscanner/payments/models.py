@@ -128,4 +128,7 @@ class CreditsPricingPlan(models.Model):
     credits             = models.IntegerField()
     is_active           = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return "%s: %s credits for $%s" % (self.name, self.credits, self.price)
+
 

@@ -27,6 +27,9 @@ class PaymentAdmin(admin.ModelAdmin):
 
 class CreditsPricingPlanAdmin(admin.ModelAdmin):
     model = CreditsPricingPlan
+    ordering = ('name',)
+    list_display = ('name', 'price', 'credits', 'is_active')
+    list_filter = ( 'is_active',)
 
 site.register(Coupon, CouponAdmin)
 site.register(Payment, PaymentAdmin)
