@@ -2,21 +2,10 @@ You (or someone pretending to be you) have asked to register an account at
 {{ site.name }}.  If this wasn't you, please ignore this email
 and your address will be removed from our records.
 
-{% if registration_inline %}
-{% else %}
 To activate your account, please click the following link within the next
-{{ expiration_days }} day:
-{% endif %}
+{{ expiration_days }} day: https://{{site.domain}}{% url registration_activate activation_key=activation_key %}
 
-{{site.domain}}{% url registration_activate activation_key=activation_key %}
-
-{% if registration_inline %}
-To see test results for {{user.registration_inline.test.url}} please visit {{user.registration_inline.test.get_absolute_url }}.
-
-You can login using this password: {{password}}.
-To change password after activation, you can visit {% url auth_password_change %}.
-{% else %}
-{% endif %}
+To change password after activation, you can visit https://{{site.domain}}{% url auth_password_change %}.
 
 Sincerely,
 webcheck.me Team
