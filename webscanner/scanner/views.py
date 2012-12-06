@@ -76,6 +76,15 @@ class ScanURLForm(forms.ModelForm):
 
         return urlk.geturl()
 
+    def clean(self):
+        log.debug('clean form')
+        if (not self.cleaned_data['check_seo'] and
+            not self.cleaned_data['check_performance'] and
+            not self.cleaned_data['check_mail'] and
+            not self.cleaned_data['check_security']):
+            raise forms.ValidationError(_("Please, choose some tests."))
+        return self.cleaned_data
+
 
 @render_to('scanner/index.html')
 def index(request):
