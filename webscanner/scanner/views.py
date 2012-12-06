@@ -104,8 +104,7 @@ def index(request):
                     'recaptcha_form':captcha}
 
     def get_test_group_codes():
-        return [ x[6:] for x in request.POST if 'check_' in x]
-
+        return filter(lambda x:x.startswith('check_'), request.POST)
 
     # if user is not authenticated, do inline registration 
     if not request.user.is_authenticated():
@@ -114,7 +113,7 @@ def index(request):
         redirect_url.args['u']=pass_url
         return redirect(redirect_url.url)
 
-    user_profile = request.user.userprofile  #get_profile()
+    user_profile = request.user.userprofile  # get_profile()
 
     if user_profile.credits > 0:
         user_profile.credits = F('credits') - 1
@@ -122,16 +121,18 @@ def index(request):
 
         test = form.save(commit=False)
         test.user = request.user
-        test.user_up = request.META['REMOTE_ADDR']
-        test.priority=20
+        test.user_ip = request.META['REMOTE_ADDR']
+        test.priority = 20
         test.save()
         test.start()
-        log.debug("User %s(%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, test.url, test.uuid))
+        log.debug("User %s(ip:%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, test.url, test.uuid))
 
     else:
         messages.warning(request, _('Not enought credits, please buy more!'))
+        log.debug('user (%s) has not enough credits'%request.user)
         return {'form':form}
 
+    log.debug('redirect to results')
     return redirect(reverse('scanner_report', kwargs={'uuid':test.uuid}))
 
 

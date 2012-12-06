@@ -108,6 +108,10 @@ def validate_groups(groups):
 
 
 class Tests(models.Model):
+    class StartError(Exception):
+        pass
+    class AlreadyStartedError(StartError):
+        pass
     TEST_STATUS = Choices(
         ('not_started', _("Not started")),
         ('started', _("Scheduled")),
@@ -209,9 +213,14 @@ class Tests(models.Model):
         return 0
 
     def start(self):
-        # TODO: make usable of `test_names` and `test_groups`
+        '''
+        This method creates Commands for this tests.
+        '''
+        # if test is not saved
+        if not self.pk:
+            raise self.StartError('Test is not saved')
         if self._status in (self.TEST_STATUS.started, self.TEST_STATUS.stopped):
-            return False
+            raise self.AlreadyStartedError('Test %s is already started')
 
         try:
             with transaction.commit_on_success():
@@ -222,9 +231,9 @@ class Tests(models.Model):
                 self._status = self.TEST_STATUS.started
                 self.save()
             return True
-        except Exception:
+        except Exception as error:
             log.exception("Error during starting test: %s"%self.uuid)
-            raise
+            raise self.StartError(error)
 
 
     @classmethod
@@ -272,26 +281,28 @@ class Tests(models.Model):
         return signing.dumps((url, groups))
 
     @classmethod
-    def create_from_signed_url(cls, signed_url, user, user_ip=None):
+    def make_from_signed_url(cls, signed_url, user, user_ip=None, **kwargs):
         '''
-        Creates test and commands for signed_url url and groups
+        Makes test and commands for signed_url url and groups (without saving it)
+
+        :param kwargs: override Test attributes
         '''
-        if signed_url is None:
-            return None
         url, groups = cls.unsign_url(signed_url)
         ctx = dict(
             url=url,
             user=user,
         )
-        for key in ['seo','performance','mail','security']:
-            ctx['check_%s'%key]=True if key in groups else False
+        # hardcoded test groups, it will be changed in next architecture redesign
+        for key in ['check_seo','check_performance','check_mail','check_security']:
+            ctx[key]=True if key in groups else False
 
         if user_ip:
             ctx['user_ip']=user_ip
 
-        test = Tests.objects.create(**ctx)
-        test.start()
-        return test
+        ctx.update(kwargs)
+
+        return Tests(**ctx)
+
 
 class CommandQueueManager(models.Manager):
     def last_finish_date(self):
