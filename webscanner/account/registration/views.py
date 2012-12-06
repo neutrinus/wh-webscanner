@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from registration.views import register
+from registration.views import register, activate
 
 log = logging.getLogger(__name__)
 
@@ -34,3 +34,4 @@ def register_inline(request, backend, success_url=None, form_class=None,
 
     return register(request, backend, success_url, form_class, 
             disallowed_url, template_name, extra_context)
+
