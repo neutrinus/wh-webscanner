@@ -61,8 +61,8 @@
     <div class="span6">
         <div class="well">
             <h2>{% trans "Status" %}</h2>
-            <p> 
-            {#{% trans "Your have " %}{{ request.user.get_profile.credits }} {% trans "credit points" %}#}
+            <p>
+            {#{% trans "Your have " %} <span class="badge badge-info"> {{ request.user.get_profile.credits }}</span>{% trans "credit points" %}#}
             {% blocktrans count points=request.user.get_profile.credits %}
                 You have <b>{{points}}</b> credit point.
             {% plural %}
@@ -79,7 +79,7 @@
                 {{ discount }}% OFF
                 {% endblocktrans %}
                 </b>
-                
+
                 {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
             </p>
 

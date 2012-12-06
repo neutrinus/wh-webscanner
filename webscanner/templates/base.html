@@ -71,7 +71,7 @@
 
         <div class="pull-right">
             <ul class="nav">
-                <li><a id="menu_payments" href="{% url payments_payments %}" >{% trans "Payments" %} </a></li>
+                <li><a id="menu_payments" href="{% url payments_payments %}" >{% trans "Credits" %} <span class="badge badge-info"> {{ user.get_profile.credits }}</span> </a></li>
                 <li><a href="{% url scanner_scan_archive %}">{% trans "Scan archive" %}</a></li>
             </ul>
         </div>
@@ -85,7 +85,7 @@
             <li><a href="{% url scanner_index %}"> <img src="{{ STATIC_URL }}images/logo.png" style="height:20px" /></a></li>
             <li><a href="{% url scanner_index %}">{% trans "Home" %}</a></li>
             <li><a href="{% url scanner_about %}">{% trans "About" %}</a></li>
-            <li><a href="{% url scanner_pricing %}">{% trans "Features" %}</a></li>
+            <!--<li><a href="{% url scanner_pricing %}">{% trans "Features" %}</a></li>-->
             <li><a href="{% url scanner_terms %}">{% trans "Terms" %}</a></li>
             <li><a href="{% url contact %}">{% trans "Contact" %}</a></li>
         </ul>
