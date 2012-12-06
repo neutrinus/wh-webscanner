@@ -1,11 +1,25 @@
-You (or someone pretending to be you) have asked to register an account at {{ site.name }}.  If this wasn't you, please ignore this email and your address will be removed from our records.
+Welcome!
 
-To activate your account and see results for {{user.tests_set.all.0.url}} please click the following link within the next {{ expiration_days }} day: https://{{site.domain}}{% url registration_activate_inline activation_key=activation_key %}.
+Hi {{user}},
 
-You can login using this password: {{password}}.
-To change password after activation, you can visit https://{{site.domain}}{% url auth_password_change %}.
+Your webcheck.me account is prepared, our machines are producing a report for {{user.tests_set.all.0.url}} webpage. But before we let to use our gregorus tools  we just have one question for you:
 
-The test results for {{user.tests_set.all.0.url}} are on https://{{site.domain}}{{ user.tests_set.all.0.get_absolute_url }}.
+Are you really who you say you are? Can you prove it?
+
+It's simple, just click the link below to verify your email.  You have {{ expiration_days }} days to do this but if you've read up to this point, you should probably just click it now.
+
+https://{{site.domain}}{% url registration_activate activation_key=activation_key %}
+
+
+We have generated a password for you: {{password}}
+If you do not love remebering random stuff, you could just change it at {% url auth_password_change %}.
+
+Enjoy and thank you for joining our ever-growing webcheck.me family.
+
+Sincerely,
+{{ site.name }} Team
+
+Please note that entering activation link means that you agree to our Terms of use (https://{{site.domain}}{% url scanner_terms %}).
 
 Sincerely,
 webcheck.me Team
