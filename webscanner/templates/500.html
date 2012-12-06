@@ -1,15 +1,46 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% load i18n %}<!DOCTYPE html>
+<html lang="en">
+<head>
 
-{% block title %}{% trans "Error [500] Server error" %}{% endblock %}
+    <title>{% trans "Error [500] Server error" %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8"/>
 
-{% block content %}
+    <meta name="author" content="whitehats.pl Team" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% blocktrans %}
-<h1>Error <b>500</b></h1>
-<h2>While processing your request({{ request_path }}) there was a server error</h2>
-<p>We are sorry for any troubles, we are working to fix this issue as soon as possible.</p>
-{% endblocktrans %}
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29131705-1']);
+        _gaq.push(['_trackPageview']);
 
-{% endblock %}
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+    </script>
+
+    <style>
+        *{margin:0;padding:0}
+        html,code{font:15px/22px arial,sans-serif}
+        html{background:#fff;color:#222;padding:15px}
+        body{margin:7% auto 0;max-width:500px;min-height:180px;padding:30px 0 15px;}
+        p{margin:11px 0 22px;overflow:hidden}
+        ins{color:#777;text-decoration:none}
+    </style>
+
+</head>
+<body>
+    <a href="https://webcheck.me/"><img src="https://webcheck.me/static/images/logo2.png" alt="webcheck.me" height="30px" style="border:0; margin-bottom:20px;" /></a>
+    {% blocktrans %}
+    <h1><b>500</b> <ins>That's an error.</ins></h1>
+    <p>While processing your request({{ request_path }}) there was a server error.</p>
+    <p>We are sorry for any troubles. <ins>Our emergency team will check the diagnostic data and develop a resolution to prevent you to see this message again.</ins></p>
+
+    {% endblocktrans %}
+
+</body>
+</html>
 
