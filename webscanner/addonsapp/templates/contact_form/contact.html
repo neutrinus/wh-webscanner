@@ -8,7 +8,7 @@
 <div class="row">
     <div class="span7 offset3 well">
         <h1>{% trans "Contact Form" %}</h1>
-        <p>{% trans "Your opinion is very important to us." %}</p>
+        <p>{% blocktrans %}Your opinion is very important to us. If you would like you can also use email:<span class="coderedirection">em.kcehcbew@troppus</span> to reach us!" {% endblocktrans %}</p>
 
         <form action="" method="post" class="form-horizontal">{% csrf_token %}
             {{ form|crispy }}

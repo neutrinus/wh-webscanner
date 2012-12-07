@@ -90,3 +90,9 @@ code {
     margin: 0 auto;
     margin-top: 1em;
 }
+
+
+.coderedirection {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
