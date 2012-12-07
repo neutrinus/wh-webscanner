@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<form class="well form-horizontal" id="form_register" method="post" action="{% url registration_register %}" >
+    <input type='hidden' name='form:registration'/>
+    {% csrf_token %}
+    <h2>{% trans "Register" %} <i class="icon-plus"></i></h2>
+    {{form|crispy}}
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit">{% trans "Register by email" %}</button>&nbsp;
+        <a href="/" class="btn">{% trans "Cancel" %}</a>
+    </div>
+</form>

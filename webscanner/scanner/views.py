@@ -118,7 +118,7 @@ def index(request):
     # if user is not authenticated, do inline registration 
     if not request.user.is_authenticated():
         pass_url = Tests.sign_url(form.cleaned_data['url'], get_test_group_codes())
-        redirect_url = furl.furl(reverse('registration_register_inline'))
+        redirect_url = furl.furl(reverse('registration_register_or_login_inline'))
         redirect_url.args['u']=pass_url
         return redirect(redirect_url.url)
 

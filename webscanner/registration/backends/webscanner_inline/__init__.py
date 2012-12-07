@@ -1,6 +1,4 @@
 import logging
-import time
-import hashlib
 
 from django.core import signing
 from django.conf import settings
@@ -17,9 +15,9 @@ from django.contrib.sites.models import Site, RequestSite
 from registration.models import RegistrationProfile
 from registration import signals
 from registration.backends.default import DefaultBackend
-from registration_email.forms import EmailRegistrationForm, generate_username
 
 from scanner.models import Tests
+from .forms import WCEmailRegistrationInlineForm
 
 def _send_activation_email(self, site, user, password):
     # it was easier to copy-paste this code than make a fork
@@ -41,26 +39,6 @@ def _send_activation_email(self, site, user, password):
 
 # monkey patching, yey
 RegistrationProfile.send_activation_email_inline = _send_activation_email
-
-
-class EmailRegistrationInlineForm(EmailRegistrationForm):
-
-    def __init__(self, *a, **b):
-        super(EmailRegistrationInlineForm, self).__init__(*a, **b)
-        del self.fields['password1']
-        del self.fields['password2']
-
-
-    def clean(self):
-        # unique email validation is done in clean_email of base class
-
-        data = self.cleaned_data
-        if not 'email' in data:
-            return data
-
-        self.cleaned_data['username'] = generate_username(data['email'])
-        self.cleaned_data['password1'] = str(hashlib.sha1(str(time.time())).hexdigest())[:10]
-        return self.cleaned_data
 
 
 class InlineBackend(DefaultBackend):
@@ -122,7 +100,7 @@ class InlineBackend(DefaultBackend):
     '''
 
     def get_form_class(self, request):
-        return EmailRegistrationInlineForm
+        return WCEmailRegistrationInlineForm
 
     def post_registration_redirect(self, request, user):
         if not user:

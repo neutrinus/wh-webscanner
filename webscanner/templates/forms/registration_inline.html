@@ -1,0 +1,40 @@
+{% load spurl %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% url registration_register_inline as post_url %}
+
+<form class='{% if not inline %}well{%endif%} form-horizontal' action="{% spurl base=post_url add_query_from=request.get_full_path %}" method='post'>
+    <input type='hidden' name='form:registration_inline'/>
+
+    {% if not inline %}
+    <h2>{% trans "Get results by email" %} <i class='icon-envelope-alt'></i>*</h2>
+    {% endif %}
+
+    {% csrf_token %}
+
+    {% if form.errors %}
+    <div class="alert alert-block alert-error">
+        {{form.non_field_errors}}
+        {{form.errors.email}}
+    </div>
+    {% endif %}
+
+    <fieldset>
+
+        <div class="control-group">
+            <label class="control-label" for="id_email">{% trans "Email" %}</label>
+            <div class="controls">
+                <input type="text" class="input-large" id="id_email" name="email" placeholder="johndoe@example.org" />
+            </div>
+        </div>
+
+        {% if not inline %}
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{% trans "Register by email" %}</button>&nbsp;
+            <a href="/" class="btn">{% trans "Cancel" %}</a>
+        </div>
+        {% endif %}
+
+        <small>* creates free account for you</small>
+    </fieldset>
+</form>

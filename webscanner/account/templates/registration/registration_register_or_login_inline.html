@@ -6,12 +6,14 @@
 {% block content %}
 <div class="row">
     <div class="span8 offset2 alert alert-success">
-        <h4>You are not able to see results for {{url}} without logging</h4>
-        <h4>Please enter your email</h4>
+        <h4>Please login or enter your email</h4>
     </div>
 </div>
 <div class="row">
-    <div class="span6 offset3">
+    <div class="span6">
+        {% include "forms/login.html" %}
+    </div>
+    <div class="span6">
         {% include "forms/registration_inline.html" %}
     </div>
 </div>
