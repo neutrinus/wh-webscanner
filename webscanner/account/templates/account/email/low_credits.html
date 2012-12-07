@@ -1,0 +1,20 @@
+{%load i18n%}
+{% url contact as contact_query %}
+{% blocktrans with user=user domain=site.domain contact_query=contact_query  %}
+
+Dear {{user.email}},
+
+We appreciate your choice of webcheck. You have almost used all your credits, it is now a good time to refill your credits account. This will let you still scan webpages and fresh analises.
+
+We offer few credit packs, so you can choose the one that fits your needs:
+
+    * plan
+    * plan
+
+If your needs are bigger than this please contact our sales team <sales@webcheck.me> - they will offer you a personalized offer.
+
+Need a little help? Have questions? Please contact <support@webcheck.me> or reach us using our contact form {{ domain }}{{ contact_query }}.
+
+Sincerely,
+webcheck.me Support Team
+{% endblocktrans %}

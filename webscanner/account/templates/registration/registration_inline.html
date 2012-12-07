@@ -5,9 +5,8 @@
 
 {% block content %}
 <div class="row">
-    <div class="span8 offset2 alert alert-error">
-        <h4>You are not able to see results for {{url}} without logging</h4>
-        <h4>Please Login or enter your email</h4>
+    <div class="span8 offset2 alert alert-success">
+        <h4>Please login or enter your email to see results.</h4>
     </div>
 </div>
 <div class="row">
@@ -16,14 +15,16 @@
     </div>
     <div class="span6">
         <form class='well form-horizontal' action="{% spurl base=request.path add_query_from=request.get_full_path %}" method='post'>
-            <h2>{% trans "Get results by email" %} <i class='icon-envelope-alt'></i>*</h2>
+            <h2>{% trans "Get free results by email" %} <i class='icon-envelope-alt'></i>*</h2>
+            <h5>{% trans "Only one more step to see results!" %}</h5>
+
             {% csrf_token %}
             {{form|crispy}}
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">{% trans "Send by email" %}</button>&nbsp;
                 <a href="/" class="btn">{% trans "Cancel" %}</a>
             </div>
-            <small>* create free trial account for you</small>
+            <small class="muted">* create free trial account for you</small>
         </form>
     </div>
 </div>
