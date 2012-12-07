@@ -99,7 +99,7 @@
         <h3>Login <i class="icon-user"></i></h3>
     </div>
     <div class="modal-body">
-        {% include "forms/login.html" with inline=1 form_id="form_modal_login"%}
+        {% include "forms/login.html" with inline=1 form="" %}
     </div>
     <div class="modal-footer">
         <a href="#" id="form_modal_submit" class="btn btn-primary">{% trans "Login" %}</a>&nbsp;
@@ -108,7 +108,7 @@
 </div>
 <script type="text/javascript">
 $('#form_modal_submit').click(function() {
-  $('#form_modal_login').submit();
+  $(this).parent().parent().find('form:first').submit();
 });
 </script>
 {% endif %}
