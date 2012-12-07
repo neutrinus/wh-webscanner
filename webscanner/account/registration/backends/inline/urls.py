@@ -2,6 +2,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
 #from registration_email.backends.default.urls import urlpatterns
+from .forms import WCEmailRegistrationForm
 
 urlpatterns = patterns('',
     url(r'^register/inline/$',
@@ -17,4 +18,13 @@ urlpatterns = patterns('',
          #'template_name': 'registration/activation_inline.html'},
          'template_name': 'registration/activate.html'},
         name='registration_activate_inline'),
+
+    # override registration
+    url(r'^register/$',
+        'registration.views.register',
+        {'backend': 'registration.backends.default.DefaultBackend',
+         'template_name': 'registration/registration_form.html',
+         'form_class': WCEmailRegistrationForm,
+        },
+        name='registration_register'),
 )
