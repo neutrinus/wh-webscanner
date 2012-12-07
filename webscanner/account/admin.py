@@ -10,5 +10,7 @@ class UserProfileInlineAdmin(admin.TabularInline):
 class UserAdmin(UserAdmin):
     inlines = UserAdmin.inlines + [ UserProfileInlineAdmin ]
 
+User.__unicode__ = lambda self: self.email
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
