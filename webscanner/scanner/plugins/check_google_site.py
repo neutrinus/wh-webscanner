@@ -46,7 +46,7 @@ class PluginGoogleSite(PluginMixin):
         from scanner.models import Results
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
         res.output_desc = unicode(_("google backlinks ") )
-        res.output_full = unicode(_('<p>There is about %(number_of_sites)s sites linking to your site. <a href="%(url)s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> ' % {
+        res.output_full = unicode(_('<p>There are about %(number_of_sites)s sites linking to your site. <a href="%(url)s">See them!</a></p> <p><small>This data is provided by google and may be inaccurate.</small></p> ' % {
             "number_of_sites":  jdata['responseData']['cursor']['estimatedResultCount'],
             "url": jdata['responseData']['cursor']['moreResultsUrl']
         }))

@@ -93,7 +93,7 @@ class PluginDNSmailRBL(PluginMixin):
                 res.output_full = unicode(_("<p>None of your mailservers are listed on RBL. Details: <code>%s</code></p>"%(results) ))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</code></p> <p> Beeing listed on those lists may cause that your reciptiens will have your mail in SPAM folder</p>"%(results) ))
+                res.output_full = unicode(_("<p>Some of your mailservers are listed on RBL blacklist. Details: <code>%s</code></p> <p> Being listed on those lists may cause that your recipietns will have your mail in SPAM folder</p>"%(results) ))
                 res.status = RESULT_STATUS.error
             res.save()
 
@@ -121,7 +121,7 @@ class PluginDNSmailRBL(PluginMixin):
             res.output_desc = unicode(_("Mailservers on DNSWL whitelist"))
             res.output_full = unicode(_("<p>DNSWL is a community driven whitelist of mailservers aiming to prevent false-positives in spam filtering.</p> "))
             if not whitelisted:
-                res.output_full += unicode(_("<p>None of your mailservers are listed on <a href='http://www.dnswl.org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please considier <a href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL to improve your success mail delivery rate.</p>"%(results) ))
+                res.output_full += unicode(_("<p>None of your mailservers are listed on <a href='http://www.dnswl.org/'>DNSWL</a>. Details: <code>%s</code></p> <p>Please consider <a href='http://www.dnswl.org/request.pl'>adding</a> your mailservers to DNSWL to improve your success mail delivery rate.</p>"%(results) ))
                 res.status = RESULT_STATUS.warning
             else:
                 res.output_full += unicode(_("<p>Your mailservers are listed on DNSWL whitelist. Details: <code>%s</code></p>"%(results) ))
