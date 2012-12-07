@@ -18,6 +18,7 @@ MANAGERS = (
 
 ACCOUNT_ACTIVATION_DAYS=1
 DEFAULT_FROM_EMAIL = 'noreply@webcheck.me'
+DEFAULT_SUPPORT_EMAIL = 'support@webcheck.me'
 SERVER_EMAIL = 'noreply@webcheck.me'
 EMAIL_HOST='localhost'
 EMAIL_PORT=587
@@ -165,7 +166,7 @@ INSTALLED_APPS = (
     'infinite_pagination',
     'captcha',
     'spurl',
-    
+
 
     'south',  # keep it as last as possible
 )

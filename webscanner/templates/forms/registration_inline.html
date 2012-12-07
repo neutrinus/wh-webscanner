@@ -7,7 +7,8 @@
     <input type='hidden' name='form:registration_inline'/>
 
     {% if not inline %}
-    <h2>{% trans "Get results by email" %} <i class='icon-envelope-alt'></i>*</h2>
+    <h2>{% trans "Get free results by email" %} <i class='icon-envelope-alt'></i>*</h2>
+    <h5>{% trans "Only one more step to see results!" %}</h5>
     {% endif %}
 
     {% csrf_token %}
@@ -35,6 +36,6 @@
         </div>
         {% endif %}
 
-        <small>* creates free account for you</small>
+        <small class="muted">* creates free account for you</small>
     </fieldset>
 </form>
