@@ -71,26 +71,47 @@
             </p>
 
             <h2>{% trans "Buy more credits" %}</h2>
-            <p>
-                <b>{% trans "Discount" %}:</b>
-                {% if coupon %}
-                <b>
-                {% blocktrans with discount=coupon.percent %}
-                {{ discount }}% OFF
-                {% endblocktrans %}
-                </b>
 
-                {%else%} 0% &nbsp; <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>{% endif %}<br />
-            </p>
+            <div>
+                {% if coupon %}
+                    <div class='alert alert-success'>
+                {% endif %}
+
+                <h4>{% trans "Discount" %}: 
+
+                    {% if coupon %}
+                        {% blocktrans with discount_percent=coupon.percent context "discout information" %}
+                        {{ discount_percent }}% OFF
+                        {% endblocktrans %}
+                    {%else%} 
+                        0% &nbsp; 
+                        <a  data-toggle="modal" href="#modal_coupon_form" >{% trans "I have a coupon code!" %}</a>
+                    {% endif %}
+
+                </h4>
+                {% if coupon %}
+                    </div>
+                {% endif %}
+            <div>
+
+            <br/>
 
             <form class='form-horizontal' action="{{request.get_full_path}}" method=post>
                 {% csrf_token %}
                 {% for plan in pricing_plans %}
                 <div class="control-group">
                 <button style="width:100%" class="btn btn-primary btn-large" type=submit name="plan" value="{{plan.pk}}">
-                    {% blocktrans with plan_name=plan.name price=plan.price credits=plan.credits context "buy button" %}
-                    Buy "{{plan_name}}" plan <br/> ${{price}} for <b>{{credits}}</b> credits
-                    {% endblocktrans %}
+                    {% if coupon %}
+                        {% blocktrans with plan_name=plan.name new_price=plan.new_price old_price=plan.price credits=plan.credits context "buy button (with coupon)" %}
+                        Buy "{{plan_name}}" plan <br/> 
+                        ${{new_price}} for <b>{{credits}}</b> credits.
+                        {% endblocktrans %}
+                    {% else %}
+                        {% blocktrans with plan_name=plan.name price=plan.price credits=plan.credits context "buy button (without coupon)" %}
+                        Buy "{{plan_name}}" plan <br/> 
+                        ${{price}} for <b>{{credits}}</b> credits.
+                        {% endblocktrans %}
+                    {% endif %}
                 </button>
                 </div>
                 {% endfor %}

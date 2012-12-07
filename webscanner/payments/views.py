@@ -90,12 +90,16 @@ def payments(req):
         return {'TEMPLATE': 'payments/paypal_redirection.html',
                 'paypal_form': payment.render_paypal_form(req),
         }
+    pricing_plans = list(CreditsPricingPlan.objects.filter(is_active=True).order_by('credits'))
+    if coupon:
+        for plan in pricing_plans:
+            plan.new_price = coupon.discount_price(plan.price)
 
     return dict(
         # current coupon
         coupon=coupon,
         payments=req.user.payment_set.filter(is_paid=True).order_by('-date_created'),
-        pricing_plans=CreditsPricingPlan.objects.filter(is_active=True).order_by('credits'),
+        pricing_plans=pricing_plans,
     )
 
 
