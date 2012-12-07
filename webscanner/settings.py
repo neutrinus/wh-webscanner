@@ -265,6 +265,6 @@ GRAPPELLI_INDEX_DASHBOARD = 'webscanner.dashboard.CustomIndexDashboard'
 
 
 # This should be at the very end
-#execfile(apath('settings_local.py'))
+execfile(apath('settings_local.py'))
 #execfile(apath('settings_prod.py'))
 
