@@ -2,7 +2,7 @@ Welcome!
 
 Hi {{user}},
 
-Your webcheck.me account is prepared, our machines produce a report for a {{user.tests_set.all.0.url}} webpage. But before we let to use our gregorus tools  we just have one question for you:
+Your webcheck.me account is prepared, our machines produce a report for a {{user.tests_set.all.0.url}} webpage. But before we let to use our incredible tools  we just have one question for you:
 
 Are you really who you say you are? Can you prove it?
 
