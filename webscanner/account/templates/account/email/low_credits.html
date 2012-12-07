@@ -1,8 +1,8 @@
-{%load i18n%}
+{% spaceless %}{%load i18n%}
 {% url contact as contact_query %}
 {% blocktrans with user=user domain=site.domain contact_query=contact_query  %}
 
-Dear {{user.email}},
+{% endspaceless %}Dear {{user.email}},
 
 We appreciate your choice of webcheck. You have almost used all your credits, it is now a good time to refill your credits account. This will let you still scan webpages and fresh analises.
 
