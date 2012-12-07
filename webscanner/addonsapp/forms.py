@@ -56,4 +56,4 @@ class BasicContactForm(ContactForm):
     name = forms.CharField(label=_(u'Your name'), max_length=100)
     email = forms.EmailField(label=_(u'Your email address'), max_length=200)
     body = forms.CharField(label=_(u'Your message'), widget=forms.Textarea())
-    captcha = ReCaptchaField()
+    captcha = ReCaptchaField(attrs={'theme' : 'white'})

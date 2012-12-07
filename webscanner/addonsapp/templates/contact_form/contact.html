@@ -6,17 +6,15 @@
 
 {% block content %}
 <div class="row">
-    <div class="span6 offset3 well">
+    <div class="span7 offset3 well">
         <h1>{% trans "Contact Form" %}</h1>
         <p>{% trans "Your opinion is very important to us." %}</p>
-
 
         <form action="" method="post" class="form-horizontal">{% csrf_token %}
             {{ form|crispy }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-large btn-primary">{% trans "Contact Us" %}</button>
             </div>
-
         </form>
     </div>
 </div>
