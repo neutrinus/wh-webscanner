@@ -137,7 +137,7 @@ def index(request):
         log.debug("User %s(ip:%s) ordered report for url %s report_uuid %s"%(request.user, test.user_ip, test.url, test.uuid))
 
     else:
-        messages.warning(request, _('Not enought credits, please buy more!'))
+        messages.warning(request, _('Not enought credits, please <a href="%s">buy more</a>!')%reverse('payments_payments'))
         log.debug('user (%s) has not enough credits'%request.user)
         return {'form':form}
 
