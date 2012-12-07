@@ -4,7 +4,7 @@ from django.conf.urls.defaults import patterns, include, url
 #from registration_email.backends.default.urls import urlpatterns
 
 urlpatterns = patterns('',
-    url(r'^register/inline/', 
+    url(r'^register/inline/$',
         'account.registration.views.register_inline',
         {'backend': 'account.registration.backends.inline.InlineBackend',
          'template_name': 'registration/registration_inline.html',
