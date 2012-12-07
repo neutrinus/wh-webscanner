@@ -134,8 +134,6 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     #apps
-    'grappelli.dashboard',
-    'grappelli',
 
     'account',
     'scanner',
@@ -143,6 +141,9 @@ INSTALLED_APPS = (
     'addonsapp',
     'registration_email',
     'registration',
+
+    'grappelli.dashboard',
+    'grappelli',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
