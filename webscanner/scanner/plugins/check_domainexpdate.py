@@ -25,52 +25,19 @@ from datetime import datetime
 from datetime import timedelta
 from urlparse import urlparse
 from settings   import apath
-
+from webscanner.addonsapp.tools import extract_domain
 
 
 class PluginDomainExpireDate(PluginMixin):
     '''
     This Plugin uses whois data to determine domain expiration date
     '''
-    tlds = []
-    def __init__(self):
-        try:
-            # load tlds, ignore comments and empty lines:
-            #https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
-            with open(apath("scanner/plugins/effective_tld_names.dat.txt")) as tldFile:
-                self.tlds = [line.strip() for line in tldFile if line[0] not in "/\n"]
-        except IOError:
-            self.log.error("Could not find file effective_tld_names.dat.txt")
-
-    #http://stackoverflow.com/questions/1066933/how-to-extract-domain-name-from-url/1069780#1069780
-    def getDomain(self,url, tlds):
-        urlElements = urlparse(url)[1].split('.')
-        # urlElements = ["abcde","co","uk"]
-
-        for i in range(-len(urlElements),0):
-            lastIElements = urlElements[i:]
-            #    i=-3: ["abcde","co","uk"]
-            #    i=-2: ["co","uk"]
-            #    i=-1: ["uk"] etc
-
-            candidate = ".".join(lastIElements) # abcde.co.uk, co.uk, uk
-            wildcardCandidate = ".".join(["*"]+lastIElements[1:]) # *.co.uk, *.uk, *
-            exceptionCandidate = "!"+candidate
-
-            # match tlds:
-            if (str(exceptionCandidate) in tlds):
-                return ".".join(urlElements[i:])
-            if (str(candidate) in tlds or str(wildcardCandidate) in tlds):
-                return ".".join(urlElements[i-1:])
-                # returns "abcde.co.uk"
-        raise ValueError("Domain not in global list of TLDs")
-
 
     name = unicode(_("Check domain expiration date"))
     wait_for_download = False
 
     def run(self, command):
-        domain = self.getDomain(command.test.url,self.tlds)
+        domain = extract_domain(command.test.url)
         self.log.debug("Checking whois data for %s"%(domain))
 
         try:

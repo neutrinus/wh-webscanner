@@ -23,6 +23,7 @@ from annoying.decorators import render_to
 
 from scanner.models import *
 from scanner.forms import FormCaptcha
+from webscanner.addonsapp.tools import extract_domain
 
 log = logging.getLogger(__name__)
 
@@ -66,6 +67,11 @@ class ScanURLForm(forms.ModelForm):
            (not urlparse(url).netloc) or \
            len(urlparse(url).netloc) < 3:
                raise forms.ValidationError(_('Invalid website address (URL), please try again.'))
+
+        try:
+            extract_domain(url)
+        except:
+            raise forms.ValidationError(_('Invalid website address (URL), please try again.'))
 
         url = unquote_plus(url)
         if not urlparse(url).path:
@@ -115,7 +121,7 @@ def index(request):
     def get_test_group_codes():
         return filter(lambda x:x.startswith('check_'), request.POST)
 
-    # if user is not authenticated, do inline registration 
+    # if user is not authenticated, do inline registration
     if not request.user.is_authenticated():
         pass_url = Tests.sign_url(form.cleaned_data['url'], get_test_group_codes())
         redirect_url = furl.furl(reverse('registration_register_or_login_inline'))
