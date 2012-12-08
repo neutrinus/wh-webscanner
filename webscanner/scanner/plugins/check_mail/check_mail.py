@@ -95,11 +95,13 @@ class PluginMail(PluginMixin):
                     else:
                         noopenrelay +=   "<b>mailserver: %s </b><br />&nbsp; RCPT TO: openrelaytest-webscanner@neutrinus.com <br />&nbsp; %s %s <br /><br />"%(mx,code,msg)
                     foo.quit()
+
                 except smtplib.SMTPServerDisconnected:
                     noconnect +=   "%s (timeout)<br />"%(mx)
                     noconnect_count +=1
                     pass
-                except smtplib.socket.error:
+
+                except smtplib.socket.error, smtplib.SMTPConnectError:
                     noconnect +=   "%s<br />"%(mx)
                     noconnect_count +=1
                     pass
