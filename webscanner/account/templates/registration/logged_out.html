@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="span6 offset3">
+        <h2>{%trans "You have been logged out" context "message after logging out"%}</h2>
+        <a href="/" class="btn btn-large btn-primary">{% trans "Go to webcheck.me" context "button after logging out"%}</a>
+    </div>
+</div>
+    
+{% endblock con %}
+
