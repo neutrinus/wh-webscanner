@@ -91,7 +91,7 @@
 {% else %}
         <div class="btn-group pull-right">
             <a class="btn" href="{% url registration_register %}"><i class="icon-plus"></i> {% trans "Register" %}</a>
-            <a class="btn" data-toggle="modal" href="#modal_login" ><i class="icon-user"></i> {% trans "Login" %}</a>
+            <a class="btn" onclick='show_login_modal_form();' href="#" ><i class="icon-user"></i> {% trans "Login" %}</a>
         </div>
 {% endif %}
         <ul class="nav" role="navigation">
@@ -106,23 +106,53 @@
 </div>
 
 {% if not user.is_authenticated %}
-<div class="modal fade" id="modal_login" role="form">
+<div class="modal hide" id="modal_login" role="form">
     <div class="modal-header">
-        <button class="close" data-dismiss="modal">×</button>
-        <h3>Login <i class="icon-user"></i></h3>
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>{% trans "Login" context "login modal form"%} <i class="icon-user"></i></h3>
     </div>
     <div class="modal-body">
         {% include "forms/login.html" with inline=1 form="" %}
     </div>
     <div class="modal-footer">
-        <a href="#" id="form_modal_submit" class="btn btn-primary">{% trans "Login" %}</a>&nbsp;
+        <input type="submit" id="form_modal_submit" name='form_login_submit_button' class="btn btn-primary" value="{% trans "Login" %}" />
         <a href="#" class="btn close"  data-dismiss="modal" >{% trans "Cancel" %}</a>
     </div>
 </div>
+
 <script type="text/javascript">
-$('#form_modal_submit').click(function() {
-  $(this).parent().parent().find('form:first').submit();
+$(document).ready(function(){
+
+    var modal = $('#modal_login');
+
+    {# set click action for submit button - this button has to be outside form hence this #}
+    $(modal).find('#form_modal_submit').click(function() {
+        $(this).parent().parent().find('form:first').submit();
+    });
+
+    {# 'enter' key on that form should work too #}
+    $(modal).keydown(function(e){
+        if(e.keyCode==13){
+            $(this).find('form:first').submit();
+        }
+    });
+
+    {# set focus when windows popup #}
+    $(modal).on('shown', function(){
+        modal.find('input#id_username').focus();
+    });
+
+    {# when we close window, we should focus scan url field (works only on index page) #}
+    $(modal).on('hidden', function(){
+        $('#domain').focus();
+    });
 });
+
+show_login_modal_form = function(){
+    var modal = $('#modal_login');
+    modal.modal('show');
+}
+
 </script>
 {% endif %}
 
