@@ -10,5 +10,6 @@ class UserProfile(models.Model):
     is_first_login      = models.BooleanField(default=True)
     credits             = models.IntegerField(default=10)
 
+
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^annoying\.fields\.AutoOneToOneField"])
