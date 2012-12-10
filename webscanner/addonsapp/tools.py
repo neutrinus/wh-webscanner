@@ -24,7 +24,7 @@ def extract_domain(url):
 
     urlElements = urlparse(url)[1].split('.')
 
-    print urlElements
+    #print urlElements
     # urlElements = ["abcde","co","uk"]
 
     for i in range(-len(urlElements),0):
