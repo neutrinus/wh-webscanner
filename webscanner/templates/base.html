@@ -70,7 +70,21 @@
 
         <div class="pull-right">
             <ul class="nav">
-                <li><a id="menu_payments" href="{% url payments_payments %}" >{% trans "Credits" %} <span class="badge badge-info"> {{ user.get_profile.credits }}</span> </a></li>
+                <li><a id="menu_payments" href="{% url payments_payments %}" >{% trans "Credits" %}
+
+                    {% spaceless %}
+                    <span class="badge
+                        {% if user.userprofile.credits > 4 %}
+                        badge-info
+                        {% elif user.userprofile.credits > 1 %}
+                        badge-warning
+                        {% else %}
+                        badge-important
+                        {% endif %}
+                        "> {{ user.get_profile.credits }}</span>
+                    {% endspaceless %}
+
+                </a></li>
                 <li><a href="{% url scanner_scan_archive %}">{% trans "Scan archive" %}</a></li>
             </ul>
         </div>
