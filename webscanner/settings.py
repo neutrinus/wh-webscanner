@@ -2,7 +2,6 @@
 import os
 def apath(x):
     return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
-from decimal import Decimal
 
 
 DEBUG = False
