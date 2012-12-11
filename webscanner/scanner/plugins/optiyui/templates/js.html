@@ -6,19 +6,11 @@
     <ul>
     {% for image in optijses %}
         <li>
-            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, {% if vip_mode  %}<a href="https://webcheck.me/{{ image.ofile }}">optimized</a>{% else %}optimized{% endif %} {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
+            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a>{{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
         </li>
     {% endfor %}
     </ul>
     <p>A total <b>{{ btotals|filesizeformat }}</b> could be saved by optimizing those javascript files.</p>
-
-    {% if not vip_mode  %}
-        <div class="alert alert-info">
-        {% blocktrans %}
-        <b>VIP benefits avalible!</b> For VIPs we provide optimized files <i>ready for download</i>.
-        {% endblocktrans %}
-        </div>
-    {% endif %}
 
     {% else %}
     <p>{% trans "There were no javascript files that could be optimized." %}</p>

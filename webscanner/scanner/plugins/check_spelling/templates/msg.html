@@ -18,13 +18,7 @@
     {% trans "There were no spelling errors." %}
 {% endfor %}
 
+<div class="alert" >{% trans "<strong>Warning!</strong> please note that this is just a dictionary check - some of your brand names and other words may be placed here by a mistake (false positive)!" %}</div>
 
-    {% if not vip_mode  %}
-        <div class="alert alert-info">
-        {% blocktrans %}
-        <b>VIP benefits avalible!</b> As normal user you can see only first 10 errors, while VIP members have full access.
-        {% endblocktrans %}
-        </div>
-    {% endif %}
 
 </div>

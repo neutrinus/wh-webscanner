@@ -216,7 +216,7 @@ class PluginOptiimg(PluginMixin):
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
         res.output_desc = unicode(_("Images optimalization"))
-        res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals, 'vip_mode': command.test.vip_mode }))
+        res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals }))
 
         if btotals < 500*1024:
             res.status = RESULT_STATUS.success
