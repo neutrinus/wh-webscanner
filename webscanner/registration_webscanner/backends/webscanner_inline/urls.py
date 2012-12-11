@@ -14,7 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^register/inline/$',
         register_inline,
-        {'backend': 'registration.backends.webscanner_inline.InlineBackend',
+        {'backend': 'registration_webscanner.backends.webscanner_inline.InlineBackend',
          'template_name': 'registration/registration_inline.html',
          'form_class': WCEmailRegistrationInlineForm,
         },
@@ -22,7 +22,7 @@ urlpatterns = patterns('',
 
     url(r'^activate/inline/(?P<activation_key>\w+)/$',
         'registration.views.activate',
-        {'backend': 'registration.backends.webscanner_inline.InlineBackend',
+        {'backend': 'registration_webscanner.backends.webscanner_inline.InlineBackend',
          'template_name': 'registration/activate.html'},
         name='registration_activate_inline'),
 
