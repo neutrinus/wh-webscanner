@@ -119,7 +119,7 @@ class PluginMakeScreenshots(PluginMixin):
         timing = {}
         max_loadtime = 0
 
-        for browser in browsers:
+        for browser in self.browsers:
             filename = os.path.join ('screenshots/', ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png")
 
             browsename =""
@@ -141,7 +141,7 @@ class PluginMakeScreenshots(PluginMixin):
                 elif browser["browseName"] == "opera":
                     desired_capabilities = webdriver.DesiredCapabilities.OPERA
                 else:
-                    print "browser unknown"
+                    self.log.warning("Browser unknown - please check configuration")
                     continue
 
                 if "version" in browser:
