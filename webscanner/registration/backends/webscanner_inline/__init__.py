@@ -69,6 +69,8 @@ class InlineBackend(DefaultBackend):
                                                                     cleaneddata['password1'],
                                                                     site,
                                                                     send_email=False)
+        if not new_user:
+            return None
 
         test.user = new_user  # set newly created user as test owner
         test.save()
@@ -84,20 +86,11 @@ class InlineBackend(DefaultBackend):
                                          user=new_user,
                                          request=request)
         except Exception as error:
-            messages.error(request, _("Sorry, there was some error during registration. Please try again or contact with administrator"))
             self.log.exception('error starting test during inline registration (deleting newly created user: %r), error:%s'%(new_user,error))
             test.delete()
             new_user.delete()
             return None
         return new_user
-
-    '''
-    def activate(self, request, **kwargs):
-        user = super(InlineBackend, self).activate(request, **kwargs)
-        if not user:
-            return user
-        raise Exception('witaj')
-    '''
 
     def get_form_class(self, request):
         return WCEmailRegistrationInlineForm
@@ -105,6 +98,7 @@ class InlineBackend(DefaultBackend):
     def post_registration_redirect(self, request, user):
         if not user:
             # this redirects user and show him a message
+            messages.error(request, _("Sorry, there was some error during registration. Please try again or contact with administrator"))
             return '/', (), {}
         return reverse('registration_complete'), (), {}
 
