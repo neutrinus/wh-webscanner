@@ -108,10 +108,18 @@ class InlineBackend(DefaultBackend):
             return None
         # if user was activated, login him and redirect to results
         self.log.info('activation of user (%s)'%user)
-        test = user.tests_set.all()[0]
+
+        self.log.info('autologin during activation (user:%s)'%user)
         from django.contrib import auth
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         auth.login(request, user)
-        self.log.info('autologin during activation (user:%s)'%user)
-        return test, (), {}
+
+        # during activation user can has 0 or 1 test (1 if he did inline registration)
+        test = user.tests_set.all()[:1]
+        if test:
+            # inline activation detected
+            return test[0], (), {}
+
+        # ordinary activation (redirect user to main page)
+        return '/', (), {}
 

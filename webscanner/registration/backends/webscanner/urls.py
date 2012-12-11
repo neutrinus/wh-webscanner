@@ -14,4 +14,10 @@ urlpatterns = patterns('',
         },
         name='registration_register'),
 
+    url(r'^activate/(?P<activation_key>\w+)/$',
+        'registration.views.activate',
+        {'backend': 'registration.backends.webscanner_inline.InlineBackend',
+         'template_name': 'registration/activate.html'},
+        name='registration_activate'),
+
 )
