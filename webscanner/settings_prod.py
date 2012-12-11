@@ -24,10 +24,18 @@ log_conf = {
     'level': 'DEBUG',
 }
 
+# our namespace
 LOGGING["loggers"]["webscanner"] =  log_conf
+
+LOGGING["loggers"]["addonsapp"] =  log_conf
 LOGGING["loggers"]["payments"] =  log_conf
 LOGGING["loggers"]["account"] =  log_conf
 LOGGING["loggers"]["scanner"] =  log_conf
+LOGGING["loggers"]["registration_webscanner"] =  log_conf
+LOGGING["loggers"]["registration_email"] =  log_conf
+LOGGING["loggers"]["registration"] =  log_conf
+
+LOGGING["loggers"]["paypal"] =  log_conf
 
 
 PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
