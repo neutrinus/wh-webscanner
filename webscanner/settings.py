@@ -206,7 +206,7 @@ LOGGING = {
         'logfile':{
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'webscanner.log',
+            'filename': apath('webscanner.log'),
             'formatter': 'marek',
         }
     },
@@ -269,6 +269,6 @@ COMPRESS_ENABLED = True
 
 
 # This should be at the very end
-execfile(apath('settings_local.py'))
+#execfile(apath('settings_local.py'))
 #execfile(apath('settings_prod.py'))
 
