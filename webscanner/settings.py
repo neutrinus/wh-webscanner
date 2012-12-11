@@ -88,7 +88,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 STATICFILES_DIRS = (
-
+    apath('assets'),
 )
 
 STATICFILES_FINDERS = (
