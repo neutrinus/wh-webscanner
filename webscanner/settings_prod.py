@@ -24,6 +24,7 @@ log_conf = {
     'level': 'DEBUG',
 }
 
+LOGGING["loggers"]["webscanner"] =  log_conf
 LOGGING["loggers"]["payments"] =  log_conf
 LOGGING["loggers"]["account"] =  log_conf
 LOGGING["loggers"]["scanner"] =  log_conf
