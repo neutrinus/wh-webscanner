@@ -125,7 +125,7 @@ def payment_ok(sender, **kwargs):
         log.info('Payment: user=%s price=%s invoice=%s' % (payment.user, payment.price, payment.code))
 
     user_profile =  UserProfile.objects.get_or_create(user = payment.user)[0]
-    user_profile.credits += 100
+    user_profile.credits += payment.credits
     user_profile.save()
 
     payment.set_paid()
