@@ -140,6 +140,7 @@ INSTALLED_APPS = (
     'scanner',
     'payments',
     'addonsapp',
+    'registration_webscanner',
     'registration_email',
     'registration',
 

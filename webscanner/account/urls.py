@@ -9,8 +9,8 @@ urlpatterns = patterns('',
 
     # this two webscanner url packs override default flow (must be before
     # registration and registration_email
-    url(r'^', include('registration.backends.webscanner_inline.urls')),
-    url(r'^', include('registration.backends.webscanner.urls')),
+    url(r'^', include('registration_webscanner.backends.webscanner_inline.urls')),
+    url(r'^', include('registration_webscanner.backends.webscanner.urls')),
     url(r'^', include('registration_email.backends.default.urls')),
     url(r'^', include('django.contrib.auth.urls')),
 

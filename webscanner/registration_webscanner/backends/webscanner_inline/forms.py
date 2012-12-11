@@ -4,7 +4,7 @@ import logging
 
 from django.utils.translation import ugettext as _
 
-from registration.backends.webscanner.forms import WCEmailRegistrationForm
+from registration_webscanner.backends.webscanner.forms import WCEmailRegistrationForm
 from registration_email.forms import  generate_username
 
 log = logging.getLogger(__name__)
