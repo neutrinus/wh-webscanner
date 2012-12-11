@@ -2,9 +2,7 @@
 {%load set %}
 {% set "https://webcheck.me" as link %}
 {% url contact as contact_query %}
-{% blocktrans with user=user link=link contact_query=contact_query  %}
-
-{% endspaceless %}Dear {{user.email}},
+{% endspaceless %}{% blocktrans with user_email=user.email link=link contact_query=contact_query  %}Dear {{user_email}},
 
 Thank you for taking the time to evaluate webcheck.me.  Our support would be happy to answer any questions.  We want you to have a successful trial so please don't hesitate to reach out should you have any problems navigating the application or getting set up.
 
