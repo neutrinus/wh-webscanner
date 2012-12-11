@@ -17,8 +17,8 @@ def send_welcome_email(sender, user, request, **kwargs):
         text = template.render(Context({'user':user}))
         user.email_user(_('[%s] Welcome' % current_site.domain),
                         text,
-                        settings.DEFAULT_FROM_EMAIL,
-                        headers = {'Reply-To': settings.DEFAULT_SUPPORT_EMAIL})
+                        settings.DEFAULT_FROM_EMAIL,)
+                        #headers = {'Reply-To': settings.DEFAULT_SUPPORT_EMAIL}
 
         log.info('Welcome mail sent to user: %s'%(user.email))
     except Exception:
