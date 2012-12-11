@@ -95,6 +95,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 SECRET_KEY = 'ju1-hn3r39_!0-9r$9s+om49b!ve*x0pqfvzgn9jbaa2-f7o00'
@@ -166,6 +167,7 @@ INSTALLED_APPS = (
     'infinite_pagination',
     'captcha',
     'spurl',
+    'compressor',
 
 
     'south',  # keep it as last as possible
@@ -262,6 +264,8 @@ PAYPAL_CERT = apath('paypal_cert.pem')
 
 
 GRAPPELLI_INDEX_DASHBOARD = 'webscanner.dashboard.CustomIndexDashboard'
+
+COMPRESS_ENABLED = True
 
 
 # This should be at the very end
