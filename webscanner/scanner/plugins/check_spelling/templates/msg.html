@@ -14,11 +14,14 @@
         </li>
     {% endfor %}
     </ul>
+
+    <div class="alert" >{% trans "<strong>Warning!</strong> please note that this is just a dictionary check - some of your brand names and other words may be placed here by a mistake (false positive)!" %}</div>
+
 {% empty %}
     {% trans "There were no spelling errors." %}
 {% endfor %}
 
-<div class="alert" >{% trans "<strong>Warning!</strong> please note that this is just a dictionary check - some of your brand names and other words may be placed here by a mistake (false positive)!" %}</div>
+
 
 
 </div>
