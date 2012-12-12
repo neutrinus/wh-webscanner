@@ -114,7 +114,7 @@ def downloader():
                     if dtest.percent_progress() == 100:
                         log.debug("Cleanup old test %s (path: %s)"%(dtest.uuid, dtest.download_path))
                         if os.path.exists(dtest.download_path):
-                            shutil.rmtree(dtest.download_path)
+                            shutil.rmtree(str(dtest.download_path))
                         dtest.is_deleted = True
                         dtest.save()
 
