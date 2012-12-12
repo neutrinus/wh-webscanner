@@ -1,0 +1,9 @@
+
+
+
+
+
+ADD A CRON JOB:
+
+13      23      *       *       *       /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
+
