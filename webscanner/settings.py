@@ -51,7 +51,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = "ali_"
 CACHE_MIDDLEWARE_SECONDS = 60*5
 CACHE_MIDDLEWARE_ALIAS = "default"
 
-TIME_ZONE = 'Europe/Warsaw'
+TIME_ZONE = 'Etc/UTC'
 
 LANGUAGE_CODE = 'en'
 
@@ -73,7 +73,7 @@ LOCALE_PATHS=( apath('locale'), )
 SITE_ID = 1
 
 USE_I18N = True
-USE_L10N = True
+USE_L10N = False  # we want to use manual localization
 
 MEDIA_ROOT = apath('media')
 STATIC_ROOT = apath('static')

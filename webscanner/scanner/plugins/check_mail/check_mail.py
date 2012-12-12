@@ -178,9 +178,9 @@ class PluginMail(PluginMixin):
                 res.output_full += unicode(_("<p>None of your mailservers are open-relays: <code>%s</code></p>"%(noopenrelay ) ))
             else:
                 res.status = RESULT_STATUS.error
-                res.output_full += unicode(_("<p>Mailservers that are open-relays:<code>%s</code> </p>"%(openrelay ) ))
+                res.output_full += unicode(_("<p>Mailservers that are open-relays:<code>%s</code> </p>"%(openrelay)))
                 if noopenrelay:
-                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%(noopenrelay)s</code> </p>"%(noopenrelay ) ))
+                    res.output_full += unicode(_("<p>Mailservers that are not open-relays:<code>%(noopenrelay)s</code> </p>"%dict(noopenrelay=noopenrelay)))
 
             res.output_full += unicode(_("<p>Mailservers should not allow relaying, except for authenticated users and trusted IPs.  </p>" ))
 
