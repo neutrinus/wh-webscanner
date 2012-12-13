@@ -252,12 +252,6 @@ class PluginCheckSpelling(PluginMixin):
 
         self.log.debug("Search html files in %s "%(dirs))
 
-        limited = True
-        if command.test.user and command.test.user.is_authenticated():
-            user_profile =  UserProfile.objects.get_or_create(user = command.test.user)[0]
-            if command.test.vip_mode:
-                limited = False
-
         files_with_errors = []
         was_errors = False
         for dir in dirs:
@@ -273,8 +267,6 @@ class PluginCheckSpelling(PluginMixin):
                         continue
                     if errors:
                         errors = list(errors)
-                        if limited:
-                            errors = errors[:10]
 
                         files_with_errors.append( [os.path.join(
                                 os.path.relpath(file_path,path),
@@ -291,7 +283,7 @@ class PluginCheckSpelling(PluginMixin):
                     status=RESULT_STATUS.warning if files_with_errors else\
                            RESULT_STATUS.success)
         r.output_desc = unicode(self.name)
-        r.output_full = template.render(Context({'files':files_with_errors, 'vip_mode': command.test.vip_mode}))
+        r.output_full = template.render(Context({'files':files_with_errors,}))
         r.save()
 
         self.log.info(' * check spelling: END')

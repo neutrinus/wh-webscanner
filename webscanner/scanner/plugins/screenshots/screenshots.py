@@ -28,7 +28,6 @@ from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
 
-
 class Alarm(Exception):
     pass
 
@@ -40,7 +39,7 @@ def crop_screenshot(inputfile):
     img = Image.open(inputfile)
     box = (0, 0, 940, 400)
     area = img.crop(box)
-    ofile = os.path.join(settings.MEDIA_ROOT,"/screenshots/", "thumb_"+gentmpfilename()+".png")
+    ofile = os.path.join(settings.MEDIA_ROOT,"screenshots/", "thumb_"+gentmpfilename()+".png")
     area.save(ofile, 'png')
     return(ofile)
 
@@ -56,31 +55,31 @@ class PluginMakeScreenshots(PluginMixin):
     wait_for_download = False
 
     browsers = [
-        #{
-            #"version": "",
-            #"browseName": "opera",
-            #"platform": "LINUX",
-        #},
         {
             "version": "",
             "browseName": "opera",
-            "platform": "WINDOWS",
+            "platform": "LINUX",
         },
+        #{
+            #"version": "",
+            #"browseName": "opera",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "",
             "browseName": "chrome",
             "platform": "LINUX",
         },
-        {
-            "version": "",
-            "browseName": "chrome",
-            "platform": "WINDOWS",
-        },
-        {
-            "version": "4.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
+        #{
+            #"version": "",
+            #"browseName": "chrome",
+            #"platform": "WINDOWS",
+        #},
+        #{
+            #"version": "4.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "4.0",
             "browseName": "firefox",
@@ -91,25 +90,25 @@ class PluginMakeScreenshots(PluginMixin):
             "browseName": "firefox",
             "platform": "LINUX",
         },
-        {
-            "version": "7.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
+        #{
+            #"version": "7.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "10.0",
             "browseName": "firefox",
             "platform": "LINUX",
         },
-        {
-            "version": "10.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
-        {
-            "version": "8",
-            "browseName": "iexplore",
-        },
+        #{
+            #"version": "10.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
+        #{
+            #"version": "8",
+            #"browseName": "iexplore",
+        #},
     ]
 
     def run(self, command):
@@ -119,12 +118,12 @@ class PluginMakeScreenshots(PluginMixin):
         timing = {}
         max_loadtime = 0
 
-        for browser in browsers:
+        for browser in self.browsers:
             filename = os.path.join ('screenshots/', ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png")
 
-            browsename =""
+            browsername =""
             for key in browser:
-                browsename += "_" + str(browser[key])
+                browsername += "_" + str(browser[key])
 
             self.log.debug("Make screenshot with %s" % browser)
 
@@ -141,7 +140,7 @@ class PluginMakeScreenshots(PluginMixin):
                 elif browser["browseName"] == "opera":
                     desired_capabilities = webdriver.DesiredCapabilities.OPERA
                 else:
-                    print "browser unknown"
+                    self.log.warning("Browser unknown - please check configuration")
                     continue
 
                 if "version" in browser:
@@ -163,23 +162,28 @@ class PluginMakeScreenshots(PluginMixin):
                 #give a bit time for loading async-js
                 sleep(2)
 
-                dbrowser.get_screenshot_as_file(os.path.join(settings.MEDIA_ROOT,filename))
 
-                timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+                screenshot = os.path.join(settings.MEDIA_ROOT, filename)
+                dbrowser.get_screenshot_as_file(screenshot)
 
-                timing[browsername] = []
+                timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
-                for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                    timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
+                if timing_data:
+                    timing[browsername] = []
+                    for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                        timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
 
-                tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
-                if tmp_timing > max_loadtime:
-                    max_loadtime = tmp_timing
+                    tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
+                    if tmp_timing > max_loadtime:
+                        max_loadtime = tmp_timing
+                else:
+                    self.log.warning("There was no timing_data for %s" % (browsername))
 
                 dbrowser.quit()
                 signal.alarm(0)
 
-                thumb = crop_screenshot(os.path.join(settings.MEDIA_ROOT, filename))
+                #do it after quiting browser - to save selenium time
+                screenshot_thumb = crop_screenshot(screenshot)
 
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
@@ -190,9 +194,9 @@ class PluginMakeScreenshots(PluginMixin):
                 res.save()
                 self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
 
-            except WebDriverException:
-                self.log.warning("WebDriverException")
-
+            except WebDriverException,e:
+                self.log.warning("WebDriverException: %s" % s)
+                signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
 
@@ -201,7 +205,6 @@ class PluginMakeScreenshots(PluginMixin):
             res.output_desc = unicode(_("Webpage load time"))
             template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
             template_data = {
-                'browsernames' : browsernames,
                 'timing' : timing,
                 'max_loadtime': max_loadtime,
             }
