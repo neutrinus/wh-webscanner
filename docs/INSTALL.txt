@@ -1,12 +1,31 @@
 
 
-****
+
+
+********************
+install requirements
+********************
+
+pip install -r requirements/requirements.pip
+cat requirements/requirements.apt |xargs apt-get -y install
+
+
+*************
 Declare hosts
-****
+*************
 Edit /etc/hosts and insert:
 10.239.1.13	sv-seleniumhub 
 10.239.1.11	sv-psql
 
+
+
+*********
+manage.py
+*********
+
+./manage.py syncdb
+./manage.py migrate
+./manage.py collectstatic
 
 ***************
 ADD A CRON JOB:

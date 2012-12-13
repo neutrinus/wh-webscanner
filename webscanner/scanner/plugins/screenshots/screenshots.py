@@ -40,7 +40,7 @@ def crop_screenshot(inputfile):
     img = Image.open(inputfile)
     box = (0, 0, 940, 400)
     area = img.crop(box)
-    ofile = os.path.join(settings.MEDIA_ROOT,"/screenshots/", "thumb_"+gentmpfilename()+".png")
+    ofile = os.path.join(settings.MEDIA_ROOT,"screenshots/", "thumb_"+gentmpfilename()+".png")
     area.save(ofile, 'png')
     return(ofile)
 
@@ -122,9 +122,9 @@ class PluginMakeScreenshots(PluginMixin):
         for browser in self.browsers:
             filename = os.path.join ('screenshots/', ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png")
 
-            browsename =""
+            browsername =""
             for key in browser:
-                browsename += "_" + str(browser[key])
+                browsername += "_" + str(browser[key])
 
             self.log.debug("Make screenshot with %s" % browser)
 
