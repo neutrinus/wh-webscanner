@@ -1,6 +1,6 @@
 Welcome!
 
-Hi {{user}},
+Hi,
 
 Your webcheck.me account is prepared and almost ready to go. But before we let to use our gregorus tools  we just have one question for you:
 

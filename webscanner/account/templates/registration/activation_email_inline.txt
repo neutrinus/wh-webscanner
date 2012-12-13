@@ -18,5 +18,4 @@ Please note that entering activation link means that you agree to our Terms of u
 Enjoy and thank you for joining our ever-growing webcheck.me family.
 
 Sincerely,
-webcheck.me Team
-{{ site.name }}
+{{ site.name }} Team
