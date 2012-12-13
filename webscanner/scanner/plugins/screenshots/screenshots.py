@@ -168,15 +168,16 @@ class PluginMakeScreenshots(PluginMixin):
 
                 timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
-                timing[browsername] = []
-                self.log.debug("Timing data: %s" % timing_data)
+                if timing_data:
+                    timing[browsername] = []
+                    for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
+                        timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
 
-                for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                    timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
-
-                tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
-                if tmp_timing > max_loadtime:
-                    max_loadtime = tmp_timing
+                    tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
+                    if tmp_timing > max_loadtime:
+                        max_loadtime = tmp_timing
+                else:
+                    self.log.warning("There was no timing_data for %s" % (browsername))
 
                 dbrowser.quit()
                 signal.alarm(0)
@@ -198,7 +199,6 @@ class PluginMakeScreenshots(PluginMixin):
                 signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
-                pass
 
         if command.test.check_seo:
             res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
