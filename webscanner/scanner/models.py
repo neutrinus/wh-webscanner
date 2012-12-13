@@ -200,6 +200,9 @@ class Tests(models.Model):
             return percent
 
     def duration(self):
+        '''
+        Warning: this method call `save`
+        '''
         if self._status == self.TEST_STATUS.not_started: return 0
         elif self._status == self.TEST_STATUS.started:
             return (datetime.now() - self.creation_date).total_seconds()
