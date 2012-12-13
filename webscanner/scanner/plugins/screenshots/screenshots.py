@@ -195,7 +195,7 @@ class PluginMakeScreenshots(PluginMixin):
                 self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
 
             except WebDriverException,e:
-                self.log.warning("WebDriverException: %s" % s)
+                self.log.warning("WebDriverException: %s" % e)
                 signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
