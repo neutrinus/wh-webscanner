@@ -212,15 +212,41 @@ class Tests(models.Model):
         log.error('duration assertion: this error should never exist!')
         return 0
 
-    def start(self):
+    @property
+    def cost(self):
         '''
+        This method calculate cost of a test (in credits)
+        TODO: make it cachable as db field
+        '''
+        return 1
+
+    def start(self, check_user_credits=True):
+        '''
+        Warning: this method call `save` for `self` and `self.user.userprofile`
         This method creates Commands for this tests.
+
+        if `check_user_credits` is True and user is not None this method
+        check user has enough credits level to start this task (use `cost` to
+        calculate test cost). If user has not enough credits, NotEnoughCredits
+        exception is raised. If user has enough credits, the cost is subtracted
+        from his account and profile is saved!
         '''
         # if test is not saved
         if not self.pk:
-            raise self.StartError('Test is not saved')
+            raise self.StartError('Test %r is not saved'%self)
         if self._status in (self.TEST_STATUS.started, self.TEST_STATUS.stopped):
-            raise self.AlreadyStartedError('Test %s is already started')
+            raise self.AlreadyStartedError('Test %r is already started'%self)
+
+        log.debug('%r.start'%self)
+
+        # check user has enough credits level to start this
+        if check_user_credits and self.user:
+            log.debug('%r.checking credits for user %r'%(self, self.user))
+            if self.user.userprofile.credits < self.cost:
+                raise self.user.userprofile.NotEnoughCredits(self.user.userprofile.credits,
+                                                             self.cost,
+                                                             _('start a scan'))
+        log.info('%r.all checks done. starting commands'%self)
 
         try:
             with transaction.commit_on_success():
@@ -229,10 +255,21 @@ class Tests(models.Model):
                          testname=plugin_code,
                          wait_for_download=plugin_class.wait_for_download)
                 self._status = self.TEST_STATUS.started
+
+                # pay for test
+                if self.user:
+                    log.debug('%r just paid %s credits for test %r'%(
+                        self.user, self.cost, self))
+                    profile = self.user.userprofile
+                    from django.db.models import F
+                    profile.credits = F('credits') - self.cost
+                    profile.save()
+
                 self.save()
+            log.info('%r.test started. commands started.'%self)
             return True
         except Exception as error:
-            log.exception("Error during starting test: %s"%self.uuid)
+            log.exception("Error during starting test: %r"%self)
             raise self.StartError(error)
 
 
