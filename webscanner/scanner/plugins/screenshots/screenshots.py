@@ -165,7 +165,7 @@ class PluginMakeScreenshots(PluginMixin):
 
                 dbrowser.get_screenshot_as_file(os.path.join(settings.MEDIA_ROOT,filename))
 
-                timing_data = browser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+                timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
                 timing[browsername] = []
 
@@ -190,11 +190,12 @@ class PluginMakeScreenshots(PluginMixin):
                 res.save()
                 self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
 
-            except WebDriverException:
-                self.log.warning("WebDriverException")
+            except WebDriverException,e:
+                self.log.exception("WebDriverException")
 
             except Alarm:
                 self.log.warning("Shoot timeout")
+                pass
 
         if command.test.check_seo:
             res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
