@@ -166,6 +166,9 @@ class Tests(models.Model):
     def __unicode__(self):
         return "%s by %s"%(self.url,self.user )
 
+    def __repr__(self):
+        return '<Test uuid:%s url:%s user:%r>'%(self.uuid, self.url, self.user)
+
     @models.permalink
     def get_absolute_url(self):
         ''' link to results'''
