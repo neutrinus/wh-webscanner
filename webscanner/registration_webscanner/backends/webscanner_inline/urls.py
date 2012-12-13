@@ -1,17 +1,19 @@
 from django.conf.urls.defaults import patterns, url
 
 from .forms import WCEmailRegistrationInlineForm
-from .views import register_inline
+from .views import register_inline, login_inline
 
 urlpatterns = patterns('',
-
+    # override standard login view to perform login inline (with scan url)
+    url(r'^login/$',
+        login_inline,
+        name='auth_login'),
     url(r'^register_or_login/$',
         'django.views.generic.simple.direct_to_template',
         {
          'template': 'registration/registration_register_or_login_inline.html',
         },
         name='registration_register_or_login_inline'),
-
     url(r'^register/inline/$',
         register_inline,
         {'backend': 'registration_webscanner.backends.webscanner_inline.InlineBackend',
