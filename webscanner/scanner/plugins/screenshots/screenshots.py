@@ -28,7 +28,6 @@ from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 
 
-
 class Alarm(Exception):
     pass
 
@@ -56,31 +55,31 @@ class PluginMakeScreenshots(PluginMixin):
     wait_for_download = False
 
     browsers = [
-        #{
-            #"version": "",
-            #"browseName": "opera",
-            #"platform": "LINUX",
-        #},
         {
             "version": "",
             "browseName": "opera",
-            "platform": "WINDOWS",
+            "platform": "LINUX",
         },
+        #{
+            #"version": "",
+            #"browseName": "opera",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "",
             "browseName": "chrome",
             "platform": "LINUX",
         },
-        {
-            "version": "",
-            "browseName": "chrome",
-            "platform": "WINDOWS",
-        },
-        {
-            "version": "4.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
+        #{
+            #"version": "",
+            #"browseName": "chrome",
+            #"platform": "WINDOWS",
+        #},
+        #{
+            #"version": "4.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "4.0",
             "browseName": "firefox",
@@ -91,25 +90,25 @@ class PluginMakeScreenshots(PluginMixin):
             "browseName": "firefox",
             "platform": "LINUX",
         },
-        {
-            "version": "7.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
+        #{
+            #"version": "7.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
         {
             "version": "10.0",
             "browseName": "firefox",
             "platform": "LINUX",
         },
-        {
-            "version": "10.0",
-            "browseName": "firefox",
-            "platform": "WINDOWS",
-        },
-        {
-            "version": "8",
-            "browseName": "iexplore",
-        },
+        #{
+            #"version": "10.0",
+            #"browseName": "firefox",
+            #"platform": "WINDOWS",
+        #},
+        #{
+            #"version": "8",
+            #"browseName": "iexplore",
+        #},
     ]
 
     def run(self, command):
@@ -170,6 +169,7 @@ class PluginMakeScreenshots(PluginMixin):
                 timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
                 timing[browsername] = []
+                self.log.debug("Timing data: %s" % timing_data)
 
                 for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
                     timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
@@ -195,7 +195,7 @@ class PluginMakeScreenshots(PluginMixin):
 
             except WebDriverException,e:
                 self.log.exception("WebDriverException")
-
+                signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
                 pass
