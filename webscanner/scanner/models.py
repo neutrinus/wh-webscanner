@@ -409,10 +409,6 @@ class BadWord(models.Model):
                                      self.word,
                                      self.timestamp)
 
-    def save(self,*a,**b):
-        self.word = self.word.strip().lower()
-        super(BadWord, self).save(*a,**b)
-
     @staticmethod
     def clean_bad_words(date=None):
         'default date is 30 days'

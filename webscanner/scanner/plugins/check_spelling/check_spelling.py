@@ -131,17 +131,19 @@ class PluginCheckSpelling(PluginMixin):
     def spellcheck(self, text):
         from scanner.models import (Results, CommandQueue, BadWord)
         # guess language code
+        self.log.debug('    * guessing language...')
         lang_code, lang_num, lang_name = guess_language.\
                                             guessLanguageInfo(text)
-        self.log.debug('    * check spelling, detected lang: %s (%s)'%(lang_name,
+        self.log.debug('    -> detected lang: %s (%s)'%(lang_name,
                                                                   lang_code))
 
         if lang_code == 'UNKNOWN':
-            self.log.warning('    * Cannot detect language of page - end')
+            self.log.warning('    -> Cannot detect language of page - end')
             #
             # raise CannotGuessLanguage()
             return None,set()
 
+        self.log.debug('    * searching for dictionary')
         try:
             checker = enchant.checker.SpellChecker(lang_code,
                                        filters=[EmailFilter,
@@ -149,63 +151,72 @@ class PluginCheckSpelling(PluginMixin):
         #                                       BetterURLFilter,
                                                ])
         except enchant.DictNotFoundError as e:
-            self.log.error("Cannot find language for spellchecker for %s - end"%\
+            self.log.error("    -> Cannot find language for spellchecker for %s - end"%\
                           lang_code)
             #raise e
             return None,set()
 
         # checking page for bad words
-        self.log.debug('    * check spelling')
+        self.log.debug('    * check spelling...')
         checker.set_text(text)
+        self.log.debug('    -> ok')
 
+        self.log.debug('    * get errors...')
         errors = [ er.word for er in checker ]
-        self.log.debug('      * found %d errors'%(len(errors)))
-        self.log.debug('    * filtering bad words')
+        self.log.debug('    -> ok')
 
-        for bad_word in errors:
-            BadWord.objects.create(word=bad_word)
+        self.log.debug('      * found %d bad words and adding them to DB'%len(errors))
+        BadWord.objects.bulk_create(
+            [BadWord(word=bad_word.strip().lower()) for bad_word in errors])
+        self.log.debug('      -> ok')
 
+        self.log.debug('     * call filtering bad words')
         errors = BadWord.filter_bad_words(errors)
+        self.log.debug('      -> ok')
 
-        self.log.debug('      * after filtering out there is %d errors (%s)'%\
-                  (len(errors),errors))
+        self.log.debug('     * after filtering out there is %d errors (%s)'%
+              (len(errors),errors))
 
         return lang_name, set(errors)
 
 
     def check_file(self, path):
-        self.log.debug(' * file: %s'%path)
+        self.log.debug(' * check spelling in file: %s'%path)
 
         # check if file is type of 'html'
         if 'html' not in str(mimetypes.guess_type(path)[0]):
-            self.log.debug('   * is not html file ')
+            self.log.debug('   * is not html file, omitting')
             return None, set()
         else:
             self.log.debug("   * is html file")
 
         # read html file and convert it to plain text
         with open(path,'r') as f:
-            self.log.debug("   * opening html file")
+            self.log.debug("   * reading html file...")
             orig = f.read(self.max_file_size) # Max 1 MB of html text file
-            self.log.debug("   * file loaded")
+
+            self.log.debug("   -> file loaded")
+            self.log.debug('   * detecting charset...')
             try:
                 charset = chardet.detect(orig)
             except Exception as e:
                 charset = {'confidence':0.1,
                            'encoding':'ascii'}
-                self.log.warning('    * error while detecting charset')
-            self.log.debug('    * detected charset: %s'%charset['encoding'])
+                self.log.warning('    -> error while detecting charset')
+            self.log.debug('    -> detected charset: %s'%charset['encoding'])
             if not charset['encoding']:
-                self.log.debug('    * set default encoding (ascii)')
+                self.log.debug('    -> set default encoding (ascii)')
                 charset['encoding'] = 'ascii'
 
 
+            self.log.debug('    * decoding text...')
             try:
                 orig = orig.decode(charset['encoding'])
             except Exception as e:
-                self.log.warning('    * error while decoding text')
+                self.log.warning('    -> error while decoding text')
                 self.log.info('     * try cleaning without decoding')
                 #raise CannotDecode(e)
+            self.log.debug('    -> ok')
 
             def strip_script_tags(root):
                for s in root.childGenerator():
@@ -226,7 +237,7 @@ class PluginCheckSpelling(PluginMixin):
             #
             # The winner is: nltk - fastest and best accurate (imho)
             # - noooooooo, nltk works not well with different encodings
-            self.log.debug('    * cleaning from html to txt')
+            self.log.debug('    * cleaning from html to txt...')
             try:
                 #text = nltk.clean_html(orig)
                 text = '\n'.join(strip_script_tags(
@@ -235,13 +246,14 @@ class PluginCheckSpelling(PluginMixin):
             except Exception as e:
                 self.log.warning('    * error while cleaning html, omitting file')
                 return None, set()
+            self.log.debug('    -> ok')
 
         lang, errors = self.spellcheck(text)
         self.log.info(' * stop checking file: %s'%path)
         return lang, errors
 
     def run(self, command):
-        self.log.info("Start spellchecking")
+        self.log.info(" * check spelling: BEGIN")
         from scanner.models import (Results, CommandQueue)
         import glob
         path = str(command.test.download_path)
