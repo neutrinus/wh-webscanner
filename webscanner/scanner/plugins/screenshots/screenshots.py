@@ -163,7 +163,9 @@ class PluginMakeScreenshots(PluginMixin):
                 #give a bit time for loading async-js
                 sleep(2)
 
-                dbrowser.get_screenshot_as_file(os.path.join(settings.MEDIA_ROOT,filename))
+
+                screenshot = os.path.join(settings.MEDIA_ROOT, filename)
+                dbrowser.get_screenshot_as_file(screenshot)
 
                 timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
@@ -179,7 +181,8 @@ class PluginMakeScreenshots(PluginMixin):
                 dbrowser.quit()
                 signal.alarm(0)
 
-                thumb = crop_screenshot(os.path.join(settings.MEDIA_ROOT, filename))
+                #do it after quiting browser - to save selenium time
+                screenshot_thumb = crop_screenshot(screenshot)
 
                 template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
                 res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
