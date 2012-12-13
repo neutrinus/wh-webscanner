@@ -195,7 +195,7 @@ class PluginMakeScreenshots(PluginMixin):
                 self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
 
             except WebDriverException,e:
-                self.log.exception("WebDriverException")
+                self.log.warning("WebDriverException: %s" % s)
                 signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
@@ -205,7 +205,6 @@ class PluginMakeScreenshots(PluginMixin):
             res.output_desc = unicode(_("Webpage load time"))
             template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
             template_data = {
-                'browsernames' : browsernames,
                 'timing' : timing,
                 'max_loadtime': max_loadtime,
             }
