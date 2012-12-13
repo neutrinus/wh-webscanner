@@ -8,10 +8,10 @@
 
 <script>
 {% for browsername, timingdata in timing.items %}
-var timing_{{ browsername }} = [{% for timingtype,timevalue in timingdata %}["{{ timingtype }}",{{ timevalue }}],{% endfor %}];
+var timing_{{ forloop.counter}} = [{% for timingtype,timevalue in timingdata %}["{{ timingtype }}",{{ timevalue }}],{% endfor %}];
 {% endfor %}
 
-var timing_plot =  jQuery.jqplot('timing_plot', [ {% for browsername, timingdata in timing.items %}timing_{{ browsername }},{% endfor %} ],
+var timing_plot =  jQuery.jqplot('timing_plot', [ {% for browsername, timingdata in timing.items %}timing_{{ forloop.counter }},{% endfor %} ],
 {
     title: 'Loadtime - events',
     axesDefaults:
