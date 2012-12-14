@@ -42,7 +42,7 @@ class PluginGoogleSafeBrowsing(PluginMixin):
         res = Results(test=command.test, group = RESULT_GROUP.security, importance=3)
         res.output_desc = unicode(_("Google Safe Browsing ") )
 
-        message = '<p><small>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></small></p>'
+        message = '<p class="muted"><small>For more information please visit following sites: www.antiphishing.org, StopBadware.org. <a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></small></p>'
 
         if (int(httpstatus) == 204):
             res.output_full = unicode(_('<p>Your domain is not listed at Google Safe Browsing Blacklist. <a href="http://www.google.com/safebrowsing/diagnostic?site=%s">Check it at google</a>. It means that probably there is no malware or phishing.</p> '%domain) + message)

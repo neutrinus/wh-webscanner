@@ -37,7 +37,7 @@ def select_smallest_file(filelist):
     return minfile
 
 def optimize_agif(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".gif"
+    file1 = os.path.join(PATH_TMPSCAN, gentmpfilename() + ".gif")
     files = [filename,file1]
 
     command = 'gifsicle -O2 %s --output %s'%(filename,file1)
@@ -47,7 +47,7 @@ def optimize_agif(filename):
     return files
 
 def optimize_jpg(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".jpg"
+    file1 = os.path.join(PATH_TMPSCAN, gentmpfilename() + ".jpg")
     files = [filename,file1]
 
     command = 'jpegtran -outfile %s -optimise -copy none %s'%(file1,filename)
@@ -55,7 +55,7 @@ def optimize_jpg(filename):
     (output, stderrdata) = p.communicate()
 
     if os.path.getsize(filename) > 10000:
-        file2 = PATH_TMPSCAN +gentmpfilename()
+        file2 = os.path.join(PATH_TMPSCAN, gentmpfilename())
         files.append(file2)
 
         command = 'jpegtran -outfile %s -optimise -progressive %s'%(file2,file1)
@@ -84,7 +84,7 @@ def optimize_png(filename):
     return files
 
 def optimize_gif(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".gif"
+    file1 = os.path.join(PATH_TMPSCAN, gentmpfilename() + ".gif")
     #convert it to png and then optimize it as png
     command = 'convert %s png:%s'%(filename,file1)
     p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
