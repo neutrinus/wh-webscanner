@@ -26,11 +26,7 @@ advanced level:
 # system imports
 import sys
 import os
-import random
-import string
 import re
-from time import sleep
-from datetime import date, datetime, timedelta
 from urlparse import urlparse
 
 from django.utils.translation import ugettext_lazy as _
@@ -40,7 +36,6 @@ from django.template import Template, Context
 # 3rd party
 
 import mimetypes
-import codecs
 # pip: nltk
 #import nltk
 # pip: beautifulsoup4
@@ -52,14 +47,13 @@ import guess_language
 import enchant.checker
 from enchant.tokenize import EmailFilter, URLFilter, Filter
 
-# pip: chardet
-import chardet
+# pip: cchardet
+import cchardet
 
 # local imports
 
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
-from account.models import UserProfile
 
 class CheckSpellingError(Exception):pass
 class NoDictionary(CheckSpellingError):pass
@@ -198,7 +192,7 @@ class PluginCheckSpelling(PluginMixin):
             self.log.debug("   -> file loaded")
             self.log.debug('   * detecting charset...')
             try:
-                charset = chardet.detect(orig)
+                charset = cchardet.detect(orig)
             except Exception as e:
                 charset = {'confidence':0.1,
                            'encoding':'ascii'}
