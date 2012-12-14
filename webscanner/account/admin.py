@@ -13,7 +13,7 @@ class UserProfileInlineAdmin(admin.StackedInline):
 class UserAdmin(UserAdmin):
     inlines = UserAdmin.inlines + [ UserProfileInlineAdmin ]
     fieldsets = UserAdmin.fieldsets
-    list_display = ('pk','is_active','is_staff','is_superuser','email','credits','last_login','date_joined')
+    list_display = ('pk','email', 'is_active','credits','last_login','date_joined', 'is_staff','is_superuser')
     list_display_links = ('pk','email')
     ordering = ('date_joined',)
 

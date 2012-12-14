@@ -81,7 +81,9 @@ def worker():
 
                 try:
                     # uruchamiamy i czekamy na status
-                    ctest.status = plugin.run(ctest)
+                    plugin_status = plugin.run(ctest)
+                    ctest.status = plugin_status if plugin_status else STATUS.success
+
 
                     log.debug('Scanner plugin(%s) for test (%s) finished.'%(plugin.name, ctest))
                 except  Exception,e:
