@@ -85,7 +85,12 @@ class PluginSocial(PluginMixin):
         #remove non-breaking space
         rawdata = rawdata.replace("\xc2\xa0","")
 
-        gplus1 = int(re.search(r"id\=\"aggregateCount\"[^>]*>([\d\s ]+)",rawdata).group(1))
+        blob = re.search(r"id\=\"aggregateCount\"[^>]*>([\d\s ]+)",rawdata)
+
+        if not blob:
+            return
+
+        gplus1 = int(blob.group(1))
 
         from scanner.models import Results
         res = Results(test=command.test, group=RESULT_GROUP.seo,importance=2)

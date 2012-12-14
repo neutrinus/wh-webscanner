@@ -167,8 +167,8 @@ def downloader():
 
             else:
                 sleep(random.uniform(2,10)) #there was nothing to do - we can sleep longer
-        except  Exception,e:
-            log.exception('Command run ended with exception: %s'%e)
+        except Exception as e:
+            log.exception('Command run ended with exception: %s' % e)
             #give admins some time
             sleep(30)
 
