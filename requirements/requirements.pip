@@ -5,7 +5,7 @@ selenium
 pyvirtualdisplay
 psycopg2
 
-html2text
+html2text==3.200.3
 
 django==1.4.2
 django-annoying==0.7.6
@@ -30,7 +30,7 @@ M2Crypto
 django-wsgiserver
 django-secure
 
-nltk
+nltk==2.0.4
 guess_language-spirit==0.5a3
 pyenchant
 chardet
