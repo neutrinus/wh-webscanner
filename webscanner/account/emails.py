@@ -9,6 +9,9 @@ from django.contrib.sites.models import Site
 from payments.models import CreditsPricingPlan
 
 def send_welcome_email(sender, user, request, **kwargs):
+    """
+    After successfull activation user gets a welcome email
+    """
     log = logging.getLogger('webscanner.account.send_welcome_email')
     current_site = Site.objects.get_current()
 
@@ -127,6 +130,7 @@ def too_few_credits_check(sender, instance, **kwargs):
             text = template.render(Context({
                     'user':user,
                     'pricing_plans': pricing_plans,
+                    'site': current_site,
             }))
 
             user.email_user(_('[%s] Needs a refill' % current_site.domain),
