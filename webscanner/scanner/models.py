@@ -3,7 +3,7 @@
 import logging
 #django import
 from django.db import models
-from django.utils.translation import (ugettext as __,ugettext_lazy as _, get_language)
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -23,28 +23,28 @@ from datetime import datetime as dt, timedelta as td
 log = logging.getLogger(__name__)
 
 STATUS = Choices(
-    (-3, 'waiting',  _(u'wait for processing')),
-    (-2, 'running',  _(u'in progress')),
-    (-1, 'unsuccess',_(u'unsuccess')),
-    (0,  'success',  _(u'success')),
-    (1,  'exception',_(u'exception')),
-    (2,  'other',    _(u'Unknown')),
+    (-3, 'waiting',   _(u'wait for processing')),
+    (-2, 'running',   _(u'in progress')),
+    (-1, 'unsuccess', _(u'unsuccess')),
+    (0,  'success',   _(u'success')),
+    (1,  'exception', _(u'exception')),
+    (2,  'other',     _(u'Unknown')),
 )
 
 RESULT_STATUS = Choices(
     (0,  'success',  _(u'Success')),
-    (1,  'error',_(u'Error')),
-    (2,  'warning',    _(u'Warning')),
-    (3,  'info',    _(u'info'))
+    (1,  'error',    _(u'Error')),
+    (2,  'warning',  _(u'Warning')),
+    (3,  'info',     _(u'info'))
 )
 
 RESULT_GROUP = Choices(
-    (0,  'general',_(u'General')),
-    (1,  'mail',  _(u'E-mail related')),
-    (2,  'seo',    _(u'SEO')),
+    (0,  'general',     _(u'General')),
+    (1,  'mail',        _(u'E-mail related')),
+    (2,  'seo',         _(u'SEO')),
     (3,  'security',    _(u'Security')),
-    (4,  'screenshot',    _(u'Screenshot')),
-    (5,  'performance',    _(u'Performance')),
+    (4,  'screenshot',  _(u'Screenshot')),
+    (5,  'performance', _(u'Performance')),
 )
 
 
@@ -58,43 +58,46 @@ from scanner.plugins.check_dns import PluginDNS
 from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
 from scanner.plugins.check_pagerank import PluginPagerank
 from scanner.plugins.check_mail import PluginMail
-from scanner.plugins.screenshots import PluginMakeScreenshots
 from scanner.plugins.check_surbl import PluginSURBL
 from scanner.plugins.check_plainemail import PluginPlainTextEmail
 from scanner.plugins.check_robots import PluginCheckRobots
 from scanner.plugins.optiimg import PluginOptiimg
+from scanner.plugins.screenshots import PluginMakeScreenshots
 from scanner.plugins.optiyui import PluginOptiYUI
 from scanner.plugins.check_spelling import PluginCheckSpelling
-from scanner.plugins.check_google_site import PluginGoogleSite
+#from scanner.plugins.check_google_site import PluginGoogleSite
 from scanner.plugins.social import PluginSocial
 
 
 PLUGINS = dict((
-    ('http_code', PluginCheckHTTPCode ),
-    ('w3c_valid', PluginCheckW3CValid ),
-    ('googlesb', PluginGoogleSafeBrowsing ),
-    ('domainexpdate', PluginDomainExpireDate ),
-    ('clamav', PluginClamav ),
-    ('dns', PluginDNS ),
-    ('dns_mail', PluginDNSmail ),
-    ('dns_mail_rbl', PluginDNSmailRBL ),
-    ('pagerank', PluginPagerank ),
-    ('mail', PluginMail ),
-    ('screenshots', PluginMakeScreenshots ),
-    ('surbl', PluginSURBL ),
-    ('robots', PluginCheckRobots ),
-    ('plainemail', PluginPlainTextEmail ),
-    ('optiimg', PluginOptiimg ),
+    ('http_code', PluginCheckHTTPCode),
+    ('w3c_valid', PluginCheckW3CValid),
+    ('googlesb', PluginGoogleSafeBrowsing),
+    ('domainexpdate', PluginDomainExpireDate),
+    ('clamav', PluginClamav),
+    ('dns', PluginDNS),
+    ('dns_mail', PluginDNSmail),
+    ('dns_mail_rbl', PluginDNSmailRBL),
+    ('pagerank', PluginPagerank),
+    ('mail', PluginMail),
+    ('screenshots', PluginMakeScreenshots),
+    ('surbl', PluginSURBL),
+    ('robots', PluginCheckRobots),
+    ('plainemail', PluginPlainTextEmail),
+    ('optiimg', PluginOptiimg),
     ('spellcheck', PluginCheckSpelling),
     ('optiyui', PluginOptiYUI),
     ('social', PluginSocial),
     #('googlesite', PluginGoogleSite ),
 ))
 
-PLUGIN_NAMES = [ (code,plugin.name) for code,plugin in PLUGINS.items() ]
 
-SHOW_LANGUAGES = [ item for item in settings.LANGUAGES if item[0] in
-                  settings.SHOW_LANGUAGES ]
+PLUGIN_NAMES = [(code, plugin.name) for code, plugin in PLUGINS.items()]
+
+
+SHOW_LANGUAGES = [item for item in settings.LANGUAGES if item[0] in
+                  settings.SHOW_LANGUAGES]
+
 
 def validate_groups(groups):
     'create validator that checks item is string of comma semarated group codes'
@@ -103,20 +106,23 @@ def validate_groups(groups):
         diff = item_groups.difference(set(groups))
         if diff:
             raise ValidationError(_('You selected groups "%s" which are not '
-                                    'recognized by the system.'%', '.join(diff)))
+                                    'recognized by the system.' % ', '.join(diff)))
     return validator
 
 
 class Tests(models.Model):
     class StartError(Exception):
         pass
+
     class AlreadyStartedError(StartError):
         pass
+
     TEST_STATUS = Choices(
         ('not_started', _("Not started")),
         ('started', _("Scheduled")),
         ('stopped', _("Stopped")),
     )
+
     '''
     Fields with _ prefix should not be used for queries, there are only
     some kind of `calculated cache`.
@@ -145,7 +151,6 @@ class Tests(models.Model):
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
 
-
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
 
     ####
@@ -164,7 +169,7 @@ class Tests(models.Model):
 
 
     def __unicode__(self):
-        return "%s by %s"%(self.url,self.user )
+        return "%s by %s" % (self.url,self.user)
 
     def __repr__(self):
         return '<Test uuid:%s url:%s user:%r>'%(self.uuid, self.url, self.user)
@@ -300,7 +305,7 @@ class Tests(models.Model):
         if not isinstance(groups, list):
             raise signing.BadSignature
         return url, groups
-        
+
 
     @classmethod
     def sign_url(cls, url, groups=None):
