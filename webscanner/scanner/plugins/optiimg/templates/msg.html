@@ -2,15 +2,15 @@
 <div>
     <p>{% trans "Using proven methods, we analize photos and images on your site if there is possibility to losslossly  shrink them. As images make most of the website traffic, optimizing them is an easy way to make your site much faster." %}</p>
 
-    {% if optiimgs %}
+    {% if optimized_images %}
     <ul>
-    {% for image in optiimgs %}
+    {% for image in optimized_images %}
         <li>
-            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
+            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me{{ image.url }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
         </li>
     {% endfor %}
     </ul>
-    <p>A total <b>{{ btotals|filesizeformat }}</b> could be saved by optimizing those images.</p>
+    <p>A total <b>{{ total_bytes_saved|filesizeformat }}</b> could be saved by optimizing those images.</p>
 
     {% else %}
     <p>{% trans "There were no images that could be optimized." %}</p>

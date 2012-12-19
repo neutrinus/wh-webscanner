@@ -1,224 +1,109 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-import sys
+#import sys
 import os
-import random
-import HTMLParser
-import urllib
-import urlparse
-import random
-import string
-import logging
-import re
-import shlex, subprocess
+#import random
+#import HTMLParser
+#import urllib
+#import urlparse
+#import string
+#import logging
 import mimetypes
-import shutil
-from time import sleep
-from datetime import date
-from django.utils.translation import get_language
+#import shutil
+
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
+from django.conf import settings
+
+
 from scanner.plugins.plugin import PluginMixin
-from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 
-log = logging.getLogger(__name__)
+from .utils import ImageOptimizer
 
-def gentmpfilename():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
-
-def select_smallest_file(filelist):
-    minfile = filelist[0]
-
-    for filek in filelist:
-        if (os.path.exists(filek)) and (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
-            minfile = filek
-
-    return minfile
-
-def optimize_agif(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".gif"
-    files = [filename,file1]
-
-    command = 'gifsicle -O2 %s --output %s'%(filename,file1)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    return files
-
-def optimize_jpg(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".jpg"
-    files = [filename,file1]
-
-    command = 'jpegtran -outfile %s -optimise -copy none %s'%(file1,filename)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    if os.path.getsize(filename) > 10000:
-        file2 = PATH_TMPSCAN +gentmpfilename()
-        files.append(file2)
-
-        command = 'jpegtran -outfile %s -optimise -progressive %s'%(file2,file1)
-        p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        (output, stderrdata) = p.communicate()
-    return files
-
-def optimize_png(filename):
-    fbase = PATH_TMPSCAN +gentmpfilename()
-    file1 = fbase + ".png"
-    file1nq = fbase + "-nq8.png"
-
-    file2 = PATH_TMPSCAN +gentmpfilename() + ".png"
-    files = [filename, file1, file1nq, file2]
-
-    shutil.copyfile(filename, file1)
-
-    command =  'pngnq -n 256  -f %s '%(file1)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    command = 'pngcrush -no_cc -rem alla -brute -l 9 -z 1 -reduce -q   %s %s'%(file1nq, file2)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    return files
-
-def optimize_gif(filename):
-    file1 = PATH_TMPSCAN + gentmpfilename() + ".gif"
-    #convert it to png and then optimize it as png
-    command = 'convert %s png:%s'%(filename,file1)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    flist = optimize_png(file1).append(filename)
-
-    return flist
-
-def identify_imagetype(filename):
-    """
-    Identify type of image
-    """
-    test_command = 'identify -format %%m "%s"'%(filename)
-
-    p = subprocess.Popen(shlex.split(test_command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    if p.returncode != 0:
-        log.debug("Cannot identify file %s."%filename)
-        return False
-
-    #animated gif produce (GIF)+
-    if "GIFGIF" in str(output):
-        output = "AGIF"
-
-    return output.strip()
-
-def optimize_image(input_file, output_path, remove_original=False ):
-
-    ftype = identify_imagetype(input_file)
-    if ftype == 'JPEG' :
-        ofiles = optimize_jpg(input_file)
-    elif ftype == 'PNG':
-        ofiles = optimize_png(input_file)
-    elif ftype == 'GIF':
-        ofiles = optimize_gif(input_file)
-    elif ftype == 'AGIF':
-        ofiles = optimize_agif(input_file)
-    else:
-        ofiles = [input_file]
-
-    if ofiles:
-        ofile = select_smallest_file(ofiles)
-    else:
-        ofile = input_file
-        ofiles = []
-
-    if not ofile:
-        log.warning("No ofile!")
-        return None
-
-    otype = identify_imagetype(ofile)
-    if not otype:
-        log.warning("No otype!")
-        return None
-
-    final_file = os.path.join(output_path, gentmpfilename() + "." + otype.lower())
-    log.debug("ofile: %s" % ofile)
-    log.debug("final_file: %s" % final_file)
-    shutil.copyfile(ofile, final_file)
-
-    if os.path.exists(ofile):
-        print "ofile jest"
-
-    if os.path.exists(final_file):
-        print "final_file jest"
-
-    #remove not needed tmp files
-    for filename in ofiles:
-        if (filename == input_file) and not remove_original:
-            continue
-        #if os.path.exists(filename):
-            #os.remove(filename)
-
-    return(final_file)
 
 class PluginOptiimg(PluginMixin):
     name = unicode(_('OptiIMG'))
     wait_for_download = True
 
+    OPTIMIZED_IMAGES_DIR_NAME = getattr(settings,
+                                        'OPTIIMG_OPTIMIZED_IMAGES_DIR_NAME',
+                                        'optimized_images')
+
+    #: MEDIA_ROOT/MEDIA_URL + OPTIMIZED_IMAGES_DIR_NAME + random_file_name
+    OPTIMIZED_IMAGES_PATH = \
+        os.path.join(settings.MEDIA_ROOT, OPTIMIZED_IMAGES_DIR_NAME)
+
+    #: MEDIA_ROOT/MEDIA_URL + OPTIMIZED_IMAGES_DIR_NAME + random_file_name
+    OPTIMIZED_IMAGES_URL = os.path.join(settings.MEDIA_URL, OPTIMIZED_IMAGES_DIR_NAME)
+
+    def __init__(self, *args, **kwargs):
+        if not os.path.isdir(self.OPTIMIZED_IMAGES_PATH):
+            raise OSError('''OptiIMG: directory %s does not exist!
+Please setup OPTIIMG_OPTIMIZED_IMAGES_DIR_NAME in django `settings.py` for a name \
+of a directory which exists inside MEDIA_ROOT to store optimized images or \
+set OPTIMIZED_IMAGES_PATH and OPTIMIZED_IMAGES_URL class attributes manually.''' % self.OPTIMIZED_IMAGES_PATH)
+        super(PluginOptiimg, self).__init__(*args, **kwargs)
+
     def run(self, command):
         if not command.test.check_performance:
             return STATUS.success
 
-        domain = command.test.domain
+        #domain = command.test.domain
         path = command.test.download_path
-        self.log.debug("Recursive check image files size in %s "%(path))
-
-        if not (os.path.exists(MEDIA_ROOT) and os.path.isdir(MEDIA_ROOT)):
-            self.log.error("no such directory: MEDIA_ROOT")
-            return STATUS.exception
+        self.log.debug("Recursive check image files size in %s " % (path))
 
         optiimgs = []
-        btotals = 0
+        total_bytes_saved = 0
+
+        optimizer = ImageOptimizer()
+        optimized_files_path = os.path.join(self.OPTIMIZED_IMAGES_PATH,
+                                            command.test.uuid)
+        optimized_files_url = os.path.join(self.OPTIMIZED_IMAGES_URL,
+                                           command.test.uuid)
+        os.makedirs(optimized_files_path)
 
         for root, dirs, files in os.walk(path):
             for file in files:
-                fpath = os.path.join(root,file)
+                file_path = os.path.join(root, file)
 
                 #mimetypes is much faster than identify, use it to filterout non-images
-                if 'image' not in str(mimetypes.guess_type(fpath)[0]):
+                if 'image' not in str(mimetypes.guess_type(file_path)[0]):
                     continue
 
-                self.log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
+                self.log.debug("File: %s size: %s" % (file_path, os.path.getsize(file_path)))
 
-                ofile = optimize_image(fpath, MEDIA_ROOT, False)
-                if not ofile:
+                optimized_file_path = optimizer.optimize_image(file_path, optimized_files_path)
+                if not optimized_file_path:
+                    # if optimization was not done correctly or final file
+                    # was larger than original
                     continue
+                optimized_file_url = os.path.join(optimized_files_url, os.path.basename(optimized_file_path))
 
-                bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
-                if bytes_saved == 0:
-                    continue
+                bytes_saved = os.path.getsize(file_path) - os.path.getsize(optimized_file_path)
 
-                self.log.debug("Optimized %s to %s"%(ofile,os.path.getsize(ofile) ))
+                self.log.debug("Optimized file is %s (new size: %s)" % (optimized_file_path, os.path.getsize(optimized_file_path)))
 
-                a = {   "ifile": fpath[(len(path)+1):],
-                        "ofile": MEDIA_URL + os.path.basename(ofile),
-                        "ifilesize": os.path.getsize(fpath),
-                        "ofilesize": os.path.getsize(ofile),
-                        "bytessaved": bytes_saved,
-                        "decrease": ( float(bytes_saved) / os.path.getsize(fpath) )*100,
-                        }
+                a = {"ifile": file_path[(len(path) + 1):],
+                     "ofile": optimized_file_path,
+                     "url": optimized_file_url,
+                     "ifilesize": os.path.getsize(file_path),
+                     "ofilesize": os.path.getsize(optimized_file_path),
+                     "bytessaved": bytes_saved,
+                     "decrease": (float(bytes_saved) / os.path.getsize(file_path)) * 100,
+                     }
                 optiimgs.append(a)
-                btotals += bytes_saved
+                total_bytes_saved += bytes_saved
 
-        template = Template(open(os.path.join(os.path.dirname(__file__),'templates/msg.html')).read())
+        template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/msg.html')).read())
 
         from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
+        res = Results(test=command.test, group=RESULT_GROUP.performance, importance=2)
         res.output_desc = unicode(_("Images optimalization"))
-        res.output_full = template.render(Context({'optiimgs':optiimgs, 'btotals':btotals }))
+        res.output_full = template.render(
+            Context({'optimized_images': optiimgs, 'total_bytes_saved': total_bytes_saved}))
 
-        if btotals < 500*1024:
+        if total_bytes_saved < 500 * 1024:
             res.status = RESULT_STATUS.success
         else:
             res.status = RESULT_STATUS.warning

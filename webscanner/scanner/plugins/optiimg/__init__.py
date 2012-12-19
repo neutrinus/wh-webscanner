@@ -1,1 +1,1 @@
-from check_optiimg import *
+from check_optiimg import PluginOptiimg
