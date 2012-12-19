@@ -2,8 +2,8 @@ import mock
 from unittest import TestCase
 import logging
 
-from ..models import *
-from check_http_code import PluginCheckHTTPCode as Plug
+from scanner.models import *
+from .check_http_code import PluginCheckHTTPCode as Plug
 
 class TestCode(TestCase):
     def setUp(self):
