@@ -14,6 +14,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+DATABASE_NAME = 'test'
 
 DATABASE_OPTIONS = {'timeout': 200}
 CACHES={'default':{
@@ -73,6 +74,6 @@ LOGGING['loggers']['']={
 }
 
 
-SELENIUM_HUB = '127.0.0.1'
+SELENIUM_HUB = 'http://127.0.0.1:4444/wd/hub'
 
 AUTOROOT_EMAIL='q@q.pl'

@@ -159,6 +159,7 @@ INSTALLED_APPS = (
 
 
     #3rd party apps,
+    'django_pytest',
     'paypal.standard.ipn',
     'django_extensions',
     'model_utils',
@@ -241,7 +242,7 @@ RECAPTCHA_PUBLIC_KEY = '6LfmydQSAAAAAOHIqxQaBPr63pMr0XM23ummE4y1'
 RECAPTCHA_PRIVATE_KEY = '6LfmydQSAAAAAAU6Wmv9LDHyjnYupYkARmawIQ00 '
 RECAPTCHA_USE_SSL = True
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
 NOSE_ARGS = [
              '--with-coverage',
              '--cover-tests',
