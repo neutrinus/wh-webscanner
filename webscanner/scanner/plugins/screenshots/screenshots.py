@@ -1,55 +1,43 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
 #based on http://maestric.com/doc/python/recursive_w3c_html_validator
-import sys
 import os
-import random
-import HTMLParser
-import urllib
-import sys
-import urlparse
-import string
-import re
-import shlex
-import shutil
+import time
 import signal
-from time import sleep
-from django.utils.translation import get_language
+import hashlib
+from PIL import Image
+
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 from django.conf import settings
+
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
-from PIL import Image
-
-from scanner.plugins.optiimg import gentmpfilename, optimize_image
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 from scanner.plugins.plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
+from scanner.plugins.optiimg.utils import ImageOptimizer
 
 
 class Alarm(Exception):
     pass
 
+
 def alarm_handler(signum, frame):
     raise Alarm
 
-def crop_screenshot(inputfile):
-    """ produce a thumb of screenshot """
-    img = Image.open(inputfile)
-    box = (0, 0, 940, 400)
-    area = img.crop(box)
-    ofile = os.path.join(settings.MEDIA_ROOT,"screenshots/", "thumb_"+gentmpfilename()+".png")
-    area.save(ofile, 'png')
-    return(ofile)
 
 #http://pypi.python.org/pypi/selenium
 #https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html
-
 class PluginMakeScreenshots(PluginMixin):
     '''
     This Plugin makes screenshots of a webpage by visiting it using different webbrowsers (firefox,chrome) and selenium.
     '''
+
+    #: this is only used to build two variables below
+    SCREENSHOTS_DIR_NAME = getattr(settings, 'SCREENSHOTS_DIR_NAME', 'screenshots')
+    SCREENSHOTS_PATH = os.path.join(settings.MEDIA_ROOT, SCREENSHOTS_DIR_NAME)
+    SCREENSHOTS_URL = os.path.join(settings.MEDIA_URL, SCREENSHOTS_DIR_NAME)
 
     name = unicode(_('Screenshots'))
     wait_for_download = False
@@ -57,59 +45,18 @@ class PluginMakeScreenshots(PluginMixin):
     browsers = [
         {
             "version": "",
-            "browseName": "opera",
-            "platform": "LINUX",
-        },
-        #{
-            #"version": "",
-            #"browseName": "opera",
-            #"platform": "WINDOWS",
-        #},
-        {
-            "version": "",
-            "browseName": "chrome",
-            "platform": "LINUX",
-        },
-        #{
-            #"version": "",
-            #"browseName": "chrome",
-            #"platform": "WINDOWS",
-        #},
-        #{
-            #"version": "4.0",
-            #"browseName": "firefox",
-            #"platform": "WINDOWS",
-        #},
-        {
-            "version": "4.0",
             "browseName": "firefox",
             "platform": "LINUX",
         },
-        {
-            "version": "7.0",
-            "browseName": "firefox",
-            "platform": "LINUX",
-        },
-        #{
-            #"version": "7.0",
-            #"browseName": "firefox",
-            #"platform": "WINDOWS",
-        #},
-        {
-            "version": "10.0",
-            "browseName": "firefox",
-            "platform": "LINUX",
-        },
-        #{
-            #"version": "10.0",
-            #"browseName": "firefox",
-            #"platform": "WINDOWS",
-        #},
-        #{
-            #"version": "8",
-            #"browseName": "iexplore",
-        #},
     ]
+
+    def __init__(self, *args, **kwargs):
+        if not os.path.isdir(self.SCREENSHOTS_PATH):
+            raise OSError('''Screenshots plugin: directory %s does not exist!
+Please setup SCREENSHOTS_DIR_NAME in django `settings.py` for a name \
+of a directory which exists inside MEDIA_ROOT to store optimized images or \
+set SCREENSHOTS_PATH and SCREENSHOTS_URL class attributes manually.''' % self.SCREENSHOTS_PATH)
+        super(self.__class__, self).__init__(*args, **kwargs)
 
     def run(self, command):
         url = command.test.url
@@ -118,17 +65,21 @@ class PluginMakeScreenshots(PluginMixin):
         timing = {}
         max_loadtime = 0
 
-        for browser in self.browsers:
-            filename = os.path.join ('screenshots/', ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24)) + ".png")
+        screenshots_path = os.path.join(self.SCREENSHOTS_PATH, command.test.uuid)
+        screenshots_url = os.path.join(self.SCREENSHOTS_URL, command.test.uuid)
+        os.makedirs(screenshots_path)
 
-            browsername =""
-            for key in browser:
-                browsername += "_" + str(browser[key])
+        for browser in self.browsers:
+            screenshot_filename = hashlib.sha1(str(time.time())).hexdigest() + '.png'
+            screenshot_file_path = os.path.join(screenshots_path, screenshot_filename)
+            screenshot_url = os.path.join(screenshots_url, screenshot_filename)
+
+            browsername = '_'.join([browser[key] for key in 'platform', 'browseName', 'version'])
 
             self.log.debug("Make screenshot with %s" % browser)
 
             signal.signal(signal.SIGALRM, alarm_handler)
-            signal.alarm(3*60)  # 3 minutes
+            signal.alarm(3 * 60)  # 3 minutes
 
             try:
                 if browser["browseName"] == "iexplore":
@@ -144,10 +95,10 @@ class PluginMakeScreenshots(PluginMixin):
                     continue
 
                 if "version" in browser:
-                    desired_capabilities['version'] =  browser["version"]
+                    desired_capabilities['version'] = browser["version"]
 
                 if "platform" in browser:
-                    desired_capabilities['platform'] =  browser["platform"]
+                    desired_capabilities['platform'] = browser["platform"]
 
                 dbrowser = webdriver.Remote(
                     desired_capabilities=desired_capabilities,
@@ -156,24 +107,31 @@ class PluginMakeScreenshots(PluginMixin):
 
                 #http://seleniumhq.org/docs/04_webdriver_advanced.html
                 dbrowser.implicitly_wait(30)
-                sleep(1)
+                time.sleep(1)
                 dbrowser.get(url)
 
                 #give a bit time for loading async-js
-                sleep(2)
+                time.sleep(2)
 
+                dbrowser.get_screenshot_as_file(screenshot_file_path)
 
-                screenshot = os.path.join(settings.MEDIA_ROOT, filename)
-                dbrowser.get_screenshot_as_file(screenshot)
+                optimizer = ImageOptimizer()
+                optimized_screenshot_path = optimizer.optimize_image(screenshot_file_path, screenshots_path)
+                if optimized_screenshot_path:
+                    # if we have optimized image we do not care about old one
+                    os.unlink(screenshot_file_path)
+                    screenshot_filename = os.path.basename(optimized_screenshot_path)
+                    screenshot_file_path = optimized_screenshot_path
+                    screenshot_url = os.path.join(screenshots_url, screenshot_filename)
 
                 timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
                 if timing_data:
                     timing[browsername] = []
-                    for time in ["navigationStart","domainLookupStart","domainLookupEnd","connectStart","requestStart", "domLoading","domInteractive","domComplete","loadEventEnd"]:
-                        timing[browsername].append( (time, timing_data[time] - timing_data["navigationStart"]))
+                    for _time in ["navigationStart", "domainLookupStart", "domainLookupEnd", "connectStart", "requestStart", "domLoading", "domInteractive", "domComplete", "loadEventEnd"]:
+                        timing[browsername].append((_time, timing_data[_time] - timing_data["navigationStart"]))
 
-                    tmp_timing =  timing_data["loadEventEnd"] - timing_data["navigationStart"]
+                    tmp_timing = timing_data["loadEventEnd"] - timing_data["navigationStart"]
                     if tmp_timing > max_loadtime:
                         max_loadtime = tmp_timing
                 else:
@@ -183,29 +141,31 @@ class PluginMakeScreenshots(PluginMixin):
                 signal.alarm(0)
 
                 #do it after quiting browser - to save selenium time
-                screenshot_thumb = crop_screenshot(screenshot)
+                screenshot_thumb_path = self.crop_screenshot(screenshot_file_path)
+                screenshot_thumb_url = os.path.join(screenshots_url, os.path.basename(screenshot_thumb_path))
 
-                template = Template(open(os.path.join(os.path.dirname(__file__),'screenshots.html')).read())
-                res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc = browsername )
-                res.output_full = template.render(Context({'filename':screenshot[len(settings.MEDIA_ROOT)+1:],
-                                                            'thumb': screenshot_thumb[len(settings.MEDIA_ROOT)+1:],
-                                                            'browsername': browsername,
-                                                            'browserversion': dbrowser.capabilities['version']}))
+                template = Template(open(os.path.join(os.path.dirname(__file__), 'screenshots.html')).read())
+                res = Results(test=command.test, group=RESULT_GROUP.screenshot, status=RESULT_STATUS.info, output_desc=browsername)
+                ctx = {'filename': screenshot_url,
+                       'thumb': screenshot_thumb_url,
+                       'browsername': browsername,
+                       'browserversion': dbrowser.capabilities['version']}
+                res.output_full = template.render(Context(ctx))
                 res.save()
-                self.log.debug("Saved screenshot (result:%s)) in: %s "%(res.pk, os.path.join(settings.MEDIA_ROOT,filename)))
+                self.log.debug("Saved screenshot (result:%r))" % res)
 
-            except WebDriverException,e:
+            except WebDriverException, e:
                 self.log.warning("WebDriverException: %s" % e)
                 signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
 
         if command.test.check_seo:
-            res = Results(test=command.test, group = RESULT_GROUP.performance, status = RESULT_STATUS.success)
+            res = Results(test=command.test, group=RESULT_GROUP.performance, status=RESULT_STATUS.success)
             res.output_desc = unicode(_("Webpage load time"))
-            template = Template(open(os.path.join(os.path.dirname(__file__),'pageload.html')).read())
+            template = Template(open(os.path.join(os.path.dirname(__file__), 'pageload.html')).read())
             template_data = {
-                'timing' : timing,
+                'timing': timing,
                 'max_loadtime': max_loadtime,
             }
             res.output_full = template.render(Context(template_data))
@@ -217,3 +177,13 @@ class PluginMakeScreenshots(PluginMixin):
 
         #there was no exception - test finished with success
         return STATUS.success
+
+    def crop_screenshot(self, inputfile):
+        """ produce a thumb of screenshot in the same dir as original"""
+        img = Image.open(inputfile)
+        box = (0, 0, 940, 400)
+        area = img.crop(box)
+        basename, ext = os.path.splitext(inputfile)
+        ofile = os.path.join("%s_thumb_%dx%d%s" % (basename, box[2]. box[3], '.png'))
+        area.save(ofile, 'png')
+        return(ofile)
