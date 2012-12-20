@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 import os
-def apath(x):
-    return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
 
+
+def apath(x):
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), x))
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -15,16 +16,16 @@ MANAGERS = (
     ('neutrinus', 'marek@whitehats.pl'),
 )
 
-ACCOUNT_ACTIVATION_DAYS=1
+ACCOUNT_ACTIVATION_DAYS = 1
 DEFAULT_FROM_EMAIL = 'noreply@webcheck.me'
 DEFAULT_SUPPORT_EMAIL = 'support@webcheck.me'
 SERVER_EMAIL = 'noreply@webcheck.me'
-EMAIL_HOST='localhost'
-EMAIL_PORT=587
-EMAIL_HOST_USER='root'
-EMAIL_HOST_PASSWORD='xxx'
-EMAIL_USE_TLS=False
-EMAIL_SUBJECT_PREFIX='[webcheck.me]'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'root'
+EMAIL_HOST_PASSWORD = 'xxx'
+EMAIL_USE_TLS = False
+EMAIL_SUBJECT_PREFIX = '[webcheck.me]'
 
 AUTH_PROFILE_MODULE = 'account.UserProfile'
 
@@ -37,27 +38,27 @@ DATABASES = {
 DATABASE_ENGINE = ""
 
 CACHES = {
-    'default':{
+    'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'ram',
-        'TIMEOUT':60*5,
-        'OPTIONS':{
-            'MAX_ENTRIES':10000,
+        'TIMEOUT': 60 * 5,
+        'OPTIONS': {
+            'MAX_ENTRIES': 10000,
         },
     }
 }
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 CACHE_MIDDLEWARE_KEY_PREFIX = "ali_"
-CACHE_MIDDLEWARE_SECONDS = 60*5
+CACHE_MIDDLEWARE_SECONDS = 60 * 5
 CACHE_MIDDLEWARE_ALIAS = "default"
 
 TIME_ZONE = 'Etc/UTC'
 
 LANGUAGE_CODE = 'en'
 
-SHOW_LANGUAGES = ('pl','en')
+SHOW_LANGUAGES = ('pl', 'en')
 
-_ = lambda s:s
+_ = lambda s: s
 LANGUAGES = (
     ('en', _(u'English')),
     ('pl', _(u'Polski')),
@@ -67,7 +68,7 @@ LANGUAGES = (
 )
 
 
-LOCALE_PATHS=( apath('locale'), )
+LOCALE_PATHS = (apath('locale'),)
 
 
 SITE_ID = 1
@@ -93,7 +94,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
     'compressor.finders.CompressorFinder',
 )
 
@@ -193,19 +194,19 @@ LOGGING = {
 
     'handlers': {
         'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
         },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
-            'formatter':'verbose',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
          },
-        'logfile':{
+        'logfile': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': apath('webscanner.log'),
