@@ -1,19 +1,25 @@
 # -*- encoding: utf-8 -*-
 
+import os
+import shutil
 import logging
+from datetime import datetime
+
 #django import
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.db import transaction
 from django.core import signing
-from django_extensions.db.fields import UUIDField
-from django.core.cache import cache
-from django.db.models import Count
-from django.db.models import Max
 from django.conf import settings
-from datetime import datetime
+from django.db.models import Max
+from django.db.models import Count
+from django.db import transaction
+from django.core.cache import cache
+from django.db.models.signals import pre_delete
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import UUIDField
+
+from django.contrib.auth.models import User
+
 #3rd party import
 from urlparse import urlparse
 from model_utils import Choices
@@ -144,17 +150,16 @@ class Tests(models.Model):
 
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False, db_index=True)
 
-
     def __unicode__(self):
-        return "%s by %s" % (self.url,self.user)
+        return "%s by %s" % (self.url, self.user)
 
     def __repr__(self):
-        return '<Test uuid:%s url:%s user:%r>'%(self.uuid, self.url, self.user)
+        return '<Test uuid:%s url:%s user:%r>' % (self.uuid, self.url, self.user)
 
     @models.permalink
     def get_absolute_url(self):
         ''' link to results'''
-        return 'scanner_report', (), {'uuid':self.uuid}
+        return 'scanner_report', (), {'uuid': self.uuid}
 
     def domain(self):
         return urlparse(self.url).hostname
@@ -244,12 +249,11 @@ class Tests(models.Model):
                     log.info('%r just paid %s credits for test %r' % (
                         self.user, self.cost, self))
                 self.save()
-            log.info('%r.test started. commands started.'%self)
+            log.info('%r.test started. commands started.' % self)
             return True
         except Exception as error:
-            log.exception("Error during starting test: %r"%self)
+            log.exception("Error during starting test: %r" % self)
             raise self.StartError(error)
-
 
     @classmethod
     def unsign_url(cls, signed_url):
@@ -272,7 +276,6 @@ class Tests(models.Model):
         if not isinstance(groups, list):
             raise signing.BadSignature
         return url, groups
-
 
     @classmethod
     def sign_url(cls, url, groups=None):
@@ -308,11 +311,11 @@ class Tests(models.Model):
             user=user,
         )
         # hardcoded test groups, it will be changed in next architecture redesign
-        for key in ['check_seo','check_performance','check_mail','check_security']:
-            ctx[key]=True if key in groups else False
+        for key in ['check_seo', 'check_performance', 'check_mail', 'check_security']:
+            ctx[key] = True if key in groups else False
 
         if user_ip:
-            ctx['user_ip']=user_ip
+            ctx['user_ip'] = user_ip
 
         ctx.update(kwargs)
 
