@@ -22,8 +22,9 @@ fancy_tag==0.2.0
 django-spurl==0.6
 django-grappelli==2.4.3
 django-compressor==1.2
-django-pytest==2.1.1
+django-pytest==0.2.0
 pytest==2.3.4
+sh==1.0.7
 
 furl==0.3.3
 
