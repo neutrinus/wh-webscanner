@@ -3,6 +3,8 @@ import os
 import logging
 import tempfile
 import shutil
+import time
+import hashlib
 
 import sh
 
@@ -150,8 +152,8 @@ class ImageOptimizer(object):
             os.unlink(best_image_path)
             return False
         else:
-            log.debug('"%s" optimized successfully')
-            new_image_name = os.path.splitext(os.path.basename(image_path))[0] + os.path.splitext(best_image_path)[1]
+            new_image_name = hashlib.sha1(str(time.time())).hexdigest() + '_' + os.path.splitext(os.path.basename(image_path))[0] + os.path.splitext(best_image_path)[1]
             new_image_path = os.path.join(out_directory_path, new_image_name)
+            log.debug('"%s" optimized successfully (result in:%s)' % (image_path, new_image_path))
             shutil.move(best_image_path, new_image_path)
             return new_image_path

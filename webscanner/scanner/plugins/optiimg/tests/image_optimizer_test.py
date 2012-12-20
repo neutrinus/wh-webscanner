@@ -43,6 +43,7 @@ def test_image_optimizer_on_example(file, type):
     optimized_file_path = i.optimize_image(os.path.join(os.path.dirname(__file__), 'test_files/%s' % file), optimized_files_path)
     assert optimized_file_path
     assert os.path.exists(optimized_file_path)
+    assert os.path.getsize(optimized_file_path) > 0
     assert i.identify_image_type(optimized_file_path) == type
     os.unlink(optimized_file_path)
 
