@@ -117,23 +117,11 @@ class Tests(models.Model):
     class AlreadyStartedError(StartError):
         pass
 
-    TEST_STATUS = Choices(
-        ('not_started', _("Not started")),
-        ('started', _("Scheduled")),
-        ('stopped', _("Stopped")),
-    )
-
-    '''
-    Fields with _ prefix should not be used for queries, there are only
-    some kind of `calculated cache`.
-    '''
-
     ####
     # Attributes set during scan creation
     ####
     uuid                =   UUIDField(db_index=True, auto=True, unique=True)
     url                 =   models.CharField(max_length=600, blank=1, null=1, db_index=True)
-    priority            =   models.IntegerField(default=10)
     creation_date       =   models.DateTimeField(auto_now_add=True, db_index=True)
     #: comma separated group codes from TEST_GROUPS
     check_security      =   models.BooleanField(default=True)
@@ -141,31 +129,17 @@ class Tests(models.Model):
     check_performance   =   models.BooleanField(default=True)
     check_mail          =   models.BooleanField(default=True)
 
-    user                =   models.ForeignKey(User, null=1)
-    user_ip             =   models.IPAddressField(null=True)
+    user                =   models.ForeignKey(User, null=1, db_index=True)
+    user_ip             =   models.IPAddressField(null=True, db_index=True)
 
     ####
     # Attributes that can be changed during checks
     ####
 
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
-    download_path       =   models.CharField(max_length=300,blank=1,null=1,db_index=True)
+    download_path       =   models.CharField(max_length=300, blank=1, null=1, db_index=True)
 
-    is_deleted          =   models.BooleanField(_(u'has been removed'), default=False)
-
-    ####
-    # Attributes which should be only changed by model instance itself
-    ####
-
-    #: Cache for: status
-    _status           =   models.CharField(_(u'status'),
-                                           max_length=16,
-                                           choices=TEST_STATUS,
-                                           default=TEST_STATUS.not_started)
-
-    #: Cache for `CommandQueue` duration
-    _total_duration     =   models.PositiveIntegerField(blank=True, null=True)
-
+    is_deleted          =   models.BooleanField(_(u'has been removed'), default=False, db_index=True)
 
 
     def __unicode__(self):
@@ -192,42 +166,34 @@ class Tests(models.Model):
         '''
         Show in percentage, how much test's commands are active now.
         '''
-        if self._status == self.TEST_STATUS.not_started: return 0.0
-        if self._status == self.TEST_STATUS.stopped: return 100.0
-
         done = float(self.commands.not_active().count())
         total = float(self.commands.count())
-
         if total <= 0.1:
             return 0.0
         else:
-            percent = (done/total) * 100.0
+            percent = (done / total) * 100.0
+            if percent >= 100.0:
+                return 100.0
             return percent
+
+    def is_done(self):
+        if self.percent_progress() == 100.0:
+            return True
+        return False
 
     def duration(self):
         '''
-        Warning: this method call `save`
+        returns duration of a test in seconds
         '''
-        if self._status == self.TEST_STATUS.not_started: return 0
-        elif self._status == self.TEST_STATUS.started:
+        if self.percent_progress() < 0.99:
             return (datetime.now() - self.creation_date).total_seconds()
-        elif self._status == self.TEST_STATUS.stopped:
-            #all test finished
-            if not self._total_duration:
-                # if there is no cache, fill it
-                self._total_duration = (self.commands.last_finish_date()\
-                                       - self.creation_date).total_seconds()
-                self.save()
-            return self._total_duration
-
-        log.error('duration assertion: this error should never exist!')
-        return 0
+        else:
+            return (self.commands.last_finish_date() - self.creation_date). total_seconds()
 
     @property
     def cost(self):
         '''
         This method calculate cost of a test (in credits)
-        TODO: make it cachable as db field
         '''
         return 1
 
@@ -245,7 +211,7 @@ class Tests(models.Model):
         # if test is not saved
         if not self.pk:
             raise self.StartError('Test %r is not saved'%self)
-        if self._status in (self.TEST_STATUS.started, self.TEST_STATUS.stopped):
+        if self.commands.all().count() > 0:
             raise self.AlreadyStartedError('Test %r is already started'%self)
 
         log.debug('%r.start'%self)
@@ -263,19 +229,17 @@ class Tests(models.Model):
             with transaction.commit_on_success():
                 for plugin_code, plugin_class in PLUGINS.items():
                     CommandQueue.objects.create(test=self,
-                         testname=plugin_code,
-                         wait_for_download=plugin_class.wait_for_download)
-                self._status = self.TEST_STATUS.started
+                                                testname=plugin_code,
+                                                wait_for_download=plugin_class.wait_for_download)
 
                 # pay for test
                 if self.user:
-                    log.debug('%r just paid %s credits for test %r'%(
-                        self.user, self.cost, self))
                     profile = self.user.userprofile
                     from django.db.models import F
                     profile.credits = F('credits') - self.cost
                     profile.save()
-
+                    log.info('%r just paid %s credits for test %r' % (
+                        self.user, self.cost, self))
                 self.save()
             log.info('%r.test started. commands started.'%self)
             return True

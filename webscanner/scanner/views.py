@@ -133,7 +133,6 @@ def index(request):
     test = form.save(commit=False)
     test.user = request.user
     test.user_ip = request.META['REMOTE_ADDR']
-    test.priority = 20
     test.save()
     test.start()
 
