@@ -224,7 +224,12 @@ LOGGING = {
 
 
 # remember to remove old data and check disk usage!
-PATH_TMPSCAN = '/tmp/webscanner/'
+PATH_TMPSCAN = '/tmp/webscanner/'  # this should be replaced in all system by following variables (if possible, test.private_data_path should be used!)
+# these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
+SCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
+SCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
+SCANNER_TEST_PRIVATE_DATA_PATH = '/tmp/webscanner/'
+
 PATH_OPTIPNG = '/usr/bin/optipng'
 
 GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'

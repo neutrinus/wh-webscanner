@@ -111,6 +111,9 @@ def validate_groups(groups):
 
 
 class Tests(models.Model):
+    SCANNER_TEST_PUBLIC_DATA_PATH = getattr(settings, 'SCANNER_TEST_PUBLIC_DATA_PATH')
+    SCANNER_TEST_PRIVATE_DATA_PATH = getattr(settings, 'SCANNER_TEST_PRIVATE_DATA_PATH')
+
     class StartError(Exception):
         pass
 
@@ -314,6 +317,60 @@ class Tests(models.Model):
         ctx.update(kwargs)
 
         return Tests(**ctx)
+
+    @property
+    def public_data_path(self):
+        if not self.uuid or not self.pk:
+            raise self.DoesNotExist('%r is not saved. cannot calculate public_data_path' % self)
+        return os.path.join(self.SCANNER_TEST_PUBLIC_DATA_PATH,
+                            self.uuid)
+
+    @property
+    def private_data_path(self):
+        if not self.uuid or not self.pk:
+            raise self.DoesNotExist('%r is not saved. cannot calculate private_data_path' % self)
+        if self.download_path:
+            return self.download_path
+        return os.path.join(self.SCANNER_TEST_PRIVATE_DATA_PATH,
+                            self.uuid)
+
+    def clean_private_data(self):
+        '''
+        Warning: this method call save
+        '''
+        res = self.clean_data('private')
+        self.is_deleted = True
+        self.download_path = None
+        self.save()
+        return res
+
+    def clean_public_data(self):
+        return self.clean_data('public')
+
+    def clean_data(self, dir='public'):
+        if dir not in ('public', 'private'):
+            raise Exception('You can only remove `public` or `private` dir of test')
+        path = getattr(self, '%s_data_path' % dir)
+
+        log.debug('cleaning %s data of %r...' % (dir, self))
+        if os.path.isdir(path):
+            if os.path.basename(path) == self.uuid:
+                shutil.rmtree(path)
+                log.info('%r %s path (%s) removed.' % (self, dir, path))
+                return True
+            else:
+                log.error('%r %s data path (%s) does not contain its uuid, it can remove too much – please check this manually' % (self, dir, path))
+                return False
+        else:
+            log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
+
+
+def remove_data_of_a_test_signal(sender, instance, **kwargs):
+    log.debug('%r - remove signal')
+    instance.clean_private_data()
+    instance.clean_public_data()
+
+pre_delete.connect(remove_data_of_a_test_signal)
 
 
 class CommandQueueManager(models.Manager):

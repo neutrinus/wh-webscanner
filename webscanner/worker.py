@@ -35,7 +35,6 @@ log = logging.getLogger('webscanner.worker')
 #from logs import log
 
 PATH_HTTRACK = '/usr/bin/httrack'
-from settings import PATH_TMPSCAN
 
 
 def worker():
@@ -109,19 +108,17 @@ def downloader():
     #main program loop
     while(True):
         try:
-            # once a time clean up old tests
-            if random.randint(1,100) == 42:
-                log.debug("Cleaning time!")
-                dirtytests = Tests.objects.filter(is_deleted=False)
-                for dtest in dirtytests:
-                    if dtest.percent_progress() == 100:
-                        log.debug("Cleanup old test %s (path: %s)"%(dtest.uuid, dtest.download_path))
-                        if os.path.exists(dtest.download_path):
-                            shutil.rmtree(str(dtest.download_path))
-                        dtest.is_deleted = True
-                        dtest.save()
+            dtest = Tests.objects.filter(download_status=STATUS.success, is_deleted=False)[:1].get()
+            if dtest:
+                log.debug("Cleaning time! %r" % dtest)
+                if dtest.is_done():
+                    dtest.clean_private_data()
+            else:
+                log.debug('Nothing to clean')
+                sleep(random.uniform(10, 30))
+        except Exception:
+            log.exception('Error during cleaning.')
 
-            tmppath = PATH_TMPSCAN + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
 
 
             #log.debug('Try to fetch some fresh stuff')
@@ -139,14 +136,16 @@ def downloader():
                         continue
 
                     test.download_status = STATUS.running
-                    test.download_path = tmppath
+                    test.download_path = test.private_data_path
+                    os.makedirs(test.download_path)
                     test.save()
-                    log.info('Downloading website %s for test %s to %s'%(test.url,test.pk,tmppath))
-                except Tests.DoesNotExist:
-                    test = None
-                    log.debug("No Tests in DownloadQueue to process, sleeping.")
-                    sleep(random.uniform(5,10)) #there was nothing to do - we can sleep longer
-                    continue
+                    log.info('Downloading website %s for %r to %s' % (test.url, test, test.download_path))
+
+            except Tests.DoesNotExist:
+                test = None
+                log.debug("No Tests in DownloadQueue to process, sleeping.")
+                sleep(random.uniform(5, 10))  # there was nothing to do - we can sleep longer
+                continue
 
             if test:
                 domain = test.url
