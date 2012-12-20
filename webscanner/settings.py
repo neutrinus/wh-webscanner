@@ -182,7 +182,7 @@ LOGGING = {
 
     'formatters': {
         'verbose': {
-            'format': '%(levelname)10s | %(module)10s | %(message)s'
+            'format': '%(levelname)10s | %(name)30s | %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -205,7 +205,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
-         },
+        },
         'logfile': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
