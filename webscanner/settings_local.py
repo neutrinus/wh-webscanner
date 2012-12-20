@@ -28,7 +28,6 @@ TEMPLATE_CONTEXT_PROCESSORS += [
 
 INSTALLED_APPS += (
     'debug_toolbar',
-    'django_nose',
     'autoroot',
 )
 

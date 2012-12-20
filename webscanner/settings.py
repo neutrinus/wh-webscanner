@@ -249,21 +249,7 @@ RECAPTCHA_PRIVATE_KEY = '6LfmydQSAAAAAAU6Wmv9LDHyjnYupYkARmawIQ00 '
 RECAPTCHA_USE_SSL = True
 
 TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
-NOSE_ARGS = [
-             '--with-coverage',
-             '--cover-tests',
-             '--cover-inclusive',
-             '--cover-html',
-             '--cover-html-dir=html_coverage',
-             '--cover-package=scanner',
-             '--with-selenium',
-             '-v',
-             '-s',
-             #'--with-profile',
-             #'--profile-stats-file=tests/profile',
-            ] # arguments to nose for testing
 
-PRODUCT_PRICE = "3.79"  # USD
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 PAYPAL_ENCRYPTED = True
 PAYPAL_PRIVATE_CERT = apath('paypal.pem')
