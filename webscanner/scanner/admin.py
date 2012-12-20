@@ -19,12 +19,12 @@ class ResultsInlineAdmin(admin.TabularInline):
 class CommandQueueInlineAdmin(admin.TabularInline):
     model = CommandQueue
     extra = 0
-    readonly_fields = ( 'finish_date', 'run_date' )
+    readonly_fields = ( 'finish_date', 'run_date', 'wait_for_download', 'testname', 'status' )
 
 class TestsAdmin(admin.ModelAdmin):
     model = Tests
     list_per_page = 100
-    readonly_fields = ( 'user_ip', 'user', 'creation_date' ,'download_path')
+    readonly_fields = ( 'user_ip', 'user', 'creation_date' ,'download_path', 'is_deleted', 'download_status')
     list_display = ('url','priority', 'percent_progress', 'user', 'is_deleted', 'creation_date')
     ordering = ('-creation_date',)
     list_filter = ('creation_date', 'is_deleted')

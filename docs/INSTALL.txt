@@ -33,3 +33,27 @@ ADD A CRON JOB:
 
 13      23      *       *       *       /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
 
+
+
+********
+SELENIUM
+********
+
+
+
+SELENIUM node
+-------------
+
+ wget ftp://ftp.mozilla.org/pub/firefox/releases/7.0/linux-x86_64/en-GB/firefox-7.0.tar.bz2
+ wget ftp://ftp.mozilla.org/pub/firefox/releases/10.0/linux-x86_64/en-GB/firefox-10.0.tar.bz2
+ wget ftp://ftp.mozilla.org/pub/firefox/releases/4.0/linux-x86_64/en-GB/firefox-4.0.tar.bz2
+
+* unpack browsers, fix paths in node.json
+
+xvfb-run -s "-screen 0 1280x1024x8" java -jar selenium-server-standalone-2.25.0.jar -role node -nodeConfig linux_node.json
+
+SELENIUM hub
+------------
+
+/usr/bin/java -jar /home/selenium/selenium-server-standalone-2.25.0.jar -role hub -host 10.239.1.13
+
