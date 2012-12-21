@@ -23,7 +23,7 @@ from annoying.decorators import render_to
 
 from scanner.models import *
 from scanner.forms import FormCaptcha
-from webscanner.addonsapp.tools import extract_domain
+from webscanner.apps.addonsapp.tools import extract_domain
 
 log = logging.getLogger(__name__)
 
