@@ -193,7 +193,7 @@ class Tests(models.Model):
         '''
         returns duration of a test in seconds
         '''
-        if self.percent_progress() < 0.99:
+        if self.is_done():
             return (datetime.now() - self.creation_date).total_seconds()
         else:
             return (self.commands.last_finish_date() - self.creation_date). total_seconds()
@@ -332,8 +332,6 @@ class Tests(models.Model):
     def private_data_path(self):
         if not self.uuid or not self.pk:
             raise self.DoesNotExist('%r is not saved. cannot calculate private_data_path' % self)
-        if self.download_path:
-            return self.download_path
         return os.path.join(self.SCANNER_TEST_PRIVATE_DATA_PATH,
                             self.uuid)
 

@@ -103,6 +103,11 @@ def cleaner():
     while(True):
         try:
             dtest = Tests.objects.filter(download_status=STATUS.success, is_deleted=False)[:1]
+        except Exception:
+            log.exception('Error while fetching tests for cleaning.')
+            sleep(random.uniform(3, 5))
+            continue
+        try:
             if dtest:
                 dtest = dtest[0]
                 log.debug("Cleaning time! %r" % dtest)
@@ -112,7 +117,7 @@ def cleaner():
                 log.debug('Nothing to clean')
                 sleep(random.uniform(10, 30))
         except Exception:
-            log.exception('Error during cleaning.')
+            log.exception('Error while cleaning %r.' % dtest)
 
 
 def downloader():
