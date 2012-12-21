@@ -54,25 +54,25 @@ RESULT_GROUP = Choices(
 )
 
 
-from scanner.plugins.check_http_code import PluginCheckHTTPCode
-from scanner.plugins.check_w3c_valid import PluginCheckW3CValid
-from scanner.plugins.check_googlesb import PluginGoogleSafeBrowsing
-from scanner.plugins.check_domainexpdate import PluginDomainExpireDate
-from scanner.plugins.check_clamav import PluginClamav
-from scanner.plugins.check_dns_mail import PluginDNSmail
-from scanner.plugins.check_dns import PluginDNS
-from scanner.plugins.check_dns_mail_rbl import PluginDNSmailRBL
-from scanner.plugins.check_pagerank import PluginPagerank
-from scanner.plugins.check_mail import PluginMail
-from scanner.plugins.check_surbl import PluginSURBL
-from scanner.plugins.check_plainemail import PluginPlainTextEmail
-from scanner.plugins.check_robots import PluginCheckRobots
-from scanner.plugins.optiimg import PluginOptiimg
-from scanner.plugins.screenshots import PluginMakeScreenshots
-from scanner.plugins.optiyui import PluginOptiYUI
-from scanner.plugins.check_spelling import PluginCheckSpelling
+from .plugins.check_http_code import PluginCheckHTTPCode
+from .plugins.check_w3c_valid import PluginCheckW3CValid
+from .plugins.check_googlesb import PluginGoogleSafeBrowsing
+from .plugins.check_domainexpdate import PluginDomainExpireDate
+from .plugins.check_clamav import PluginClamav
+from .plugins.check_dns_mail import PluginDNSmail
+from .plugins.check_dns import PluginDNS
+from .plugins.check_dns_mail_rbl import PluginDNSmailRBL
+from .plugins.check_pagerank import PluginPagerank
+from .plugins.check_mail import PluginMail
+from .plugins.check_surbl import PluginSURBL
+from .plugins.check_plainemail import PluginPlainTextEmail
+from .plugins.check_robots import PluginCheckRobots
+from .plugins.optiimg import PluginOptiimg
+from .plugins.screenshots import PluginMakeScreenshots
+from .plugins.optiyui import PluginOptiYUI
+from .plugins.check_spelling import PluginCheckSpelling
 #from scanner.plugins.check_google_site import PluginGoogleSite
-from scanner.plugins.social import PluginSocial
+from .plugins.social import PluginSocial
 
 
 PLUGINS = dict((
