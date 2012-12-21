@@ -371,7 +371,7 @@ def remove_data_of_a_test_signal(sender, instance, **kwargs):
     instance.clean_private_data()
     instance.clean_public_data()
 
-pre_delete.connect(remove_data_of_a_test_signal)
+pre_delete.connect(remove_data_of_a_test_signal, Tests)
 
 
 class CommandQueueManager(models.Manager):
