@@ -25,7 +25,7 @@ from datetime import datetime
 from datetime import timedelta
 from urlparse import urlparse
 from settings   import apath
-from webscanner.addonsapp.tools import extract_domain
+from addonsapp.tools import extract_domain
 
 
 class PluginDomainExpireDate(PluginMixin):
