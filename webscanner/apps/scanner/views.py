@@ -70,7 +70,8 @@ class ScanURLForm(forms.ModelForm):
 
         try:
             extract_domain(url)
-        except:
+        except ValueError:
+            log.info('User passed "%s" as domain to scan -> ValidationError' % url)
             raise forms.ValidationError(_('Invalid website address (URL), please try again.'))
 
         url = unquote_plus(url)
