@@ -217,12 +217,12 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'logfile': {
+        'logfile-web-debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': apath('webscanner.log'),
+            'filename': apath('logs/webscanner-web-debug.log'),
             'formatter': 'marek',
-        }
+        },
     },
     'loggers': {
         '': {

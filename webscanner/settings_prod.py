@@ -19,7 +19,7 @@ DATABASES = {
 }
 
 log_conf = {
-    'handlers' : ['logfile'],
+    'handlers': ['logfile-web-debug'],
     'propagate': 1,
     'level': 'DEBUG',
 }
