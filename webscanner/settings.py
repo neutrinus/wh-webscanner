@@ -1,9 +1,20 @@
 # -*- encoding: utf-8 -*-
+###
+# Project specific initialisation
+###
 import os
+import sys
 
 
 def apath(x):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), x))
+
+
+sys.path.insert(0, apath('apps'))
+
+###
+# Django stuff
+###
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
