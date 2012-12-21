@@ -233,13 +233,24 @@ LOGGING = {
     }
 }
 
+TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
+
+#######################################
+### WH webscanner specific settings ###
+#######################################
+
+# This variable tells about mounted filesystem which is shared between
+# all scanner instances (web, workers, etc)
+# - in future, this 'sharing' engine should be replaced by `django-storages`
+WEBSCANNER_SHARED_STORAGE = '/tmp/webscanner'
 
 # remember to remove old data and check disk usage!
-PATH_TMPSCAN = '/tmp/webscanner/'  # this should be replaced in all system by following variables (if possible, test.private_data_path should be used!)
+PATH_TMPSCAN = WEBSCANNER_SHARED_STORAGE  # this should be replaced in all system by WEBSCANNER_SHARED_STORAGE
+
 # these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
 SCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
 SCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
-SCANNER_TEST_PRIVATE_DATA_PATH = '/tmp/webscanner/'
+SCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
 
 PATH_OPTIPNG = '/usr/bin/optipng'
 
@@ -252,14 +263,12 @@ SECURE_SSL_REDIRECT = 1
 SECURE_FRAME_DENY = 1
 SECURE_HSTS_SECONDS = 1
 
-SESSION_COOKIE_SECURE=1
-SESSION_COOKIE_HTTPONLY =1
+SESSION_COOKIE_SECURE = 1
+SESSION_COOKIE_HTTPONLY = 1
 
 RECAPTCHA_PUBLIC_KEY = '6LfmydQSAAAAAOHIqxQaBPr63pMr0XM23ummE4y1'
 RECAPTCHA_PRIVATE_KEY = '6LfmydQSAAAAAAU6Wmv9LDHyjnYupYkARmawIQ00 '
 RECAPTCHA_USE_SSL = True
-
-TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
 
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 PAYPAL_ENCRYPTED = True
@@ -267,13 +276,17 @@ PAYPAL_PRIVATE_CERT = apath('paypal.pem')
 PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
 PAYPAL_CERT = apath('paypal_cert.pem')
 
-
 GRAPPELLI_INDEX_DASHBOARD = 'webscanner.dashboard.CustomIndexDashboard'
 
 COMPRESS_ENABLED = True
 
-
 # This should be at the very end
-#execfile(apath('settings_local.py'))
-#execfile(apath('settings_prod.py'))
-
+WEBSCANNER_ENVIRONMENT = os.environ.get('WEBSCANNER_ENVIRONMENT')
+if WEBSCANNER_ENVIRONMENT and WEBSCANNER_ENVIRONMENT.lower() == 'production' or '--production' in sys.argv[1:]:
+    print 'RUNNING PRODUCTION!!!'
+    execfile(apath('settings_prod.py'))
+else:
+    print 'Running testing node'
+    execfile(apath('settings_local.py'))
+    if os.path.exists(apath('settings_private.py')):
+        execfile(apath('settings_private.py'))
