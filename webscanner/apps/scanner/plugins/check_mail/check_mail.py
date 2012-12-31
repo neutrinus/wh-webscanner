@@ -162,7 +162,7 @@ class PluginMail(PluginMixin):
         elif (noconnect_count< len(mxes)):
             #some servers didnt respond
             res.status = RESULT_STATUS.warning
-            res.output_full += unicode(_("<p>Some(%(number)s) of your %(mx_number)s mailservers did not accept connection from our check, details:<code>%(details)s</code></p>"%{"noconnect_count" : noconnect_count, "mx_number":len(mxes), "details" :noconnect } ))
+            res.output_full += unicode(_("<p>Some(%(noconnect_count)s) of your %(mx_number)s mailservers did not accept connection from our check, details:<code>%(details)s</code></p>"%{"noconnect_count" : noconnect_count, "mx_number":len(mxes), "details" :noconnect } ))
         else:
             #none server responded
             res.status = RESULT_STATUS.error
