@@ -276,7 +276,7 @@ PAYPAL_PRIVATE_CERT = apath('paypal.pem')
 PAYPAL_PUBLIC_CERT = apath('paypal_pub.pem')
 PAYPAL_CERT = apath('paypal_cert.pem')
 
-GRAPPELLI_INDEX_DASHBOARD = 'webscanner.dashboard.CustomIndexDashboard'
+GRAPPELLI_INDEX_DASHBOARD = 'webscanner.apps.dashboard.CustomIndexDashboard'
 
 COMPRESS_ENABLED = True
 
