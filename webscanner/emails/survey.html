@@ -1,0 +1,15 @@
+{% spaceless %}{%load i18n%}
+{%load set %}
+{% set "https://webcheck.me" as link %}
+{% url contact as contact_query %}
+{% endspaceless %}{% blocktrans with user_email=user.email link=link contact_query=contact_query  %}Hi {{user_email}},
+
+We need your help! At {{link}} we believe that our customers know better. Please share with us - we need your feedback!
+
+Below you will find a link to a short survey with simple questions about your experience with {{ link }}. There are also optional questions where you can share your thoughts so we can continue to make it a better product. Take a survey: http://www.surveymonkey.com/s/HZNCW67
+
+I sincerely appreciate your feedback, if you have any questions at all, please feel free to contact <support@webcheck.me> or reach us using our contact form {{link}}{{ contact_query }}.
+
+Thank you for your help,
+webcheck.me Developement Team
+{% endblocktrans %}
