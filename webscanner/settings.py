@@ -1,7 +1,10 @@
 # -*- encoding: utf-8 -*-
 import os
 def apath(x):
-    return os.path.abspath(os.path.join(os.path.dirname(__file__),x))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), x))
+
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 
 DEBUG = False
