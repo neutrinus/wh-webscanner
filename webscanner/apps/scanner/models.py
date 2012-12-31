@@ -196,7 +196,10 @@ class Tests(models.Model):
         if self.is_done():
             return (datetime.now() - self.creation_date).total_seconds()
         else:
-            return (self.commands.last_finish_date() - self.creation_date). total_seconds()
+            last = self.commands.last_finish_date()
+            if not last:
+                last = dt.utcnow()
+            return (last - self.creation_date). total_seconds()
 
     @property
     def cost(self):
