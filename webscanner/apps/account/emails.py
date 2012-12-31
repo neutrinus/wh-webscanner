@@ -35,6 +35,7 @@ user_activated.connect(send_welcome_email)
 
 from .models import UserProfile
 
+
 def too_few_credits_check(sender, instance, **kwargs):
     '''
     This function sends mail to user if the credits level goes down.
@@ -55,13 +56,14 @@ def too_few_credits_check(sender, instance, **kwargs):
         userprofile = instance
         old_userprofile = UserProfile.objects.get(pk=instance.pk)
 
-        log.debug('userprofile updated. credits: %s -> %s'%(old_userprofile.credits,
-                                                            userprofile.credits))
+        log.debug('userprofile updated. credits: %s -> %s' % (old_userprofile.credits,
+                                                              userprofile.credits))
         # We check here that credits changed from + to 0 (or low)
         # This could be done in two ways:
         # 1. assign new value to field and call 'save'
         # 2. using django F('field')-1 expression
         # So both cases are handled here
+
         def check_move(old, new, to_value=0):
             '''
             :param old: old value
@@ -75,7 +77,7 @@ def too_few_credits_check(sender, instance, **kwargs):
             '''
             # checks of argument types
             if not isinstance(old, int) or not isinstance(to_value, int):
-                log.error('`old` (%s) or `to_value`(%s) is not int!'%(old, to_value))
+                log.error('`old` (%s) or `to_value`(%s) is not int!' % (old, to_value))
                 return False
 
             if isinstance(new, int):
@@ -89,7 +91,7 @@ def too_few_credits_check(sender, instance, **kwargs):
             elif isinstance(new, models.expressions.ExpressionNode):
                 # here it is checked, that credits field is applied by F('credits')-x
 
-                if not new.connector=='-':
+                if not new.connector == '-':
                     # we assume only F('credits') - x (subtration)
                     return False
 
@@ -108,43 +110,35 @@ def too_few_credits_check(sender, instance, **kwargs):
                 return False
 
             else:
-                log.error('`new` is not int nor ExpressionNode (new:%s)'%new)
+                log.error('`new` is not int nor ExpressionNode (new:%s)' % new)
                 return False
 
             log.error('assertion')
             return False
 
-
-
         if (check_move(old_userprofile.credits, userprofile.credits, to_value=5) or
             check_move(old_userprofile.credits, userprofile.credits, to_value=0)):
-
-            log.info('sending mail to %r: low credits (current value: %s)'%(userprofile.user, userprofile.credits))
+            log.info('sending mail to %r: low credits (current value: %s)' % (userprofile.user, userprofile.credits))
 
             user = userprofile.user
-            pricing_plans=CreditsPricingPlan.objects.filter(is_active=True).order_by('credits')
-
+            pricing_plans = CreditsPricingPlan.objects.filter(is_active=True).order_by('credits')
 
             template = loader.find_template('account/email/low_credits.html')[0]
-            text = template.render(Context({
-                    'user':user,
-                    'site': Site.objects.get_current(),
-                    'pricing_plans': pricing_plans,
-            }))
+            text = template.render(Context({'user': user,
+                                            'site': Site.objects.get_current(),
+                                            'pricing_plans': pricing_plans}))
 
             email = EmailMessage(subject='%s %s' % (settings.EMAIL_SUBJECT_PREFIX, _('Needs a refill')),
-                                body=text,
-                                from_email=settings.DEFAULT_FROM_EMAIL,
-                                to=[user.email],
-                                headers={'Reply-To': settings.DEFAULT_SUPPORT_EMAIL})
+                                 body=text,
+                                 from_email=settings.DEFAULT_FROM_EMAIL,
+                                 to=[user.email],
+                                 headers={'Reply-To': settings.DEFAULT_SUPPORT_EMAIL})
             email.send()
 
-            log.info('Low credit level mail sent to user: %r'%user)
+            log.info('Low credit level mail sent to user: %r' % user)
     except Exception:
         # we make here all errors silence to the user, but we log them
-        log.exception("Error sending low credit level mail to user: %r"%user)
+        log.exception("Error sending low credit level mail to user: %r" % user)
 
 
 models.signals.pre_save.connect(too_few_credits_check, UserProfile)
-
-
