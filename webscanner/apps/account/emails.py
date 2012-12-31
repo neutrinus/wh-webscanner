@@ -4,25 +4,28 @@ import logging
 from django.db import models
 from django.conf import settings
 from django.template import Context, loader
+from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.contrib.sites.models import Site
 from payments.models import CreditsPricingPlan
 
+
 def send_welcome_email(sender, user, request, **kwargs):
     log = logging.getLogger('webscanner.account.send_welcome_email')
-    current_site = Site.objects.get_current()
-
     try:
         template = loader.find_template('account/email/welcome.html')[0]
-        text = template.render(Context({'user':user}))
-        user.email_user(_('[%s] Welcome' % current_site.domain),
-                        text,
-                        settings.DEFAULT_FROM_EMAIL,)
-                        #headers = {'Reply-To': settings.DEFAULT_SUPPORT_EMAIL}
+        text = template.render(Context({'user': user,
+                                        'site': Site.objects.get_current()}))
+        email = EmailMessage(subject='%s %s' % (settings.EMAIL_SUBJECT_PREFIX, _('Welcome')),
+                             body=text,
+                             from_email=settings.DEFAULT_FROM_EMAIL,
+                             to=[user.email],
+                             headers={'Reply-To': settings.DEFAULT_SUPPORT_EMAIL})
+        email.send()
 
-        log.info('Welcome mail sent to user: %s'%(user.email))
+        log.info('Welcome mail sent to user: %s' % (user.email))
     except Exception:
-        log.exception('Error sending welcome mail to user: %s'%(user.email))
+        log.exception('Error sending welcome mail to user: %s' % (user.email))
         # we make here all errors silence to the user, but we log them
 
 
@@ -114,27 +117,31 @@ def too_few_credits_check(sender, instance, **kwargs):
 
 
         if (check_move(old_userprofile.credits, userprofile.credits, to_value=5) or
+            check_move(old_userprofile.credits, userprofile.credits, to_value=4) or
+            check_move(old_userprofile.credits, userprofile.credits, to_value=3) or
+            check_move(old_userprofile.credits, userprofile.credits, to_value=2) or
+            check_move(old_userprofile.credits, userprofile.credits, to_value=1) or
             check_move(old_userprofile.credits, userprofile.credits, to_value=0)):
 
             log.info('sending mail to %s: low credits (current value: %s)'%(userprofile.user.email, userprofile.credits))
 
             user = userprofile.user
-            current_site = Site.objects.get_current()
             pricing_plans=CreditsPricingPlan.objects.filter(is_active=True).order_by('credits')
 
 
             template = loader.find_template('account/email/low_credits.html')[0]
             text = template.render(Context({
                     'user':user,
+                    'site': Site.objects.get_current(),
                     'pricing_plans': pricing_plans,
             }))
 
-            user.email_user(_('[%s] Needs a refill' % current_site.domain),
-                            text,
-                            settings.DEFAULT_FROM_EMAIL,
-                            # django does not do that!
-                            #headers = {'Reply-To': settings.DEFAULT_SUPPORT_EMAIL}
-                            )
+            email = EmailMessage(subject='%s %s' % (settings.EMAIL_SUBJECT_PREFIX, _('Needs a refill')),
+                                body=text,
+                                from_email=settings.DEFAULT_FROM_EMAIL,
+                                to=[user.email],
+                                headers={'Reply-To': settings.DEFAULT_SUPPORT_EMAIL})
+            email.send()
 
             log.info('Low credit level mail sent to user: %s'%(user.email))
     except Exception:
