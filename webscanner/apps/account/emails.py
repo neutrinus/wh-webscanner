@@ -117,10 +117,6 @@ def too_few_credits_check(sender, instance, **kwargs):
 
 
         if (check_move(old_userprofile.credits, userprofile.credits, to_value=5) or
-            check_move(old_userprofile.credits, userprofile.credits, to_value=4) or
-            check_move(old_userprofile.credits, userprofile.credits, to_value=3) or
-            check_move(old_userprofile.credits, userprofile.credits, to_value=2) or
-            check_move(old_userprofile.credits, userprofile.credits, to_value=1) or
             check_move(old_userprofile.credits, userprofile.credits, to_value=0)):
 
             log.info('sending mail to %s: low credits (current value: %s)'%(userprofile.user.email, userprofile.credits))
