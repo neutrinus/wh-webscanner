@@ -1,12 +1,12 @@
 {% load i18n %}
 <div>
-    <p>{% trans "Using advanced methods, we analize javascript files on your site if there is possibility to losslossly optimize them. Smaller files mean loading your site faster!" %}</p>
+    <p>{% trans "Using advanced methods, we analize javascript files on your site if there is possibility to losslessly optimize them. Smaller files mean loading your site faster!" %}</p>
 
     {% if optijses %}
     <ul>
     {% for image in optijses %}
         <li>
-            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a>{{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
+            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
         </li>
     {% endfor %}
     </ul>

@@ -11,6 +11,7 @@ def apath(x):
 
 
 sys.path.insert(0, apath('apps'))
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 ###
 # Django stuff

@@ -17,16 +17,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-    {% compress js%}
-    <script src="{{ STATIC_URL }}js/bootstrap-mix.min.js"></script>
-    {% comment %}
-    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
-    {% endcomment %}
     {% if not debug %}
         <script type="text/javascript">
             var _gaq = _gaq || [];
@@ -40,6 +30,17 @@
                 })();
         </script>
     {% endif %}
+
+    {% compress js%}
+    <script src="{{ STATIC_URL }}js/bootstrap-mix.min.js"></script>
+    {% comment %}
+    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+    {% endcomment %}
     {% endcompress %}
 
     {% compress css %}

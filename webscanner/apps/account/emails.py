@@ -11,6 +11,9 @@ from payments.models import CreditsPricingPlan
 
 
 def send_welcome_email(sender, user, request, **kwargs):
+    """
+    After successfull activation user gets a welcome email
+    """
     log = logging.getLogger('webscanner.account.send_welcome_email')
     try:
         template = loader.find_template('account/email/welcome.html')[0]

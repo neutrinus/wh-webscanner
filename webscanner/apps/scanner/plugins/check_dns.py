@@ -84,10 +84,10 @@ class PluginDNS(PluginMixin):
                 res.status = RESULT_STATUS.error
             res.save()
 
-        except dns.resolver.NXDOMAIN:
+        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
             res = Results(test=command.test,group = RESULT_GROUP.general, importance=5)
             res.output_desc = unicode(_("A records (IPv4)") )
-            res.output_full = unicode(_("<p>Domain not found!.</p>" ))
+            res.output_full = unicode(_("<p><strong>Domain not found!</strong>  Your webpage is currently unreachable, please check your DNS settings, it should consist at least one A record.</p>" ))
             res.status = RESULT_STATUS.error
             res.save()
 
