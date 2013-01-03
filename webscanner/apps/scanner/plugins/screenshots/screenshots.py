@@ -184,6 +184,6 @@ set SCREENSHOTS_PATH and SCREENSHOTS_URL class attributes manually.''' % self.SC
         box = (0, 0, 940, 400)
         area = img.crop(box)
         basename, ext = os.path.splitext(inputfile)
-        ofile = os.path.join("%s_thumb_%dx%d%s" % (basename, box[2]. box[3], '.png'))
+        ofile = os.path.join("%s_thumb_%dx%d%s" % (basename, box[2], box[3], '.png'))
         area.save(ofile, 'png')
         return(ofile)
