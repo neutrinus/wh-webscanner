@@ -253,6 +253,63 @@ SCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
 SCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
 SCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
 
+WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
+    {
+        "version": "",
+        "browseName": "opera",
+        "platform": "LINUX",
+    },
+    #{
+        #"version": "",
+        #"browseName": "opera",
+        #"platform": "WINDOWS",
+    #},
+    {
+        "version": "",
+        "browseName": "chrome",
+        "platform": "LINUX",
+    },
+    #{
+        #"version": "",
+        #"browseName": "chrome",
+        #"platform": "WINDOWS",
+    #},
+    #{
+        #"version": "4.0",
+        #"browseName": "firefox",
+        #"platform": "WINDOWS",
+    #},
+    {
+        "version": "4.0",
+        "browseName": "firefox",
+        "platform": "LINUX",
+    },
+    {
+        "version": "7.0",
+        "browseName": "firefox",
+        "platform": "LINUX",
+    },
+    #{
+        #"version": "7.0",
+        #"browseName": "firefox",
+        #"platform": "WINDOWS",
+    #},
+    {
+        "version": "10.0",
+        "browseName": "firefox",
+        "platform": "LINUX",
+    },
+    #{
+        #"version": "10.0",
+        #"browseName": "firefox",
+        #"platform": "WINDOWS",
+    #},
+    #{
+        #"version": "8",
+        #"browseName": "iexplore",
+    #},
+]
+
 PATH_OPTIPNG = '/usr/bin/optipng'
 
 GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'

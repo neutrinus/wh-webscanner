@@ -42,13 +42,7 @@ class PluginMakeScreenshots(PluginMixin):
     name = unicode(_('Screenshots'))
     wait_for_download = False
 
-    browsers = [
-        {
-            "version": "",
-            "browseName": "firefox",
-            "platform": "LINUX",
-        },
-    ]
+    browsers = getattr(settings, 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS', {})
 
     def __init__(self, *args, **kwargs):
         if not os.path.isdir(self.SCREENSHOTS_PATH):
@@ -57,6 +51,9 @@ Please setup SCREENSHOTS_DIR_NAME in django `settings.py` for a name \
 of a directory which exists inside MEDIA_ROOT to store optimized images or \
 set SCREENSHOTS_PATH and SCREENSHOTS_URL class attributes manually.''' % self.SCREENSHOTS_PATH)
         super(self.__class__, self).__init__(*args, **kwargs)
+        if not self.browsers:
+            self.log.warning('''You have activated screenshots plugin buy you did not set any browsers.
+You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictionary in settings.''')
 
     def run(self, command):
         url = command.test.url
