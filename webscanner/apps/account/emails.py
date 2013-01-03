@@ -33,7 +33,7 @@ def send_welcome_email(sender, user, request, **kwargs):
 
 
 from registration.signals import user_activated
-user_activated.connect(send_welcome_email)
+user_activated.connect(send_welcome_email, dispatch_uid='send_welcome_email_after_account_activation')
 
 
 from .models import UserProfile
@@ -144,4 +144,4 @@ def too_few_credits_check(sender, instance, **kwargs):
         log.exception("Error sending low credit level mail to user: %r" % user)
 
 
-models.signals.pre_save.connect(too_few_credits_check, UserProfile)
+models.signals.pre_save.connect(too_few_credits_check, UserProfile, dispatch_uid='send_mail_when_credits_level_is_low_signal')
