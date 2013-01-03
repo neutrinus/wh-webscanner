@@ -370,7 +370,7 @@ class Tests(models.Model):
 
 
 def remove_data_of_a_test_signal(sender, instance, **kwargs):
-    log.debug('%r - remove signal')
+    log.debug('%r - remove signal' % instance)
     instance.clean_private_data()
     instance.clean_public_data()
 
