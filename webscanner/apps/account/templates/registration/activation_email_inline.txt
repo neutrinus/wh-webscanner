@@ -11,7 +11,7 @@ It's simple, just click the link below to verify your email.  You have {{ expira
 https://{{site.domain}}{% url registration_activate_inline activation_key=activation_key %}
 
 We have generated a password for you: {{password}}
-If you do not love remebering random stuff, you could just change it at https://{{site.domain}}{% url auth_password_change %}.
+If you do not love remembering random stuff, you could just change it at https://{{site.domain}}{% url auth_password_change %}.
 
 Please note that entering activation link means that you agree to our Terms of use (https://{{site.domain}}{% url scanner_terms %}).
 
