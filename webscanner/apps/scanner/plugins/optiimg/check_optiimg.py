@@ -50,8 +50,8 @@ set OPTIMIZED_IMAGES_PATH and OPTIMIZED_IMAGES_URL class attributes manually.'''
             return STATUS.success
 
         #domain = command.test.domain
-        path = command.test.download_path
-        self.log.debug("Recursive check image files size in %s " % (path))
+        path = str(command.test.download_path)  # fix UTF-8 path error
+        self.log.debug("Recursive check image files size in %s " % path)
 
         optiimgs = []
         total_bytes_saved = 0

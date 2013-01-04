@@ -67,7 +67,7 @@ class PluginOptiYUI(PluginMixin):
             return
 
         domain = command.test.domain
-        path = command.test.download_path
+        path = str(command.test.download_path)  # fix UTF-8 path problem
         self.log.debug("Recursive check js/css files size in %s "%(path))
 
         optifiles = dict()
