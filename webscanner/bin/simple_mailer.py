@@ -30,7 +30,7 @@ from django.contrib.sites.models import Site
 
 CONFIGURATION = {
     'survey': {'description': 'Send users a satisfaction survey',
-                'users': lambda: User.objects.filter(pk=1),
+                'users': lambda: User.objects.filter(date_joined__lte=datetime.date.today()-datetime.timedelta(days=7))),
                 'template': os.path.join(settings.PROJECT_PATH, 'emails', 'survey.html'),
                 'subject': 'We need your help',  # this will be prefixed like all django emails
                 }
