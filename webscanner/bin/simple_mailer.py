@@ -116,7 +116,7 @@ if __name__ == '__main__':
     try:
         for user in users:
             if user.pk in cache:
-                log.info('Not sending to {user}. It was sent {date}'.format(user=repr(user), date=cache[user.pk]))
+                #log.info('Not sending to {user}. It was sent {date}'.format(user=repr(user), date=cache[user.pk]))
                 continue
             log.info('Sending {template} to {user}...'.format(template=config['template'],
                                                               user=repr(user)))
