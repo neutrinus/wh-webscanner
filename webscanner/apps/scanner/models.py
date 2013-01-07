@@ -193,8 +193,8 @@ class Tests(models.Model):
         '''
         returns duration of a test in seconds
         '''
-        if self.is_done():
-            return (datetime.now() - self.creation_date).total_seconds()
+        if not self.is_done():
+            return (datetime.utcnow() - self.creation_date).total_seconds()
         else:
             last = self.commands.last_finish_date()
             if not last:
