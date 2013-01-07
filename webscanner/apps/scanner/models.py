@@ -405,6 +405,13 @@ class CommandQueue(models.Model):
 
     objects = CommandQueueManager()
 
+    def __repr__(self):
+        return '<CommandQueue pk:%s, name:%s, test:%r, status:%r>' % (self.pk,
+                                                                      self.testname,
+                                                                      self.test,
+                                                                      unicode(dict(STATUS)[self.status]))
+
+
     def __unicode__(self):
         return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
