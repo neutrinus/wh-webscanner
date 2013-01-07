@@ -31,8 +31,8 @@ manage.py
 ADD A CRON JOB:
 ***************
 
-13      23      *       *       *       /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
-42      18      *       *       *       /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/bin/simple_mailer.py send -n survey
+13      23      *       *       *       WEBSCANNER_ENVIRONMENT=production /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
+42      18      *       *       *       WEBSCANNER_ENVIRONMENT=production /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/bin/simple_mailer.py send -n survey
 
 
 ********
