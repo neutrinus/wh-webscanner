@@ -28,10 +28,10 @@ from django.contrib.sites.models import Site
 
 
 CONFIGURATION = {
-    'example': {'description': 'example mailing',
+    'survey': {'description': 'Send users a satisfaction survey',
                 'users': lambda: User.objects.filter(pk=1),
-                'template': os.path.join(settings.PROJECT_PATH, 'emails', 'example.html'),
-                'subject': 'hello admin',  # this will be prefixed like all django emails
+                'template': os.path.join(settings.PROJECT_PATH, 'emails', 'survey.html'),
+                'subject': 'We need your help',  # this will be prefixed like all django emails
                 }
 }
 
