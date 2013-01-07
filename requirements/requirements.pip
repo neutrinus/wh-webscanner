@@ -33,7 +33,7 @@ django-wsgiserver
 django-secure
 
 nltk==2.0.4
-guess_language-spirit==0.5a3
+guess_language==0.2
 pyenchant==1.6.5
 cchardet==0.3.2
 beautifulsoup4==4.1.3
