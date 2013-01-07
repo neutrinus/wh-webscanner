@@ -1,22 +1,63 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import sys
 import random
 import socket
+import signal
+import errno
 import logging
 import subprocess
 import shlex
 import urlparse
 from time import sleep
-from datetime import datetime
+from datetime import datetime, timedelta
 #from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
+from setproctitle import setproctitle
+
 from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
 
 
+def restarter_process():
+    '''
+    Restart downloads and CommandQueues after 15 minutes without ending.
+    '''
+    setproctitle('Worker[restarter]')
+    log = logging.getLogger('webscanner.utils.restarter_process')
+    TIME_BETWEEN_RESTARTS = 15 * 60  # in seconds
+    WAIT_SEC = 30
+    time_between_restarts = timedelta(seconds=TIME_BETWEEN_RESTARTS)
+    while True:
+        # restart downloads
+        log.info('Checking for (tests) downloads needs to be restarted.')
+        with transaction.commit_on_success():
+            tests = Tests.objects.filter(download_status=STATUS.running, download_run_date__lt=datetime.utcnow() - time_between_restarts, is_deleted=False).exclude(download_run_date=None)
+            tests_count = tests.count()
+            for test in tests:
+                log.warning('Downloading for %r is restarting.' % test)
+            changed = tests.update(download_status=STATUS.waiting, download_run_date=datetime.utcnow())
+            if not tests_count == changed:
+                log.warning('Found %s (tests) downloads in running status which should be switched to waiting, but switched only %s' % (len(tests), changed))
+
+        # restart commands
+        log.info('Checking for commands needs to be restarted.')
+        with transaction.commit_on_success():
+            commands = CommandQueue.objects.filter(status=STATUS.running, run_date__lt=datetime.utcnow() - time_between_restarts)
+            changed = commands.update(status=STATUS.waiting, run_date=datetime.utcnow())
+            for command in commands:
+                log.warning('CommandQueue %r is restarting.' % command)
+            if not len(commands) == changed:
+                log.warning('Found %s commands in running status which should be switched to waiting, but switched only %s' % (len(commands), changed))
+
+        log.debug('Waiting %s seconds' % WAIT_SEC)
+        sleep(WAIT_SEC)
+
+
 def worker_process():
+    setproctitle('Worker[process worker]')
     log = logging.getLogger('webscanner.utils.worker_process')
     log.debug("Starting new worker pid=%s" % (os.getpid()))
     sleep(random.uniform(0, 5))
@@ -34,8 +75,6 @@ def worker_process():
 
                     if (commandschanged == 0):
                         log.debug("Someone already took care of this ctest(%r)" % ctest)
-                        ctest = None
-                        sleep(random.uniform(2, 10))  # there was nothing to do - we can sleep longer
                         continue
 
                     ctest.status = STATUS.running
@@ -43,9 +82,8 @@ def worker_process():
                     ctest.save()
                     log.info('Processing command %s(%s) for %s (queue len:%s)' % (ctest.testname, ctest.pk, ctest.test.url, CommandQueue.objects.filter(status=STATUS.waiting).filter(Q(wait_for_download=False) | Q(test__download_status=STATUS.success)).count()))
                 except CommandQueue.DoesNotExist:
-                    ctest = None
                     log.debug("No Commands in Queue to process, sleeping.")
-                    sleep(random.uniform(5, 10))  # there was nothing to do - we can sleep longer
+                    sleep(random.uniform(2, 10))
                     continue
 
             if ctest:
@@ -83,6 +121,7 @@ def download_cleaner_process():
     '''
     Cleaner process, removes unused downloaded data
     '''
+    setproctitle('Worker[cleaner]')
     log = logging.getLogger('webscanner.worker.cleaner')
     log.debug("Starting new cleaner pid=%s" % os.getpid())
     if not os.path.exists(settings.WEBSCANNER_SHARED_STORAGE):
@@ -172,6 +211,7 @@ def download_cleaner_process():
 
 
 def downloader_process():
+    setproctitle('Worker[downloader]')
     PATH_HTTRACK = getattr(settings, 'PATH_HTTRACK', '/usr/bin/httrack')
     if not os.path.isfile(PATH_HTTRACK):
         raise Exception('httrack is not installed in %s. Please install it or correct PATH_HTTRACK in `settings`' % PATH_HTTRACK)
@@ -211,7 +251,12 @@ def downloader_process():
             if test:
                 domain = test.url
                 wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc + urlparse.urlparse(test.url).path
-                os.makedirs(test.download_path)
+                if not test.download_path:
+                    test.download_path = test.private_data_path
+                    test.save()
+                elif not os.path.exists(test.download_path):
+                    os.makedirs(test.download_path)
+
                 cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*" % (str(test.download_path), wwwdomain, domain)
 
                 args = shlex.split(cmd)

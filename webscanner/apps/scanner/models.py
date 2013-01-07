@@ -145,6 +145,7 @@ class Tests(models.Model):
     # Attributes that can be changed during checks
     ####
 
+    download_run_date   =   models.DateTimeField(blank=True, null=True, default=None)
     download_status     =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
     download_path       =   models.CharField(max_length=300, blank=1, null=1, db_index=True)
 
