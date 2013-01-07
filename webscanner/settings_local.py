@@ -71,6 +71,8 @@ LOGGING['loggers']['']={
     'level':'DEBUG',
     'propagate':1,
 }
+LOGGING['loggers']['django.db.backends']={
+    'level': 'ERROR'}
 
 
 SELENIUM_HUB = 'http://127.0.0.1:4444/wd/hub'
