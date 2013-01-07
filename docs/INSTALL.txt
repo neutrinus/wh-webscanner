@@ -14,7 +14,7 @@ cat requirements/requirements.apt |xargs apt-get -y install
 Declare hosts
 *************
 Edit /etc/hosts and insert:
-10.239.1.13	sv-seleniumhub 
+10.239.1.13	sv-seleniumhub
 10.239.1.11	sv-psql
 
 
@@ -31,8 +31,8 @@ manage.py
 ADD A CRON JOB:
 ***************
 
-13      23      *       *       *       /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
-
+13      23      *       *       *       WEBSCANNER_ENVIRONMENT=production /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/manage.py cleanupregistration
+42      18      *       *       *       WEBSCANNER_ENVIRONMENT=production /home/webcheck/with_env.sh /home/webcheck/www/wh-webscanner/webscanner/bin/simple_mailer.py send -n survey
 
 
 ********
