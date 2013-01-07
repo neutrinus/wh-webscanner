@@ -1,11 +1,8 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-import sys
-import os
 import re
 from urlparse import urlparse
 
-from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
@@ -14,13 +11,17 @@ import dns.resolver
 import dns.reversename
 
 from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
+
+from django.contrib.gis.utils import GeoIP
+geoip = GeoIP()
 
 
 class PluginDNSmail(PluginMixin):
     name = unicode(_("Check dns MAIL"))
     description = unicode(_("Check dns MAIL"))
     wait_for_download = False
+
 
     def run(self, command):
         from scanner.models import Results
@@ -57,9 +58,6 @@ class PluginDNSmail(PluginMixin):
 
 
             #check geolocation
-            from django.contrib.gis.utils import GeoIP
-            from settings import GEOIP_PATH
-            geoip = GeoIP()
             locations = {}
 
             for server in answers:
@@ -71,6 +69,7 @@ class PluginDNSmail(PluginMixin):
             res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>"))
             res.status = RESULT_STATUS.info
             res.save()
+            del res
 
             #check private IPs
             res = Results(test=command.test,group = RESULT_GROUP.mail,importance=5)
@@ -82,6 +81,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full = unicode(_("<p>Following MX records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
                 res.status = RESULT_STATUS.error
             res.save()
+            del res
 
             res = Results(test=command.test,group = RESULT_GROUP.mail,importance=3)
             res.output_desc = unicode(_("Reverse Entries for MX records") )
@@ -94,6 +94,7 @@ class PluginDNSmail(PluginMixin):
 
             res.output_full += unicode(_("<p>All mail servers should have a reverse DNS (PTR) entry for each IP address (RFC 1912). Missing reverse DNS entries will make many mailservers reject your e-mails or mark them as SPAM. </p>"))
             res.save()
+            del res
 
 
             spfrecord = ""
@@ -117,6 +118,7 @@ class PluginDNSmail(PluginMixin):
                 res.output_full += unicode(_("<p>There is no SPF defined for your domain. Consider creating one - it helps a lot dealing with SPAM.</p>"))
                 res.status = RESULT_STATUS.warning
             res.save()
+            del res
 
             return STATUS.success
         except dns.resolver.Timeout,e:
@@ -126,6 +128,7 @@ class PluginDNSmail(PluginMixin):
             res.status = RESULT_STATUS.error
             res.save()
             self.log.debug("Timeout while asking for MX records: %s"%str(e))
+            del res
 
         except dns.resolver.NoAnswer,e:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
@@ -137,6 +140,7 @@ class PluginDNSmail(PluginMixin):
             res.status = RESULT_STATUS.error
             res.save()
             self.log.debug("NoAnswer while asking for MX records: %s"%str(e))
+            del res
 
         except dns.resolver.NXDOMAIN:
             res = Results(test=command.test,group = RESULT_GROUP.general,importance=4)
@@ -145,6 +149,7 @@ class PluginDNSmail(PluginMixin):
             res.status = RESULT_STATUS.error
             res.save()
             self.log.debug("NXDOMAIN while asking for MX records. ")
+            del res
 
         except StandardError,e:
             self.log.exception("%s"%str(e))
