@@ -19,8 +19,8 @@ class PluginMixin(object):
     wait_for_download = True
 
     def __init__(self):
-        self.log = logging.getLogger(self.__class__.__name__)
-        self.log.debug('%s plugin initialized'%self.__class__.__name__)
+        self.log = logging.getLogger(__name__ + '.' + self.__class__.__name__)
+        self.log.debug('%s plugin initialized' % self.__class__.__name__)
 
     def __unicode__(self):
         return unicode(self.name)
