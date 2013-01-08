@@ -43,6 +43,13 @@ import bs4
 # pip: guess_language
 import guess_language
 
+# not use enchant due to not freeing memory of dicts
+# only works with guess_language-spirit
+if hasattr(guess_language, 'use_enchant'):
+    guess_language.use_enchant(False)
+else:
+    guess_language.USE_ENCHANT = False
+
 # pip: pyenchant
 import enchant.checker
 from enchant.tokenize import EmailFilter, URLFilter, Filter
