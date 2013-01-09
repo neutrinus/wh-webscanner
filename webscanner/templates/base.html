@@ -50,7 +50,7 @@
 
     {% block extrahead %} {% endblock %}
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/WebPage">
 <noscript>
     <div id='no-javascript' class="alert alert-error">
     You have no javascript enabled.
@@ -100,7 +100,7 @@
             <a class="btn" onclick='show_login_modal_form();' href="#" ><i class="icon-user"></i> {% trans "Login" %}</a>
         </div>
 {% endif %}
-        <ul class="nav" role="navigation">
+        <ul class="nav" role="navigation" itemscope="itemscope" itemtype="http://www.schema.org/SiteNavigationElement">
             <li><a href="{% url scanner_index %}"> <img src="{{ STATIC_URL }}images/logo.png" style="height:20px" /></a></li>
             <li><a href="{% url scanner_index %}">{% trans "Home" %}</a></li>
             <li><a href="{% url scanner_about %}">{% trans "About" %}</a></li>
@@ -188,7 +188,7 @@ show_login_modal_form = function(){
         <hr />
 
         <div class='pull-right muted' role="contentinfo">
-            {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
+           <a href="https://plus.google.com/u/1/117621913793411950348/posts" rel="publisher">webcheck.me@google+</a> &nbsp; {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
         </div>
 
     </div>
