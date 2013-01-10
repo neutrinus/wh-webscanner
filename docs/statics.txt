@@ -1,5 +1,0 @@
-cat bootstrap-dropdown.js bootstrap-alert.js bootstrap-modal.js bootstrap-transition.js bootstrap-tooltip.js bootstrap-popover.js bootstrap-carousel.js > ./bootstrap-mix.js
-yui-compressor ./bootstrap-mix.js  > ./bootstrap-mix.min.js
-
-cat jquery.jqplot.min.js jqplot.pieRenderer.min.js jqplot.dateAxisRenderer.min.js jqplot.canvasTextRenderer.min.js jqplot.canvasAxisTickRenderer.min.js jqplot.categoryAxisRenderer.min.js > ./results-mix.js
-yui-compressor ./results-mix.js > ./results-mix.min.js
