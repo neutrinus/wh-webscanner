@@ -33,30 +33,30 @@
 </form>
 </div>
 
-<div itemscope itemtype="http://schema.org/Product">
-    <meta itemprop="url" content = "https://webcheck.me" />
-    <meta itemprop="brand" content = "webcheck.me" />
-    <meta itemprop="manufacturer" content = "http://whitehats.pl" />
 
+<div itemscope itemtype="http://schema.org/Product">
     <div class="section">
-        <h1 itemprop="name">{% trans '<b>Website scanner</b>'%}</h1>
+        <h1 itemprop="name">{% trans 'Website scanner' %}</h1>
         <div class="row-fluid">
             <div class="row">
                 <div class="span3">
                     <h2><b>{% trans "Welcome" %}</b></h2>
                     {% blocktrans %}
-                    <p itemprop="description">This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form above and let us check your site! <span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-                        Webcheck.me is rated at <span itemprop="ratingValue">9</span>/<span itemprop="bestRating">10</span>based on customer survey.</span> <meta itemprop="reviewCount" content="8" /> </span>  </p>
+                    <p itemprop="description">This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form above and let us check your site!</p>
+
+                    <small itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                        Webcheck.me service is rated at <span itemprop="ratingValue">9</span> out of <span itemprop="bestRating">100</span> based on <span itemprop="ratingCount">8</span> user ratings (data from user satisfaction survey).
+                    </span></small>
 
                     {% endblocktrans %}
                     <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
                 </div>
-                <div class="span3" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <div class="span3" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
                     <meta itemprop="availability" href="http://schema.org/InStock" />
                     <h2>{% trans "Try it for free!" %}</h2>
                     {% blocktrans %}
                     <p>We believe that information should be free - we allow everybody to test our scanner for free (even for commercial use).</p>{% endblocktrans %}
-                    <p>Once you found our tools usefull there will be a per report rate. We have elastic test packages - they will fit your needs. The prices start at <span itemprop="price">$3</span>.</p>
+                    <p>Once you found our tools usefull there will be a per report rate. We have elastic test packages - they will fit your needs. The packages prices vary from <spanitemprop="lowPrice">$3</span> to <span itemprop="highPrice">$10</span> (in <span itemprop="offerCount">3</span> packages).</p>
                 </div>
                 <div class="span3">
                     <h2>{% trans "Lots of tests" %}</h2>
