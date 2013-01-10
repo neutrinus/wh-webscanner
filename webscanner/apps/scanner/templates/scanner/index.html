@@ -34,6 +34,10 @@
 </div>
 
 <div itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="url" content = "https://webcheck.me" />
+    <meta itemprop="brand" content = "webcheck.me" />
+    <meta itemprop="manufacturer" content = "http://whitehats.pl" />
+
     <div class="section">
         <h1 itemprop="name">{% trans '<b>Website scanner</b>'%}</h1>
         <div class="row-fluid">
@@ -47,7 +51,7 @@
                     {% endblocktrans %}
                     <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
                 </div>
-                <div class="span3" itemscope itemtype="http://schema.org/Offer">
+                <div class="span3" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <meta itemprop="availability" href="http://schema.org/InStock" />
                     <h2>{% trans "Try it for free!" %}</h2>
                     {% blocktrans %}
