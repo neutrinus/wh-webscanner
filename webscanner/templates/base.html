@@ -15,6 +15,11 @@
 
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" type="image/x-icon"/>
 
+    {% compress css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    {% endcompress %}
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     {% if not debug %}
@@ -41,10 +46,7 @@
     <script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
     {% endcompress %}
 
-    {% compress css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
-    {% endcompress %}
+
 
     {% block extrahead %} {% endblock %}
 </head>
