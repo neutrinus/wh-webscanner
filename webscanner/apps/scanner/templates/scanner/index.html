@@ -33,88 +33,92 @@
 </form>
 </div>
 
-<div class="section">
-    <h1>{% trans '<b>Website scanner</b>'%}</h1>
-    <div class="row-fluid">
-        <div class="row">
-            <div class="span3">
-                <h2><b>{% trans "Welcome" %}</b></h2>
-                {% blocktrans %}
-                <p>This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form above and let us check your site!</p>
-                {% endblocktrans %}
-                <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
+<div itemscope itemtype="http://schema.org/Product">
+    <div class="section">
+        <h1 itemprop="name">{% trans '<b>Website scanner</b>'%}</h1>
+        <div class="row-fluid">
+            <div class="row">
+                <div class="span3">
+                    <h2><b>{% trans "Welcome" %}</b></h2>
+                    {% blocktrans %}
+                    <p itemprop="description">This tool allows you to <strong>check your website against</strong> many known problems like <b>misconfiguration or malware</b> (and many more). Just enter your website address in the form above and let us check your site! <span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                        Webcheck.me is rated at <span itemprop="ratingValue">9</span>/10 based on customer survey.</span>  </p>
+
+                    {% endblocktrans %}
+                    <p>Learn more <a href="{% url scanner_about %}">about us</a>  or <a href="{% url contact %}">get in touch</a>.</p>
+                </div>
+                <div class="span3" itemscope itemtype="http://schema.org/Offer">
+                    <meta itemprop="availability" href="http://schema.org/InStock" />
+                    <h2>{% trans "Try it for free!" %}</h2>
+                    {% blocktrans %}
+                    <p>We believe that information should be free - we allow everybody to test our scanner for free (even for commercial use).</p>{% endblocktrans %}
+                    <p>Once you found our tools usefull there will be a per report rate. We have elastic test packages - they will fit your needs. The prices start at <span itemprop="price">$3</span>.</p>
+                </div>
+                <div class="span3">
+                    <h2>{% trans "Lots of tests" %}</h2>
+                    {% blocktrans %}
+                    <p>Our tests database was created in response to requests from our customers. We make every
+                    effort to cover all aspects of webpages problems (XSS, sql injecton) or misconfigurations
+                    (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
+                    of different technologies. We keep our technology updated - for you!</p>{% endblocktrans %}
+                </div>
+                <div class="span3">
+                    <h2>{% trans "Lightning fast" %}</h2>
+                    {% blocktrans %}
+                    <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide you with the results as fast as possible.
+                    You get your results immediately on your PC. You do not have to wait untill all the tests are completed.</p>{% endblocktrans %}
+                </div>
             </div>
-            <div class="span3">
-                <h2>{% trans "Try it for free!" %}</h2>
-                {% blocktrans %}
-                <p>We believe that information should be free - we allow everybody to test our scanner for free (even for commercial use).</p>{% endblocktrans %}
-                <p>Once you found our tools usefull there will be a per report rate. We have elastic test packages - they will fit your needs.</p>
-            </div>
-            <div class="span3">
-                <h2>{% trans "Lots of tests" %}</h2>
-                {% blocktrans %}
-                <p>Our tests database was created in response to requests from our customers. We make every
-                effort to cover all aspects of webpages problems (XSS, sql injecton) or misconfigurations
-                (too big pagesize or not optimal css or images). As webpages are more and more complex, there are lots
-                of different technologies. We keep our technology updated - for you!</p>{% endblocktrans %}
-            </div>
-            <div class="span3">
-                <h2>{% trans "Lightning fast" %}</h2>
-                {% blocktrans %}
-                <p>We understand that your time is valuable! We use Bleeding-Edge-Cloud technology to provide you with the results as fast as possible.
-                You get your results immediately on your PC. You do not have to wait untill all the tests are completed.</p>{% endblocktrans %}
+        </div>
+    </div>
+
+
+    <div class="section">{% blocktrans %}
+        <h1><b>Example website scan reports</b></h1>
+        <p>For your convenience we provide sample reports generated by <a href="https://webcheck.me">webcheck the website scanner</a> for the top 3 webpages acording to Alexa. </p>
+        {% endblocktrans %}
+        <div class="row-fluid">
+            <div class="row">
+                <div class="span4" itemprop="review" itemscope itemtype="http://schema.org/Review" >
+                    <meta itemprop="author" content = "webcheck" />
+                    <meta itemprop="datepublished" content = "2013-01-01" />
+                    <meta itemprop="description" content = "" />
+                    <h2><a href="https://webcheck.me/reports/2ba5b5d2-5b08-11e2-a59b-00163e72943f/" itemprop="name">facebook.com</a> </h2>
+                    <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
+                        <meta itemprop="worstRating" content = "0">
+                        <span itemprop="ratingValue">8.9</span>/<span itemprop="bestRating">10</span>
+                    </span></h3>
+                    <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_facebook.png" width="250px" height="150px" />
+                </div>
+
+                <div class="span4" itemprop="review" itemscope itemtype="http://schema.org/Review" >
+                    <meta itemprop="author" content = "webcheck" />
+                    <meta itemprop="datepublished" content = "2013-01-01" />
+                    <meta itemprop="description" content = "" />
+                    <h2><a href="https://webcheck.me/reports/fd10aff4-5b0e-11e2-9708-00163e72943f/" itemprop="name">google.com</a> </h2>
+                    <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
+                        <meta itemprop="worstRating" content = "0">
+                        <span itemprop="ratingValue">9.2</span>/<span itemprop="bestRating">10</span>
+                    </span></h3>
+                    <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_google.png" width="250px" height="150px" />
+                </div>
+
+                <div class="span4" itemprop="review" itemscope itemtype="http://schema.org/Review" >
+                    <meta itemprop="author" content = "webcheck" />
+                    <meta itemprop="datepublished" content = "2013-01-01" />
+                    <meta itemprop="description" content = "" />
+                    <h2><a href="https://webcheck.me/reports/67ee3f58-5b0f-11e2-b17b-00163e72943f/" itemprop="name">youtube.com</a> </h2>
+                    <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
+                        <meta itemprop="worstRating" content = "0">
+                        <span itemprop="ratingValue">8.1</span>/<span itemprop="bestRating">10</span>
+                    </span></h3>
+                    <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_youtube.png" width="250px" height="150px" />
+                </div>
+
             </div>
         </div>
     </div>
 </div>
-
-
-<div class="section">{% blocktrans %}
-    <h1><b>Example website scan reports</b></h1>
-    <p>For your convenience we provide sample reports generated by <a href="https://webcheck.me">webcheck the website scanner</a> for the top 3 webpages acording to Alexa. </p>
-    {% endblocktrans %}
-    <div class="row-fluid">
-        <div class="row">
-            <div class="span4" itemscope itemtype="http://schema.org/Review" >
-                <meta itemprop="author" content = "webcheck" />
-                <meta itemprop="datepublished" content = "2013-01-01" />
-                <meta itemprop="description" content = "" />
-                <h2><a href="https://webcheck.me/reports/2ba5b5d2-5b08-11e2-a59b-00163e72943f/" itemprop="name">facebook.com</a> </h2>
-                <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
-                    <meta itemprop="worstRating" content = "0">
-                    <span itemprop="ratingValue">8.9</span>/<span itemprop="bestRating">10</span>
-                </span></h3>
-                 <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_facebook.png" width="250px" height="150px" />
-            </div>
-
-            <div class="span4" itemscope itemtype="http://schema.org/Review" >
-                <meta itemprop="author" content = "webcheck" />
-                <meta itemprop="datepublished" content = "2013-01-01" />
-                <meta itemprop="description" content = "" />
-                <h2><a href="https://webcheck.me/reports/fd10aff4-5b0e-11e2-9708-00163e72943f/" itemprop="name">google.com</a> </h2>
-                <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
-                    <meta itemprop="worstRating" content = "0">
-                    <span itemprop="ratingValue">9.2</span>/<span itemprop="bestRating">10</span>
-                </span></h3>
-                 <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_google.png" width="250px" height="150px" />
-            </div>
-
-            <div class="span4" itemscope itemtype="http://schema.org/Review" >
-                <meta itemprop="author" content = "webcheck" />
-                <meta itemprop="datepublished" content = "2013-01-01" />
-                <meta itemprop="description" content = "" />
-                <h2><a href="https://webcheck.me/reports/67ee3f58-5b0f-11e2-b17b-00163e72943f/" itemprop="name">youtube.com</a> </h2>
-                <h3>rating: <span id="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
-                    <meta itemprop="worstRating" content = "0">
-                    <span itemprop="ratingValue">8.1</span>/<span itemprop="bestRating">10</span>
-                </span></h3>
-                 <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_youtube.png" width="250px" height="150px" />
-            </div>
-
-        </div>
-    </div>
-</div>
-
 
 
 <div class="section">
