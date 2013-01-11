@@ -374,20 +374,15 @@ class Tests(models.Model):
             log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
 
     def calculate_rating(self):
-        points = 0.0
-        points_max = 0.0
-        results = Results.objects.filter(test=self)
-        for result in results:
-            points_max += result.importance
-
-            if result.status == RESULT_STATUS.success:
-                points += result.importance
-            elif result.status == RESULT_STATUS.error:
-                points += 0
-            elif result.status == RESULT_STATUS.warning:
-                points += result.importance * 0.5
-
-        return math.pow( points/points_max, 2) * 10
+        results = self.results.all().values('status', 'importance')
+        status_multiplier = {RESULT_STATUS.success: 1,
+                             RESULT_STATUS.error: 0,
+                             RESULT_STATUS.warning: 0.5}
+        try:
+            return round((sum(status_multiplier[x['status']] * x['importance'] for x in results)\
+                          / sum(x['importance'] for x in results)) ** 2 * 10, 2)
+        except ZeroDivisionError:
+            return 0.0
 
 
 def remove_data_of_a_test_signal(sender, instance, **kwargs):
