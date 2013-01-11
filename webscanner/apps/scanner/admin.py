@@ -1,27 +1,23 @@
 
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from django.contrib.admin import site
 from django.contrib import admin
-from django import forms
 
 from models import *
-
-#site.unregister(User)
-#site.register(User,UserWithProfile)
 
 
 class ResultsInlineAdmin(admin.TabularInline):
     model = Results
     extra = 0
-    readonly_fields = ('status', 'creation_date', 'test','group','importance')
-    has_add_permission = lambda s,r:False
+    readonly_fields = ('status', 'creation_date', 'test', 'group', 'importance')
+    has_add_permission = lambda s, r: False
+
 
 class CommandQueueInlineAdmin(admin.TabularInline):
     model = CommandQueue
     extra = 0
-    readonly_fields = ( 'finish_date', 'run_date', 'status','testname','wait_for_download')
-    has_add_permission = lambda s,r:False
+    readonly_fields = ('finish_date', 'run_date', 'status', 'testname', 'wait_for_download')
+    has_add_permission = lambda s, r: False
+
 
 class TestsAdmin(admin.ModelAdmin):
     model = Tests
