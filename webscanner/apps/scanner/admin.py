@@ -22,19 +22,20 @@ class CommandQueueInlineAdmin(admin.TabularInline):
 class TestsAdmin(admin.ModelAdmin):
     model = Tests
     search_fields = ['uuid', 'url', 'user__email', 'user_ip', 'download_path']
-    readonly_fields = ('uuid', 'uuid','url' , 'user_ip', 'user', 'creation_date' ,
-                       'download_path', '_percent_progress','_duration',
-                       'check_seo','check_performance','check_security','check_mail', 'download_status')
+    readonly_fields = ('uuid', 'uuid', 'url', 'user_ip', 'user', 'creation_date',
+                       'download_path', '_percent_progress', '_duration',
+                       'check_seo', 'check_performance', 'check_security', 'check_mail', 'download_status',
+                       'calculate_rating')
     ordering = ('-creation_date',)
 
     fieldsets = (
         (None, {'fields': (('uuid','url'),('user','user_ip'),'check_seo','check_performance','check_security','check_mail'),}),
-        ("progress", {'fields': (('_percent_progress', '_duration'),)}),
+        ("progress", {'fields': (('_percent_progress', '_duration', 'calculate_rating'),)}),
         ('others', {'fields': ('creation_date','download_status','download_path','is_deleted')}),
         )
 
     list_per_page = 50
-    list_display = ('uuid', 'url', 'user', '_percent_progress', '_duration',  'is_deleted', 'creation_date')
+    list_display = ('uuid', 'url', 'user', '_percent_progress', '_duration', 'calculate_rating', 'is_deleted', 'creation_date')
     list_filter = ('creation_date', 'is_deleted')
     list_select_related = True
     has_add_permission = lambda s,r:False
