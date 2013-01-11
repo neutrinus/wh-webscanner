@@ -364,7 +364,11 @@ class Tests(models.Model):
         log.debug('cleaning %s data of %r...' % (dir, self))
         if os.path.isdir(path):
             if os.path.basename(path) == self.uuid:
-                shutil.rmtree(path)
+                try:
+                    shutil.rmtree(path)
+                except Exception:
+                    log.exception('Cannot remove %s' % path)
+                    return False
                 log.info('%r %s path (%s) removed.' % (self, dir, path))
                 return True
             else:
