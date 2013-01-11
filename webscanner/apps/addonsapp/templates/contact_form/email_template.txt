@@ -7,3 +7,8 @@ Email: {{ email }}
 Message: {{ body }}
 
 Have a great day!
+
+{% if request.user.is_authenticated %}
+This message was sent by <a href="{% url admin:auth_user_change request.user.pk %}">User (pk:{{request.user.pk}}, email:{{request.user.email}})</a>
+{% endif %}
+

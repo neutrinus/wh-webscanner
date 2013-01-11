@@ -23,6 +23,8 @@ class BaseEmailFormMixin(object):
     def get_context(self):
         if not self.is_valid():
             raise ValueError("Cannot generate Context when form is invalid.")
+        if getattr(self, 'request', None):
+            self.cleaned_data['request'] = self.request
         return self.cleaned_data
 
     def get_message_dict(self):
