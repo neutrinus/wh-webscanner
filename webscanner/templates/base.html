@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="utf-8"/>
 
-    <meta name="description" content="webcheck.me {% block meta-desc %}Free online website scanner. Tests security, SEO, mail problems and sugest solutions.. {% endblock %}" />
+    <meta name="description" content="{% block meta-desc %}Online website scanner and checker. Tests security, SEO, mail problems and sugest solutions.. {% endblock %}" />
     <meta name="keywords" content="webcheck, {% block meta-keywords %}free, online, security, www, webpage, internet page, seo, mail, http code, antivirus, malware check, loadtime, page size, sql injecton, xss atack, screenshots, website snapshot, css optimize, image optimize, spf check, website spellcheck, robots.txt, http compression, website blacklists, plain-text emails, webpage validiation, pagerank, http compresion, webpage spellcheck  {% endblock %}" />
     <meta name="author" content="whitehats.pl Team" />
     <meta name="robots" content="index,follow" />
@@ -14,6 +14,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" type="image/x-icon"/>
+
+    {% compress css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    {% endcompress %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
@@ -31,26 +36,21 @@
         </script>
     {% endif %}
 
-    {% compress js%}
-    <script src="{{ STATIC_URL }}js/bootstrap-mix.min.js"></script>
-    {% comment %}
+    {% compress js %}
     <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
-    {% endcomment %}
+    <script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
     {% endcompress %}
 
-    {% compress css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
-    {% endcompress %}
+
 
     {% block extrahead %} {% endblock %}
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/WebPage">
 <noscript>
     <div id='no-javascript' class="alert alert-error">
     You have no javascript enabled.
@@ -100,7 +100,7 @@
             <a class="btn" onclick='show_login_modal_form();' href="#" ><i class="icon-user"></i> {% trans "Login" %}</a>
         </div>
 {% endif %}
-        <ul class="nav" role="navigation">
+        <ul class="nav" role="navigation" itemscope="itemscope" itemtype="http://www.schema.org/SiteNavigationElement">
             <li><a href="{% url scanner_index %}"> <img src="{{ STATIC_URL }}images/logo.png" style="height:20px" /></a></li>
             <li><a href="{% url scanner_index %}">{% trans "Home" %}</a></li>
             <li><a href="{% url scanner_about %}">{% trans "About" %}</a></li>
@@ -182,13 +182,13 @@ show_login_modal_form = function(){
 
 
         {% block content %}
-        <h2>{% trans "Something went wrong! Please contact with administrator." %}</h2>
+        <h2>{% trans "Something went wrong! Please contact with support [at] webcheck.me." %}</h2>
         {% endblock %}
 
         <hr />
 
         <div class='pull-right muted' role="contentinfo">
-            {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
+           <a href="https://plus.google.com/u/1/117621913793411950348/posts" rel="publisher">webcheck.me@google+</a> &nbsp; {% trans 'Copyright 2012 <a href="http://whitehats.pl" >whitehats.pl</a>' %}
         </div>
 
     </div>

@@ -2,35 +2,34 @@
 {% load humanize %}
 {% load l10n %}
 {% load i18n %}
-
-{% block title %}{% trans "Webscan results for " %}{{ test.domain }} {% endblock %}
+{% load compress %}
+{% block title %}{% trans "Website scan adcheck results for " %}{{ test.domain }} {% endblock %}
 
 {% block extrahead %}
-<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-<link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
+    {% compress css %}
+    <link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+    <link type="text/css" href="{{ STATIC_URL }}css/jquery.jqplot.min.css" rel="stylesheet"/>
+    {% endcompress %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
 
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}openlayers/OpenLayers.js"></script>
-
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/results-mix.min.js"></script>
-
-{% comment %}
-<!--<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pieRenderer.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.dateAxisRenderer.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasTextRenderer.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasAxisTickRenderer.min.js"></script>
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.categoryAxisRenderer.min.js"></script>-->
-{% endcomment %}
+    {% compress js %}
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}openlayers/OpenLayers.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pieRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.dateAxisRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasTextRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.canvasAxisTickRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot.categoryAxisRenderer.min.js"></script>
+    {% endcompress %}
 {% endblock %}
 
 
 {% block content %}
 <div class="page-header">
     <h1>{% trans "Website scan results for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
-    <h3><small>{% trans "Scan started: " %}{{ test.creation_date }}{% if test.vip_mode %}, in VIP mode{% endif %}</small></h3>
+    <h3><small>{% trans "Scan started: " %}{{ test.creation_date }}</small></h3>
 </div>
 
 
@@ -44,7 +43,7 @@
             <div class="row">
                 <div class="span4">
                     <h3>{% trans "Scan time" %}</h3>
-                    <p>{% trans "Average website check takes 200 seconds. If your site is particularly slow it could be even more than 10 minutes. VIP members just got .pdf report in their mailbox (option available in near future - we are working on it!)." %}</p>
+                    <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
                 </div>
                 <div class="span4">
                     <h3>{% trans "Overall note" %}</h3>

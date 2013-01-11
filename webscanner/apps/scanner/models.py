@@ -3,6 +3,7 @@
 import os
 import shutil
 import logging
+import math
 from datetime import datetime
 
 #django import
@@ -368,6 +369,22 @@ class Tests(models.Model):
                 return False
         else:
             log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
+
+    def calculate_rating(self):
+        points = 0.0
+        points_max = 0.0
+        results = Results.objects.filter(test=self)
+        for result in results:
+            points_max += result.importance
+
+            if result.status == RESULT_STATUS.success:
+                points += result.importance
+            elif result.status == RESULT_STATUS.error:
+                points += 0
+            elif result.status == RESULT_STATUS.warning:
+                points += result.importance * 0.5
+
+        return math.pow( points/points_max, 2) * 10
 
 
 def remove_data_of_a_test_signal(sender, instance, **kwargs):
