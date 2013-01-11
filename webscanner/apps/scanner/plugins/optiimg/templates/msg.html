@@ -5,9 +5,11 @@
     {% if optimized_images %}
     <ul>
     {% for image in optimized_images %}
+        {% if image.bytessaved %}
         <li>
             <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me{{ image.url }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
         </li>
+        {% endif %}
     {% endfor %}
     </ul>
     <p>A total <b>{{ total_bytes_saved|filesizeformat }}</b> could be saved by optimizing those images.</p>
