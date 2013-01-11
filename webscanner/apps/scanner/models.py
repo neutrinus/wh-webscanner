@@ -118,6 +118,9 @@ def validate_groups(groups):
 
 
 class Tests(models.Model):
+    class Meta:
+        verbose_name = 'test'
+        verbose_name_plural = 'tests'
     SCANNER_TEST_PUBLIC_DATA_PATH = getattr(settings, 'SCANNER_TEST_PUBLIC_DATA_PATH')
     SCANNER_TEST_PRIVATE_DATA_PATH = getattr(settings, 'SCANNER_TEST_PRIVATE_DATA_PATH')
 
@@ -411,6 +414,9 @@ class CommandQueueManager(models.Manager):
 
 
 class CommandQueue(models.Model):
+    class Meta:
+        verbose_name = 'command'
+        verbose_name_plural = 'commands'
 
     test                =   models.ForeignKey(Tests, related_name="commands")
     status              =   models.IntegerField(choices=STATUS, default=STATUS.waiting, db_index=True)
@@ -434,7 +440,10 @@ class CommandQueue(models.Model):
 
 
 class Results(models.Model):
-    test                =   models.ForeignKey(Tests, related_name="result")
+    class Meta:
+        verbose_name = 'result'
+        verbose_name_plural = 'results'
+    test                =   models.ForeignKey(Tests, related_name="results")
 
     status              =   models.IntegerField(choices=RESULT_STATUS)
     group               =   models.IntegerField(choices=RESULT_GROUP)
