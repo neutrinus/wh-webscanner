@@ -163,7 +163,7 @@ class PluginCheckSpelling(PluginMixin):
         self.log.debug('    -> ok')
 
         self.log.debug('    * get errors...')
-        errors = [ er.word for er in checker ]
+        errors = [ er.word for er in checker if len(er.word) < 128]
         self.log.debug('    -> ok')
 
         self.log.debug('      * found %d bad words and adding them to DB'%len(errors))
