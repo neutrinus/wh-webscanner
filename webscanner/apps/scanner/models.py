@@ -378,10 +378,13 @@ class Tests(models.Model):
             log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
 
     def calculate_rating(self):
-        results = self.results.all().values('status', 'importance')
         status_multiplier = {RESULT_STATUS.success: 1,
                              RESULT_STATUS.error: 0,
                              RESULT_STATUS.warning: 0.5}
+        # we gen only these results that has defined statuses as success,
+        # error, warning. info and other statuses are omitted
+        results = filter(lambda item: item['status'] in status_multiplier,
+                         self.results.all().values('status', 'importance'))
         try:
             return round((sum(status_multiplier[x['status']] * x['importance'] for x in results)\
                           / sum(x['importance'] for x in results)) ** 2 * 10, 2)
