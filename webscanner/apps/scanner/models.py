@@ -365,7 +365,7 @@ class Tests(models.Model):
         if os.path.isdir(path):
             if os.path.basename(path) == self.uuid:
                 try:
-                    shutil.rmtree(path)
+                    shutil.rmtree(str(path))
                 except Exception:
                     log.exception('Cannot remove %s' % path)
                     return False
