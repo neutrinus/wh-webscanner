@@ -160,37 +160,35 @@ def check_results(request, uuid):
     """
     ajax requests handler - suply information about tests
     """
-    if not request.is_ajax():
+    if not request.is_ajax() and not settings.DEBUG:
+        raise Exception("ERROR")
+    if not request.GET.get('callback', None):
         raise Exception("ERROR")
 
     try:
         test = Tests.objects.get(uuid=uuid)
     except Tests.DoesNotExist:
-        #TODO: return some valid error
-        return "{}"
+        raise Http404
 
     last = request.GET.get("last")
     if not last:
-        last=0
+        last = 0
 
-    results = Results.objects.filter(test=test).filter(pk__gt = last)
+    #results = Results.objects.filter(test=test).filter(pk__gt=last)
+    results = test.results.filter(pk__gt=last).values('id',
+                                                      'group',
+                                                      'importance',
+                                                      'status',
+                                                      'output_desc',
+                                                      'output_full')
+    data = {'ordered': test.commands.count() + 1,
+            "done": test.commands.not_active().count() + 1,
+            "test_duration": test.duration(),
+            "rating": test.calculate_rating(),
+            "results": list(results)}
 
-    foo = []
-    for result in results:
-        foo.append({'output_desc':result.output_desc,
-                    'output_full':result.output_full,
-                    'status': result.status,
-                    'importance': result.importance,
-                    'id': result.pk,
-                    'group': result.group})
+    return HttpResponse('%s(%s)' % (request.GET.get('callback', ''), json.dumps(data)), mimetype='application/json')
 
-    data = {    'ordered': test.commands.count() + 1,
-                "done": test.commands.not_active().count() + 1,
-                "test_duration": test.duration(),
-                "results": foo,
-    }
-
-    return HttpResponse('%s(%s)'%(request.GET.get('callback',''),  json.dumps(data)), mimetype='application/json')
 
 @render_to('scanner/simple_results.html')
 def show_simple_report(request, uuid):
