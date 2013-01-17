@@ -13,7 +13,7 @@
 <div class="section">
     {% autopaginate tests per_page=30 as ptests %}
     <h1>{% trans "Scan archive" %}</h1>
-    {% trans "Here you can find your old scans done for you" %}
+    <p>{% trans "Here you can find your old scans done for you." %}</p>
     <div class="row-fluid">
         {% if tests %}
         <div class="span6">
@@ -22,11 +22,7 @@
                     <thead>
                         <tr>
                             <th>{% trans "url" %}</th>
-                            {#<th>{% trans "completion" %}</th>#}
-                            {#<th>{% trans "duration" %}</th>#}
-                            {#<th>{% trans "priority" %}</th>#}
-                            {#<th>{% trans "VIP mode" %}</th>#}
-                            {# TODO <th>{% trans "score" %}</th>#}
+                            <th>{% trans "score" %}</th>
                             <th>{% trans "date" %}</th>
                         </tr>
                     </thead>
@@ -34,11 +30,7 @@
                     {% for test in ptests %}
                         <tr>
                             <td><a href="{% url scanner_report test.uuid %} ">{{ test.url }}</a></td>
-                            {#<td>{{ test.percent_done|floatformat:"0" }}%</td>#}
-                            {#<td>{{ test.duration|floatformat:"0" }}s</td>#}
-                            {#<td>{{ test.priority }}</td>#}
-                            {#<td>{{ test.vip_mode }}</td>#}
-                            {#<td>{{ test.score }} </td>#}
+                            <td>{{ test.calculate_rating }}</td>
                             <td>{{ test.creation_date }}</td>
                         </tr>
                     {% endfor %}
@@ -48,6 +40,7 @@
         </div>
         {% endif %}
     </div>
+    <p class="muted">{% trans "We keep the right to remove oldest archive scans. If you would need the archive reports in the future, please save the pdf versions on your disk." %}</p>
     {% paginate %}
 </div>
 
