@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="row hero-unit">
-    <div class="span4 offset2"><a href="/"> <img src="{{ STATIC_URL }}images/logo2.png" width="300px" height="36px" /></a></div>
+    <div class="span4 offset2"><a href="/"> <img src="{{ STATIC_URL }}images/logo2.png" style="width:300px; height:36px" alt="website scanner logotype" /></a></div>
     <div>{% trans "let us check your website" %}</div>
 
 <form class="form-vertical" action="." method="POST" style="text-align:center; margin-top:4em;">
@@ -90,7 +90,7 @@
                     <meta itemprop="worstRating" content = "0">
                     <span itemprop="ratingValue">8.9</span>/<span itemprop="bestRating">10</span>
                 </span></h3>
-                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_facebook.png" width="250px" height="150px" />
+                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_facebook.png" style="width:250px; height:150px;" alt="facebook scan" />
             </div>
 
             <div class="span4" itemscope itemtype="http://schema.org/Review">
@@ -99,8 +99,7 @@
                     <meta itemprop="worstRating" content = "0">
                     <span itemprop="ratingValue">9.2</span>/<span itemprop="bestRating">10</span>
                 </span></h3>
-                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_google.png" width="250px" height="150px" />
-            </div>
+                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_google.png" style="width:250px; height:150px;" alt="google scan" />            </div>
 
             <div class="span4" itemscope itemtype="http://schema.org/Review">
                 <h2><a href="https://webcheck.me/reports/67ee3f58-5b0f-11e2-b17b-00163e72943f/" itemprop="name">youtube.com</a> </h2>
@@ -108,7 +107,7 @@
                     <meta itemprop="worstRating" content = "0">
                     <span itemprop="ratingValue">8.1</span>/<span itemprop="bestRating">10</span>
                 </span></h3>
-                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_youtube.png" width="250px" height="150px" />
+                <img itemprop="image" class="img-polaroid" src="{{ STATIC_URL }}images/example_youtube.png" style="width:250px; height:150px;" alt="youtube scan" />
             </div>
 
         </div>

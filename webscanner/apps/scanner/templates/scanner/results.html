@@ -3,7 +3,8 @@
 {% load l10n %}
 {% load i18n %}
 {% load compress %}
-{% block title %}{% trans "Website scan adcheck results for " %}{{ test.domain }} {% endblock %}
+{% block title %}{% trans "Website scan results for " %}{{ test.domain }} {% endblock %}
+{% block meta-desc %}"A detailed raport done by our website scanner on website: {{ test.domain }} at {{ test.creation_date }}. {% endblock %}
 
 {% block extrahead %}
     {% compress css %}
@@ -42,20 +43,22 @@
         <div class="span12">
             <div class="row">
                 <div class="span4">
-                    <h3>{% trans "Scan time" %}</h3>
+                    <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
+
                     <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
-                </div>
-                <div class="span4">
-                    <h3>{% trans "Overall note" %}</h3>
-                    <br />
-                    <p>{% trans "basing on all checks below we give your website an overall note:" %}</p>
-                    <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">?</span>/10<p>
-                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
+                    <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
                 </div>
                 <div class="span4">
                     <h3>{% trans "The numbers!" %}</h3>
+                    <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
+                    <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">?</span>/10<p>
+                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
+
+
+                </div>
+                <div class="span4">
                     <div id="chart" style="height:200px; width:290px;"></div>
-                    <p>{% trans "Scan time: " %}<span id="timer">0</span> secs</p>
+
                 </div>
             </div>
 
