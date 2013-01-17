@@ -236,6 +236,7 @@ class Tests(models.Model):
         if check_user_credits and self.user:
             log.debug('%r.checking credits for user %r'%(self, self.user))
             if self.user.userprofile.credits < self.cost:
+                self.delete()
                 raise self.user.userprofile.NotEnoughCredits(self.user.userprofile.credits,
                                                              self.cost,
                                                              _('start a scan'))
