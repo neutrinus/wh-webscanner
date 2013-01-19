@@ -75,6 +75,7 @@ from .plugins.check_spelling import PluginCheckSpelling
 #from scanner.plugins.check_google_site import PluginGoogleSite
 from .plugins.social import PluginSocial
 from .plugins.check_urllength import PluginUrlLength
+from .plugins.check_seotags import PluginSEOTags
 
 
 PLUGINS = dict((
@@ -98,6 +99,7 @@ PLUGINS = dict((
     ('social', PluginSocial),
     #('googlesite', PluginGoogleSite ),
     ('urllength', PluginUrlLength),
+    ('seo_tags', PluginSEOTags),
 ))
 
 

@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load compress %}
 {% block title %}{% trans "Website scan results for " %}{{ test.domain }} {% endblock %}
-{% block meta-desc %}"A detailed raport done by our website scanner on website: {{ test.domain }} at {{ test.creation_date }}. {% endblock %}
+{% block meta-desc %}A detailed raport done by our website scanner on website: {{ test.domain }} at {{ test.creation_date }}. {% endblock %}
 
 {% block extrahead %}
     {% compress css %}
@@ -323,5 +323,7 @@ var status_plot = jQuery.jqplot ('chart', [data],
     })
 
 </script>
+
+
 
 {% endblock %}
