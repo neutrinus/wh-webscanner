@@ -1,0 +1,20 @@
+{% load i18n %}
+<div>
+<h5>Your website has proper meta keywords</h5>
+
+<p>As meta keywords were overused by spammers, this parameter has almost no influence on SEO</p>
+
+<table>
+<tr> <th>Page</th> <th>Keywords number</th> <th>Keywords</th> </tr>
+{% for page in files %}
+<tr>
+    <td>{{page.file}}</td>
+    <td>{{page.char_count}}</td>
+    <td>{{page.keywords}}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+</div>
+

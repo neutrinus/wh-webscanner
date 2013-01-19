@@ -26,22 +26,22 @@ class PluginSEOTags(PluginMixin):
 
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h1s= bs4.BeautifulSoup(orig).findAll('h1')
+            h1s = bs4.BeautifulSoup(orig).findAll('h1')
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h2s= bs4.BeautifulSoup(orig).findAll('h2')
+            h2s = bs4.BeautifulSoup(orig).findAll('h2')
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h3s= bs4.BeautifulSoup(orig).findAll('h3')
+            h3s = bs4.BeautifulSoup(orig).findAll('h3')
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h4s= bs4.BeautifulSoup(orig).findAll('h4')
+            h4s = bs4.BeautifulSoup(orig).findAll('h4')
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h5s= bs4.BeautifulSoup(orig).findAll('h5')
+            h5s = bs4.BeautifulSoup(orig).findAll('h5')
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            h6s= bs4.BeautifulSoup(orig).findAll('h6')
+            h6s = bs4.BeautifulSoup(orig).findAll('h6')
 
         return {    'h1s': h1s,
                     'h2s': h2s,
@@ -54,9 +54,17 @@ class PluginSEOTags(PluginMixin):
     def check_title(self, path):
         with open(path,'r') as f:
             orig = f.read(self.max_file_size)
-            print bs4.BeautifulSoup(orig).findAll('title')
+            return bs4.BeautifulSoup(orig).html.head.findAll('title')
 
-        return None
+    def check_description(self, path):
+        with open(path,'r') as f:
+            orig = f.read(self.max_file_size)
+            return bs4.BeautifulSoup(orig).findAll(attrs={"name": "description"})
+
+    def check_keywords(self, path):
+        with open(path,'r') as f:
+            orig = f.read(self.max_file_size)
+            return bs4.BeautifulSoup(orig).findAll(attrs={"name": "keywords"})
 
 
     def run(self, command):
@@ -72,6 +80,9 @@ class PluginSEOTags(PluginMixin):
 
 
         result_headings = []
+        result_keywords = []
+        result_descriptions = []
+        result_titles = []
         was_errors = False
         for dir in dirs:
             for root, dirs, files in os.walk(str(dir)):
@@ -95,16 +106,58 @@ class PluginSEOTags(PluginMixin):
                         'h6s_count' : len(headings["h6s"]),
                     })
 
+                    description = self.check_description(file_path)
+                    result_descriptions.append({
+                        'file': os.path.join(os.path.relpath(file_path,path),),
+                        'description': description,
+                        'char_count': len(description),
+                    })
 
+                    result_keywords.append({
+                        'file': os.path.join(os.path.relpath(file_path,path),),
+                        'keywords': self.check_keywords(file_path),
+                    })
+
+                    result_titles.append({
+                        'file': os.path.join(os.path.relpath(file_path,path),),
+                        'title': self.check_title(file_path),
+                    })
+
+
+        # Check headings
         template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/headings.html')).read())
-
-        res = Results(test=command.test, group = RESULT_GROUP.seo,importance=3)
+        res = Results(test=command.test, group = RESULT_GROUP.seo, importance=3)
         res.output_desc = unicode(_("Headings"))
         res.output_full = template.render(Context({'files':result_headings,}))
         res.status = RESULT_STATUS.success
         res.save()
 
 
+        # Check description
+        template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/descriptions.html')).read())
+        res = Results(test=command.test, group = RESULT_GROUP.seo,importance=3)
+        res.output_desc = unicode(_("Meta desctiption"))
+        res.output_full = template.render(Context({'files':result_descriptions,}))
+        res.status = RESULT_STATUS.success
+        res.save()
+
+
+        ## Check keywords
+        template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/keywords.html')).read())
+        res = Results(test=command.test, group = RESULT_GROUP.seo,importance=1)
+        res.output_desc = unicode(_("Meta keywords"))
+        res.output_full = template.render(Context({'files':result_keywords,}))
+        res.status = RESULT_STATUS.success
+        res.save()
+
+
+        ## Check titles
+        template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/titles.html')).read())
+        res = Results(test=command.test, group = RESULT_GROUP.seo,importance=3)
+        res.output_desc = unicode(_("Pages Titles"))
+        res.output_full = template.render(Context({'files':result_titles,}))
+        res.status = RESULT_STATUS.success
+        res.save()
 
 
 

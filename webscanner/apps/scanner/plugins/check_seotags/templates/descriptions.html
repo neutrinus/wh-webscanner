@@ -1,0 +1,19 @@
+{% load i18n %}
+<div>
+<h5>Your website has proper meta descriptions</h5>
+
+
+<table>
+<tr> <th>Page</th> <th>Chars</th> <th>Description</th> </tr>
+{% for page in files %}
+<tr>
+    <td>{{page.file}}</td>
+    <td>{{page.char_count}}</td>
+    <td>{{page.description}}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+</div>
+

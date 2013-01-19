@@ -35,7 +35,7 @@ class PluginCheckW3CValid(PluginMixin):
                 str(result.info().getheader('x-w3c-validator-errors')))
 
         from scanner.models import Results
-        res = Results(test=command.test, group = RESULT_GROUP.seo)
+        res = Results(test=command.test, group = RESULT_GROUP.general, importance=2)
         res.output_desc = unicode(_("W3C Validation"))
 
         if result.info().getheader('x-w3c-validator-status') == 'Valid' :
