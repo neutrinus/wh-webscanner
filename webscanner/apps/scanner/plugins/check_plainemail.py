@@ -53,7 +53,7 @@ class PluginPlainTextEmail(PluginMixin):
 
             if efound:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>We have found following email addreses: <code>%s</code> </p>"%(efound)))
+                res.output_full += unicode(_("<p>We have found following email addresses: <code>%s</code> </p>"%(efound)))
             else:
                 res.status = RESULT_STATUS.success
                 res.output_full += unicode(_("<p>OK, we did not found any plaintext e-mail addreses on your website.</p>"))
