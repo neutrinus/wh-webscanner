@@ -88,15 +88,15 @@ def worker_process():
 
             if ctest:
                 try:
-                    # bierzemy plugina
-                    plugin = PLUGINS[ctest.testname]()
-                except KeyError:
-                    log.exception('Could not find plugin: %s' % ctest.testname)
-                    break
+                    try:
+                        # bierzemy plugina
+                        plugin = PLUGINS[ctest.testname]()
+                    except KeyError:
+                        log.exception('Could not find plugin: %s' % ctest.testname)
+                        break
 
-                log.debug('Starting scanner plugin: %s' % plugin)
+                    log.debug('Starting scanner plugin: %s' % plugin)
 
-                try:
                     # uruchamiamy i czekamy na status
                     plugin_status = plugin.run(ctest)
                     ctest.status = plugin_status if plugin_status else STATUS.success
