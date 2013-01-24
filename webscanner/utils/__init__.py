@@ -196,12 +196,12 @@ def download_cleaner_process():
                     del dtest
                 else:
                     log.debug('Nothing to clean.')
-                    sleep(random.uniform(10, 30))
+                    sleep(random.uniform(60, 120))
 
             except Exception:
                 log.exception('Error while cleaning %r.' % dtest)
-                sleep(random.uniform(3, 5))
-            sleep(random.uniform(3, 5))
+                sleep(random.uniform(10, 20))
+
     finally:
         if os.path.exists(LOCK_FILE):
             log.info('Removing LOCK_FILE: %s' % LOCK_FILE)
