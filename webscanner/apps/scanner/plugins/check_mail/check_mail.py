@@ -145,7 +145,7 @@ class PluginMail(PluginMixin):
                 "noabuse" :noabuse
             } ))
             if abuse:
-                res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%(domain)s:<code>%(abbuse)s</code> </p>"% {
+                res.output_full += unicode(_("<p>Mailservers that accept mail to abuse@%(domain)s:<code>%(abuse)s</code> </p>"% {
                     "domain": domain,
                     "abuse" : abuse
                 } ))
