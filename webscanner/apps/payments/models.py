@@ -38,6 +38,10 @@ class Coupon(models.Model):
     used_date           =   models.DateTimeField(default=None,
                                                  blank=True,
                                                  null=True)
+    comment             =   models.CharField(max_length=256,
+                                             blank=True,
+                                             null=True)
+
     def set_used(self):
         self.used=True
         self.used_date=dt.utcnow()
