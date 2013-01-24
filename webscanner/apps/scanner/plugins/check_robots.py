@@ -26,7 +26,7 @@ class PluginCheckRobots(PluginMixin):
         self.log.debug("Looking for: %s "%(robotsurl))
 
         from scanner.models import Results
-        res = Results(test=command.test, group = RESULT_GROUP.general,importance=2)
+        res = Results(test=command.test, group = RESULT_GROUP.seo, importance=2)
 
         res.output_desc = unicode(_("robots.txt"))
         res.output_full = '<p><a href="http://www.robotstxt.org/">robots.txt</a> file is used to control automatic software (like Web Wanderers, Crawlers, or Spiders). Address of your robots.txt for your domain should be: <code>%s</code> </p> '%(robotsurl)
