@@ -11,7 +11,6 @@ class TestCode(TestCase):
 
     def test_non_existance_domain(self):
         test = Tests(url='http://dsafdsafa324324239421432rji41111111111.tld',
-                     priority=0,
                     )
         test.save()
         cmd = CommandQueue(
@@ -26,7 +25,6 @@ class TestCode(TestCase):
     def test_non_existance_domain(self):
         Results.objects.all().delete()
         test = Tests(url='http://asd213120asod.pl',
-                     priority=0,
                     )
         test.save()
         cmd = CommandQueue(
@@ -53,7 +51,7 @@ class TestCode(TestCase):
         assert self.plugin.run(cmd) == STATUS.success
 
         mock1.stop(), mock2.stop()
-        
+
         assert Results.objects.all()[0].status == RESULT_STATUS.success
         assert Results.objects.all()[1].status == RESULT_STATUS.warning
 
@@ -65,6 +63,6 @@ class TestCode(TestCase):
         mock1.start(), mock2.start()
         assert self.plugin.run(cmd) == STATUS.success
         mock1.stop(), mock2.stop()
-        
+
         assert Results.objects.all()[0].status == RESULT_STATUS.success
         assert Results.objects.all()[1].status == RESULT_STATUS.success
