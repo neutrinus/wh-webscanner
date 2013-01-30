@@ -27,23 +27,8 @@ class PluginOptiimg(PluginMixin):
     wait_for_download = True
 
     OPTIMIZED_IMAGES_DIR_NAME = getattr(settings,
-                                        'OPTIIMG_OPTIMIZED_IMAGES_DIR_NAME',
+                                        'WEBSCANNER_OPTIIMG_OPTIMIZED_IMAGES_DIR_NAME',
                                         'optimized_images')
-
-    #: MEDIA_ROOT/MEDIA_URL + OPTIMIZED_IMAGES_DIR_NAME + random_file_name
-    OPTIMIZED_IMAGES_PATH = \
-        os.path.join(settings.MEDIA_ROOT, OPTIMIZED_IMAGES_DIR_NAME)
-
-    #: MEDIA_ROOT/MEDIA_URL + OPTIMIZED_IMAGES_DIR_NAME + random_file_name
-    OPTIMIZED_IMAGES_URL = os.path.join(settings.MEDIA_URL, OPTIMIZED_IMAGES_DIR_NAME)
-
-    def __init__(self, *args, **kwargs):
-        if not os.path.isdir(self.OPTIMIZED_IMAGES_PATH):
-            raise OSError('''OptiIMG: directory %s does not exist!
-Please setup OPTIIMG_OPTIMIZED_IMAGES_DIR_NAME in django `settings.py` for a name \
-of a directory which exists inside MEDIA_ROOT to store optimized images or \
-set OPTIMIZED_IMAGES_PATH and OPTIMIZED_IMAGES_URL class attributes manually.''' % self.OPTIMIZED_IMAGES_PATH)
-        super(PluginOptiimg, self).__init__(*args, **kwargs)
 
     def run(self, command):
         if not command.test.check_performance:
@@ -57,11 +42,10 @@ set OPTIMIZED_IMAGES_PATH and OPTIMIZED_IMAGES_URL class attributes manually.'''
         total_bytes_saved = 0
 
         optimizer = ImageOptimizer()
-        optimized_files_path = os.path.join(self.OPTIMIZED_IMAGES_PATH,
-                                            command.test.uuid)
-        optimized_files_url = os.path.join(self.OPTIMIZED_IMAGES_URL,
-                                           command.test.uuid)
-        os.makedirs(optimized_files_path)
+        optimized_files_path = os.path.join(command.test.public_data_path, self.OPTIMIZED_IMAGES_DIR_NAME)
+        optimized_files_url = os.path.join(command.test.public_data_url, self.OPTIMIZED_IMAGES_DIR_NAME)
+        if not os.path.exists(optimized_files_path):
+            os.makedirs(optimized_files_path)
 
         for root, dirs, files in os.walk(path):
             for file in files:
