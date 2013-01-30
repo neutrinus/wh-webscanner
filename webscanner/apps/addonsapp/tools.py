@@ -2,7 +2,6 @@
 # -*- encoding: utf-8 -*-
 import os
 from urlparse import urlparse
-from settings import apath
 
 PATH_TLD_NAMES = os.path.join(os.path.dirname(__file__), "effective_tld_names.dat.txt")
 
@@ -13,7 +12,7 @@ tlds = []
 try:
     # load tlds, ignore comments and empty lines:
     #https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
-    with open(apath(PATH_TLD_NAMES)) as tldFile:
+    with open(PATH_TLD_NAMES) as tldFile:
         tlds = [line.strip() for line in tldFile if line[0] not in "/\n"]
 except IOError:
     raise IOError("Could not find file %s" % PATH_TLD_NAMES)
