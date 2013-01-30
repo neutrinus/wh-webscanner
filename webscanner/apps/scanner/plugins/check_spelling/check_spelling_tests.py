@@ -4,13 +4,13 @@ import mock
 from unittest import TestCase
 import logging
 import enchant
-import chardet
+import cchardet as chardet
 import nltk
 
 from ...models import *
 from check_spelling import PluginCheckSpelling as Plug, BetterURLFilter, tlds
 from check_spelling import CannotGuessLanguage
-            
+
 
 def abspath(p):
     return os.path.abspath(os.path.join(os.path.dirname(__file__),p))
@@ -25,9 +25,7 @@ class TestCode(TestCase):
         Tests.objects.all().delete()
         CommandQueue.objects.all().delete()
 
-        self.test =test = Tests(url='http://dsafdsafa324324239421432rji41111111111.tld',
-                     priority=0,
-                    )
+        self.test =test = Tests(url='http://dsafdsafa324324239421432rji41111111111.tld')
         test.save()
         self.cmd= cmd = CommandQueue(
                         test=test,
@@ -39,7 +37,7 @@ class TestCode(TestCase):
 
     def test_undetected_language(self):
         pl = self.plugin
-        self.assertRaises(CannotGuessLanguage, lambda:pl.spellcheck("sadagaewqr"))
+        assert pl.spellcheck("sadagaewqr")[0] == None
 
     def test_pl_ok(self):
         pl = self.plugin
@@ -88,7 +86,7 @@ class TestCode(TestCase):
         BadWord.clean_bad_words()
 
         assert BadWord.objects.all().count() == 2
-        
+
 
     def test_checker_regexp(self):
         b=BetterURLFilter
@@ -128,7 +126,7 @@ class TestCode(TestCase):
             assert not match
 
 
-        
+
 
     def test_checker_with_better_url_filter(self):
         #pl = self.plugin
@@ -156,8 +154,8 @@ class TestCode(TestCase):
         words = words.union( bad_words )
 
         checker = enchant.checker.SpellChecker('en', filters=[
-                        BetterURLFilter,            
-        ]) 
+                        BetterURLFilter,
+        ])
 
         sentence = u' '.join(words)
 
@@ -178,14 +176,14 @@ class TestCode(TestCase):
     def test_onet(self):
         log.debug("CHECKING ONET !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         pl = self.plugin
-        f = open(abspath('tests_htmls/onet.html')).read() 
+        f = open(abspath('tests_htmls/onet.html')).read()
         charset = chardet.detect(f)['encoding']
         f=f.decode(charset)
         f=nltk.clean_html(f)
 
         checker = enchant.checker.SpellChecker('pl', filters=[
-                        BetterURLFilter,            
-        ]) 
+                        BetterURLFilter,
+        ])
         checker.set_text(f)
         errors = [ e.word for e in checker ]
 
@@ -203,11 +201,9 @@ class TestCode(TestCase):
 
     def check_wykop(self):
         pl = self.plugin
-        pass
 
     def check_amazon(self):
         pl = self.plugin
-        pass
 
     def tes_compare(self):
         # only for see what files are handled
