@@ -57,6 +57,9 @@ from enchant.tokenize import EmailFilter, URLFilter, Filter
 # pip: cchardet
 import cchardet
 
+# pip: chromium_compact_language_detector 0.1.1
+import cld
+
 # local imports
 
 from scanner.plugins.plugin import PluginMixin
@@ -128,21 +131,18 @@ class PluginCheckSpelling(PluginMixin):
     #: X days
     bad_word_days = 30
 
-
-    def spellcheck(self, text):
-        from scanner.models import (Results, CommandQueue, BadWord)
+    def spellcheck(self, text, tld=''):
+        from scanner.models import BadWord
         # guess language code
         self.log.debug('    * guessing language...')
-        lang_code, lang_num, lang_name = guess_language.\
-                                            guessLanguageInfo(text)
-        self.log.debug('    -> detected lang: %s (%s)'%(lang_name,
-                                                                  lang_code))
+        #lang_code, lang_num, lang_name = guess_language.guessLanguageInfo(text)
+        lang_name, lang_code, reliable, bytes_found, details = \
+            cld.detect(text.encode('utf-8'), hintTopLevelDomain=tld)
+        self.log.debug('    -> detected lang: %s (%s)' % (lang_name, lang_code))
 
-        if lang_code == 'UNKNOWN':
-            self.log.warning('    -> Cannot detect language of page - end')
-            #
-            # raise CannotGuessLanguage()
-            return None,set()
+        if lang_code.upper() == 'UNKNOWN' or lang_name.upper() == 'UNKNOWN' or not reliable:
+            self.log.warning('    -> Cannot detect language of page - end : %s' % details)
+            return None, set()
 
         self.log.debug('    * searching for dictionary')
         try:
