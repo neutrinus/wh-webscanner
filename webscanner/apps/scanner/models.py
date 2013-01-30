@@ -125,8 +125,9 @@ class Tests(models.Model):
     class Meta:
         verbose_name = 'test'
         verbose_name_plural = 'tests'
-    SCANNER_TEST_PUBLIC_DATA_PATH = getattr(settings, 'SCANNER_TEST_PUBLIC_DATA_PATH')
-    SCANNER_TEST_PRIVATE_DATA_PATH = getattr(settings, 'SCANNER_TEST_PRIVATE_DATA_PATH')
+    WEBSCANNER_TEST_PUBLIC_DATA_PATH = getattr(settings, 'WEBSCANNER_TEST_PUBLIC_DATA_PATH')
+    WEBSCANNER_TEST_PUBLIC_DATA_URL = getattr(settings, 'WEBSCANNER_TEST_PUBLIC_DATA_URL')
+    WEBSCANNER_TEST_PRIVATE_DATA_PATH = getattr(settings, 'WEBSCANNER_TEST_PRIVATE_DATA_PATH')
 
     class StartError(Exception):
         pass
@@ -338,14 +339,21 @@ class Tests(models.Model):
     def public_data_path(self):
         if not self.uuid or not self.pk:
             raise self.DoesNotExist('%r is not saved. cannot calculate public_data_path' % self)
-        return os.path.join(self.SCANNER_TEST_PUBLIC_DATA_PATH,
+        return os.path.join(self.WEBSCANNER_TEST_PUBLIC_DATA_PATH,
+                            self.uuid)
+
+    @property
+    def public_data_url(self):
+        return os.path.join(self.WEBSCANNER_TEST_PUBLIC_DATA_URL,
                             self.uuid)
 
     @property
     def private_data_path(self):
         if not self.uuid or not self.pk:
             raise self.DoesNotExist('%r is not saved. cannot calculate private_data_path' % self)
-        return os.path.join(self.SCANNER_TEST_PRIVATE_DATA_PATH,
+        if self.download_path:
+            return self.download_path
+        return os.path.join(self.WEBSCANNER_TEST_PRIVATE_DATA_PATH,
                             self.uuid)
 
     def clean_private_data(self):

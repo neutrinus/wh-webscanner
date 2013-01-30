@@ -249,9 +249,9 @@ WEBSCANNER_SHARED_STORAGE = '/tmp/webscanner'
 PATH_TMPSCAN = WEBSCANNER_SHARED_STORAGE  # this should be replaced in all system by WEBSCANNER_SHARED_STORAGE
 
 # these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
-SCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
-SCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
-SCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
+WEBSCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
+WEBSCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
+WEBSCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
 
 WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
     {
