@@ -10,7 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
 
 
 class PluginSocial(PluginMixin):
