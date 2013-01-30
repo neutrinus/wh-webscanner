@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from settings import PATH_TMPSCAN, MEDIA_ROOT, MEDIA_URL
+from django.conf import settings
 
 
 def gentmpfilename():
@@ -36,7 +36,7 @@ def select_smallest_file(filelist):
 
 def optimize_yui(ifile, ftype, output_path, remove_original=False ):
 
-    ofile = PATH_TMPSCAN +gentmpfilename() + "." + ftype
+    ofile = settings.PATH_TMPSCAN +gentmpfilename() + "." + ftype
     files = [ifile, ofile]
 
     command =  'yui-compressor --type %s -o %s %s'%(ftype, ofile, ifile)
@@ -90,7 +90,7 @@ class PluginOptiYUI(PluginMixin):
                     continue
 
                 self.log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
-                ofile = optimize_yui(fpath, ftype, MEDIA_ROOT+"/", False)
+                ofile = optimize_yui(fpath, ftype, settings.MEDIA_ROOT+"/", False)
 
                 bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
                 if bytes_saved == 0:
@@ -100,7 +100,7 @@ class PluginOptiYUI(PluginMixin):
 
                 optifiles[ftype].append({
                         "ifile": fpath[(len(path)+1):],
-                        "ofile": "/" + MEDIA_URL + ofile[len(MEDIA_ROOT+"/")+1:],
+                        "ofile": "/" + settings.MEDIA_URL + ofile[len(settings.MEDIA_ROOT+"/")+1:],
                         "ifilesize": os.path.getsize(fpath),
                         "ofilesize": os.path.getsize(ofile),
                         "bytessaved": bytes_saved,
