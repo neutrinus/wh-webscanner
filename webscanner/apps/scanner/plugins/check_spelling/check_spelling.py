@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-__doc__='''
+__doc__ = '''
 Enchant backend: hunspell
 
 requirements.pip: pyenchant guess-language html2text
@@ -147,15 +147,13 @@ class PluginCheckSpelling(PluginMixin):
         self.log.debug('    * searching for dictionary')
         try:
             checker = enchant.checker.SpellChecker(lang_code,
-                                       filters=[EmailFilter,
-                                                URLFilter,
-        #                                       BetterURLFilter,
-                                               ])
-        except enchant.DictNotFoundError as e:
-            self.log.error("    -> Cannot find language for spellchecker for %s - end"%\
-                          lang_code)
-            #raise e
-            return None,set()
+                                                   filters=[EmailFilter,
+                                                            URLFilter,
+                                                            #  BetterURLFilter,
+                                                            ])
+        except enchant.DictNotFoundError:
+            self.log.error("    -> Cannot find language for spellchecker for %s - end" % lang_code)
+            return None, set()
 
         # checking page for bad words
         self.log.debug('    * check spelling...')
@@ -163,10 +161,10 @@ class PluginCheckSpelling(PluginMixin):
         self.log.debug('    -> ok')
 
         self.log.debug('    * get errors...')
-        errors = [ er.word for er in checker if len(er.word) < 128]
+        errors = [er.word for er in checker if len(er.word) < 128]
         self.log.debug('    -> ok')
 
-        self.log.debug('      * found %d bad words and adding them to DB'%len(errors))
+        self.log.debug('      * found %d bad words and adding them to DB' % len(errors))
         BadWord.objects.bulk_create(
             [BadWord(word=bad_word.strip().lower()) for bad_word in errors])
         self.log.debug('      -> ok')
@@ -175,14 +173,12 @@ class PluginCheckSpelling(PluginMixin):
         errors = BadWord.filter_bad_words(errors)
         self.log.debug('      -> ok')
 
-        self.log.debug('     * after filtering out there is %d errors (%s)'%
-              (len(errors),errors))
+        self.log.debug('     * after filtering out there is %d errors (%s)' % (len(errors), errors))
 
         return lang_name, set(errors)
 
-
     def check_file(self, path):
-        self.log.debug(' * check spelling in file: %s'%path)
+        self.log.debug(' * check spelling in file: %s' % path)
 
         # check if file is type of 'html'
         if 'html' not in str(mimetypes.guess_type(path)[0]):
@@ -192,28 +188,26 @@ class PluginCheckSpelling(PluginMixin):
             self.log.debug("   * is html file")
 
         # read html file and convert it to plain text
-        with open(path,'r') as f:
+        with open(path, 'r') as f:
             self.log.debug("   * reading html file...")
-            orig = f.read(self.max_file_size) # Max 1 MB of html text file
+            orig = f.read(self.max_file_size)  # Max 1 MB of html text file
 
             self.log.debug("   -> file loaded")
             self.log.debug('   * detecting charset...')
             try:
                 charset = cchardet.detect(orig)
-            except Exception as e:
-                charset = {'confidence':0.1,
-                           'encoding':'ascii'}
+            except Exception:
+                charset = {'confidence': 0.1, 'encoding': 'ascii'}
                 self.log.warning('    -> error while detecting charset')
-            self.log.debug('    -> detected charset: %s'%charset['encoding'])
+            self.log.debug('    -> detected charset: %s' % charset['encoding'])
             if not charset['encoding']:
                 self.log.debug('    -> set default encoding (ascii)')
                 charset['encoding'] = 'ascii'
 
-
             self.log.debug('    * decoding text...')
             try:
                 orig = orig.decode(charset['encoding'])
-            except Exception as e:
+            except Exception:
                 self.log.warning('    -> error while decoding text')
                 self.log.info('     * try cleaning without decoding')
                 #raise CannotDecode(e)
@@ -241,29 +235,27 @@ class PluginCheckSpelling(PluginMixin):
             self.log.debug('    * cleaning from html to txt...')
             try:
                 #text = nltk.clean_html(orig)
-                text = '\n'.join(strip_script_tags(
-                            bs4.BeautifulSoup(orig).html.body
-                ))
-            except Exception as e:
+                text = '\n'.join(strip_script_tags(bs4.BeautifulSoup(orig).html.body))
+            except Exception:
                 self.log.warning('    * error while cleaning html, omitting file')
                 return None, set()
             self.log.debug('    -> ok')
 
         lang, errors = self.spellcheck(text)
-        self.log.info(' * stop checking file: %s'%path)
+        self.log.info(' * stop checking file: %s' % path)
         return lang, errors
 
     def run(self, command):
         self.log.info(" * check spelling: BEGIN")
-        from scanner.models import (Results, CommandQueue)
+        from scanner.models import Results
         import glob
         path = str(command.test.download_path)
 
         # search html files
 
-        dirs = glob.glob(os.path.join(path,'*%s*'%command.test.domain()))
+        dirs = glob.glob(os.path.join(path, '*%s*' % command.test.domain()))
 
-        self.log.debug("Search html files in %s "%(dirs))
+        self.log.debug("Search html files in %s " % (dirs,))
 
         files_with_errors = []
         was_errors = False
@@ -274,29 +266,26 @@ class PluginCheckSpelling(PluginMixin):
                     try:
                         lang, errors = self.check_file(file_path)
                     except CheckSpellingError as e:
-                        self.log.exception(" * Spellchecking error: %s",e)
-                        errors=set()
-                        was_errors=True
+                        self.log.exception(" * Spellchecking error: %s", e)
+                        errors = set()
+                        was_errors = True
                         continue
                     if errors:
                         errors = list(errors)
 
-                        files_with_errors.append( [os.path.join(
-                                os.path.relpath(file_path,path),
-                            ),
-                            lang,
-                            errors,
-                        ])
+                        files_with_errors.append([os.path.relpath(file_path, path),
+                                                  lang,
+                                                  errors])
 
         template = Template(open(os.path.join(os.path.dirname(__file__),
                                               'templates/msg.html')).read())
         r = Results(test=command.test,
                     group=RESULT_GROUP.general,
                     importance=1,
-                    status=RESULT_STATUS.warning if files_with_errors else\
-                           RESULT_STATUS.success)
+                    status=RESULT_STATUS.warning if files_with_errors else
+                    RESULT_STATUS.success)
         r.output_desc = unicode(self.name)
-        r.output_full = template.render(Context({'files':files_with_errors,}))
+        r.output_full = template.render(Context({'files': files_with_errors}))
         r.save()
 
         self.log.info(' * check spelling: END')
@@ -304,4 +293,3 @@ class PluginCheckSpelling(PluginMixin):
         if was_errors:
             return STATUS.unsuccess
         return STATUS.success
-
