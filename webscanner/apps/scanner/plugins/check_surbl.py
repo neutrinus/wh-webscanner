@@ -6,23 +6,22 @@ from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 import dns.resolver
 import urlparse
-from settings import apath
+
 
 class PluginSURBL(PluginMixin):
     name = unicode(_("Check SURBL database"))
     wait_for_download = False
-    
-    
+
+
     # Takes the location of the file listing the known TLDs where second level registration is well-known
     # An example of such a file can be downloaded from:
     # http://spamcheck.freeapp.net/two-level-tlds
     def __init__(self):
-        f = open(apath("two-level-tlds"))
-        self._twoLevelsTlds = f.readlines()
-        f.close()
-        
+        self._twoLevelsTlds = settings.WEBSCANNER_TWO_LEVEL_TLDS
+
     def isMarkedAsSpam(self,uri):
         # The domain part of the URI is the 2nd item in the set
         domainData = urlparse.urlparse(uri)
@@ -45,8 +44,8 @@ class PluginSURBL(PluginMixin):
         else:
             registeredName = dnsParts[-2] + '.' + dnsParts[-1]
         return registeredName
-    
-    
+
+
     def run(self, command):
         from scanner.models import Results
         domain = urlparse.urlparse(command.test.url).hostname
@@ -59,10 +58,10 @@ class PluginSURBL(PluginMixin):
             res.status = RESULT_STATUS.warning
         else:
             res.output_full += unicode(_("<p>Ok, your webpage is not listed at SURBL.</p>" ))
-            res.status = RESULT_STATUS.success         
+            res.status = RESULT_STATUS.success
         res.save()
-            
-        
+
+
         return STATUS.success
 
 
