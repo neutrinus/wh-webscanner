@@ -35,9 +35,7 @@ class PluginMakeScreenshots(PluginMixin):
     '''
 
     #: this is only used to build two variables below
-    SCREENSHOTS_DIR_NAME = getattr(settings, 'SCREENSHOTS_DIR_NAME', 'screenshots')
-    SCREENSHOTS_PATH = os.path.join(settings.MEDIA_ROOT, SCREENSHOTS_DIR_NAME)
-    SCREENSHOTS_URL = os.path.join(settings.MEDIA_URL, SCREENSHOTS_DIR_NAME)
+    SCREENSHOTS_DIR_NAME = getattr(settings, 'WEBSCANNER_SCREENSHOTS_DIR_NAME', 'screenshots')
 
     name = unicode(_('Screenshots'))
     wait_for_download = False
@@ -45,14 +43,9 @@ class PluginMakeScreenshots(PluginMixin):
     browsers = getattr(settings, 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS', {})
 
     def __init__(self, *args, **kwargs):
-        if not os.path.isdir(self.SCREENSHOTS_PATH):
-            raise OSError('''Screenshots plugin: directory %s does not exist!
-Please setup SCREENSHOTS_DIR_NAME in django `settings.py` for a name \
-of a directory which exists inside MEDIA_ROOT to store optimized images or \
-set SCREENSHOTS_PATH and SCREENSHOTS_URL class attributes manually.''' % self.SCREENSHOTS_PATH)
         super(self.__class__, self).__init__(*args, **kwargs)
         if not self.browsers:
-            self.log.warning('''You have activated screenshots plugin buy you did not set any browsers.
+            self.log.warning('''You have activated screenshots plugin but you did not set any browsers.
 You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictionary in settings.''')
 
     def run(self, command):
@@ -62,9 +55,10 @@ You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictio
         timing = {}
         max_loadtime = 0
 
-        screenshots_path = os.path.join(self.SCREENSHOTS_PATH, command.test.uuid)
-        screenshots_url = os.path.join(self.SCREENSHOTS_URL, command.test.uuid)
-        os.makedirs(screenshots_path)
+        screenshots_path = os.path.join(command.test.public_data_path, self.SCREENSHOTS_DIR_NAME)
+        screenshots_url = os.path.join(command.test.public_data_url, self.SCREENSHOTS_DIR_NAME)
+        if not os.path.exists(screenshots_path):
+            os.makedirs(screenshots_path)
 
         for browser in self.browsers:
             screenshot_filename = hashlib.sha1(str(time.time())).hexdigest() + '.png'
