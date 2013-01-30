@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
+
+import requests
 from setproctitle import setproctitle
 
 from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
@@ -249,15 +251,14 @@ def downloader_process():
                 continue
 
             if test:
-                domain = test.url
-                wwwdomain = urlparse.urlparse(test.url).scheme + "://www." + urlparse.urlparse(test.url).netloc + urlparse.urlparse(test.url).path
+                domain = requests.head(test.url, timeout=5).url
                 if not test.download_path:
                     test.download_path = test.private_data_path
                     test.save()
                 elif not os.path.exists(test.download_path):
                     os.makedirs(test.download_path)
 
-                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s %s +*" % (str(test.download_path), wwwdomain, domain)
+                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s +*" % (str(test.download_path), domain)
 
                 args = shlex.split(cmd)
                 p = subprocess.Popen(args,  stdout=subprocess.PIPE)
