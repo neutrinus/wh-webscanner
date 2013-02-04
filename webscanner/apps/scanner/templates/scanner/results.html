@@ -30,41 +30,41 @@
 {% block content %}
 <div class="page-header">
     <h1>{% trans "Website scan results for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
-    <h3><small>{% trans "Scan started: " %}{{ test.creation_date }}</small></h3>
+    <h3><small>{% trans "Scan started: " %}{{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</small></h3>
 </div>
-
 
 <div class="progress progress-striped active" id="progressbar" >
     <div class="bar" style="width: 1%;">1%</div>
 </div>
 
 <br />
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="row">
-                <div class="span4">
-                    <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
+<div class="row-fluid">
+    <div class="span12">
 
-                    <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
-                    <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
-                </div>
-                <div class="span4">
-                    <h3>{% trans "The numbers!" %}</h3>
-                    <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
-                    <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">?</span>/10<p>
-                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
+        <div class="row">
+            {% if not test.is_done %}
+            <div class="span4">
+                <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
 
-
-                </div>
-                <div class="span4">
-                    <div id="chart" style="height:200px; width:290px;"></div>
-
-                </div>
+                <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
+                <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
             </div>
+            {% endif %}
+            <div class="span4">
+                <h3>{% trans "The numbers!" %}</h3>
+                <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
+                <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">{% if test.is_done %}{{test.calculate_rating|floatformat}}{%else%}?{%endif%}</span>/10<p>
+                <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
 
+            </div>
+            <div class="span4">
+                <div id="chart" style="height:200px; width:290px;"></div>
+
+            </div>
         </div>
-    </div>
 
+    </div>
+</div>
 <hr />
 
 <h2>{% trans "Siteshots" %} <small>({% trans "click on to see fullsize" %})</small></h2>
@@ -118,66 +118,6 @@ var statuses_info = 0;
 var last_result = 0;
 var percentage = 0;
 var s = 0;
-
-
-jQuery.fn.sortElements = (function(){
-
-    var sort = [].sort;
-
-    return function(comparator, getSortable) {
-        getSortable = getSortable || function(){return this;};
-        var placements = this.map(function(){
-
-            var sortElement = getSortable.call(this),
-                parentNode = sortElement.parentNode,
-
-                // Since the element itself will change position, we have
-                // to have some way of storing its original position in
-                // the DOM. The easiest way is to have a 'flag' node:
-                nextSibling = parentNode.insertBefore(
-                    document.createTextNode(''),
-                    sortElement.nextSibling
-                );
-
-            return function() {
-
-                if (parentNode === this) {
-                    throw new Error(
-                        "You can't sort elements if any one is a descendant of another."
-                    );
-                }
-
-                // Insert before flag:
-                parentNode.insertBefore(this, nextSibling);
-                // Remove flag:
-                parentNode.removeChild(nextSibling);
-
-            };
-
-        });
-
-        return sort.call(this, comparator).each(function(i){
-            placements[i].call(getSortable.call(this));
-        });
-
-    };
-
-})();
-
-function sort_results() {
-     ["#results_0", "#results_1", "#results_2", "#results_3", "#results_5" ].forEach( function(item) {
-         $(item).contents()
-            .find('td')
-            .filter(function(){ return $(this).index() === 1; })
-            .sortElements(
-                function(a, b){
-                    return a.sork > b.sork ? -1 : 1;
-                },
-                function(){  return this.parentNode; }
-             )  ;
-
-    });
-}
 
 function add_screenshot(status, output_desc, output_full, group) {
      $("#screenshots-inner")[0].innerHTML += output_full;
@@ -237,7 +177,6 @@ function add_result(status, output_desc, output_full, group, importance) {
 
     $(element).fadeOut(0);
     $(element).fadeIn("slow");
-//     sort_results()
 }
 
 
