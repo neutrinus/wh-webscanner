@@ -99,7 +99,7 @@ PLUGINS = dict((
     ('social', PluginSocial),
     #('googlesite', PluginGoogleSite ),
     ('urllength', PluginUrlLength),
-    #('seo_tags', PluginSEOTags),
+    ('seo_tags', PluginSEOTags),
 ))
 
 
