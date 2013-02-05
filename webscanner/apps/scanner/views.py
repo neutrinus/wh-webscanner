@@ -150,10 +150,15 @@ def results(request):
 def show_report(request, uuid):
     try:
         test = Tests.objects.filter(uuid=uuid).get()
+        results = Results.objects.filter(test=test).order_by('-status')
+        if results:
+            last_pk = max(results, key=lambda x: x.pk).pk
+        else:
+            last_pk = 0
     except ObjectDoesNotExist:
         messages.warning(request, _('Report not found, please check ID and URL'))
         return redirect('/')
-    return {'test': test}
+    return {'test': test, 'results': results, 'last_pk': last_pk}
 
 
 def check_results(request, uuid):
@@ -190,13 +195,3 @@ def check_results(request, uuid):
     return HttpResponse('%s(%s)' % (request.GET.get('callback', ''), json.dumps(data)), mimetype='application/json')
 
 
-@render_to('scanner/simple_results.html')
-def show_simple_report(request, uuid):
-    try:
-        test = Tests.objects.filter(uuid=uuid).get()
-        results = Results.objects.filter(test=test).order_by('status')
-
-    except ObjectDoesNotExist:
-        messages.warning(request, _('Report not found, please check ID and URL'))
-        return redirect('/')
-    return {'test': test, 'results': results}
