@@ -36,7 +36,7 @@
 
 {% if not test.is_done %}
 <div class="progress progress-striped active" id="progressbar" >
-    <div class="bar" style="width: 1%;">1%</div>
+    <div class="bar" style="width: {{ test.percent_progress }}%;">{{ test.percent_progress }}%</div>
 </div>
 {% endif %}
 
@@ -183,17 +183,17 @@
 
 <script type="text/javascript">
 // TODO: compute it at template level
-var statuses_ok = 0;
-var statuses_error = 0;
-var statuses_warning = 0;
-var statuses_info = 0;
+var statuses_ok = {{ stats_success }};
+var statuses_error = {{ stats_error }};
+var statuses_warning = {{ stats_warning }};
+var statuses_info = {{ stats_info }};
 
 {% if not test.is_done %}
 var finished = 0;
 // miliseconds counter
-var timer_val = 0;
+var timer_val = {{ test.duration|floatformat }} * 10;
 var last_result = {{ last_pk }};
-var percentage = 0;
+var percentage = {{ test.percent_progress }};
 var s = 0;
 
 function add_screenshot(status, output_desc, output_full, group) {

@@ -36,10 +36,6 @@ def terms(request):
 def about(request):
     return dict()
 
-@render_to('pricing.html')
-def pricing(request):
-    return dict()
-
 @login_required
 @render_to('scanner/scan_archive.html')
 def scan_archive(request):
@@ -158,7 +154,14 @@ def show_report(request, uuid):
     except ObjectDoesNotExist:
         messages.warning(request, _('Report not found, please check ID and URL'))
         return redirect('/')
-    return {'test': test, 'results': results, 'last_pk': last_pk}
+    return {'test': test,
+            'results': results,
+            'last_pk': last_pk,
+            'stats_success': results.filter(status=RESULT_STATUS.success).count(),
+            'stats_error': results.filter(status=RESULT_STATUS.error).count(),
+            'stats_warning': results.filter(status=RESULT_STATUS.warning).count(),
+            'stats_info': results.filter(status=RESULT_STATUS.info).count(),
+    }
 
 
 def check_results(request, uuid):
