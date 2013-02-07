@@ -1,26 +1,23 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import sys
 import random
 import socket
-import signal
-import errno
 import logging
 import subprocess
 import shlex
-import urlparse
 from time import sleep
 from datetime import datetime, timedelta
-#from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
 
 import requests
 from setproctitle import setproctitle
 
 from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
+from webscanner.apps.scanner.models import Results, RESULT_STATUS, RESULT_GROUP
 
 
 def restarter_process():
@@ -224,6 +221,7 @@ def downloader_process():
 
     #main program loop
     while(True):
+        test = None
         try:
             #log.debug('Try to fetch some fresh stuff')
             try:
@@ -235,46 +233,69 @@ def downloader_process():
 
                     if (testschanged == 0):
                         log.debug("Someone already is downloading this ctest(%r)" % test)
-                        test = None
                         sleep(random.uniform(2, 10))  # there was nothing to do - we can sleep longer
                         continue
 
                     test.download_status = STATUS.running
-                    test.download_path = test.private_data_path
+                    if not test.download_path:
+                        test.download_path = test.private_data_path
                     test.save()
                     log.info('Downloading website %s for %r to %s' % (test.url, test, test.download_path))
 
             except Tests.DoesNotExist:
-                test = None
                 log.debug("No Tests in DownloadQueue to process, sleeping.")
                 sleep(random.uniform(5, 10))  # there was nothing to do - we can sleep longer
                 continue
 
             if test:
-                domain = requests.head(test.url, timeout=5).url
-                if not test.download_path:
-                    test.download_path = test.private_data_path
+                try:
+                    # catch specific error
+                    try:
+                        if not os.path.exists(test.download_path):
+                            os.makedirs(test.download_path)
+                    except Exception:
+                        log.exception('Cannot create download-folder for %r' % test)
+                        # the exception is re-raised because we want to set
+                        # download status as exception
+                        raise
+
+                    try:
+                        domain = requests.head(test.url, timeout=5).url
+
+                        cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s +*" % (str(test.download_path), domain)
+
+                        args = shlex.split(cmd)
+                        p = subprocess.Popen(args,  stdout=subprocess.PIPE)
+                        (stdoutdata, stderrdata) = p.communicate()
+                    except:
+                        log.exception('Error while downloading test %r to %s' % (test, test.download_path))
+                        # re-raise to set download_status
+                        raise
+
+                    test.download_status = STATUS.success
                     test.save()
-                elif not os.path.exists(test.download_path):
-                    os.makedirs(test.download_path)
+                    log.info('Downloading website %s (%r) finished' % (test.url, test))
+                except Exception as error:
+                    log.exception("Error while processing test %r" % test)
+                    test.download_status = STATUS.exception
+                    test.save()
+                    log.debug('Removing tests which needs to wait for download.')
+                    test.commands.filter(wait_for_download=True).delete()
 
-                cmd = PATH_HTTRACK + " --clean --referer webcheck.me -I0 -r2 --max-time=160 -%%P 1 --preserve --keep-alive -n --user-agent wh-webscanner -s0 -O %s %s +*" % (str(test.download_path), domain)
-
-                args = shlex.split(cmd)
-                p = subprocess.Popen(args,  stdout=subprocess.PIPE)
-                (stdoutdata, stderrdata) = p.communicate()
-
-                #if p.returncode != 0:
-                    #test.download_status = STATUS.exception
-                    #test.save()
-                    #log.exception("%s returned %s errorcode, strerr: %s"%(PATH_HTTRACK,p.returncode,stderrdata))
-                    #raise RuntimeError("%s returned %s errorcode"%(PATH_HTTRACK,p.returncode) )
-
-                test.download_status = STATUS.success
-                test.save()
-                log.info('Downloading website %s (%r) finished' % (test.url, test))
+                    # and at the end, show user a message what happened
+                    Results.objects.create(test=test,
+                                           status=RESULT_STATUS.error,
+                                           group=RESULT_GROUP.general,
+                                           importance=5,
+                                           output_desc=_("Download status"),
+                                           output_full=_("""An error occur while downloading site. Please
+make sure that the domain exist in DNS the site is working properly, if so please contact with support.
+Currently, a lot of tests cannot be done until the site is reachable."""))
             else:
                 sleep(random.uniform(2, 10))  # there was nothing to do - we can sleep longer
+
+        # this `except` prevent downloader from crash but not prevent from
+        # `losing` a Command from being check as exception
         except Exception as error:
             log.exception('Downloading ended with an exception: %s' % error)
             #give admins some time
