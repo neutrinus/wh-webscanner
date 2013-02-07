@@ -40,15 +40,6 @@ import mimetypes
 #import nltk
 # pip: beautifulsoup4
 import bs4
-# pip: guess_language
-import guess_language
-
-# not use enchant due to not freeing memory of dicts
-# only works with guess_language-spirit
-if hasattr(guess_language, 'use_enchant'):
-    guess_language.use_enchant(False)
-else:
-    guess_language.USE_ENCHANT = False
 
 # pip: pyenchant
 import enchant.checker
@@ -57,6 +48,9 @@ from enchant.tokenize import EmailFilter, URLFilter, Filter
 # pip: cchardet
 import cchardet
 
+# cld is used now instead of guess_language and guess_language-spirit
+# guess_language was a little slow and inaccurate, guess_language-spirit
+# was memory inefficient (used enchant dicts but did not free memory)
 # pip: chromium_compact_language_detector 0.1.1
 import cld
 
