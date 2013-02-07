@@ -12,4 +12,5 @@ py_env
 docs/_build/
 webscanner/media/screenshots/
 .ropeproject
-
+webscanner/media/*
+webscanner/static/CACHE/*
