@@ -172,7 +172,6 @@ INSTALLED_APPS = (
 
 
     #3rd party apps,
-    'django_pytest',
     'paypal.standard.ipn',
     'django_extensions',
     'model_utils',
@@ -234,7 +233,7 @@ LOGGING = {
     }
 }
 
-TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
+#TEST_RUNNER = 'django_pytest.test_runner.TestRunner'
 
 #######################################
 ### WH webscanner specific settings ###
@@ -341,12 +340,17 @@ GRAPPELLI_INDEX_DASHBOARD = 'webscanner.apps.dashboard.CustomIndexDashboard'
 COMPRESS_ENABLED = True
 
 # This should be at the very end
-WEBSCANNER_ENVIRONMENT = os.environ.get('WEBSCANNER_ENVIRONMENT')
-if WEBSCANNER_ENVIRONMENT and WEBSCANNER_ENVIRONMENT.lower() == 'production' or '--production' in sys.argv[1:]:
-    print 'RUNNING PRODUCTION!!!'
+WEBSCANNER_ENVIRONMENT = os.environ.get('WEBSCANNER_ENVIRONMENT', '')
+print 'WEBSCANNER ENV:',
+if WEBSCANNER_ENVIRONMENT.lower() == 'production' or '--production' in sys.argv[1:]:
+    print 'PRODUCTION!!!'
     execfile(apath('settings_prod.py'))
+elif WEBSCANNER_ENVIRONMENT.lower() in ['test', 'tests', 'testing']:
+    print 'automatic tests mode'
+    execfile(apath('settings_tests.py'))
 else:
-    print 'Running testing node'
+    print 'developer mode'
     execfile(apath('settings_local.py'))
     if os.path.exists(apath('settings_private.py')):
+        print ' - loading `private settings`'
         execfile(apath('settings_private.py'))

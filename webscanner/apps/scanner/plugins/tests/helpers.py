@@ -10,10 +10,9 @@ class TempDirMixin(object):
     '''
     This is for pytest, so instead of __init__ it has `setup` :(
     '''
-    def setup(self):
+    def setup_method(self, method):
         # all this temp dirs will be removed after test
         self._temp_dir_paths = []
-        super(TempDirMixin, self).setup()
 
     def mkdtemp(self, subdir_name=None):
         '''
@@ -37,9 +36,8 @@ class TempDirMixin(object):
             if os.path.isdir(tmp_dir_path):
                 shutil.rmtree(tmp_dir_path)
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._remove_temp_dirs()
-        #super(TempDirMixin, self).teardown()
 
 
 class PluginTestBase(object):

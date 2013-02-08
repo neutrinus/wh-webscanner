@@ -1,10 +1,13 @@
-import mock
-from unittest import TestCase
 import logging
+
+import mock
+import pytest
+from unittest import TestCase
 
 from scanner.models import *
 from .check_http_code import PluginCheckHTTPCode as Plug
 
+@pytest.mark.django_db
 class TestCode(TestCase):
     def setUp(self):
         self.plugin = Plug()
