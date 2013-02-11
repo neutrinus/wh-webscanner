@@ -9,7 +9,7 @@ from datetime import datetime as dt, timedelta as td
 
 from django import forms
 from django.db.models import F
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
