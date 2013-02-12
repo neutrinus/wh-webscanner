@@ -93,7 +93,7 @@
     {% for result in results %}
         {% if result.group == 0 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc">{{result.output_desc|safe}}</td>
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
@@ -111,7 +111,7 @@
     {% for result in results %}
         {% if result.group == 5 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc">{{result.output_desc|safe}}</td>
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
@@ -130,7 +130,7 @@
     {% for result in results %}
         {% if result.group == 3 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc">{{result.output_desc|safe}}</td>
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
@@ -148,7 +148,7 @@
     {% for result in results %}
         {% if result.group == 2 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc">{{result.output_desc|safe}}</td>
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
@@ -167,7 +167,7 @@
     {% for result in results %}
         {% if result.group == 1 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc">{{result.output_desc|safe}}</td>
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
