@@ -17,7 +17,7 @@ from webscanner.utils import worker_process, downloader_process, process_wrapper
 
 def main():
     setproctitle.setproctitle('Worker[main process]')
-    processes_count = max((4, cpu_count()))
+    processes_count = max((8, cpu_count()))
     pool = Pool(processes=processes_count)
 
     for x in xrange(0, int(round(processes_count / 2))):
