@@ -208,8 +208,24 @@ class PluginCheckSpelling(PluginMixin):
                 #raise CannotDecode(e)
             self.log.debug('    -> ok')
 
-            # nltk.clean_html
-            # html2text.html2text
+            def strip_script_tags(root):
+               for s in root.childGenerator():
+                 if hasattr(s, 'name'):    # then it's a tag
+                   if s.name == 'script':  # skip it!
+                     continue
+                   for x in strip_script_tags(s): yield x
+                 else:                     # it's a string!
+                   yield s
+
+            def visible(element):
+                if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+                    return False
+                elif re.match('<!--.*-->', element):
+                    return False
+                return True
+
+            # nltk.clean_html - slow
+            # html2text.html2text - not accurate
             # stripogram.html2text - deprecated buuuu
             # webstemmer - advanced - need site 'learning'
             # boilerpipe - java interface
@@ -217,11 +233,14 @@ class PluginCheckSpelling(PluginMixin):
             # beautifulsoup4
             #
             # The winner is: nltk - fastest and best accurate (imho)
-            # - noooooooo, nltk works not well with different encodings
+            # - noooooooo, nltk does not work well with different encodings
             self.log.debug('    * cleaning from html to txt...')
             try:
-                #text = nltk.clean_html(orig)
-                text = '\n'.join(strip_html_tags(bs4.BeautifulSoup(orig).html.body))
+                #text = nltk.clean_html(orig) - a little slow, problem with encodings
+                text = bs4.BeautifulSoup(orig).html.body.findAll(text=True)
+                text = strip_script_tags(text)
+                text = filter(visible, text)
+                text = '\n'.join()
             except Exception:
                 self.log.warning('    * error while cleaning html, omitting file')
                 return None, set()
