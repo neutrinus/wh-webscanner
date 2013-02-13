@@ -1,18 +1,26 @@
 {% load i18n %}
 <div>
-<h5>Your website has proper titles</h5>
+{% if files %}
+    <h5>Your website has proper title</h5>
 
 
-
-<table>
-<tr> <th>Page</th> <th>Title</th> </tr>
-{% for page in files %}
-<tr>
-    <td>{{ page.file }}</td>
-    <td>{{ page.title }}</td>
-</tr>
-{% endfor %}
-</table>
+    <table>
+        <tr> <th>Page</th> <th>Title</th> </tr>
+        {% for filename, result in files.items %}
+        <tr>
+            <td>{{ filename }}</td>
+            <td>{% if result.title %}
+                    {{ result.title }}
+                {% else %}
+                    {% trans "No proper title tag" %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h5>Your website has no proper title</h5>
+{% endif %}
 
 
 </div>

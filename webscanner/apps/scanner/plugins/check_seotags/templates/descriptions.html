@@ -1,19 +1,26 @@
 {% load i18n %}
 <div>
-<h5>Your website has proper meta descriptions</h5>
+{% if files %}
+    <h5>Your website has proper meta descriptions</h5>
 
+    <table>
+        <tr> <th>Page</th> <th>Chars</th> <th>Description</th> </tr>
+        {% for filename, result in files.items %}
+        <tr>
+            <td>{{filename}}</td>
+            {% if result.description %}
+                <td>{{result.description|length}}</td>
+                <td>{{result.description}}</td>
+            {% else %}
+                <td colspan="2">{% trans "No description meta tag"%}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
 
-<table>
-<tr> <th>Page</th> <th>Chars</th> <th>Description</th> </tr>
-{% for page in files %}
-<tr>
-    <td>{{page.file}}</td>
-    <td>{{page.char_count}}</td>
-    <td>{{page.description}}</td>
-</tr>
-{% endfor %}
-</table>
-
+{% else %}
+    <h5>Your website has no meta descriptions</h5>
+{% endif %}
 
 </div>
 
