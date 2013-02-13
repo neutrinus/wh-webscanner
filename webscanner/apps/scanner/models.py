@@ -76,6 +76,7 @@ from .plugins.check_spelling import PluginCheckSpelling
 from .plugins.social import PluginSocial
 from .plugins.check_urllength import PluginUrlLength
 from .plugins.check_seotags import PluginSEOTags
+from .plugins.check_html2text_ratio import PluginHtml2TextRatio
 
 
 PLUGINS = dict((
@@ -100,6 +101,7 @@ PLUGINS = dict((
     #('googlesite', PluginGoogleSite ),
     ('urllength', PluginUrlLength),
     ('seo_tags', PluginSEOTags),
+    ('html2text ratio', PluginHtml2TextRatio),
 ))
 
 

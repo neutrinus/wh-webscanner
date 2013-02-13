@@ -30,8 +30,8 @@ class PluginHtml2TextRatio(PluginMixin):
 
         from scanner.models import Results
 
-        chars_total = 0
-        chars_text = 0
+        chars_total = 0.0
+        chars_text = 0.0
         path = str(command.test.download_path)
 
         for dir in glob.glob(os.path.join(path,'*%s*'%command.test.domain())):
@@ -45,12 +45,13 @@ class PluginHtml2TextRatio(PluginMixin):
                         orig = f.read()
 
                         chars_total += len(str(orig))
-                        chars_text += len(str(strip_html_tags(orig)))
+                        chars_text +=  len('\n'.join(strip_html_tags(bs4.BeautifulSoup(orig))))
+                        #print "file: %s; (%s / %s)" % (file_path, chars_text, chars_total)
 
         if chars_total:
-            ratio = chars_text /chars_total
+            ratio = chars_text / chars_total
         else:
-            ratio = 0
+            ratio = 0.0
 
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=2)
         res.output_desc = unicode(_("Code to content ratio "))
@@ -61,6 +62,7 @@ class PluginHtml2TextRatio(PluginMixin):
             res.status = RESULT_STATUS.warning
             res.output_full += unicode(_("<p>BAAAD, your code to text ratio is  %s</p>"%(ratio)))
 
+        #res.output_full += unicode(_("<p>total: %s, text:%s</p>"%(chars_total, chars_text ) ))
 
         res.save()
 

@@ -58,6 +58,7 @@ import cld
 
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
+from addonsapp.tools import strip_html_tags
 
 class CheckSpellingError(Exception):pass
 class NoDictionary(CheckSpellingError):pass
@@ -207,15 +208,6 @@ class PluginCheckSpelling(PluginMixin):
                 #raise CannotDecode(e)
             self.log.debug('    -> ok')
 
-            def strip_script_tags(root):
-               for s in root.childGenerator():
-                 if hasattr(s, 'name'):    # then it's a tag
-                   if s.name == 'script':  # skip it!
-                     continue
-                   for x in strip_script_tags(s): yield x
-                 else:                     # it's a string!
-                   yield s
-
             # nltk.clean_html
             # html2text.html2text
             # stripogram.html2text - deprecated buuuu
@@ -229,7 +221,7 @@ class PluginCheckSpelling(PluginMixin):
             self.log.debug('    * cleaning from html to txt...')
             try:
                 #text = nltk.clean_html(orig)
-                text = '\n'.join(strip_script_tags(bs4.BeautifulSoup(orig).html.body))
+                text = '\n'.join(strip_html_tags(bs4.BeautifulSoup(orig).html.body))
             except Exception:
                 self.log.warning('    * error while cleaning html, omitting file')
                 return None, set()
