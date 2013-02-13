@@ -49,20 +49,19 @@ class PluginHtml2TextRatio(PluginMixin):
                         #print "file: %s; (%s / %s)" % (file_path, chars_text, chars_total)
 
         if chars_total:
-            ratio = chars_text / chars_total
+            ratio = (chars_text / chars_total) * 100
         else:
             ratio = 0.0
 
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=2)
-        res.output_desc = unicode(_("Code to content ratio "))
-        if ratio > 0.25 and ratio < 0.70:
+        res.output_desc = unicode(_("Code to text ratio "))
+        res.output_full = unicode(_("<p>The code to text(content) ratio represents the percentage of actual text in your web page. Our software extracts content from website and computes the ratio. Some SEO folks say that perfect ratio should be between 20% and 70%, the others say that this parameter has little to none influence on SEO.</p>"))
+        if ratio > 20 and ratio < 70:
             res.status = RESULT_STATUS.success
-            res.output_full += unicode(_("<p>Good, your code to text ratio is  %s</p>"%(ratio ) ))
+            res.output_full += unicode(_("<p>Good, your code to text ratio is  <b>%.1f%%</b></p>"%(ratio ) ))
         else:
             res.status = RESULT_STATUS.warning
-            res.output_full += unicode(_("<p>BAAAD, your code to text ratio is  %s</p>"%(ratio)))
-
-        #res.output_full += unicode(_("<p>total: %s, text:%s</p>"%(chars_total, chars_text ) ))
+            res.output_full += unicode(_("<p>Your code to text ratio is <b>%.1f%%</b>, maybe you could review content on your website and work on the copy?</p>"%(ratio)))
 
         res.save()
 
