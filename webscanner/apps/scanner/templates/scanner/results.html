@@ -89,15 +89,16 @@
 
 <div class="row">
     <h2>{% trans "General" %}</h2>
-    <table class="table  table-bordered table-striped results" id="results_0">
+    <table class="table  table-striped results" id="results_0">
     {% for result in results %}
         {% if result.group == 0 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
             {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             <td class="output_full">{{result.output_full|safe}}</td>
         </tr>
         {% endif %}
@@ -107,15 +108,15 @@
 
 <div class="row">
     <h2>{% trans "Performance" %}</h2>
-    <table class="table table-striped table-bordered results" id="results_5">
+    <table class="table table-striped results" id="results_5">
     {% for result in results %}
         {% if result.group == 5 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
             {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             <td class="output_full">{{result.output_full|safe}}</td>
         </tr>
         {% endif %}
@@ -126,15 +127,15 @@
 
 <div class="row">
     <h2>{% trans "Security" %}</h2>
-    <table class="table table-striped table-bordered results" id="results_3">
+    <table class="table table-striped results" id="results_3">
     {% for result in results %}
         {% if result.group == 3 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
             {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             <td class="output_full">{{result.output_full|safe}}</td>
         </tr>
         {% endif %}
@@ -144,15 +145,15 @@
 
 <div class="row">
     <h2>{% trans "S.E.O." %}</h2>
-    <table class="table table-striped table-bordered results" id="results_2">
+    <table class="table table-striped results" id="results_2">
     {% for result in results %}
         {% if result.group == 2 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
             {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             <td class="output_full">{{result.output_full|safe}}</td>
         </tr>
         {% endif %}
@@ -163,15 +164,15 @@
 
 <div class="row">
     <h2>{% trans "Mail" %}</h2>
-    <table class="table table-striped table-bordered results" id="results_1">
+    <table class="table table-striped results" id="results_1">
     {% for result in results %}
         {% if result.group == 1 %}
         <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
             {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
             {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
             {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
             <td class="output_full">{{result.output_full|safe}}</td>
         </tr>
         {% endif %}
@@ -209,11 +210,7 @@ function add_result(status, output_desc, output_full, group, importance) {
     var element = document.createElement('tr');
 
     var a = document.createElement('td');
-    a.setAttribute('class','output_desc');
-    a.innerHTML = "<h5>"+output_desc+"</h5>";
-    element.appendChild(a);
 
-    var a = document.createElement('td');
     a.setAttribute('class','status');
 
     if (status == 0) {
@@ -240,6 +237,11 @@ function add_result(status, output_desc, output_full, group, importance) {
         a.sork = 3;
         statuses_info += 1;
         }
+    element.appendChild(a);
+
+    var a = document.createElement('td');
+    a.setAttribute('class','output_desc');
+    a.innerHTML = "<h5>"+output_desc+"</h5>";
     element.appendChild(a);
 
     status_plot.series[0].data = [ ['errors', statuses_error],['warnings', statuses_warning],['success', statuses_ok] ];
