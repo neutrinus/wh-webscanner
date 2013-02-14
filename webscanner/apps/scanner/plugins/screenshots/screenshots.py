@@ -147,9 +147,10 @@ You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictio
 
             except WebDriverException, e:
                 self.log.warning("WebDriverException: %s" % e)
-                signal.alarm(0)
             except Alarm:
                 self.log.warning("Shoot timeout")
+            finally:
+                signal.alarm(0)
 
         if command.test.check_seo:
             res = Results(test=command.test, group=RESULT_GROUP.performance, status=RESULT_STATUS.success)
