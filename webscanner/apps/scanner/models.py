@@ -264,6 +264,10 @@ class Tests(models.Model):
                     profile.save()
                     log.info('%r just paid %s credits for test %r' % (
                         self.user, self.cost, self))
+                if not os.path.exists(self.public_data_path):
+                    os.makedirs(self.public_data_path)
+                if not os.path.exists(self.private_data_path):
+                    os.makedirs(self.private_data_path)
                 self.save()
             log.info('%r.test started. commands started.' % self)
             return True
