@@ -1,14 +1,18 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
-from django.utils.translation import ugettext_lazy as _
+import os
 import dns.resolver
-from IPy import IP
 from urlparse import urlparse
 
-from django.template.loader import render_to_string
 from django.contrib.gis.utils import GeoIP
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
+
+from IPy import IP
+
+from plugin import PluginMixin
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
+from webscanner.utils.geo import make_map
 
 geoip = GeoIP()
 
@@ -21,6 +25,7 @@ class PluginDNS(PluginMixin):
     def run(self, command):
         from scanner.models import Results
         domain = urlparse(command.test.url).hostname
+        test = command.test
 
         try:
             #A
@@ -52,16 +57,24 @@ class PluginDNS(PluginMixin):
 
             #check geolocation
             locations = {}
+            points = []
 
             for server in answers:
-                locations[str(server.address)] = geoip.city(str(server.address))
-            rendered = render_to_string('scanner/serversmap.js', {'locations': locations, 'id': 'webserversmap'})
+                _temp = locations[str(server.address)] = geoip.city(str(server.address))
+                name = u'%s (%s)' % (_temp['city'], _temp['country_name']) if _temp['city'] else _temp['country_name']
+                points.append((float(_temp['longitude']),
+                               float(_temp['latitude']),
+                               name))
+
+            # we need only 1 map probably
+            map_image_filename = 'webservers_geolocations.png'
+            map_image_path = os.path.join(test.public_data_path, map_image_filename)
+            map_image_url = os.path.join(test.public_data_url, map_image_filename)
+            make_map(points, size=(6, 3), dpi=350 / 3.0, file_path=map_image_path)
+            rendered = render_to_string('scanner/serversmap.html', {'locations': locations, 'map_image_url': map_image_url})
 
             res = Results(test=command.test, group=RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Web server(s) geo-location"))
-            # I think webcheck does not show all locations, so information
-            # below can be misleading, someone can have a lot of servers
-            # already
             res.output_full = rendered + unicode(_("<p>It is important to have servers in different geographic locations, to increase reliability of your services.</p>"))
             res.status = RESULT_STATUS.info
             res.save()

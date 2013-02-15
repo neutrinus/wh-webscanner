@@ -1,10 +1,12 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
+import os
 import re
 from urlparse import urlparse
 
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.gis.utils import GeoIP
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 from IPy import IP
 import dns.resolver
@@ -12,8 +14,8 @@ import dns.reversename
 
 from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
+from webscanner.utils.geo import make_map
 
-from django.contrib.gis.utils import GeoIP
 geoip = GeoIP()
 
 
@@ -22,10 +24,10 @@ class PluginDNSmail(PluginMixin):
     description = unicode(_("Check dns MAIL"))
     wait_for_download = False
 
-
     def run(self, command):
         from scanner.models import Results
         domain = urlparse(command.test.url).hostname
+        test = command.test
 
         if not command.test.check_mail:
             return STATUS.success
@@ -59,13 +61,22 @@ class PluginDNSmail(PluginMixin):
 
             #check geolocation
             locations = {}
+            points = []
 
             for server in answers:
-                locations[str(server.exchange)] = geoip.city(str(server.exchange))
-            rendered = render_to_string('scanner/serversmap.js', {'locations': locations,'id': 'mxserversmap'} )
+                _temp = locations[str(server.exchange)] = geoip.city(str(server.exchange))
+                name = u'%s (%s)' % (_temp['city'], _temp['country_name']) if _temp['city'] else _temp['country_name']
+                points.append((float(_temp['longitude']),
+                               float(_temp['latitude']),
+                               name))
+            map_image_filename = 'webservers_geolocations.png'
+            map_image_path = os.path.join(test.public_data_path, map_image_filename)
+            map_image_url = os.path.join(test.public_data_url, map_image_filename)
+            make_map(points, size=(6, 3), dpi=350 / 3.0, file_path=map_image_path)
+            rendered = render_to_string('scanner/serversmap.html', {'locations': locations, 'map_image_url': map_image_url})
 
-            res = Results(test=command.test,group = RESULT_GROUP.performance, importance=1)
-            res.output_desc = unicode(_("Mail server(s) geo-location") )
+            res = Results(test=command.test, group=RESULT_GROUP.performance, importance=1)
+            res.output_desc = unicode(_("Mail server(s) geo-location"))
             res.output_full = rendered + unicode(_("<p>Its important to have servers in different geographic locations, to increase reliability of your services.</p>"))
             res.status = RESULT_STATUS.info
             res.save()

@@ -1,0 +1,15 @@
+{% load l10n %}
+{% load i18n %}
+
+<p>{% trans "We use GeoIP database to estimate geolocation of your servers, please note that locations are approximated." %}</p>
+
+<div class="thumbnail">
+    <img height="350px" src="{{map_image_url}}" />
+</div>
+
+<ul>
+    {% for address, in_dict in locations.items %}
+    <li><b>{{ address }}</b> is located in {% if in_dict.city %}{{ in_dict.city }}, {% endif %}{{ in_dict.country_name }}</li>
+    {% endfor %}
+</ul>
+
