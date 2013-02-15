@@ -43,7 +43,7 @@ cchardet==0.3.2
 beautifulsoup4==4.1.3
 sh==1.07
 
-PIL
+pillow # instead of PIL
 
 -e git+git://github.com/dcramer/django-paypal.git#egg=paypal
 
