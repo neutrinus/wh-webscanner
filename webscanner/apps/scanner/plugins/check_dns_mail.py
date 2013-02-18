@@ -67,7 +67,7 @@ class PluginDNSmail(PluginMixin):
                 points.append((float(_temp['longitude']),
                                float(_temp['latitude']),
                                name))
-            map_image_filename = 'webservers_geolocations.png'
+            map_image_filename = 'mailservers_geolocations.png'
             map_image_path = os.path.join(test.public_data_path, map_image_filename)
             map_image_url = os.path.join(test.public_data_url, map_image_filename)
             make_map(points, size=(6, 3), dpi=350 / 3.0, file_path=map_image_path)
