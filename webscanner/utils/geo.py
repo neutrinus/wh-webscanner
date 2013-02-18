@@ -32,15 +32,15 @@ def make_map(points, dpi=92, min_map=True, size=None, fix_aspect=False, file_pat
     #map.shadedrelief(scale=0.3)
     map.drawcoastlines()
     map.drawcountries(linewidth=1.0)
-    map.fillcontinents(color='brown', lake_color='none')
+    map.fillcontinents(color='grey', lake_color='none')
     #map.drawparallels(np.arange(-90.,91.,30.))
     #map.drawmeridians(np.arange(-180.,181.,60.))
     #map.drawmapboundary(fill_color='aqua')
     for point in points:
         x, y = map(point[0], point[1])
         map.plot([x], [y], 'ro')
-        if len(point) > 2:
-            ax.text(x, y, point[2], bbox=dict(facecolor='green', alpha=0.7))
+        #if len(point) > 2:
+            #ax.text(x, y, point[2], bbox=dict(facecolor='green', alpha=0.7))
     if file_path:
         can = FigureCanvas(fig)
         can.print_figure(file_path, dpi=dpi, transparent=True)
