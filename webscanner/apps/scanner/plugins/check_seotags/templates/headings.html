@@ -1,31 +1,54 @@
 {% load i18n %}
 <div>
-<h5>Great, your webpage is structured using XHTML headings (from H1 to H6)!</h5>
+{% if files %}
+    <h5>Great, your webpage is structured using XHTML headings (from H1 to H6)!</h5>
 
-<p>Use your keywords in the headings and make sure the first level (H1) includes your most important keywords. Try not to duplicate your title tag content in your header tag. For more effective SEO, use only one H1 tag per page.</p>
+    <p>Use your keywords in the headings and make sure the first level (H1)
+    includes your most important keywords. Try not to duplicate your title tag
+    content in your header tag. For more effective SEO, use only one H1 tag per
+    page.</p>
 
-<p>Table below show how many headings of different types are on your pages.</p>
+    <p>Table below show how many headings of different types are on your pages.</p>
 
 
+    <table>
+    <tr> <th>Page</th> <th>h1</th> <th>h2</th> <th>h3</th> <th>h4</th><th>h5</th> <th>h6</th></tr>
+    {% for filename, result in files.items %}
+    <tr>
+        <td>{{filename}}</td>
 
-<table>
-<tr> <th>Page</th> <th>h1</th> <th>h2</th> <th>h3</th> <th>h4</th><th>h5</th> <th>h6</th></tr>
-{% for heading in files %}
-<tr>
-    <td>{{heading.file}}</td>
-    <td><a rel="popover" data-title="H1" data-content="{{ heading.h1s|striptags }}" data-trigger="hover" href="#">{{heading.h1s_count}}</a></td>
-    <td><a rel="popover" data-title="H2" data-content="{{ heading.h2s|striptags }}" data-trigger="hover" href="#">{{heading.h2s_count}}</a></td>
-    <td><a rel="popover" data-title="H3" data-content="{{ heading.h3s|striptags }}" data-trigger="hover" href="#">{{heading.h3s_count}}</a></td>
-    <td><a rel="popover" data-title="H4" data-content="{{ heading.h4s|striptags }}" data-trigger="hover" href="#">{{heading.h4s_count}}</a></td>
-    <td><a rel="popover" data-title="H5" data-content="{{ heading.h5s|striptags }}" data-trigger="hover" href="#">{{heading.h5s_count}}</a></td>
-    <td><a rel="popover" data-title="H6" data-content="{{ heading.h6s|striptags }}" data-trigger="hover" href="#">{{heading.h6s_count}}</a></td>
-</tr>
-{% endfor %}
-</table>
+        {% for heading, content in result.headings.items %}
+            <td>
+                {% if content %}
+                <a rel="html-popover" 
+                    data-title="H{{ forloop.counter }}" 
+                    data-content="<ul>
+                        {% for item in content %}
+                            <li>{{item|striptags}}</li>
+                        {% endfor %}
+                    </ul>
+                    " 
+                   data-trigger="hover" 
+                   href="#">{{content|length}}
+                </a>
+                {% else %}
+                    0
+                {% endif %}
+           </td>
+       {% empty %}
+            <td colspan="6">No headings</td>
+       {% endfor %}
+
+    </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <h5>Your site has no headings.</h5>
+{% endif %}
 
 
 </div>
 
 <script type="text/javascript">
-    $("a[rel=popover]").popover()
+    $("a[rel=html-popover]").popover({html: true})
 </script>

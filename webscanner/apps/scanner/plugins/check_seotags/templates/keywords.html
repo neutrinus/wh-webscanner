@@ -1,19 +1,27 @@
 {% load i18n %}
 <div>
-<h5>Your website has proper meta keywords</h5>
+{% if files %}
+    <h5>Your website has proper meta keywords</h5>
 
-<p>As meta keywords were overused by spammers, this parameter has almost no influence on SEO</p>
+    <p>As meta keywords were overused by spammers, this parameter has almost no influence on SEO</p>
 
-<table>
-<tr> <th>Page</th> <th>Keywords number</th> <th>Keywords</th> </tr>
-{% for page in files %}
-<tr>
-    <td>{{page.file}}</td>
-    <td>{{page.char_count}}</td>
-    <td>{{page.keywords}}</td>
-</tr>
-{% endfor %}
-</table>
+    <table>
+        <tr> <th>Page</th> <th>Keywords number</th> <th>Keywords</th> </tr>
+        {% for filename, result in files.items %}
+        <tr>
+            <td>{{filename}}</td>
+            {% if result.keywords %}
+                <td>{{result.keywords|length}}</td>
+                <td>{{result.keywords|join:', '}}</td>
+            {% else %}
+                <td colspan="2">No keywords meta tag found</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h5>Your website has no proper meta keywords</h5>
+{% endif %}
 
 
 </div>
