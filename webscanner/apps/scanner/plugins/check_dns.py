@@ -1,16 +1,21 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-from plugin import PluginMixin
-from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
-from django.utils.translation import ugettext_lazy as _
+import os
 import dns.resolver
-from IPy import IP
 from urlparse import urlparse
 
-from django.template.loader import render_to_string
 from django.contrib.gis.utils import GeoIP
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
+
+from IPy import IP
+
+from plugin import PluginMixin
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
+from webscanner.utils.geo import make_map
 
 geoip = GeoIP()
+
 
 class PluginDNS(PluginMixin):
     name = unicode(_("Check dns"))
@@ -20,6 +25,7 @@ class PluginDNS(PluginMixin):
     def run(self, command):
         from scanner.models import Results
         domain = urlparse(command.test.url).hostname
+        test = command.test
 
         try:
             #A
@@ -51,10 +57,21 @@ class PluginDNS(PluginMixin):
 
             #check geolocation
             locations = {}
+            points = []
 
             for server in answers:
-                locations[str(server.address)] = geoip.city(str(server.address))
-            rendered = render_to_string('scanner/serversmap.js', {'locations': locations, 'id': 'webserversmap'})
+                _temp = locations[str(server.address)] = geoip.city(str(server.address))
+                name = u'%s (%s)' % (_temp['city'], _temp['country_name']) if _temp['city'] else _temp['country_name']
+                points.append((float(_temp['longitude']),
+                               float(_temp['latitude']),
+                               name))
+
+            # we need only 1 map probably
+            map_image_filename = 'webservers_geolocations.png'
+            map_image_path = os.path.join(test.public_data_path, map_image_filename)
+            map_image_url = os.path.join(test.public_data_url, map_image_filename)
+            make_map(points, size=(6, 3), dpi=350 / 3.0, file_path=map_image_path)
+            rendered = render_to_string('scanner/serversmap.html', {'locations': locations, 'map_image_url': map_image_url})
 
             res = Results(test=command.test, group=RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("Web server(s) geo-location"))
@@ -70,22 +87,22 @@ class PluginDNS(PluginMixin):
                 if IP(rdata.address).iptype() == "PRIVATE":
                     records += "%s <br" % rdata.address
 
-            res = Results(test=command.test, group = RESULT_GROUP.general, importance=4)
-            res.output_desc = unicode(_("No private IP in A records ") )
+            res = Results(test=command.test, group=RESULT_GROUP.general, importance=4)
+            res.output_desc = unicode(_("No private IP in A records "))
             if not records:
-                res.output_full = unicode(_("<p>All your A records are public.</p>" ))
+                res.output_full = unicode(_("<p>All your A records are public.</p>"))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>Following A records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>"%(records) ))
+                res.output_full = unicode(_("<p>Following A records for this domain are private: <code>%s</code>. Private IP can\'t be rached from the Internet. </p>" % (records)))
                 res.status = RESULT_STATUS.error
             res.save()
             del records
             del res
 
         except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
-            res = Results(test=command.test,group = RESULT_GROUP.general, importance=5)
-            res.output_desc = unicode(_("A records (IPv4)") )
-            res.output_full = unicode(_("<p><strong>Domain not found!</strong>  Your webpage is currently unreachable, please check your DNS settings, it should consist at least one A record.</p>" ))
+            res = Results(test=command.test, group=RESULT_GROUP.general, importance=5)
+            res.output_desc = unicode(_("A records (IPv4)"))
+            res.output_full = unicode(_("<p><strong>Domain not found!</strong>  Your webpage is currently unreachable, please check your DNS settings, it should consist at least one A record.</p>"))
             res.status = RESULT_STATUS.error
             res.save()
             del res
