@@ -1,6 +1,6 @@
 {% load i18n %}
 <div>
-<p>{% trans "For each site we guess the language and use dictionary check to detect spelling errors. Proper copy of text is important to credibility of your website, it can also affect SEO. Please review the spelling errors for misspelligs and typos." %}</p>
+<p>{% trans "For each site we guess the language and use dictionary check to detect spelling errors. Proper copy of text is important to credibility of your website, it can also affect SEO. Please review the spelling errors for misspellings and typos." %}</p>
 {% for file, lang, errors in files %}
     <h5>{% trans "Spelling errors in" %} <a href="http://{{file}}" rel="nofollow">{{ file}}</a> <small> (guessed language: {{lang}})</small></h5>
     <ul class="spellcheck_badwords">
