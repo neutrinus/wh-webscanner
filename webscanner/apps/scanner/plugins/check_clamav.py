@@ -19,11 +19,7 @@ from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
 
-#PATH_KASPERSKY = '/'
 PATH_CLAMSCAN = '/usr/bin/clamscan'
-PATH_WGET = '/usr/bin/puf'
-PATH_TMPSCAN = '/tmp/clamdd/'
-
 
 class PluginClamav(PluginMixin):
     name = unicode(_('Clamscan'))
@@ -38,7 +34,7 @@ class PluginClamav(PluginMixin):
             p = subprocess.Popen(args, stdout=subprocess.PIPE)
             (output, stderrdata2) = p.communicate()
             if p.returncode != 0:
-                self.log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN,stderrdata2))
+                self.log.exception("%s returned non-0 status, stderr: %s "%(PATH_CLAMSCAN, stderrdata2))
                 return STATUS.exception
 
             numberofthreats = int(re.search('Infected files: (?P<kaczka>[0-9]*)',output).group('kaczka'))

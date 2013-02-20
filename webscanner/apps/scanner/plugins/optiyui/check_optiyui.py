@@ -36,7 +36,7 @@ def select_smallest_file(filelist):
 
 def optimize_yui(ifile, ftype, output_path, remove_original=False ):
 
-    ofile = settings.PATH_TMPSCAN +gentmpfilename() + "." + ftype
+    ofile = settings.WEBSCANNER_SHARED_STORAGE +gentmpfilename() + "." + ftype
     files = [ifile, ofile]
 
     command =  'yui-compressor --type %s -o %s %s'%(ftype, ofile, ifile)

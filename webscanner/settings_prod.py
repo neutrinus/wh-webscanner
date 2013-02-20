@@ -38,8 +38,6 @@ LOGGING["loggers"]["paypal"] =  log_conf
 PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 
-
-PATH_TMPSCAN = '/home/webcheck/www/tmp/'
-
+WEBSCANNER_SHARED_STORAGE = '/home/webcheck/www/tmp/'
 
 SELENIUM_HUB = "http://sv-seleniumhub:4444/wd/hub"
