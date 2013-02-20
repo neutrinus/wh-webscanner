@@ -29,7 +29,7 @@ class PluginPlainTextEmail(PluginMixin):
 
             # We want to recurslivly grep all html files and look for something looking like email address
             filelist = []
-            for root, dirs, files in os.walk(path):
+            for root, dirs, files in os.walk(str(path)):
                 for file in files:
                     if re.search('(.html)|(.php)|(.xml)|(.txt)|(.htm)|(.js)',file) is not None:
                         filelist.append(os.path.join(root,file))
