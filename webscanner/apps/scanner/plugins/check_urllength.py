@@ -21,11 +21,11 @@ class PluginUrlLength(PluginMixin):
 
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=2)
         res.output_desc = unicode(_("URL length") )
-        res.output_full = unicode(_("<p>Usability of your website require that url is short and easy to remember. A descriptive URL is better recognized by search engines. A user should be able to look at the address bar (url) and make an accurate guess about the content of the page before entering it (e.g., http://www.company.com/en/products). A SEO strategy should contain a comprehensive policy of URL handling.</p> <p>SEO folks sugest that url should be no longer than 90 characters (and avg should about 75 chars).</p>" ))
+        res.output_full = unicode(_("<p>Usability of your website require that url is short and easy to remember. A descriptive URL is better recognized by search engines. A user should be able to look at the address bar (url) and make an accurate guess about the content of the page before entering it (e.g., http://www.company.com/en/products). A SEO strategy should contain a comprehensive policy of URL handling.</p> <p>SEO folks suggest that url should be no longer than 90 characters (and avg should about 75 chars).</p>" ))
 
         if ( len(command.test.url) >80):
             res.status = RESULT_STATUS.warning
-            res.output_full += unicode(_("Your webpage url %s length is <b>%s</b> characters. We sugest not to cross 90 chars border" % (command.test.url, len(command.test.url))))
+            res.output_full += unicode(_("Your webpage url %s length is <b>%s</b> characters. We suggest not to cross 90 chars border" % (command.test.url, len(command.test.url))))
         else:
             res.status = RESULT_STATUS.success
             res.output_full += unicode(_("Your webpage url %s length is <b>%s</b> characters. Good!" % (command.test.url, len(command.test.url))))
