@@ -12,7 +12,7 @@ setup_environ(webscanner.settings)
 import time
 import setproctitle
 from multiprocessing import Pool, cpu_count
-from webscanner.utils import worker_process, downloader_process, process_wrapper
+from webscanner.utils.processes import worker_process, downloader_process, process_wrapper
 
 
 def main():

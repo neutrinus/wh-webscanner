@@ -9,7 +9,7 @@ sys.path.append('./')
 import webscanner.settings
 setup_environ(webscanner.settings)
 
-from webscanner.utils import download_cleaner_process, process_wrapper
+from webscanner.utils.processes import download_cleaner_process, process_wrapper
 
 
 if __name__ == '__main__':

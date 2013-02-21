@@ -17,10 +17,6 @@ DATABASES = {
 DATABASE_NAME = 'test'
 
 DATABASE_OPTIONS = {'timeout': 200}
-CACHES={'default':{
-    'BACKEND':'django.core.cache.backends.dummy.DummyCache'
-    }}
-
 
 TEMPLATE_CONTEXT_PROCESSORS += [
     'django.core.context_processors.debug',
@@ -67,8 +63,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_FILE_PATH = '/tmp/djangosz'
 
 LOGGING['loggers']['']={
-    'handlers':['console','logfile-web-debug'],
-    'level':'DEBUG',
+    'handlers':['console', 'logfile-web-debug'],
+    'level':'ERROR',
     'propagate':1,
 }
 LOGGING['loggers']['django.db.backends']={

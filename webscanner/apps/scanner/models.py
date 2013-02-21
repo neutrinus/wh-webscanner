@@ -13,7 +13,7 @@ from django.conf import settings
 from django.db.models import Max
 from django.db.models import Count
 from django.db import transaction
-from django.core.cache import cache
+from django.core import cache
 from django.db.models.signals import pre_delete
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -26,6 +26,8 @@ from urlparse import urlparse
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
 #local imports
+
+from webscanner.utils.httrack import parse_new_txt
 
 log = logging.getLogger(__name__)
 
@@ -110,6 +112,10 @@ PLUGIN_NAMES = [(code, plugin.name) for code, plugin in PLUGINS.items()]
 
 SHOW_LANGUAGES = [item for item in settings.LANGUAGES if item[0] in
                   settings.SHOW_LANGUAGES]
+
+
+gcache = cache.get_cache('default')
+lcache = cache.get_cache('local')
 
 
 def validate_groups(groups):
@@ -410,6 +416,50 @@ class Tests(models.Model):
         except ZeroDivisionError:
             return 0.0
 
+    @property
+    def downloaded_files(self):
+        error_msg = None
+        if not self.download_path:
+            error_msg = 'path was not set'
+        elif not self.download_status == STATUS.success:
+            error_msg = 'status is not success'
+        elif self.is_deleted:
+            error_msg = 'data was deleted'
+        if error_msg:
+            raise IOError('Cannot cache httrack log (new.txt) (for %r) because download %s' % (self, error_msg))
+
+        key = 'scanner.test.%s.httrack:new.txt' % self.uuid
+        data = gcache.get(key)
+        if not data:
+            data = list(parse_new_txt(os.path.join(
+                self.download_path, 'hts-cache', 'new.txt'), self.download_path))
+            gcache.set(key, data)
+        return data
+
+    @property
+    def url_to_path(self):
+        '''URLS to file paths mapping
+        '''
+        key = 'scanner.test.%s.urls_translation' % self.uuid
+        urls_t = lcache.get(key)
+        if not urls_t:
+            urls_t = {d['url']: d['path'] for d in self.downloaded_files}
+            lcache.set(key, urls_t)
+        return urls_t
+
+    @property
+    def path_to_url(self):
+        '''file paths to urls mapping
+        '''
+        key = 'scanner.test.%s.files_translation' % self.uuid
+        files_t = lcache.get(key)
+        if not files_t:
+            files_t = {d['path']: d['url'] for d in self.downloaded_files}
+            lcache.set(key, files_t)
+        return files_t
+
+
+
 
 def remove_data_of_a_test_signal(sender, instance, **kwargs):
     log.debug('%r - remove signal' % instance)
@@ -510,7 +560,7 @@ class BadWord(models.Model):
 
     @staticmethod
     def filter_bad_words(words):
-        bad_words = cache.get('scanner.bad_words')
+        bad_words = gcache.get('scanner.bad_words')
 
         # do caching if not in cache
         BadWord.clean_bad_words()
@@ -527,7 +577,7 @@ class BadWord(models.Model):
                     PluginCheckSpelling.bad_word_limit
             ))
 
-            cache.set('scanner.bad_words', bad_words, 60*60*24)
+            gcache.set('scanner.bad_words', bad_words, 60*60*24)
 
             log.debug('Bad words saved to cache (%d bad words)'%len(bad_words))
             #log.debug(' * %s '%bad_words)

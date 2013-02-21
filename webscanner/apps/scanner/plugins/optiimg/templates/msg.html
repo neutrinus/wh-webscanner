@@ -5,14 +5,15 @@
     {% if optimized_images %}
     <ul>
     {% for image in optimized_images %}
-        {% if image.bytessaved %}
+        {% if image.bytes_saved %}
         <li>
-            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me{{ image.url }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
+        <b><a href="{{ image.original_file_url }}">{{ image.original_file_url }}</a></b> size 
+                {{ image.original_file_size|filesizeformat }}, <a href="{{ image.optimized_file_url }}">optimized</a> {{ image.optimized_file_size|filesizeformat }}, <b>{{ image.bytes_saved|filesizeformat }} ({{ image.percent_saved|floatformat:0 }}%)</b> decrease;
         </li>
         {% endif %}
     {% endfor %}
     </ul>
-    <p>A total <b>{{ total_bytes_saved|filesizeformat }}</b> could be saved by optimizing those images.</p>
+    <p>A total <b>{{ total_bytes_saved|filesizeformat }}</b> from {{total_bytes|filesizeformat}} ({{total_percent_saved}}%) could be saved by optimizing those images.</p>
 
     {% else %}
     <p>{% trans "There were no images that could be optimized." %}</p>

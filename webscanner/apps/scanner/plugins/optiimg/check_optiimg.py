@@ -1,15 +1,6 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-#import sys
 import os
-#import random
-#import HTMLParser
-#import urllib
-#import urlparse
-#import string
-#import logging
-import mimetypes
-#import shutil
 
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
@@ -36,9 +27,11 @@ class PluginOptiimg(PluginMixin):
 
         #domain = command.test.domain
         path = str(command.test.download_path)  # fix UTF-8 path error
+        test = command.test
         self.log.debug("Recursive check image files size in %s " % path)
 
         optiimgs = []
+        total_bytes = 0
         total_bytes_saved = 0
 
         optimizer = ImageOptimizer()
@@ -47,37 +40,38 @@ class PluginOptiimg(PluginMixin):
         if not os.path.exists(optimized_files_path):
             os.makedirs(optimized_files_path)
 
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                file_path = os.path.join(root, file)
+        for file_info in test.downloaded_files:
+            file_path = os.path.join(test.download_path, file_info['path'])
 
-                #mimetypes is much faster than identify, use it to filterout non-images
-                if 'image' not in str(mimetypes.guess_type(file_path)[0]):
-                    continue
+            #mimetypes is much faster than identify, use it to filterout non-images
+            if 'image' not in file_info['mime']:
+                continue
 
-                self.log.debug("File: %s size: %s" % (file_path, os.path.getsize(file_path)))
+            self.log.debug("File: %s size: %s" % (file_path, os.path.getsize(file_path)))
 
-                optimized_file_path = optimizer.optimize_image(file_path, optimized_files_path)
-                if not optimized_file_path:
-                    # if optimization was not done correctly or final file
-                    # was larger than original
-                    continue
-                optimized_file_url = os.path.join(optimized_files_url, os.path.basename(optimized_file_path))
+            optimized_file_path = optimizer.optimize_image(file_path, optimized_files_path)
+            if not optimized_file_path:
+                # if optimization was not done correctly or final file
+                # was larger than original
+                continue
+            optimized_file_url = os.path.join(optimized_files_url, os.path.basename(optimized_file_path))
 
-                bytes_saved = os.path.getsize(file_path) - os.path.getsize(optimized_file_path)
+            bytes_saved = os.path.getsize(file_path) - os.path.getsize(optimized_file_path)
 
-                self.log.debug("Optimized file is %s (new size: %s)" % (optimized_file_path, os.path.getsize(optimized_file_path)))
+            self.log.debug("Optimized file is %s (new size: %s)" % (optimized_file_path, os.path.getsize(optimized_file_path)))
 
-                a = {"ifile": file_path[(len(path) + 1):],
-                     "ofile": optimized_file_path,
-                     "url": optimized_file_url,
-                     "ifilesize": os.path.getsize(file_path),
-                     "ofilesize": os.path.getsize(optimized_file_path),
-                     "bytessaved": bytes_saved,
-                     "decrease": (float(bytes_saved) / os.path.getsize(file_path)) * 100,
-                     }
-                optiimgs.append(a)
-                total_bytes_saved += bytes_saved
+            a = {"original_file_url": file_info['url'],
+                 "original_file_size": os.path.getsize(file_path),
+                 "optimized_file_path": optimized_file_path,
+                 "optimized_file_url": optimized_file_url,
+                 "optimized_file_size": os.path.getsize(optimized_file_path),
+                 "bytes_saved": bytes_saved,
+                 "percent_saved": (float(bytes_saved) / os.path.getsize(file_path)) * 100.0,
+                 }
+            optiimgs.append(a)
+            total_bytes += os.path.getsize(file_path)
+            total_bytes_saved += bytes_saved
+            total_percent_saved = (float(total_bytes_saved) / total_bytes) * 100.0
 
         template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/msg.html')).read())
 
@@ -85,7 +79,10 @@ class PluginOptiimg(PluginMixin):
         res = Results(test=command.test, group=RESULT_GROUP.performance, importance=2)
         res.output_desc = unicode(_("Images optimalization"))
         res.output_full = template.render(
-            Context({'optimized_images': optiimgs, 'total_bytes_saved': total_bytes_saved}))
+            Context({'optimized_images': optiimgs,
+                     'total_bytes': total_bytes,
+                     'total_bytes_saved': total_bytes_saved,
+                     'total_percent_saved': total_percent_saved}))
 
         if total_bytes_saved < 500 * 1024:
             res.status = RESULT_STATUS.success

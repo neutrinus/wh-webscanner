@@ -10,6 +10,14 @@ def apath(x):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), x))
 
 
+def first_which_exists(*args, **kwargs):
+    func = kwargs.get('check', os.path.exists)
+    for arg in args:
+        if func(arg):
+            return arg
+    raise ValueError('Any declared path (%s) does not exist, please install missing files.' % ', '.join(args))
+
+
 sys.path.insert(0, apath('apps'))
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
@@ -50,6 +58,7 @@ DATABASES = {
 DATABASE_ENGINE = ""
 
 CACHES = {
+    # This can be shared global cache (memcache or sth)
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'ram',
@@ -57,8 +66,16 @@ CACHES = {
         'OPTIONS': {
             'MAX_ENTRIES': 10000,
         },
+    },
+    # This should be rather local cache (for very fast access without lags for
+    # local computations)
+    'local': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'machine_local_cache',
+        'TIMEOUT': 60 * 60 * 24,  # 24h
     }
 }
+
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 CACHE_MIDDLEWARE_KEY_PREFIX = "ali_"
 CACHE_MIDDLEWARE_SECONDS = 60 * 5
@@ -319,7 +336,13 @@ WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
     #},
 ]
 
-PATH_OPTIPNG = '/usr/bin/optipng'
+WEBSCANNER_EXTERNAL_APPS = dict(
+    YUI_COMPRESSOR=dict(path='/usr/bin/yui-compressor'),
+    OPTIPNG=dict(path='/usr/bin/optipng'),
+)
+
+# ONLY FOR BACKWARD COMPATIBILITY
+PATH_OPTIPNG = WEBSCANNER_EXTERNAL_APPS['OPTIPNG']['path']
 
 GEOIP_PATH = WEBSCANNER_DATABASES['GEOIP']['path']
 

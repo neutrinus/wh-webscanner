@@ -23,7 +23,8 @@ from time import mktime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-from urlparse import urlparse
+
+from webscanner.utils.http import extract_domain
 
 
 class PluginDomainExpireDate(PluginMixin):
@@ -34,7 +35,6 @@ class PluginDomainExpireDate(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
-        from addonsapp.tools import extract_domain
         domain = extract_domain(command.test.url)
         self.log.debug("Checking whois data for %s"%(domain))
         from scanner.models import Results

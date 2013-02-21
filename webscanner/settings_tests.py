@@ -17,9 +17,14 @@ DATABASES = {
 DATABASE_NAME = 'default'
 SOUTH_TESTS_MIGRATE = False  # for testing only
 
-CACHES={'default':{
-    'BACKEND':'django.core.cache.backends.dummy.DummyCache'
-}}
+CACHES = {
+    'default':{
+        'BACKEND':'django.core.cache.backends.dummy.DummyCache'
+    },
+    'local':{
+        'BACKEND':'django.core.cache.backends.dummy.DummyCache'
+    }
+}
 
 
 TEMPLATE_CONTEXT_PROCESSORS += [
