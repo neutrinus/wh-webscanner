@@ -1,0 +1,12 @@
+{% load i18n %}
+<div>
+    <p>{% trans "Some of images found on your website look corrupted. " %}</p>
+
+<ul>
+    {% for image in corrupted_images %}
+        <li>
+            <a href="http://{{ image.ifile }}">{{ image.ifile }}</a> because {{ image.error_msg }}
+        </li>
+    {% endfor %}
+</ul>
+</div>
