@@ -75,9 +75,7 @@ class PluginSEOTags(PluginMixin):
         path = str(command.test.download_path)
 
         # search html files
-
         dirs = glob.glob(os.path.join(path, '*%s*' % command.test.domain()))
-
         results = self.check_dirs(dirs, path)
 
         def make_result(template_filename, desc, context, status=RESULT_STATUS.success, importance=3):
@@ -97,7 +95,7 @@ class PluginSEOTags(PluginMixin):
         make_result('templates/headings.html', _('Headings'), {'files': results}).save()
 
         # Check description
-        make_result('templates/descriptions.html', _('Meta descriptions'), {'files': results}).save()
+        make_result('templates/descriptions.html', _('Meta descriptions'), {'files': results}, importance=2).save()
 
         ## Check keywords
         make_result('templates/keywords.html', _('Meta keywords'), {'files': results}, importance=1).save()

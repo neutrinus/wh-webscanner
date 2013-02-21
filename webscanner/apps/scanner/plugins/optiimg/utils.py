@@ -10,6 +10,7 @@ import sh
 
 log = logging.getLogger(__name__)
 
+class CorruptFile(Exception): pass
 
 class ImageOptimizer(object):
     def __init__(self, tmp_path=tempfile.gettempdir()):
@@ -32,7 +33,11 @@ class ImageOptimizer(object):
     @staticmethod
     def optimize_agif(filename, out_filename):
         log.debug('agif optimization...')
-        sh.gifsicle('-O2', filename, output=out_filename)
+        try:
+            sh.gifsicle('-O2', filename, output=out_filename)
+        except sh.ErrorReturnCode_1 as e:
+            # warning: trailing garbage after GIF ignored
+            raise CorruptFile(e)
 
     @staticmethod
     def optimize_jpg(filename, out_filename, progressive=False):
