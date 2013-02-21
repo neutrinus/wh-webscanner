@@ -36,10 +36,6 @@ from django.template import Template, Context
 # 3rd party
 
 import mimetypes
-# pip: nltk
-#import nltk
-# pip: beautifulsoup4
-import bs4
 
 # pip: pyenchant
 import enchant.checker
@@ -59,6 +55,7 @@ import cld
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
 from addonsapp.tools import strip_html_tags
+from webscanner.utils.html import clean_html
 
 class CheckSpellingError(Exception):pass
 class NoDictionary(CheckSpellingError):pass
@@ -208,21 +205,6 @@ class PluginCheckSpelling(PluginMixin):
                 #raise CannotDecode(e)
             self.log.debug('    -> ok')
 
-            def strip_script_tags(root):
-               for s in root.childGenerator():
-                 if hasattr(s, 'name'):    # then it's a tag
-                   if s.name == 'script':  # skip it!
-                     continue
-                   for x in strip_script_tags(s): yield x
-                 else:                     # it's a string!
-                   yield s
-
-            def visible(element):
-                if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
-                    return False
-                elif re.match('<!--.*-->', element):
-                    return False
-                return True
 
             # nltk.clean_html - slow
             # html2text.html2text - not accurate
@@ -237,12 +219,9 @@ class PluginCheckSpelling(PluginMixin):
             self.log.debug('    * cleaning from html to txt...')
             try:
                 #text = nltk.clean_html(orig) - a little slow, problem with encodings
-                text = bs4.BeautifulSoup(orig).html.body.findAll(text=True)
-                text = strip_script_tags(text)
-                text = filter(visible, text)
-                text = '\n'.join()
-            except Exception:
-                self.log.warning('    * error while cleaning html, omitting file')
+                text = clean_html(orig)
+            except Exception as error:
+                self.log.warning('    * error while cleaning html, omitting file: %s' % error)
                 return None, set()
             self.log.debug('    -> ok')
 
