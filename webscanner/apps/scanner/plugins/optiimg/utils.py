@@ -5,7 +5,7 @@ import tempfile
 import shutil
 import time
 import hashlib
-
+import re
 import sh
 
 log = logging.getLogger(__name__)
@@ -37,7 +37,10 @@ class ImageOptimizer(object):
             sh.gifsicle('-O2', filename, output=out_filename)
         except sh.ErrorReturnCode_1 as e:
             # warning: trailing garbage after GIF ignored
-            raise CorruptFile(e)
+            if re.search("trailing garbage after GIF ignored", str(e)):
+                raise CorruptFile("Trailing garbage after GIF")
+            else:
+                raise
 
     @staticmethod
     def optimize_jpg(filename, out_filename, progressive=False):
@@ -48,7 +51,14 @@ class ImageOptimizer(object):
         else:
             log.debug('jpeg optimization...')
         args += filename,
-        sh.jpegtran(*args, _out=out_filename)
+        try:
+            sh.jpegtran(*args, _out=out_filename)
+        except sh.ErrorReturnCode_2 as e:
+            # warning: trailing garbage after GIF ignored
+            if re.search("Premature end of JPEG file", str(e)):
+                raise CorruptFile("Premature end of JPEG file")
+            else:
+                raise
 
     @staticmethod
     def optimize_png_nq(filename, out_filename):
