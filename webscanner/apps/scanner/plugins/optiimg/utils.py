@@ -39,6 +39,8 @@ class ImageOptimizer(object):
             # warning: trailing garbage after GIF ignored
             if re.search("trailing garbage after GIF ignored", str(e)):
                 raise CorruptFile("Trailing garbage after GIF")
+            elif re.search("background color not in colormap", str(e)):
+                raise CorruptFile("background color not in colormap")
             else:
                 raise
 
