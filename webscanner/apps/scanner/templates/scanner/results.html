@@ -31,7 +31,7 @@
 <div itemscope itemtype="http://schema.org/Review">
     <meta itemprop="author" content="webcheck.me">
     <meta itemprop="description" content="A website review done by webcheck.me - automatic website scanner and checker.">
-    <meta itemprop="datePublished" content = "{{ test.creation_date | date:"Y-m-d" }}">
+    <meta itemprop="datePublished" content = "{{ test.creation_date|date:"Y-m-d" }}">
     <div class="page-header">
         <h1 itemprop="name">{% trans "Website scan report for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
         <h4 class="muted">{% trans "Scan started: " %}{{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</h4>
