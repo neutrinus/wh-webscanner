@@ -244,12 +244,23 @@ LOGGING = {
 # - in future, this 'sharing' engine should be replaced by `django-storages`
 WEBSCANNER_SHARED_STORAGE = '/tmp/webscanner'
 
+# Where to keep local files with various databases
+WEBSCANNER_DATABASES_PATH = os.path.join(PROJECT_PATH, 'databases')
+WEBSCANNER_DATABASES = dict(
+    TWO_LEVEL_TLDS=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'two-level-tlds'),
+                        url="http://george.surbl.org/two-level-tlds"),
+    EFFECTIVE_TLDS=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'effective_tld_names.dat.txt'),
+                             url="https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1"),
+    GEOIP=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'GeoLiteCity.dat'),
+               url=('/usr/share/GeoIP/GeoLiteCity.dat',
+                    'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz'),
+               codec='gzip'),
+)
+
 # these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
 WEBSCANNER_TEST_PUBLIC_DATA_PATH = os.path.join(MEDIA_ROOT, 'scan')
 WEBSCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
 WEBSCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
-
-WEBSCANNER_TWO_LEVEL_TLDS = open(apath('two-level-tlds')).readlines()
 
 WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
     {
@@ -310,7 +321,7 @@ WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
 
 PATH_OPTIPNG = '/usr/bin/optipng'
 
-GEOIP_PATH = '/usr/share/GeoIP/GeoLiteCity.dat'
+GEOIP_PATH = WEBSCANNER_DATABASES['GEOIP']['path']
 
 ################################
 ### Third party apps options ###
