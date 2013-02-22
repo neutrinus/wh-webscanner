@@ -29,7 +29,7 @@
 
 {% block content %}
 <div itemscope itemtype="http://schema.org/Review">
-    <meta itemprop="author" content="Marek H">
+    <meta itemprop="author" content="webcheck.me">
     <meta itemprop="datePublished" content = "{{ test.creation_date|date:"Y-m-d" }}">
     <div class="page-header">
         <h1 itemprop="description">{% trans "Website scan report for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
@@ -59,7 +59,7 @@
                     <h3>{% trans "The numbers!" %}</h3>
                     <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
                     <p style="font-size:4em; text-align:center; margin-top:1em;"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-                        <span id="rating" itemprop="ratingValue">{{test.calculate_rating|floatformat}}</span>/<span itemprop="bestRating">10</span><meta itemprop="worstRating" content = "0">
+                        <span id="rating" itemprop="ratingValue">{{test.calculate_rating|floatformat}}</span>/<span itemprop="bestRating">10</span><meta itemprop="worstRating" content = "1">
                     </p>
                     <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
 
