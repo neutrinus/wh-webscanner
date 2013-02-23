@@ -55,10 +55,11 @@ class ImageOptimizer(object):
         args += filename,
         try:
             sh.jpegtran(*args, _out=out_filename)
-        except sh.ErrorReturnCode_2 as e:
-            # warning: trailing garbage after GIF ignored
+        except sh.ErrorReturnCode as e:
             if re.search("Premature end of JPEG file", str(e)):
                 raise CorruptFile("Premature end of JPEG file")
+            elif re.search("premature end of data segment", str(e)):
+                raise CorruptFile("Premature end of data segment")
             else:
                 raise
 
