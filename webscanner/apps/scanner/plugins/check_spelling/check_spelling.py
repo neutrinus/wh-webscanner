@@ -54,7 +54,6 @@ import cld
 
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
-from addonsapp.tools import strip_html_tags
 from webscanner.utils.html import clean_html
 
 class CheckSpellingError(Exception):pass
@@ -225,6 +224,7 @@ class PluginCheckSpelling(PluginMixin):
                 return None, set()
             self.log.debug('    -> ok')
 
+        #TODO: pass tld
         lang, errors = self.spellcheck(text)
         self.log.info(' * stop checking file: %s' % path)
         return lang, errors
