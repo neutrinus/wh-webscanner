@@ -1,0 +1,14 @@
+{% load i18n %}
+<div>
+    <p>{% trans "Some of images found on your website look corrupted. It may be result of failed upload or be on purpose." %}</p>
+
+<ul>
+    {% for image in corrupted_images %}
+        <li>
+            <a href="http://{{ image.original_file_url}}">{{ image.original_file_url}}</a> <span class="muted">({{ image.error_message }})</span>
+        </li>
+    {% endfor %}
+</ul>
+
+<p>{% trans "Please check those images as corrupted images may result in problems with rendering your website in webbrowsers." %}</p>
+</div>

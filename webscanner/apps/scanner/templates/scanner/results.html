@@ -28,162 +28,165 @@
 
 
 {% block content %}
-<div class="page-header">
-    <h1>{% trans "Website scan results for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
-    <h4 class="muted">{% trans "Scan started: " %}{{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</h4>
-</div>
+<div itemscope itemtype="http://schema.org/Review">
+    <meta itemprop="author" content="webcheck.me">
+    <meta itemprop="datePublished" content = "{{ test.creation_date|date:"Y-m-d" }}">
+    <div class="page-header">
+        <h1 itemprop="description">{% trans "Website scan report for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
+        <h4 class="muted">{% trans "Scan started: " %}{{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</h4>
+    </div>
 
 
-{% if not test.is_done %}
-<div class="progress progress-striped active" id="progressbar" >
-    <div class="bar" style="width: {{ test.percent_progress }}%;">{{ test.percent_progress }}%</div>
-</div>
-{% endif %}
+    {% if not test.is_done %}
+    <div class="progress progress-striped active" id="progressbar" >
+        <div class="bar" style="width: {{ test.percent_progress }}%;">{{ test.percent_progress }}%</div>
+    </div>
+    {% endif %}
 
-<br />
-<div class="row-fluid">
-    <div class="span12">
+    <br />
+    <div class="row-fluid">
+        <div class="span12">
 
-        <div class="row">
-            {% if not test.is_done %}
-            <div class="span4">
-                <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
-                <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
-                <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
+            <div class="row">
+                {% if not test.is_done %}
+                <div class="span4">
+                    <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
+                    <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
+                    <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
+                </div>
+                {% endif %}
+                <div class="span4">
+                    <h3>{% trans "The numbers!" %}</h3>
+                    <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
+                    <p style="font-size:4em; text-align:center; margin-top:1em;"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                        <span id="rating" itemprop="ratingValue">{{test.calculate_rating|floatformat}}</span>/<span itemprop="bestRating">10</span><meta itemprop="worstRating" content = "1">
+                    </p>
+                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
+
+                </div>
+                <div class="span4">
+                    <div id="chart" style="height:200px; width:290px;"></div>
+
+                </div>
             </div>
-            {% endif %}
-            <div class="span4">
-                <h3>{% trans "The numbers!" %}</h3>
-                <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
-                <p style="font-size:4em; text-align:center; margin-top:1em;"><span id="rating">{{test.calculate_rating|floatformat}}</span>/10<p>
-                <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
 
-            </div>
-            <div class="span4">
-                <div id="chart" style="height:200px; width:290px;"></div>
-
-            </div>
         </div>
+    </div>
+    <hr />
 
+    <h2>{% trans "Siteshots" %} <small class="muted">({% trans "click on to see fullsize" %})</small></h2>
+    <div id="myCarousel" class="carousel">
+        <!-- Carousel items -->
+        <div id="screenshots-inner" class="carousel-inner" style="height:400px">
+    {% for result in results %}
+            {% if result.group == 4 %}
+                {{result.output_full|safe}}
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div>
+
+
+    <div class="row">
+        <h2>{% trans "General" %}</h2>
+        <table class="table  table-striped results" id="results_0">
+        {% for result in results %}
+            {% if result.group == 0 %}
+            <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
+
+                {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
+                {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+                <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+                <td class="output_full">{{result.output_full|safe}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+
+    <div class="row">
+        <h2>{% trans "Performance" %}</h2>
+        <table class="table table-striped results" id="results_5">
+        {% for result in results %}
+            {% if result.group == 5 %}
+            <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
+                {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
+                {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+                <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+                <td class="output_full">{{result.output_full|safe}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+        </table>
+    </div>
+
+    <div class="row">
+        <h2>{% trans "Security" %}</h2>
+        <table class="table table-striped results" id="results_3">
+        {% for result in results %}
+            {% if result.group == 3 %}
+            <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
+                {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
+                {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+                <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+                <td class="output_full">{{result.output_full|safe}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+
+    <div class="row">
+        <h2>{% trans "S.E.O." %}</h2>
+        <table class="table table-striped results" id="results_2">
+        {% for result in results %}
+            {% if result.group == 2 %}
+            <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
+                {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
+                {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+                <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+                <td class="output_full">{{result.output_full|safe}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+
+    <div class="row">
+        <h2>{% trans "Mail" %}</h2>
+        <table class="table table-striped results" id="results_1">
+        {% for result in results %}
+            {% if result.group == 1 %}
+            <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
+                {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
+                {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
+                {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
+                <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
+                <td class="output_full">{{result.output_full|safe}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
     </div>
 </div>
-<hr />
-
-<h2>{% trans "Siteshots" %} <small class="muted">({% trans "click on to see fullsize" %})</small></h2>
-<div id="myCarousel" class="carousel">
-    <!-- Carousel items -->
-    <div id="screenshots-inner" class="carousel-inner" style="height:400px">
-   {% for result in results %}
-        {% if result.group == 4 %}
-            {{result.output_full|safe}}
-        </tr>
-        {% endif %}
-    {% endfor %}
-
-    </div>
-    <!-- Carousel nav -->
-    <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-    <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-</div>
-
-
-<div class="row">
-    <h2>{% trans "General" %}</h2>
-    <table class="table  table-striped results" id="results_0">
-    {% for result in results %}
-        {% if result.group == 0 %}
-        <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-
-            {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
-            {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
-            <td class="output_full">{{result.output_full|safe}}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-    </table>
-</div>
-
-<div class="row">
-    <h2>{% trans "Performance" %}</h2>
-    <table class="table table-striped results" id="results_5">
-    {% for result in results %}
-        {% if result.group == 5 %}
-        <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
-            {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
-            <td class="output_full">{{result.output_full|safe}}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-
-    </table>
-</div>
-
-<div class="row">
-    <h2>{% trans "Security" %}</h2>
-    <table class="table table-striped results" id="results_3">
-    {% for result in results %}
-        {% if result.group == 3 %}
-        <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
-            {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
-            <td class="output_full">{{result.output_full|safe}}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-    </table>
-</div>
-
-<div class="row">
-    <h2>{% trans "S.E.O." %}</h2>
-    <table class="table table-striped results" id="results_2">
-    {% for result in results %}
-        {% if result.group == 2 %}
-        <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
-            {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
-            <td class="output_full">{{result.output_full|safe}}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-    </table>
-</div>
-
-
-<div class="row">
-    <h2>{% trans "Mail" %}</h2>
-    <table class="table table-striped results" id="results_1">
-    {% for result in results %}
-        {% if result.group == 1 %}
-        <tr class="status_{% if result.status == 0 %}ok{%endif%}{% if result.status == 1 %}error{%endif%}{% if result.status == 2 %}warning{%endif%}{% if result.status == 3 %}info{%endif%}">
-            {% if result.status == 0 %}<td class="status"><i class="icon-ok-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 1 %}<td class="status"><i class="icon-bolt icon-large"></i></td>{% endif %}
-            {% if result.status == 2 %}<td class="status"><i class="icon-warning-sign icon-large"></i></td>{% endif %}
-            {% if result.status == 3 %}<td class="status"><i class="icon-info-sign icon-large"></i></td>{% endif %}
-            <td class="output_desc"><h5>{{result.output_desc|safe}}</h5></td>
-            <td class="output_full">{{result.output_full|safe}}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-    </table>
-</div>
-
 
 
 <script type="text/javascript">
-// TODO: compute it at template level
 var statuses_ok = {{ stats_success }};
 var statuses_error = {{ stats_error }};
 var statuses_warning = {{ stats_warning }};

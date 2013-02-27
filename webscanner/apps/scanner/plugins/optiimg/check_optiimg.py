@@ -10,7 +10,7 @@ from django.conf import settings
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 
-from .utils import ImageOptimizer
+from .utils import ImageOptimizer, CorruptFile
 
 
 class PluginOptiimg(PluginMixin):
@@ -31,6 +31,8 @@ class PluginOptiimg(PluginMixin):
         self.log.debug("Recursive check image files size in %s " % path)
 
         optiimgs = []
+        corrupted_imgs = []
+
         total_bytes = 0
         total_bytes_saved = 0
 
@@ -49,7 +51,14 @@ class PluginOptiimg(PluginMixin):
 
             self.log.debug("File: %s size: %s" % (file_path, os.path.getsize(file_path)))
 
-            optimized_file_path = optimizer.optimize_image(file_path, optimized_files_path)
+            try:
+                optimized_file_path = optimizer.optimize_image(file_path, optimized_files_path)
+            except CorruptFile as e:
+                a = {"original_file_url": file_info['url'],
+                     "error_message": str(e)}
+                corrupted_imgs.append(a)
+                continue
+
             if not optimized_file_path:
                 # if optimization was not done correctly or final file
                 # was larger than original
@@ -99,6 +108,13 @@ class PluginOptiimg(PluginMixin):
         else:
             res.status = RESULT_STATUS.warning
         res.save()
+
+        if corrupted_imgs:
+            template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/corrupted.html')).read())
+            res = Results(test=command.test, group=RESULT_GROUP.general, importance=3, status=RESULT_STATUS.warning)
+            res.output_desc = unicode(_("Images validation"))
+            res.output_full = template.render(Context({'corrupted_images': corrupted_imgs}))
+            res.save()
 
         #as plugin finished - its success
         return STATUS.success

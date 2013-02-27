@@ -5,11 +5,12 @@ import tempfile
 import shutil
 import time
 import hashlib
-
+import re
 import sh
 
 log = logging.getLogger(__name__)
 
+class CorruptFile(Exception): pass
 
 class ImageOptimizer(object):
     def __init__(self, tmp_path=tempfile.gettempdir()):
@@ -32,7 +33,16 @@ class ImageOptimizer(object):
     @staticmethod
     def optimize_agif(filename, out_filename):
         log.debug('agif optimization...')
-        sh.gifsicle('-O2', filename, output=out_filename)
+        try:
+            sh.gifsicle('-O2', filename, output=out_filename)
+        except sh.ErrorReturnCode_1 as e:
+            # warning: trailing garbage after GIF ignored
+            if re.search("trailing garbage after GIF ignored", str(e)):
+                raise CorruptFile("Trailing garbage after GIF")
+            elif re.search("background color not in colormap", str(e)):
+                raise CorruptFile("background color not in colormap")
+            else:
+                raise
 
     @staticmethod
     def optimize_jpg(filename, out_filename, progressive=False):
@@ -43,7 +53,15 @@ class ImageOptimizer(object):
         else:
             log.debug('jpeg optimization...')
         args += filename,
-        sh.jpegtran(*args, _out=out_filename)
+        try:
+            sh.jpegtran(*args, _out=out_filename)
+        except sh.ErrorReturnCode as e:
+            if re.search("Premature end of JPEG file", str(e)):
+                raise CorruptFile("Premature end of JPEG file")
+            elif re.search("premature end of data segment", str(e)):
+                raise CorruptFile("Premature end of data segment")
+            else:
+                raise
 
     @staticmethod
     def optimize_png_nq(filename, out_filename):
