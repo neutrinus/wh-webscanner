@@ -11,12 +11,11 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-import sh
-import requests
 from setproctitle import setproctitle
 
 from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
 from webscanner.apps.scanner.models import Results, RESULT_STATUS, RESULT_GROUP
+from .httrack import httrack_download_website
 
 
 def restarter_process():
@@ -208,86 +207,6 @@ def download_cleaner_process():
             log.warning('While closing cleaner lack of LOCK_FILE (%s) detected. Someone remove it before exiting cleaner process!' % LOCK_FILE)
 
 
-def download_website(url, path, PATH_HTTRACK=None):
-    '''url is resolved by requests module (http redirection is not shown to user
-    path - must exists, and good if it's empty
-    '''
-    path = str(path)
-    domain = requests.head(url, timeout=5).url
-
-    cmd = [
-        '--clean',
-        '--referer', 'webcheck.me',
-        '-I0',
-        '-r2',
-        '--max-time=160',
-        '-%P', '1',
-        '--preserve',
-        '--keep-alive',
-        '-n',
-        '--user-agent', 'wh-webscanner',
-        '-s0',
-        '-O %s %s +*' % (path, domain)
-    ]
-
-    cmd2 = [
-        # GENERAL
-            '--path', path,  # where to place the files
-        # LIMITS
-            '--depth=2',  # depth level
-            '--ext-depth=0',  # depth level for external sites
-            '-m10485760,2097152',  # max size for non html 10MB, html 2MB
-            '--max-time=160',
-        # FLOW
-            '--sockets=40',  # multiple connections
-        # LINKS
-            #'--extended-parsing',  # read links not only in clear html (in JS) - this is by default
-            '--near',  # get non html files
-        # BUILD
-            # 0 - original structure
-            # 1 - html in web, images in images
-            # 99 - random names in web
-            # 1099 - random names (no web dir)
-            #'--structure=0',  # structure: 0-original, 1+ ??
-            #'-or', '-N "%h%p/%n%q.%t'  # own structure?
-            '--structure=99',
-
-            '--keep-links=4',  # keep original links
-            # it seams --replace-external does not much
-            #'--replace-external',  # replace external links with errors, may be good, TEST WHETHER THIS NOT REMOVE THIS LINKS
-            '--include-query-string',  # TEST: where this add this?
-            '--generate-errors=0',  # TEST: I think errors we can read from log
-        # SPIDER
-            '--robots=0',  # not follow robots.txt
-            '--keep-alive',
-        # BROWSER ID
-            '--user-agent=',
-            '--referer=http://webcheck.me',
-            '--footer=',  # do not add anything to files
-        # LOG, INDEX, CACHE
-            '--extra-log',
-            #'--debug-log',  # TEST what is there
-            #'--file-log',  # log in files?
-            '--single-log',  # one log
-            '-I0',  # '--index=0' - this does not work,  # do not make an index
-        # EXPERT
-            #'--debug-headers',  # TEST: do we need this?
-        # GURU
-            #'--debug-xfrstats',  # generate ops log every minute
-            '--debug-ratestats',  # generate rate stats
-
-        domain,  # site to scan
-        '+*',  # which files to get
-    ]
-
-    if not PATH_HTTRACK:
-        httrack = sh.httrack
-    else:
-        httrack = sh.__getattr__(PATH_HTTRACK)
-
-    httrack(*cmd2)
-
-
 def downloader_process():
     setproctitle('Worker[downloader]')
     PATH_HTTRACK = getattr(settings, 'PATH_HTTRACK', '/usr/bin/httrack')
@@ -339,7 +258,7 @@ def downloader_process():
                         raise
 
                     try:
-                        download_website(test.url, test.download_path)
+                        httrack_download_website(test.url, test.download_path)
                     except:
                         log.exception('Error while downloading test %r to %s' % (test, test.download_path))
                         # re-raise to set download_status
