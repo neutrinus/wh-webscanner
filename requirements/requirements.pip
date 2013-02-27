@@ -4,6 +4,7 @@ ipython
 selenium
 pyvirtualdisplay
 psycopg2
+whois==0.7
 
 html2text==3.200.3
 

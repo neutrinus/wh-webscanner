@@ -10,7 +10,6 @@ from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-from scanner import pywhois
 import random
 import HTMLParser
 import urllib

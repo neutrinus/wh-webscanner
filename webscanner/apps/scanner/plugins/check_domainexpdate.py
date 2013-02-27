@@ -12,7 +12,7 @@ from plugin import PluginMixin
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
-from scanner import pywhois
+import whois
 import random
 import HTMLParser
 import urllib
@@ -35,23 +35,22 @@ class PluginDomainExpireDate(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
-        domain = extract_domain(command.test.url)
+        domain = str(extract_domain(command.test.url))
         self.log.debug("Checking whois data for %s"%(domain))
         from scanner.models import Results
 
-        data = pywhois.whois(domain)
+        # works also when subdomain is added
+        data = whois.query(domain)
 
-        if hasattr(data,'expiration_date') and (len(data.expiration_date) >0):
-            domainexp = self.cast_date(data.expiration_date[0])
-            # convert time.struct_time object into a datetime.datetime
-            dt = date.fromtimestamp(mktime(domainexp))
+        if data and data.expiration_date:
+            dt = domainexp = data.expiration_date
 
             res = Results(test=command.test, group = RESULT_GROUP.general, importance=5)
 
             res.output_desc = unicode(_("Domain expiration date") )
-            if dt - date.today() > timedelta(days=20):
+            if dt.date() - date.today() > timedelta(days=20):
                 res.output_full = unicode(_("<p>Your domain will be valid until %(date)s. There is still %(days)s days to renew it.</p>"% {"date":dt,
-                                    "days":(dt - date.today()).days
+                                    "days":(dt.date() - date.today()).days
                                     }))
                 res.status = RESULT_STATUS.success
             else:
@@ -64,18 +63,16 @@ class PluginDomainExpireDate(PluginMixin):
         else:
             self.log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
 
-        if hasattr(data,'creation_date') and (len(data.creation_date) >0):
-            domain_creation = self.cast_date(data.creation_date[0])
-            # convert time.struct_time object into a datetime.datetime
-            dt = date.fromtimestamp(mktime(domain_creation))
+        if data and data.creation_date:
+            dt = domain_creation = data.creation_date
 
             res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
 
             res.output_desc = unicode(_("Domain age") )
             res.output_full = unicode(_("<p>Your domain has been first registred %(days)s days ago (registration date: %(date)s).</p>"% {"date":dt,
-                                    "days":(date.today() - dt).days
+                                    "days":(date.today() - dt.date()).days
                                     }))
-            if date.today() - dt < timedelta(days=500):
+            if date.today() - dt.date() < timedelta(days=500):
                 res.output_full += unicode(_("<p><b>Your domain is a fresh one. </b></p>"))
                 res.status = RESULT_STATUS.warning
             else:
@@ -89,29 +86,3 @@ class PluginDomainExpireDate(PluginMixin):
             self.log.debug("This gTLD doesnt provide valid domain creation date in whois database")
 
         return STATUS.success
-
-    def cast_date(self,date_str):
-        """Convert any date string found in WHOIS to a time object.
-        """
-        known_formats = [
-            '%d-%b-%Y',                 # 02-jan-2000
-            '%Y-%m-%d',                 # 2000-01-02
-            '%Y.%m.%d',                 # 2000.01.02
-            '%d-%b-%Y %H:%M:%S %Z',     # 24-Jul-2009 13:20:03 UTC
-            '%a %b %d %H:%M:%S %Z %Y',  # Tue Jun 21 23:59:59 GMT 2011
-            '%Y-%m-%dT%H:%M:%SZ',       # 2007-01-26T19:10:31Z
-            '%Y-%m-%d %H:%M:%S',        # 2007-01-26 19:10:31
-            '%d-%b-%Y %H:%M:%S',        # 30-Mar-2012 15:32:20
-            '%Y-%m-%d %H:%M:%S %Z',     # 2012-04-28 15:22:46 GMT
-            '%Y.%m.%d %H:%M:%S',        # 2012.04.28 15:22:46
-        ]
-
-        for format in known_formats:
-            try:
-                return time.strptime(date_str.strip(), format)
-            except ValueError, e:
-                pass # Wrong format, keep trying
-
-        raise NameError("Unsupported date format: " + str(date_str))
-        return None
-
