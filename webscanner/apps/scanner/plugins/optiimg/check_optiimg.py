@@ -58,20 +58,30 @@ class PluginOptiimg(PluginMixin):
 
             bytes_saved = os.path.getsize(file_path) - os.path.getsize(optimized_file_path)
 
+            if bytes_saved < 1:
+                continue
+
             self.log.debug("Optimized file is %s (new size: %s)" % (optimized_file_path, os.path.getsize(optimized_file_path)))
 
+            try:
+                percent_saved = (float(bytes_saved) / os.path.getsize(file_path)) * 100.0
+            except ZeroDivisionError:
+                percent_saved = 0.0
             a = {"original_file_url": file_info['url'],
                  "original_file_size": os.path.getsize(file_path),
                  "optimized_file_path": optimized_file_path,
                  "optimized_file_url": optimized_file_url,
                  "optimized_file_size": os.path.getsize(optimized_file_path),
                  "bytes_saved": bytes_saved,
-                 "percent_saved": (float(bytes_saved) / os.path.getsize(file_path)) * 100.0,
+                 "percent_saved": percent_saved,
                  }
             optiimgs.append(a)
             total_bytes += os.path.getsize(file_path)
             total_bytes_saved += bytes_saved
+        try:
             total_percent_saved = (float(total_bytes_saved) / total_bytes) * 100.0
+        except ZeroDivisionError:
+            total_percent_saved = 0.0
 
         template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/msg.html')).read())
 
