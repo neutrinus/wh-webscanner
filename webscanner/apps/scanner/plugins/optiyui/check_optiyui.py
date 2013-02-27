@@ -1,137 +1,144 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
-import sys
 import os
-import random
-import HTMLParser
-import urllib
-import urlparse
-import random
-import string
-import re
-import shlex, subprocess
-import mimetypes
-import shutil
-from time import sleep
-from datetime import date
-from django.utils.translation import get_language
+from hashlib import sha1
+
+import sh
+
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
+
 from scanner.plugins.plugin import PluginMixin
-from scanner.models import STATUS,RESULT_STATUS, RESULT_GROUP
-from django.conf import settings
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 
 
-def gentmpfilename():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(24))
+yui_compressor = sh.__getattr__('yui-compressor')
 
-def select_smallest_file(filelist):
-    minfile = filelist[0]
-
-    for filek in filelist:
-        if (os.path.exists(filek)) and (os.path.getsize(filek) >0) and (os.path.getsize(filek) < os.path.getsize(minfile)):
-            minfile = filek
-    return minfile
-
-
-def optimize_yui(ifile, ftype, output_path, remove_original=False ):
-
-    ofile = settings.WEBSCANNER_SHARED_STORAGE +gentmpfilename() + "." + ftype
-    files = [ifile, ofile]
-
-    command =  'yui-compressor --type %s -o %s %s'%(ftype, ofile, ifile)
-    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    (output, stderrdata) = p.communicate()
-
-    ofile = select_smallest_file(files)
-
-    if output_path:
-        final_file = output_path + "/" + gentmpfilename() +"." + ftype
-        shutil.copyfile(ofile, final_file)
-
-    for filename in files:
-        if (filename == ifile):
-            continue
-        if os.path.exists(filename):
-            os.remove(filename)
-    if output_path:
-        return(final_file)
 
 class PluginOptiYUI(PluginMixin):
     name = unicode(_('OptiYUI'))
     wait_for_download = True
 
-    def run(self, command):
+    OPTIMIZED_CSS_DIR_NAME = getattr(settings,
+                                     'WEBSCANNER_OPTIYUI_OPTIMIZED_CSS_DIR_NAME',
+                                     'optimized_css')
+    OPTIMIZED_JS_DIR_NAME = getattr(settings,
+                                    'WEBSCANNER_OPTIYUI_OPTIMIZED_JS_DIR_NAME',
+                                    'optimized_js')
 
+    def run(self, command):
+        from scanner.models import Results
         if not command.test.check_performance:
             return
 
-        domain = command.test.domain
         path = str(command.test.download_path)  # fix UTF-8 path problem
-        self.log.debug("Recursive check js/css files size in %s "%(path))
+        self.log.debug("Recursive check js/css files size in %s " % path)
 
-        optifiles = dict()
-        optifiles["css"] = []
-        optifiles["js"] = []
+        optimized_css_path = os.path.join(command.test.public_data_path, self.OPTIMIZED_CSS_DIR_NAME)
+        optimized_css_url = os.path.join(command.test.public_data_url, self.OPTIMIZED_CSS_DIR_NAME)
 
-        btotals = dict()
-        btotals["css"] = 0
-        btotals["js"] = 0
+        optimized_js_path = os.path.join(command.test.public_data_path, self.OPTIMIZED_JS_DIR_NAME)
+        optimized_js_url = os.path.join(command.test.public_data_url, self.OPTIMIZED_JS_DIR_NAME)
 
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                fpath = os.path.join(root,file)
+        if not os.path.isdir(optimized_css_path):
+            os.makedirs(optimized_css_path)
+        if not os.path.isdir(optimized_js_path):
+            os.makedirs(optimized_js_path)
 
-                if mimetypes.guess_type(fpath)[0] == 'application/javascript':
-                    ftype = "js"
-                elif mimetypes.guess_type(fpath)[0] == 'text/css':
-                    ftype = "css"
-                else:
-                    continue
+        # lists of dicts with file info (see below)
+        optimized_files = {'css': [],
+                           'js': []}
 
-                self.log.debug("File: %s size: %s"%(fpath, os.path.getsize(fpath)))
-                ofile = optimize_yui(fpath, ftype, settings.MEDIA_ROOT+"/", False)
+        total_bytes = {'css': 0,
+                       'js': 0}
 
-                bytes_saved = os.path.getsize(fpath) - os.path.getsize(ofile)
-                if bytes_saved == 0:
-                    continue
+        total_bytes_saved = {'css': 0,
+                             'js': 0}
 
-                self.log.debug("Optimized %s to %s" % (ofile,os.path.getsize(ofile) ))
+        for file_info in command.test.downloaded_files:
+            file_path = os.path.join(command.test.download_path, file_info['path'])
 
-                optifiles[ftype].append({
-                        "ifile": fpath[(len(path)+1):],
-                        "ofile": "/" + settings.MEDIA_URL + ofile[len(settings.MEDIA_ROOT+"/")+1:],
-                        "ifilesize": os.path.getsize(fpath),
-                        "ofilesize": os.path.getsize(ofile),
-                        "bytessaved": bytes_saved,
-                        "decrease": ( float(bytes_saved) / os.path.getsize(fpath) )*100,
-                })
-                btotals[ftype] += bytes_saved
+            mime = file_info['mime'].lower()
+            if 'javascript' in mime:
+                mime = 'js'
+            elif 'text/css' in mime:
+                mime = 'css'
+            else:
+                continue
 
+            file_size = file_info['local_size']
 
+            self.log.debug("File: %s, size:%s, mime:%s" % (file_path, file_size, mime))
 
-        template = Template(open(os.path.join(os.path.dirname(__file__),'templates/js.html')).read())
-        from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
-        res.output_desc = unicode(_("JavaScript optimalization"))
-        res.output_full = template.render(Context({'optijses': optifiles["js"], 'btotals':btotals["js"]}))
-        if btotals["js"] < 100*1024:
-            res.status = RESULT_STATUS.success
-        else:
-            res.status = RESULT_STATUS.warning
-        res.save()
+            optimized_file_name = '.'.join([sha1(file_path).hexdigest(), mime])
+            if mime == 'css':
+                optimized_file_path = os.path.join(optimized_css_path, optimized_file_name)
+                optimized_file_url = os.path.join(optimized_css_url, optimized_file_name)
+            elif mime == 'js':
+                optimized_file_path = os.path.join(optimized_js_path, optimized_file_name)
+                optimized_file_url = os.path.join(optimized_js_url, optimized_file_name)
+            else:
+                self.log.error('ASSERTION')
+                continue
 
-        template = Template(open(os.path.join(os.path.dirname(__file__),'templates/css.html')).read())
-        from scanner.models import Results
-        res = Results(test=command.test, group=RESULT_GROUP.performance,importance=2)
-        res.output_desc = unicode(_("CSS optimalization"))
-        res.output_full = template.render(Context({'opticsses': optifiles["css"], 'btotals':btotals["css"]}))
-        if btotals["css"] < 20*1024:
-            res.status = RESULT_STATUS.success
-        else:
-            res.status = RESULT_STATUS.warning
-        res.save()
+            try:
+                yui_compressor(file_path, type=mime, o=optimized_file_path)
+            except Exception:
+                self.log.exception('yui-compressor crashed for file %s' % file_path)
+                continue
 
+            try:
+                optimized_file_size = os.path.getsize(optimized_file_path)
+                bytes_saved = file_size - optimized_file_size
+            except (IOError, OSError):
+                bytes_saved = 0
+                self.log.warning('cannot fetch file size of optimized file %s' % optimized_file_path)
+                continue
+
+            if bytes_saved < 1:
+                self.log.debug('%s was badly optimized (saved %s bytes), no sense to show it' % (optimized_file_path, bytes_saved))
+                continue
+
+            try:
+                percent_saved = (float(bytes_saved) / file_size) * 100.0
+            except ZeroDivisionError:
+                percent_saved = 0.0
+            optimized_files[mime].append({
+                "original_file_url": file_info['url'],
+                "original_file_size": file_size,
+                "optimized_file_url": optimized_file_url,
+                "optimized_file_size": optimized_file_size,
+                "bytes_saved": bytes_saved,
+                "percent_saved": percent_saved,
+            })
+
+            total_bytes[mime] += file_size
+            total_bytes_saved[mime] += bytes_saved
+
+        def render_template_for(mime, title, bytes_warning=100 * 1024):
+            try:
+                total_percent_saved = (float(total_bytes_saved[mime]) / total_bytes[mime]) * 100.0
+            except ZeroDivisionError:
+                total_percent_saved = 0.0
+            ctx = {
+                'files': optimized_files[mime],
+                'total_bytes': total_bytes[mime],
+                'total_bytes_saved': total_bytes_saved[mime],
+                'total_percent_saved': total_percent_saved,
+            }
+            template = Template(open(os.path.join(os.path.dirname(__file__), 'templates/%s.html' % mime)).read())
+            res = Results(test=command.test, group=RESULT_GROUP.performance, importance=2)
+            res.output_desc = unicode(title)
+            res.output_full = template.render(Context(ctx))
+            if total_bytes_saved[mime] < bytes_warning:
+                res.status = RESULT_STATUS.success
+            else:
+                res.status = RESULT_STATUS.warning
+            res.save()
+
+        render_template_for('js', _("JavaScript optimization"))
+        render_template_for('css', _("CSS optimization"), bytes_warning=20 * 1024)
 
         #as plugin finished - its success
         return STATUS.success

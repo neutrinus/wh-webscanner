@@ -2,15 +2,16 @@
 <div>
     <p>{% trans "Using advanced methods, we analize javascript files on your site if there is possibility to losslessly optimize them. Smaller files mean loading your site faster!" %}</p>
 
-    {% if optijses %}
+    {% if files %}
     <ul>
-    {% for image in optijses %}
+    {% for file in files %}
         <li>
-            <b><a href="http://{{ image.ifile }}">{{ image.ifile }}</a></b> size {{ image.ifilesize|filesizeformat }}, <a href="https://webcheck.me/{{ image.ofile }}">optimized</a> {{ image.ofilesize|filesizeformat }}, <b>{{ image.bytessaved|filesizeformat }} ({{ image.decrease|floatformat:0 }}%)</b> decrease;
+        <b><a href="{{ file.original_file_url }}">{{ file.original_file_url }}</a></b> size {{ file.original_file_size|filesizeformat }}, 
+        <a href="{{ file.optimized_file_url }}">optimized</a> {{ file.optimized_file_size|filesizeformat }}, <b>{{ file.bytes_saved|filesizeformat }} ({{ file.percent_saved|floatformat:0 }}%)</b> decrease;
         </li>
     {% endfor %}
     </ul>
-    <p>A total <b>{{ btotals|filesizeformat }}</b> could be saved by optimizing those javascript files.</p>
+    <p>A total <b>{{ total_bytes_saved|filesizeformat }}</b> from {{total_bytes|filesizeformat}} ({{total_percent_saved|floatformat}}%) could be saved by optimizing those css files.</p>
 
     {% else %}
     <p><b>{% trans "Good, all of your javascript files looks optimized!." %}</b></p>
