@@ -26,13 +26,20 @@ def clean_html(text, join_result=True):
     :returns: list of strings or string (if you set `join_result=True`)
     '''
     if isinstance(text, (str, unicode)):
-        text = bs4.BeautifulSoup(text).html.body
+        text = bs4.BeautifulSoup(text)
+        try:
+            text = text.html.body
+        except AttributeError:
+            pass
     elif isinstance(text, bs4.PageElement):
         pass
     else:
         raise TypeError('`text` has to be str,unicode or bs4.PageElement')
 
-    text = filter(visible, text.findAll(text=True))
+    if text:
+        text = filter(visible, text.findAll(text=True))
+    else:
+        text = []
     if join_result:
         return '\n'.join(text)
     return text
