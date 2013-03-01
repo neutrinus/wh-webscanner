@@ -24,10 +24,7 @@ advanced level:
 
 
 # system imports
-import sys
 import os
-import re
-from urlparse import urlparse
 
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
@@ -55,64 +52,52 @@ import cld
 from scanner.plugins.plugin import PluginMixin
 from scanner.models import (STATUS, RESULT_STATUS, RESULT_GROUP)
 from webscanner.utils.html import clean_html
-
-class CheckSpellingError(Exception):pass
-class NoDictionary(CheckSpellingError):pass
-class CannotGuessEncoding(CheckSpellingError):pass
-class CannotGuessLanguage(CheckSpellingError):pass
-class LanguageNotInstalled(CheckSpellingError):pass
-class CannotDecode(CheckSpellingError):pass
-class CannotCleanHTML(CheckSpellingError):pass
-
-try:
-    tlds = [
-        tld.strip().lower() for tld in open(os.path.join(
-                                            os.path.dirname(__file__),
-                                            'tlds.txt')).read().splitlines()
-    ]
-except OSError as e:
-    raise Exception("Problem with reading tlds.txt from plugin directory",e)
-    sys.exit(1)
+from webscanner.utils.http import check_effective_tld
 
 
-word_regex = re.compile(r'\w+')
+class CheckSpellingError(Exception):
+    pass
 
-def parse_word(url):
-    'returns tuple of words (unicodes)'
-    url = urlparse(url)
-    words = word_regex.findall(url.hostname)
-    return words
+
+class NoDictionary(CheckSpellingError):
+    pass
+
+
+class CannotGuessEncoding(CheckSpellingError):
+    pass
+
+
+class CannotGuessLanguage(CheckSpellingError):
+    pass
+
+
+class LanguageNotInstalled(CheckSpellingError):
+    pass
+
+
+class CannotDecode(CheckSpellingError):
+    pass
+
+
+class CannotCleanHTML(CheckSpellingError):
+    pass
 
 
 class BetterURLFilter(Filter):
-    _pattern = re.compile(r'.*?(\w+)\.(\w+)$')
 
     def _skip(self, word):
-
-        #log.debug("Better url word check: %s (%s:%s) =>"%(word, type(word),
-        #                                                 len(word)))
-        matching = self._pattern.match(word)
-        if matching:
-
-            #log.debug(" * match !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-            tld = matching.groups()[-1]
-            tld = tld.tounicode()
-            stld=tld
-
-            if tld in tlds:
-                #log.debug(" * SKIP: last group in tld")
-                return True
-
-        #log.info(" * NOT SKIP")
-        return False
+        try:
+            check_effective_tld(word)
+            return True
+        except ValueError:
+            return False
 
 
 class PluginCheckSpelling(PluginMixin):
     name = _('Spell checking')
     description = _('Search mistakes in text')
     wait_for_download = True
-    max_file_size = 1024*1024 # in bytes
+    max_file_size = 1024 * 1024  # in bytes
 
     #: how many occurences of bad word should be in DB to
     #: classify word as good word
@@ -204,7 +189,6 @@ class PluginCheckSpelling(PluginMixin):
                 #raise CannotDecode(e)
             self.log.debug('    -> ok')
 
-
             # nltk.clean_html - slow
             # html2text.html2text - not accurate
             # stripogram.html2text - deprecated buuuu
@@ -224,7 +208,6 @@ class PluginCheckSpelling(PluginMixin):
                 return None, set()
             self.log.debug('    -> ok')
 
-        #TODO: pass tld
         lang, errors = self.spellcheck(text)
         self.log.info(' * stop checking file: %s' % path)
         return lang, errors
@@ -232,34 +215,27 @@ class PluginCheckSpelling(PluginMixin):
     def run(self, command):
         self.log.info(" * check spelling: BEGIN")
         from scanner.models import Results
-        import glob
         path = str(command.test.download_path)
 
         # search html files
 
-        dirs = glob.glob(os.path.join(path, '*%s*' % command.test.domain()))
-
-        self.log.debug("Search html files in %s " % (dirs,))
-
         files_with_errors = []
         was_errors = False
-        for dir in dirs:
-            for root, dirs, files in os.walk(str(dir)):
-                for file in files:
-                    file_path = os.path.abspath(os.path.join(root, file))
-                    try:
-                        lang, errors = self.check_file(file_path)
-                    except CheckSpellingError as e:
-                        self.log.exception(" * Spellchecking error: %s", e)
-                        errors = set()
-                        was_errors = True
-                        continue
-                    if errors:
-                        errors = list(errors)
+        for file_info in command.test.downloaded_files:
+            file_path = os.path.join(path, file_info['path'])
+            try:
+                lang, errors = self.check_file(file_path)
+            except CheckSpellingError as e:
+                self.log.exception(" * Spellchecking error: %s", e)
+                errors = set()
+                was_errors = True
+                continue
+            if errors:
+                errors = list(errors)
 
-                        files_with_errors.append([os.path.relpath(file_path, path),
-                                                  lang,
-                                                  errors])
+                files_with_errors.append({'url': file_info['url'],
+                                          'detected_language': lang,
+                                          'spelling_errors': errors})
 
         template = Template(open(os.path.join(os.path.dirname(__file__),
                                               'templates/msg.html')).read())
@@ -269,7 +245,7 @@ class PluginCheckSpelling(PluginMixin):
                     status=RESULT_STATUS.warning if files_with_errors else
                     RESULT_STATUS.success)
         r.output_desc = unicode(self.name)
-        r.output_full = template.render(Context({'files': files_with_errors}))
+        r.output_full = template.render(Context({'urls': files_with_errors}))
         r.save()
 
         self.log.info(' * check spelling: END')
