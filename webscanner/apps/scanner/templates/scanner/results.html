@@ -33,7 +33,7 @@
     <meta itemprop="datePublished" content = "{{ test.creation_date|date:"Y-m-d" }}">
     <div class="page-header">
         <h1 itemprop="description">{% trans "Website scan report for " %}<a href="{{ test.url }}" rel="nofollow">{{ test.url }}</a></h1>
-        <h4 class="muted">{% trans "Scan started: " %}{{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</h4>
+        <h4 class="muted">{% trans "Scan started on" %} {{ test.creation_date }}{% if test.is_done %}, took {{ test.duration|floatformat }} seconds to produce this report{% endif %}.</h4>
     </div>
 
 
@@ -47,27 +47,24 @@
     <div class="row-fluid">
         <div class="span12">
 
-            <div class="row">
-                {% if not test.is_done %}
-                <div class="span4">
-                    <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
-                    <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
-                    <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "secs to provide you this website scanner results page." %} </p>
-                </div>
-                {% endif %}
-                <div class="span4">
-                    <h3>{% trans "The numbers!" %}</h3>
-                    <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
-                    <p style="font-size:4em; text-align:center; margin-top:1em;"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-                        <span id="rating" itemprop="ratingValue">{{test.calculate_rating|floatformat}}</span>/<span itemprop="bestRating">10</span><meta itemprop="worstRating" content = "1">
-                    </p>
-                    <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
+            {% if not test.is_done %}
+            <div class="span4">
+                <h3>{% trans "Please stand by" %} <br /><small>{% trans "..while the www scanner is running." %}</small></h3>
+                <p>{% trans "Average website check takes 300 seconds. If your site is particularly slow it could be even more than 10 minutes." %}</p>
+                <p>{% trans "It took already" %} <span id="timer">0</span> {% trans "seconds to provide you this website scanner results page." %} </p>
+            </div>
+            {% endif %}
+            <div class="span4">
+                <h3>{% trans "The numbers!" %}</h3>
+                <p>{% trans "Basing on all checks done below we give your website an overall note:" %}</p>
+                <p style="font-size:4em; text-align:center; margin-top:1em;"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                    <span id="rating" itemprop="ratingValue">{{test.calculate_rating|floatformat}}</span>/<span itemprop="bestRating">10</span><meta itemprop="worstRating" content = "1">
+                </p>
+                <p id="congratulations" style="text-align:center; margin-top:1.5em; display:none; " >{% trans "congratulations!" %}</p>
 
-                </div>
-                <div class="span4">
-                    <div id="chart" style="height:200px; width:290px;"></div>
-
-                </div>
+            </div>
+            <div class="span4">
+                <div id="chart" style="height:200px; width:290px;"></div>
             </div>
 
         </div>
@@ -75,20 +72,30 @@
     <hr />
 
     <h2>{% trans "Siteshots" %} <small class="muted">({% trans "click on to see fullsize" %})</small></h2>
-    <div id="myCarousel" class="carousel">
-        <!-- Carousel items -->
-        <div id="screenshots-inner" class="carousel-inner" style="height:400px">
-    {% for result in results %}
-            {% if result.group == 4 %}
-                {{result.output_full|safe}}
-            </tr>
-            {% endif %}
-        {% endfor %}
+    <div id="screenshots" class='carousel slide'>
+        <div id="screenshots-inner" class="carousel-inner" style="height:400px" align=center>
+
+            <!-- Carousel items -->
+            {% if not result_groups.4 %}
+            <div class="item active message">
+                <img src="http://placehold.it/940x400&text={% if test.is_done %}{% trans "Sorry, there is no screenshots for this site."%}{% else %}{% trans "Waiting for screenshots."%}{% endif %}">
+            </div>
+            {% else %}
+                {% for result in result_groups.4 %}
+                <div class="item
+                    {% if forloop.counter0 == 0 %}
+                        active
+                    {% endif %}
+                    ">
+                        {{result.output_full|safe}}
+                    </div>
+                {% endfor %}
+            {% endif %} 
 
         </div>
         <!-- Carousel nav -->
-        <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-        <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+        <a class="carousel-control left" href="#screenshots" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#screenshots" data-slide="next">&rsaquo;</a>
     </div>
 
 
@@ -200,13 +207,28 @@ var last_result = {{ last_pk }};
 var percentage = {{ test.percent_progress }};
 var s = 0;
 
-function add_screenshot(status, output_desc, output_full, group) {
-     $("#screenshots-inner")[0].innerHTML += output_full;
+function add_screenshot(status, output_desc, output_full) {
+    var first = '';
+
+ //   screenshots_carousel.carousel('pause');
+    $('#screenshots-inner .message').remove();
+
+    if(!$("#screenshots-inner").children().length){
+        first = 'active';
+    }
+
+    var text = '<div class="item '+first+'">'+output_full+'</div>';
+    $("#screenshots-inner").append(text);
+
+    $('#screenshots').removeData('carousel');
+    $('#screenshots').carousel({interval: 1000});
+
+//    screenshots_carousel.carousel('cycle');
 }
 
 function add_result(status, output_desc, output_full, group, importance) {
     if (group == 4){
-        add_screenshot(status, output_desc, output_full, group);
+        add_screenshot(status, output_desc, output_full);
         return(0);
     }
 
@@ -295,11 +317,11 @@ function check_results(){
                 $("#progressbar").fadeOut("slow");
 
             } else {
-                window.setTimeout(check_results,1000);
+                window.setTimeout(check_results, 2000);
             }
         },
         error:function (xhr, ajaxOptions, thrownError){
-                window.setTimeout(check_results,5000);
+                window.setTimeout(check_results, 5000);
         },
         dataType: "jsonp"
     });
@@ -309,12 +331,12 @@ check_results();
 
 function timer(){
     if (finished == 0){
-            timer_val += 1
-            $("#timer").text(timer_val/10)
-            window.setTimeout(timer,111);
+            timer_val += 1;
+            $("#timer").text(timer_val/10);
+            window.setTimeout(timer, 100);
         }
 }
-timer()
+timer();
 {% endif %}
 
 var data = [ ['errors', statuses_error],['warnings', statuses_warning], ['success', statuses_ok] ];
@@ -340,12 +362,5 @@ var status_plot = jQuery.jqplot ('chart', [data],
     seriesColors: [ "#9d261d", "#ffc40d", "#46a546"],
     });
 
-    $('.carousel').carousel({
-        interval: 2121
-    })
-
 </script>
-
-
-
 {% endblock %}

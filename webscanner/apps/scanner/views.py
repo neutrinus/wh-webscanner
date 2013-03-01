@@ -154,7 +154,13 @@ def show_report(request, uuid):
     except ObjectDoesNotExist:
         messages.warning(request, _('Report not found, please check ID and URL'))
         return redirect('/')
+
+    from collections import defaultdict
+    result_groups = defaultdict(list)
+    [result_groups[r.group].append(r) for r in results]
+
     return {'test': test,
+            'result_groups': dict(result_groups),
             'results': results,
             'last_pk': last_pk,
             'stats_success': results.filter(status=RESULT_STATUS.success).count(),
