@@ -1,21 +1,24 @@
 {% load i18n %}
 <div>
 {% if files %}
-    <h5>Great, your webpage is structured using XHTML headings (from H1 to H6)!</h5>
+    <h5>{% trans "Great, your webpage is structured using XHTML headings (from H1 to H6)!"%}</h5>
 
-    <p>Use your keywords in the headings and make sure the first level (H1)
+    <p>
+    {% blocktrans %}
+    Use your keywords in the headings and make sure the first level (H1)
     includes your most important keywords. Try not to duplicate your title tag
     content in your header tag. For more effective SEO, use only one H1 tag per
-    page.</p>
+    page.
+    {% endblocktrans %}</p>
 
-    <p>Table below show how many headings of different types are on your pages.</p>
+    <p>{% trans "Table below show how many headings of different types are on your pages."%}</p>
 
 
     <table>
-    <tr> <th>Page</th> <th>h1</th> <th>h2</th> <th>h3</th> <th>h4</th><th>h5</th> <th>h6</th></tr>
-    {% for filename, result in files.items %}
+    <tr> <th>{% trans "Page"%}</th> <th>h1</th> <th>h2</th> <th>h3</th> <th>h4</th><th>h5</th> <th>h6</th></tr>
+    {% for url, result in files.items %}
     <tr>
-        <td>{{filename}}</td>
+        <td><a href="{{url}}" rel="nofollow">{{url}}</a></td>
 
         {% for heading, content in result.headings.items %}
             <td>
@@ -36,14 +39,14 @@
                 {% endif %}
            </td>
        {% empty %}
-            <td colspan="6">No headings</td>
+           <td colspan="6">{% trans "No headings."%}</td>
        {% endfor %}
 
     </tr>
     {% endfor %}
     </table>
 {% else %}
-    <h5>Your site has no headings.</h5>
+    <h5>{% trans "Your site has no headings."%}</h5>
 {% endif %}
 
 

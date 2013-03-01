@@ -3,7 +3,6 @@
 
 import os
 import bs4
-import mimetypes
 from collections import OrderedDict
 
 from scanner.plugins.plugin import PluginMixin
@@ -20,63 +19,59 @@ class PluginSEOTags(PluginMixin):
 
     templates = {}
 
-    def check_dirs(self, dirs_paths, rel_path):
-        self.log.debug("Search html files in %s " % dirs_paths)
-
-        results = OrderedDict()  # keep order while adding files
-        for dir in dirs_paths:
-            for root, dirs, files in os.walk(str(dir)):
-                for file in files:
-                    result = {}
-                    file_path = os.path.abspath(os.path.join(root, file))
-                    if 'html' not in str(mimetypes.guess_type(file_path)[0]):
-                        continue
-                    self.log.debug('analizing file %s' % file_path)
-                    with open(file_path, 'r') as f:
-                        html = bs4.BeautifulSoup(f)
-
-                    try:
-                        result['title'] = html.head.title.text
-                    except:
-                        result['title'] = ''
-
-                    try:
-                        description = html.head.find(attrs={'name': 'description'})
-                        if description:
-                            description = description['content']
-                        result['description'] = description
-                    except:
-                        result['description'] = ''
-
-                    try:
-                        keywords = html.head.find(attrs={"name": "keywords"})
-                        if keywords:
-                            keywords = keywords['content'].split(',')
-                        result['keywords'] = keywords
-                    except:
-                        result['keywords'] = []
-
-                    def get_text(iterable):
-                        return [x.text for x in iterable]
-
-                    result['headings'] = OrderedDict()
-                    for number in range(1, 7):
-                        try:
-                            result['headings']['h%d' % number] = get_text(html.findAll('h%d' % number))
-                        except:
-                            result['headings']['h%d' % number] = []
-
-                    results[os.path.relpath(file_path, rel_path)] = result
-        return results
-
     def run(self, command):
         from scanner.models import Results
-        import glob
         path = str(command.test.download_path)
 
-        # search html files
-        dirs = glob.glob(os.path.join(path, '*%s*' % command.test.domain()))
-        results = self.check_dirs(dirs, path)
+        results = OrderedDict()  # keep order while adding files
+        for file_info in command.test.downloaded_files:
+            file_path = os.path.join(path, file_info['path'])
+
+            result = {}
+
+            if 'html' not in file_info['mime']:
+                continue
+
+            self.log.debug('analizing file %s' % file_path)
+            try:
+                with open(file_path, 'r') as f:
+                    html = bs4.BeautifulSoup(f)
+            except Exception:
+                self.log.exception('Exception while processing file %s' % file_path)
+                continue
+
+            try:
+                result['title'] = html.head.title.text
+            except:
+                result['title'] = ''
+
+            try:
+                description = html.head.find(attrs={'name': 'description'})
+                if description:
+                    description = description['content']
+                result['description'] = description
+            except:
+                result['description'] = ''
+
+            try:
+                keywords = html.head.find(attrs={"name": "keywords"})
+                if keywords:
+                    keywords = keywords['content'].split(',')
+                result['keywords'] = keywords
+            except:
+                result['keywords'] = []
+
+            def get_text(iterable):
+                return [x.text for x in iterable]
+
+            result['headings'] = OrderedDict()
+            for number in range(1, 7):
+                try:
+                    result['headings']['h%d' % number] = get_text(html.findAll('h%d' % number))
+                except:
+                    result['headings']['h%d' % number] = []
+
+            results[file_info['url']] = result
 
         def make_result(template_filename, desc, context, status=RESULT_STATUS.success, importance=3):
             # cache templates
