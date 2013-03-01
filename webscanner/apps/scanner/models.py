@@ -416,8 +416,7 @@ class Tests(models.Model):
         except ZeroDivisionError:
             return 0.0
 
-    @property
-    def downloaded_files(self):
+    def _cache_httrack_request_log(self):
         error_msg = None
         if not self.download_path:
             error_msg = 'path was not set'
@@ -435,6 +434,14 @@ class Tests(models.Model):
                 self.download_path, 'hts-cache', 'new.txt'), self.download_path))
             gcache.set(key, data)
         return data
+
+    @property
+    def requests(self):
+        return self._cache_httrack_request_log()
+
+    @property
+    def downloaded_files(self):
+        return [el for el in self._cache_httrack_request_log() if el['local_size'] > 0 and not el['path'].endswith('delayed')]
 
     @property
     def url_to_path(self):
