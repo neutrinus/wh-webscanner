@@ -7,7 +7,7 @@
         <tr> <th>Page</th> <th>Chars</th> <th>Description</th> </tr>
         {% for url, result in files.items %}
         <tr>
-            <td><a href="url" rel="nofollow">{{url}}</a></td>
+            <td><a href="{{url}}" rel="nofollow">{{url}}</a></td>
             {% if result.description %}
                 <td>{{result.description|length}}</td>
                 <td>{{result.description}}</td>
