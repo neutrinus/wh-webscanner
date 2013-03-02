@@ -78,7 +78,7 @@
             <!-- Carousel items -->
             {% if not result_groups.4 %}
             <div class="item active message">
-                <img src="http://placehold.it/940x400&text={% if test.is_done %}{% trans "Sorry, there is no screenshots for this site."%}{% else %}{% trans "Waiting for screenshots."%}{% endif %}">
+                <img src="http://placehold.it/940x400&text={% if test.is_done %}{% trans "Sorry, there are no screenshots for this site."%}{% else %}{% trans "Waiting for screenshots."%}{% endif %}">
             </div>
             {% else %}
                 {% for result in result_groups.4 %}
@@ -90,7 +90,7 @@
                         {{result.output_full|safe}}
                     </div>
                 {% endfor %}
-            {% endif %} 
+            {% endif %}
 
         </div>
         <!-- Carousel nav -->
