@@ -222,6 +222,8 @@ class PluginCheckSpelling(PluginMixin):
         files_with_errors = []
         was_errors = False
         for file_info in command.test.downloaded_files:
+            if not 'text' in file_info['mime']:
+                continue
             file_path = os.path.join(path, file_info['path'])
             try:
                 lang, errors = self.check_file(file_path)
