@@ -441,7 +441,7 @@ class Tests(models.Model):
 
     @property
     def downloaded_files(self):
-        return [el for el in self._cache_httrack_request_log() if el['local_size'] > 0 and not el['path'].endswith('delayed')]
+        return [el for el in self._cache_httrack_request_log() if el['local_size'] > 0 and not el['path'].endswith('delayed') and os.path.exists(os.path.join(self.download_path, el['path']))]
 
     @property
     def url_to_path(self):
