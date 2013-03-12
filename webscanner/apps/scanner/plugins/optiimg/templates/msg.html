@@ -1,13 +1,13 @@
 {% load i18n %}
 <div>
-    <p>{% trans "Using proven methods, we analize photos and images on your site if there is possibility to losslossly  shrink them. As images make most of the website traffic, optimizing them is an easy way to make your site much faster." %}</p>
+    <p>{% trans "Using proven methods, we analize photos and images on your site if there is possibility to losslessly  shrink them. As images make most of the website traffic, optimizing them is an easy way to make your site much faster." %}</p>
 
     {% if optimized_images %}
     <ul>
     {% for image in optimized_images %}
         {% if image.bytes_saved %}
         <li>
-        <b><a href="{{ image.original_file_url }}">{{ image.original_file_url }}</a></b> size 
+        <b><a href="{{ image.original_file_url }}">{{ image.original_file_url }}</a></b> size
                 {{ image.original_file_size|filesizeformat }}, <a href="{{ image.optimized_file_url }}">optimized</a> {{ image.optimized_file_size|filesizeformat }}, <b>{{ image.bytes_saved|filesizeformat }} ({{ image.percent_saved|floatformat:0 }}%)</b> decrease;
         </li>
         {% endif %}
