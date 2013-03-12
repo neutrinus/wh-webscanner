@@ -22,6 +22,8 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
         '--ext-depth=0',  # depth level for external sites
         '-m10485760,2097152',  # max size for non html 10MB, html 2MB
         '--max-time=160',
+        '--disable-security-limits',
+        '--max-rate=5 000 000', # in bytes/sec = 5MB/s
         # === FLOW
         '--sockets=40',  # multiple connections
         # === LINKS
