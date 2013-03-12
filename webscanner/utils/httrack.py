@@ -3,6 +3,8 @@ import os
 
 import sh
 import requests
+# python-magic
+from magic import Magic
 
 
 def httrack_download_website(url, path, PATH_HTTRACK=None):
@@ -71,19 +73,31 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
 
 
 def parse_new_txt(file_path, root_path=None):
+    file_type = Magic(mime=True)
     f = open(file_path)
     next(f)  # omit first line
     for line in f:
         data = line.strip().split('\t')
         sizes = data[1].split('/')
+        try:
+            exists = os.path.exists(data[8])
+            size = os.path.getsize(data[8])
+            type = file_type.from_file(data[8])
+        except (IOError, OSError):
+            exists = False
+            size = 0
+            type = ''
         yield {'download_date': data[0],
-               'remote_size': int(sizes[0]),
-               'local_size': int(sizes[1]),
+               'remote_size': int(sizes[0]),  # httrack remote size
+               'local_size': int(sizes[1]),  # httrack local size
                'flags': data[2],
                'http_status_code': data[3],
                'status': data[4],
-               'mime': data[5],
+               'httrack_mime': data[5],  # httrack mime type
                'etag': data[6],
                'url': data[7],
                'path': os.path.relpath(data[8], root_path) if root_path else data[8],
-               'from_url': data[9]}
+               'from_url': data[9],
+               'mime': type,
+               'size': size,
+               'exists': exists}
