@@ -1,10 +1,12 @@
 
 import os
+import logging
 
 import sh
 import requests
-# python-magic
-from magic import Magic
+from .magic import Magic
+
+log = logging.getLogger(__name__)
 
 
 def httrack_download_website(url, path, PATH_HTTRACK=None):
@@ -12,6 +14,7 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
     path - must exists, and good if it's empty
     '''
     path = str(path)
+    #TODO: catch errors
     domain = requests.head(url, timeout=5).url
 
     cmd = [
@@ -73,7 +76,7 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
 
 
 def parse_new_txt(file_path, root_path=None):
-    file_type = Magic(mime=True)
+    file_type = Magic()
     f = open(file_path)
     next(f)  # omit first line
     for line in f:
