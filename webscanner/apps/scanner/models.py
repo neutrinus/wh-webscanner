@@ -425,14 +425,21 @@ class Tests(models.Model):
         elif self.is_deleted:
             error_msg = 'data was deleted'
         if error_msg:
-            raise IOError('Cannot cache httrack log (new.txt) (for %r) because download %s' % (self, error_msg))
+            # if there are any errors, return empty list and not crash whole
+            # test
+            log.error('Cannot cache httrack log (new.txt) (for %r) because download %s' % (self, error_msg))
+            return []
 
         key = 'scanner.test.%s.httrack:new.txt' % self.uuid
         data = gcache.get(key)
         if not data:
-            data = list(parse_new_txt(os.path.join(
-                self.download_path, 'hts-cache', 'new.txt'), self.download_path))
-            gcache.set(key, data)
+            try:
+                data = list(parse_new_txt(os.path.join(
+                    self.download_path, 'hts-cache', 'new.txt'), self.download_path))
+                gcache.set(key, data)
+            except Exception as error:
+                log.exception('Error while parsing downloader log.')
+                return []
         return data
 
     @property
