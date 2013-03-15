@@ -272,6 +272,9 @@ WEBSCANNER_DATABASES = dict(
                sources=[dict(url='/usr/share/GeoIP/GeoLiteCity.dat'),
                         dict(url='http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz', codec='gzip')]),
     MAGIC=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'webscanner.magic')),
+    MIME_TEXT_CLASSIFIER=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'webscanner.text.mime.classifier.pickle'),
+                              sources=[dict(python='utils.magic:preload')],
+                            )
 )
 
 # these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
