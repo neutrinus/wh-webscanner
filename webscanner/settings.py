@@ -265,13 +265,13 @@ WEBSCANNER_SHARED_STORAGE = '/tmp/webscanner'
 WEBSCANNER_DATABASES_PATH = os.path.join(PROJECT_PATH, 'databases')
 WEBSCANNER_DATABASES = dict(
     TWO_LEVEL_TLDS=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'two-level-tlds'),
-                        url="http://george.surbl.org/two-level-tlds"),
+                        sources=[dict(url="http://george.surbl.org/two-level-tlds")]),
     EFFECTIVE_TLDS=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'effective_tld_names.dat.txt'),
-                             url="https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1"),
+                        sources=[dict(url="https://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1")]),
     GEOIP=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'GeoLiteCity.dat'),
-               url=('/usr/share/GeoIP/GeoLiteCity.dat',
-                    'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz'),
-               codec='gzip'),
+               sources=[dict(url='/usr/share/GeoIP/GeoLiteCity.dat'),
+                        dict(url='http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz', codec='gzip')]),
+    MAGIC=dict(path=os.path.join(WEBSCANNER_DATABASES_PATH, 'webscanner.magic')),
 )
 
 # these path should not be used directly, rather through scanner.models:Tests.private_data_path/public_data_path
