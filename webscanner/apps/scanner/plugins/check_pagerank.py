@@ -128,10 +128,16 @@ class PluginPagerank(PluginMixin):
         rank = get_pagerank(domain)
 
         res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
-        res.output_desc = unicode(_("Google pagerank") )
-        res.output_full = unicode(_("<p>A <a href='http://en.wikipedia.org/wiki/PageRank'>PageRank</a> results from a mathematical algorithm based on the graph, the webgraph, created by all World Wide Web pages as nodes and hyperlinks as edges.</p><p>Your website pagerank is %s.</p>"%(rank ) ))
+        try:
+            rank = int(rank)
+        except ValueError:
+            rank = None
+        _rank = rank if rank else _('not known')
 
-        if ( int(rank) <2):
+        res.output_desc = unicode(_("Google pagerank") )
+        res.output_full = unicode(_("<p>A <a href='http://en.wikipedia.org/wiki/PageRank'>PageRank</a> results from a mathematical algorithm based on the graph, the webgraph, created by all World Wide Web pages as nodes and hyperlinks as edges.</p><p>Your website pagerank is %s.</p>")) % _rank
+
+        if rank and rank < 2:
             res.status = RESULT_STATUS.warning
         else:
             res.status = RESULT_STATUS.info
