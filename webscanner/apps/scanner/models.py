@@ -388,21 +388,21 @@ class Tests(models.Model):
             raise Exception('You can only remove `public` or `private` dir of test')
         path = getattr(self, '%s_data_path' % dir)
 
-        log.debug('cleaning %s data of %r...' % (dir, self))
+        log.debug('cleaning {!s} data of {!r}...'.format(dir, self))
         if os.path.isdir(path):
             if os.path.basename(path) == self.uuid:
                 try:
                     shutil.rmtree(str(path))
                 except Exception:
-                    log.exception('Cannot remove %s' % path)
+                    log.exception('Cannot remove {!s}'.format(path))
                     return False
-                log.info('%r %s path (%s) removed.' % (self, dir, path))
+                log.info('{!r} {!s} path ({!s}) removed.'.format(self, dir, path))
                 return True
             else:
-                log.error('%r %s data path (%s) does not contain its uuid, it can remove too much – please check this manually' % (self, dir, path))
+                log.error('{!r} {!s} data path ({!s}) does not contain its uuid, it can remove too much – please check this manually'.format(self, dir, path))
                 return False
         else:
-            log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
+            log.warning('{!r} {!s} data path ({!s}) does not exists!'.format(self, dir, path))
 
     def calculate_rating(self):
         status_multiplier = {RESULT_STATUS.success: 1,
