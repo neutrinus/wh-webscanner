@@ -169,10 +169,12 @@ class Tests(models.Model):
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False, db_index=True)
 
     def __unicode__(self):
-        return "%s by %s" % (self.url, self.user)
+        return u"%s by %s" % (self.url, self.user)
 
     def __repr__(self):
-        return '<Test uuid:%s url:%s user:%r>' % (self.uuid, self.url, self.user)
+        return '<Test uuid:{} url:{} user:{!r}>'.format(self.uuid,
+                                                        self.url.encode('utf-8', 'backslashreplace'),
+                                                        self.user)
 
     @models.permalink
     def get_absolute_url(self):
@@ -507,14 +509,14 @@ class CommandQueue(models.Model):
     objects = CommandQueueManager()
 
     def __repr__(self):
-        return '<CommandQueue pk:%s, name:%s, test:%r, status:%r>' % (self.pk,
-                                                                      self.testname,
-                                                                      self.test,
-                                                                      unicode(dict(STATUS)[self.status]))
+        return '<CommandQueue pk:{}, name:{}, test:{!r}, status:{!s}>'.format(self.pk,
+                                                                              self.testname,
+                                                                              self.test,
+                                                                              dict(STATUS)[self.status])
 
 
     def __unicode__(self):
-        return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
+        return u"%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
 
 class Results(models.Model):
@@ -534,7 +536,7 @@ class Results(models.Model):
     creation_date       =   models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "%s: %s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
+        return u"%s: %s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
 
 #: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
@@ -547,9 +549,9 @@ class BadWord(models.Model):
         return self.word
 
     def __repr__(self):
-        return u'<%s: %s (seen:%s)'%(self.__class__.__name__,
-                                     self.word,
-                                     self.timestamp)
+        return '<{}: {} (seen:{})>'.format(self.__class__.__name__,
+                                           self.word,
+                                           self.timestamp)
 
     @staticmethod
     def clean_bad_words(date=None):
