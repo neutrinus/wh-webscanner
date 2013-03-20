@@ -22,18 +22,17 @@ from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
 
 
 time_between_restarts = timedelta(seconds=(12 * 60))
-commands = CommandQueue.objects.filter(status=STATUS.running, run_date__lt=datetime.utcnow() - time_between_restarts)
+commands = CommandQueue.objects.filter(status=STATUS.running, run_date__lt=datetime.utcnow() - time_between_restarts).order_by("run_date")
 
-txt = ""
+if commands:
+	command = commands[0]
+	txt = "%s:%s:%s, %s total " %(command.test.domain(), command.testname, datetime.utcnow() - command.run_date, len(commands) )
 
-for command in commands:
-	txt += "%s:%s:%s " %(command.test.domain(), command.testname, command.run_date )
 
+	email = EmailMessage(subject='webcheck:' + txt ,
+		body=txt,
+		from_email=settings.DEFAULT_FROM_EMAIL,
+		to=('neutrinus@plusnet.pl',))
 
-email = EmailMessage(subject='webcheck:' + txt ,
-	body=txt,
-	from_email=settings.DEFAULT_FROM_EMAIL,
-	to=('neutrinus@plusnet.pl',))
-
-email.send()
+	email.send()
 
