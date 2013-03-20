@@ -14,15 +14,14 @@ setup_environ(webscanner.settings)
 
 from datetime import datetime, timedelta
 from django.conf import settings
-import logging
-
-
+from django.db.models import Q
 from django.core.mail import EmailMessage
+import logging
 from webscanner.apps.scanner.models import Tests, CommandQueue, STATUS, PLUGINS
 
 
 time_between_restarts = timedelta(seconds=(12 * 60))
-commands = CommandQueue.objects.filter(status=STATUS.running, run_date__lt=datetime.utcnow() - time_between_restarts).order_by("run_date")
+commands = CommandQueue.objects.filter(Q(status=STATUS.running) | Q(status=STATUS.waiting)).filter( run_date__lt=datetime.utcnow() - time_between_restarts).order_by("run_date")
 
 if commands:
 	command = commands[0]
@@ -30,7 +29,7 @@ if commands:
 
 
 	email = EmailMessage(subject='webcheck:' + txt ,
-		body=txt,
+		body=command.test.uuid,
 		from_email=settings.DEFAULT_FROM_EMAIL,
 		to=('neutrinus@plusnet.pl',))
 
