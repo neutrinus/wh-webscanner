@@ -27,10 +27,10 @@ commands = CommandQueue.objects.filter(status=STATUS.running, run_date__lt=datet
 txt = ""
 
 for command in commands:
-	txt += "#%s:%s:%s# " %(command.test.domain(), command.testname, command.run_date )
+	txt += "%s:%s:%s " %(command.test.domain(), command.testname, command.run_date )
 
 
-email = EmailMessage(subject='Webcheck long commands monitor' ,
+email = EmailMessage(subject='webcheck:' + txt ,
 	body=txt,
 	from_email=settings.DEFAULT_FROM_EMAIL,
 	to=('neutrinus@plusnet.pl',))
