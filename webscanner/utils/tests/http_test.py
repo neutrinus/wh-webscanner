@@ -18,6 +18,7 @@ valid_one_level_tld_domains = (
 valid_two_level_tld_domains = (
     'amazon.co.uk',
     'pwr.wroc.pl',
+    'sascha.miro-edv.de',
 )
 
 valid_multi_level_domains = (
