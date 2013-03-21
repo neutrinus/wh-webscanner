@@ -25,9 +25,10 @@ from django.contrib.auth.models import User
 from urlparse import urlparse
 from model_utils import Choices
 from datetime import datetime as dt, timedelta as td
-#local imports
 
+#local imports
 from webscanner.utils.httrack import parse_new_txt
+from webscanner.utils.http import extract_domain_from_url, extract_root_domain
 
 log = logging.getLogger(__name__)
 
@@ -180,7 +181,10 @@ class Tests(models.Model):
         return 'scanner_report', (), {'uuid': self.uuid}
 
     def domain(self):
-        return urlparse(self.url).hostname
+        return extract_domain_from_url(self.url)
+
+    def root_domain(self):
+        return extract_root_domain(self.domain())
 
     def port(self):
         if urlparse(self.url).port:
