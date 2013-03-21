@@ -23,7 +23,7 @@ from annoying.decorators import render_to
 
 from scanner.models import *
 from scanner.forms import FormCaptcha
-from webscanner.utils.http import extract_domain
+from webscanner.utils.http import extract_domain_from_url, check_effective_tld
 
 log = logging.getLogger(__name__)
 

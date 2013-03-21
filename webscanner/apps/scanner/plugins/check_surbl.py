@@ -23,7 +23,7 @@ class PluginSURBL(PluginMixin):
         res = Results(test=command.test, group=RESULT_GROUP.general, importance=3)
         res.output_desc = unicode(_("<a href='http://www.surbl.org'>SURBL</a> database check"))
         res.output_full = unicode(_("<p>SURBLs are lists of web sites that have appeared in unsolicited messages.</p>"))
-        if self.isMarkedAsSpam(command.test.root_domain):
+        if self.isMarkedAsSpam(command.test.root_domain()):
             res.output_full += unicode(_("<p>Your webpage is <b>listed</b> at SURBL. Check it on <a href='http://www.surbl.org/surbl-analysis'>their site</a> </p>"))
             res.status = RESULT_STATUS.warning
         else:

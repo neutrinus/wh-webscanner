@@ -22,7 +22,7 @@ class PluginDomainExpireDate(PluginMixin):
     def run(self, command):
         from scanner.models import Results
 
-        domain = command.test.domain
+        domain = command.test.domain()
         self.log.debug("Checking whois data for {}".format(domain))
 
         # works also when subdomain is added

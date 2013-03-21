@@ -23,7 +23,7 @@ class PluginDNS(PluginMixin):
 
     def run(self, command):
         from scanner.models import Results
-        domain = command.test.domain
+        domain = command.test.domain()
         test = command.test
 
         try:

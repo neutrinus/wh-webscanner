@@ -26,7 +26,7 @@ class PluginDNSmail(PluginMixin):
 
     def run(self, command):
         from scanner.models import Results
-        domain = urlparse(command.test.url).hostname
+        domain = command.test.domain()
         test = command.test
 
         if not command.test.check_mail:

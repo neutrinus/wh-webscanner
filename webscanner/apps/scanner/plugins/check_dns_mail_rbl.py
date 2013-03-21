@@ -24,7 +24,7 @@ class PluginDNSmailRBL(PluginMixin):
             return STATUS.success
 
         from scanner.models import Results
-        domain = urlparse(command.test.url).hostname
+        domain = command.test.domain()
 
 
         # list of blacklists to check

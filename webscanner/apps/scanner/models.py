@@ -183,9 +183,15 @@ class Tests(models.Model):
         return 'scanner_report', (), {'uuid': self.uuid}
 
     def domain(self):
+        return self.domain_name().encode('idna')
+
+    def domain_name(self):
         return extract_domain_from_url(self.url)
 
     def root_domain(self):
+        self.root_domain_name().encode('idna')
+
+    def root_domain_name(self):
         return extract_root_domain(self.domain())
 
     def port(self):
