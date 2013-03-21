@@ -2,11 +2,13 @@ from django.conf.urls.defaults import patterns, url
 
 from .forms import WCEmailRegistrationInlineForm
 from .views import register_inline, login_inline
+from registration_email.forms import EmailAuthenticationForm
 
 urlpatterns = patterns('',
     # override standard login view to perform login inline (with scan url)
     url(r'^login/$',
         login_inline,
+        {'authentication_form': EmailAuthenticationForm},
         name='auth_login'),
     url(r'^register_or_login/$',
         'django.views.generic.simple.direct_to_template',
