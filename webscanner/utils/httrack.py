@@ -31,7 +31,7 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
         # === FLOW
         '--sockets=40',  # multiple connections
         # === LINKS
-        '--extended-parsing',  # read links not only in clear html (in JS) - this is by default
+        #'--extended-parsing',  # read links not only in clear html (in JS) - this is by default
         '--near',  # get non html files
         #'--test', # test all URLs (even forbidden ones)
         # === BUILD
