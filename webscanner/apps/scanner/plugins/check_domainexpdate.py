@@ -30,19 +30,18 @@ class PluginDomainExpireDate(PluginMixin):
         data = whois.query(domain)
 
         if data and data.expiration_date:
-            dt = domainexp = data.expiration_date
+            dt = data.expiration_date
 
-            res = Results(test=command.test, group = RESULT_GROUP.general, importance=5)
+            res = Results(test=command.test, group=RESULT_GROUP.general, importance=5)
 
-            res.output_desc = unicode(_("Domain expiration date") )
+            res.output_desc = unicode(_("Domain expiration date"))
             if dt.date() - date.today() > timedelta(days=20):
-                res.output_full = unicode(_("<p>Your domain will be valid until %(date)s. There is still %(days)s days to renew it.</p>"% {"date":dt,
-                                    "days":(dt.date() - date.today()).days
-                                    }))
+                res.output_full = unicode(_("<p>Your domain will be valid until %(date)s. There is still %(days)s days to renew it.</p>" % {"date": dt,
+                                            "days": (dt.date() - date.today()).days}))
                 res.status = RESULT_STATUS.success
             else:
-                res.output_full = unicode(_("<p>Better renew your domain, its valid until %(date)s! There is only %(days)s days left.</p>"% { "date" :dt,
-                                    "days": (dt - date.today()).days } ))
+                res.output_full = unicode(_("<p>Better renew your domain, its valid until %(date)s! There is only %(days)s days left.</p>" % {"date": dt,
+                                            "days": (dt - date.today()).days}))
                 res.status = RESULT_STATUS.error
 
             res.output_full += unicode(_("<p class='muted'> We use <a href='http://en.wikipedia.org/wiki/Whois'>WHOIS</a> data to check domain expiration date. Depending on your domain registration operator this date may be inaccurate or outdated.</p> "))
@@ -51,14 +50,13 @@ class PluginDomainExpireDate(PluginMixin):
             self.log.debug("This gTLD doesnt provide valid domain expiration date in whois database")
 
         if data and data.creation_date:
-            dt = domain_creation = data.creation_date
+            dt = data.creation_date
 
-            res = Results(test=command.test, group = RESULT_GROUP.seo, importance=1)
+            res = Results(test=command.test, group=RESULT_GROUP.seo, importance=1)
 
-            res.output_desc = unicode(_("Domain age") )
-            res.output_full = unicode(_("<p>Your domain has been first registred %(days)s days ago (registration date: %(date)s).</p>"% {"date":dt,
-                                    "days":(date.today() - dt.date()).days
-                                    }))
+            res.output_desc = unicode(_("Domain age"))
+            res.output_full = unicode(_("<p>Your domain has been first registred %(days)s days ago (registration date: %(date)s).</p>" % {"date": dt,
+                                        "days": (date.today() - dt.date()).days}))
             if date.today() - dt.date() < timedelta(days=500):
                 res.output_full += unicode(_("<p><b>Your domain is a fresh one. </b></p>"))
                 res.status = RESULT_STATUS.warning
