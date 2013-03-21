@@ -2,7 +2,6 @@
 # -*- encoding: utf-8 -*-
 import os
 import dns.resolver
-from urlparse import urlparse
 
 from django.contrib.gis.utils import GeoIP
 from django.template.loader import render_to_string
@@ -24,7 +23,7 @@ class PluginDNS(PluginMixin):
 
     def run(self, command):
         from scanner.models import Results
-        domain = urlparse(command.test.url).hostname
+        domain = command.test.domain
         test = command.test
 
         try:

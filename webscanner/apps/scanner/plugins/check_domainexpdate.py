@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import whois
 
-from webscanner.utils.http import extract_domain_from_url, extract_root_domain
 from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 from plugin import PluginMixin
 
@@ -23,7 +22,7 @@ class PluginDomainExpireDate(PluginMixin):
     def run(self, command):
         from scanner.models import Results
 
-        domain = str(extract_root_domain(extract_domain_from_url(command.test.url)))
+        domain = command.test.domain
         self.log.debug("Checking whois data for {}".format(domain))
 
         # works also when subdomain is added
