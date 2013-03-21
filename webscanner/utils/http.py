@@ -18,7 +18,7 @@ log.info('Loading "TWO_LEVEL_TLDS" database from "%s".' % settings.WEBSCANNER_DA
 TWO_LEVEL_TLDS_CACHE = [line.strip() for line in open(settings.WEBSCANNER_DATABASES['TWO_LEVEL_TLDS']['path']) if line.strip()]
 
 
-def extract_domain(url):
+def extract_domain_from_url(url):
     url = urlparse(url)
     if not url.scheme:
         raise ValueError('Scheme/protocol element for url is missing, domain cannot be correctly parsed.')

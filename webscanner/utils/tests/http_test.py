@@ -1,6 +1,6 @@
 
 import pytest
-from ..http import extract_domain, check_domain_name, check_effective_tld, extract_root_domain
+from ..http import extract_domain_from_url, check_domain_name, check_effective_tld, extract_root_domain
 
 
 valid_one_level_tld_domains = (
@@ -59,13 +59,13 @@ invalid_domains = (
                           ('https://something/with/an?another=something&and=1#egg=Nein', 'something'),
                           ))
 def test_extract_domain(uri, domain):
-    assert extract_domain(uri) == domain
+    assert extract_domain_from_url(uri) == domain
 
 
 @pytest.mark.parametrize('uri',
                          ('wp.pl', 'onet.pl', 'Fail/sadas/a', 'ftp:/ok/jest'))
 def test_extract_domain_with_not_proper_uri(uri):
-    pytest.raises(ValueError, extract_domain, uri)
+    pytest.raises(ValueError, extract_domain_from_url, uri)
 
 
 @pytest.mark.parametrize('domain',
