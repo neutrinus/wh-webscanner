@@ -51,7 +51,9 @@ class ScanURLForm(forms.ModelForm):
         fields = 'url', 'check_seo', 'check_security', 'check_performance', 'check_mail'
 
     def clean_url(self):
+        log.debug('clean form (url)')
         url = self.cleaned_data['url']
+        errors = None
 
         #basic url validiation and normalization
         url = re.sub(r'\s+$', '', url)
@@ -62,12 +64,16 @@ class ScanURLForm(forms.ModelForm):
         if (urlparse(url).scheme not in ["http","https"]) or \
            (not urlparse(url).netloc) or \
            len(urlparse(url).netloc) < 3:
-               raise forms.ValidationError(_('Invalid website address (URL), please try again.'))
+            errors = True
 
         try:
-            extract_domain(url)
+            domain = extract_domain_from_url(url)
+            check_effective_tld(domain)
         except ValueError:
-            log.info('User passed "%s" as domain to scan -> ValidationError' % url)
+            log.info(u'User passed "%s" as domain to scan -> ValidationError' % url)
+            errors = True
+
+        if errors:
             raise forms.ValidationError(_('Invalid website address (URL), please try again.'))
 
         url = unquote_plus(url)
