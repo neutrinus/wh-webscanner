@@ -56,7 +56,6 @@ class Magic(object):
             #    return 'text/html'
             #except Exception as error:
             #    print error
-            # TODO: try histogram classifier
             if not self._classifier:
                 return mime
             mime = self._classifier.guess_from_file(file_path)

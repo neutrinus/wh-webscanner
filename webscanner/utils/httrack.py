@@ -86,7 +86,7 @@ def parse_new_txt(file_path, root_path=None):
     for line in f:
         try:
             data = line.strip().split('\t')
-            data[8]  # check data has length min 8 or raise IndexError
+            data[9]  # check data has length min 8 or raise IndexError
         except IndexError:
             log.exception('Error while parsing httrack log in file %s -> line: %s' % (file_path, data))
             raise
@@ -98,7 +98,7 @@ def parse_new_txt(file_path, root_path=None):
         try:
             exists = os.path.exists(data[8])
             size = os.path.getsize(data[8])
-            type = file_type.from_file(data[8])
+            type = file_type.advanced_for_file(data[8])
         except (IOError, OSError):
             exists = False
             size = 0
