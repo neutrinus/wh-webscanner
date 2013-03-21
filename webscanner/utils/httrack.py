@@ -21,14 +21,16 @@ def httrack_download_website(url, path, PATH_HTTRACK=None):
         '--depth=2',  # depth level
         '--ext-depth=0',  # depth level for external sites
         '-m10485760,2097152',  # max size for non html 10MB, html 2MB
-        '--max-time=160',
+        '--max-time=90',
         '--disable-security-limits',
         '--max-rate=5000000', # in bytes/sec = 5MB/s
+        '--connection-per-second=20', # maximum number of connections/seconds
         # === FLOW
         '--sockets=40',  # multiple connections
         # === LINKS
-        #'--extended-parsing',  # read links not only in clear html (in JS) - this is by default
+        '--extended-parsing',  # read links not only in clear html (in JS) - this is by default
         '--near',  # get non html files
+        #'--test', # test all URLs (even forbidden ones)
         # === BUILD
         # 0 - original structure
         # 1 - html in web, images in images
