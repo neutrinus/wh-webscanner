@@ -1,30 +1,16 @@
 #! /usr/bin/env python
 # -*- encoding: utf-8 -*-
 from __future__ import with_statement
-import sys
-import os
-import random
-import httplib
-from time import sleep
-from urlparse import urlparse
-from plugin import PluginMixin
-#from scanner.models import UsersTest_Options
-from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
-from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
-import whois
-import random
-import HTMLParser
-import urllib
-import sys
-import time
-from time import sleep
-from time import mktime
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
 
-from webscanner.utils.http import extract_domain
+from datetime import date, timedelta
+
+from django.utils.translation import ugettext_lazy as _
+
+import whois
+
+from webscanner.utils.http import extract_domain_from_url, extract_root_domain
+from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
+from plugin import PluginMixin
 
 
 class PluginDomainExpireDate(PluginMixin):
@@ -35,9 +21,10 @@ class PluginDomainExpireDate(PluginMixin):
     wait_for_download = False
 
     def run(self, command):
-        domain = str(extract_domain(command.test.url))
-        self.log.debug("Checking whois data for %s"%(domain))
         from scanner.models import Results
+
+        domain = str(extract_root_domain(extract_domain_from_url(command.test.url)))
+        self.log.debug("Checking whois data for {}".format(domain))
 
         # works also when subdomain is added
         data = whois.query(domain)
