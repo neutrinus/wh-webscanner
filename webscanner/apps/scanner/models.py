@@ -170,10 +170,12 @@ class Tests(models.Model):
     is_deleted          =   models.BooleanField(_(u'has been removed'), default=False, db_index=True)
 
     def __unicode__(self):
-        return "%s by %s" % (self.url, self.user)
+        return u"%s by %s" % (self.url, self.user)
 
     def __repr__(self):
-        return '<Test uuid:%s url:%s user:%r>' % (self.uuid, self.url, self.user)
+        return '<Test uuid:{} url:{} user:{!r}>'.format(self.uuid,
+                                                        self.url.encode('utf-8', 'backslashreplace'),
+                                                        self.user)
 
     @models.permalink
     def get_absolute_url(self):
@@ -390,21 +392,21 @@ class Tests(models.Model):
             raise Exception('You can only remove `public` or `private` dir of test')
         path = getattr(self, '%s_data_path' % dir)
 
-        log.debug('cleaning %s data of %r...' % (dir, self))
+        log.debug('cleaning {!s} data of {!r}...'.format(dir, self))
         if os.path.isdir(path):
             if os.path.basename(path) == self.uuid:
                 try:
                     shutil.rmtree(str(path))
                 except Exception:
-                    log.exception('Cannot remove %s' % path)
+                    log.exception('Cannot remove {!s}'.format(path))
                     return False
-                log.info('%r %s path (%s) removed.' % (self, dir, path))
+                log.info('{!r} {!s} path ({!s}) removed.'.format(self, dir, path))
                 return True
             else:
-                log.error('%r %s data path (%s) does not contain its uuid, it can remove too much – please check this manually' % (self, dir, path))
+                log.error('{!r} {!s} data path ({!s}) does not contain its uuid, it can remove too much – please check this manually'.format(self, dir, path))
                 return False
         else:
-            log.warning('%r %s data path (%s) does not exists!' % (self, dir, path))
+            log.warning('{!r} {!s} data path ({!s}) does not exists!'.format(self, dir, path))
 
     def calculate_rating(self):
         status_multiplier = {RESULT_STATUS.success: 1,
@@ -518,14 +520,14 @@ class CommandQueue(models.Model):
     objects = CommandQueueManager()
 
     def __repr__(self):
-        return '<CommandQueue pk:%s, name:%s, test:%r, status:%r>' % (self.pk,
-                                                                      self.testname,
-                                                                      self.test,
-                                                                      unicode(dict(STATUS)[self.status]))
+        return '<CommandQueue pk:{}, name:{}, test:{!r}, status:{!s}>'.format(self.pk,
+                                                                              self.testname,
+                                                                              self.test,
+                                                                              dict(STATUS)[self.status])
 
 
     def __unicode__(self):
-        return "%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
+        return u"%s: status=%s"%(self.test.domain(),unicode(dict(STATUS)[self.status]))
 
 
 class Results(models.Model):
@@ -545,7 +547,7 @@ class Results(models.Model):
     creation_date       =   models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "%s: %s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
+        return u"%s: %s(%s)"%(self.test.domain(),self.output_desc,unicode(dict(RESULT_STATUS)[self.status]))
 
 
 #: Model for check_spell plugin to keep 'bad' words (bad, but we want to keep
@@ -558,9 +560,9 @@ class BadWord(models.Model):
         return self.word
 
     def __repr__(self):
-        return u'<%s: %s (seen:%s)'%(self.__class__.__name__,
-                                     self.word,
-                                     self.timestamp)
+        return '<{}: {} (seen:{})>'.format(self.__class__.__name__,
+                                           self.word,
+                                           self.timestamp)
 
     @staticmethod
     def clean_bad_words(date=None):

@@ -26,7 +26,8 @@ class PluginCheckW3CValid(PluginMixin):
     def run(self, command):
         domain = command.test.url
 
-        checklink = w3c_validator + 'check?uri=' + domain
+        # urllib requires bytestring
+        checklink = '{}check?uri={}'.format(w3c_validator, domain.encode('utf-8'))
         result = urllib.urlopen(checklink)
 
         output = "status: %s, warnings: %s, errors: %s."%(
