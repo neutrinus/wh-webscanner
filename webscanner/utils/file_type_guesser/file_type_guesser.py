@@ -5,9 +5,7 @@ import sys
 import logging
 import pickle
 
-from collections import defaultdict, Counter
-from pygments import lexers
-from nltk.classify import NaiveBayesClassifier, DecisionTreeClassifier
+from nltk.classify import NaiveBayesClassifier
 
 
 log = logging.getLogger(__name__)
@@ -85,10 +83,10 @@ class TextFileTypeGuesser(object):
         try:
             # !!! WARNING pygments lexer hangout sometimes !!! rarely but still
             #lexer = lexers.guess_lexer(data)
-            from nltk.tokenize import TreebankWordTokenizer, WordPunctTokenizer
+            from nltk.tokenize import TreebankWordTokenizer  # , WordPunctTokenizer
             tokens = list(TreebankWordTokenizer().tokenize(data))[:300]
             #tokens = list(WordPunctTokenizer().tokenize(data))
-            tokens = tokens[:300]+tokens[-100:]  # tokens[:300] + tokens[-10:]
+            tokens = tokens[:300] + tokens[-100:]  # tokens[:300] + tokens[-10:]
         except Exception:
             log.warning('Cannot find pygments lexer for file %s' % file)
             raise CannotRecognizeLanguage(file)
