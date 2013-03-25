@@ -41,28 +41,10 @@ class PluginCheckHTTPCode(PluginMixin):
             self.log.exception(_("Error: Non numerical httpstatus code "))
             return STATUS.unsuccess
 
-        #check http_status 200>X>300
-        from scanner.models import Results
-        res = Results(test=command.test, group = RESULT_GROUP.general, importance=3)
-        res.output_desc = unicode(_("HTTP return code"))
-
-        if (int(httpstatus) > 199) & (int(httpstatus) < 399) :
-            res.output_full = unicode(_("<p>Server returned <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - it is safe</p>"% {
-                "status_code" : unicode(httpstatus),
-                "status_code_name" :httplib.responses[int(httpstatus)]
-                }) )
-            res.status = RESULT_STATUS.success
-        else:
-            res.output_full = unicode(_("<p>Server returned unsafe <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>\"%(status_code)s %(status_code_name)s\"</a> code - please check it</p>" % { "status_code" : unicode(httpstatus) , "status_code_name": httplib.responses[int(httpstatus)], } ))
-            res.status = RESULT_STATUS.error
-
-        res.output_full += unicode(_("<p>This is very low level check - it checks whether webserver is reachable and answering</p> "))
-
-        res.save()
-
-
         if command.test.check_performance:
             #check http encoding aceptation
+            from scanner.models import Results
+
             encoding = response.getheader("Content-Encoding")
             res = Results(test=command.test, group = RESULT_GROUP.performance, importance=1)
             res.output_desc = unicode(_("HTTP compression"))

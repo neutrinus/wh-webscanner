@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div>
+
+
+{% if bad_requests %}
+<p>{% trans "Some of resources of your website are problematic. Please check the http codes and act now, before your customers realize!" %}</p>
+<ul>
+{% for request in bad_requests %}
+    <li><a href="{{request.url}}">{{request.url}}</a> finished with <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>{{request.http_status_code}} {{request.http_status_code_txt}}</a> status code;</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>{% trans "None of your website resources were found problematic. Good" %}</p>
+{% endif %}
+</div>

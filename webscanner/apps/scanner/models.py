@@ -80,6 +80,7 @@ from .plugins.social import PluginSocial
 from .plugins.check_urllength import PluginUrlLength
 from .plugins.check_seotags import PluginSEOTags
 from .plugins.check_html2text_ratio import PluginHtml2TextRatio
+from .plugins.check_requests import PluginRequests
 
 
 PLUGINS = dict((
@@ -105,6 +106,7 @@ PLUGINS = dict((
     ('urllength', PluginUrlLength),
     ('seo_tags', PluginSEOTags),
     ('html2text ratio', PluginHtml2TextRatio),
+    ('requests', PluginRequests),
 ))
 
 
