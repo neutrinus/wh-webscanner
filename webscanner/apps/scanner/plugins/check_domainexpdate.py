@@ -31,7 +31,7 @@ class PluginDomainExpireDate(PluginMixin):
         if data and data.expiration_date:
             dt = data.expiration_date
 
-            res = Results(test=command.test, group=RESULT_GROUP.general, importance=5)
+            res = Results(test=command.test, group=RESULT_GROUP.security, importance=5)
 
             res.output_desc = unicode(_("Domain expiration date"))
             if dt.date() - date.today() > timedelta(days=20):
