@@ -99,6 +99,8 @@ class PluginCheckSpelling(PluginMixin):
     wait_for_download = True
     max_file_size = 1024 * 1024  # in bytes
 
+    not_supported_lang = ['xxx', 'tr', 'id', 'mt', 'ka', 'az']
+
     #: how many occurences of bad word should be in DB to
     #: classify word as good word
     bad_word_limit = 5
@@ -128,7 +130,10 @@ class PluginCheckSpelling(PluginMixin):
                                                             #  BetterURLFilter,
                                                             ])
         except enchant.DictNotFoundError:
-            self.log.error("    -> Cannot find language for spellchecker for %s - end" % lang_code)
+            if lang_code in self.not_supported_lang:
+                self.log.debug("    -> Cannot find language for spellchecker for %s - end (blacklisted)" % lang_code)
+            else:
+                self.log.error("    -> Cannot find language for spellchecker for %s - end" % lang_code)
             return None, set()
 
         # checking page for bad words
