@@ -80,14 +80,10 @@ class TextFileTypeGuesser(object):
             return True
 
         data = open(file).read(cls.MAX_BYTES)
-        try:
-            # !!! WARNING pygments lexer hangout sometimes !!! rarely but still
-            #lexer = lexers.guess_lexer(data)
-            from nltk.tokenize import TreebankWordTokenizer  # , WordPunctTokenizer
-            tokens = list(TreebankWordTokenizer().tokenize(data))[:300]
-            #tokens = list(WordPunctTokenizer().tokenize(data))
-            tokens = tokens[:300] + tokens[-100:]  # tokens[:300] + tokens[-10:]
-        except Exception:
-            log.warning('Cannot find pygments lexer for file %s' % file)
-            raise CannotRecognizeLanguage(file)
+        # !!! WARNING pygments lexer hangout sometimes !!! rarely but still
+        #lexer = lexers.guess_lexer(data)
+        from nltk.tokenize import TreebankWordTokenizer, WordPunctTokenizer
+        #tokens = TreebankWordTokenizer().tokenize(data)  # slower tokenizer
+        tokens = WordPunctTokenizer().tokenize(data)  # faster tokenizer
+        tokens = tokens[:300] + tokens[-100:]
         return {x: True for x in tokens if valid(x)}
