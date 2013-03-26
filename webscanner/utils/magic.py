@@ -46,7 +46,7 @@ class Magic(object):
 
     def advanced_for_file(self, file_path):
         mime = self.magic_for_file(file_path)
-        if mime.startswith('text') or mime.startswith('application'):
+        if mime.startswith('text/') or 'javascript' in mime:
             # This method is not very accurate, some js are parsed as html too
             # :(
             #f = open(file_path).read(2 * 1024 * 1024)
