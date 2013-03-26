@@ -54,7 +54,7 @@ class PluginDomainExpireDate(PluginMixin):
             res = Results(test=command.test, group=RESULT_GROUP.seo, importance=1)
 
             res.output_desc = unicode(_("Domain age"))
-            res.output_full = unicode(_("<p>Your domain has been first registred %(days)s days ago (registration date: %(date)s).</p>" % {"date": dt,
+            res.output_full = unicode(_("<p>Your domain has been first registered %(days)s days ago (registration date: %(date)s).</p>" % {"date": dt,
                                         "days": (date.today() - dt.date()).days}))
             if date.today() - dt.date() < timedelta(days=500):
                 res.output_full += unicode(_("<p><b>Your domain is a fresh one. </b></p>"))

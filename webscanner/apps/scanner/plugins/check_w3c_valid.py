@@ -47,7 +47,7 @@ class PluginCheckW3CValid(PluginMixin):
             res.output_full = '<p>W3C Validator marks your website as <b>Invalid</b>. %s <a href="%s">Check details at W3C</a></p>'%(output,checklink)
 
         #TODO
-        res.output_full += unicode(_("<p>Complying with web standards enchances interoperity and may result in better google positon </p> "))
+        res.output_full += unicode(_("<p>Complying with web standards enhances interoperability and may result in better google position </p> "))
 
         res.save()
 
