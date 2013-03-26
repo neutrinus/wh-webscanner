@@ -58,7 +58,9 @@ class Magic(object):
             #    print error
             if not self._classifier:
                 return mime
-            mime = self._classifier.guess_from_file(file_path)
+            new_mime = self._classifier.guess_from_file(file_path)
+            if new_mime:
+                mime = new_mime
         return mime
 
 

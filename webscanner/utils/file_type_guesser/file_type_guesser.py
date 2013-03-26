@@ -18,9 +18,13 @@ class CannotRecognizeLanguage(Exception):
 class TextFileTypeGuesser(object):
     MAX_BYTES = 2 * 1024 * 1024  # 2 MiB
 
-    def __init__(self):
-        """docstring for __init__"""
+    def __init__(self, threshold=0.7):
+        """
+        :param threshold: if the best answer has probability lower then threshold, classifier
+                          return '' (empty string) instead of an anser
+        """
         self._cls = None
+        self.threshold = float(threshold)
 
     def train(self, files_dict):
         '''Train classifier with sample data.
@@ -37,12 +41,21 @@ class TextFileTypeGuesser(object):
         print 'train'
         self._cls = NaiveBayesClassifier.train(train_data)
 
-    def guess_from_file(self, file_path):
+    def guess_from_file(self, file_path, full=False):
+        '''
+        :param full: returns Probabilities of responses instead of best answer
+                     only. Threshold is not used in this case.
+        '''
         if not self._cls:
             raise AttributeError('Classifier is not trained!')
         cls = self._cls
         x = self._get_tokens(file_path)
-        return cls.classify(x)
+        guess = cls.prob_classify(x)
+        if full:
+            return guess
+        elif guess.prob(guess.max()) < self.threshold:
+            return ''
+        return guess.max()
 
     def save(self, file_path):
         if not self._cls:
