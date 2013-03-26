@@ -24,14 +24,18 @@ class PluginRequests(PluginMixin):
 
         bad_requests = []
         redirects = []
+        wrong_mime = []
         for request in command.test.requests:
+            print request
             http_status_code = int(request["http_status_code"])
             request["http_status_code_txt"] =  httplib.responses[http_status_code]
             if not (http_status_code > 199) & (http_status_code < 399) :
                 bad_requests.append(request)
             if (http_status_code > 299)  & (http_status_code < 400):
                 redirects.append(request)
-
+            if request["exists"]:
+                if request["httrack_mime"] != request["mime"]:
+                    wrong_mime.append(request)
                #'download_date': data[0],
                #'remote_size': int(sizes[0]),  # httrack remote size
                #'local_size': int(sizes[1]),  # httrack local size
@@ -71,6 +75,17 @@ class PluginRequests(PluginMixin):
         res.output_full = template.render(Context({'redirects': redirects, 'rnumber': len(redirects)}))
         res.save()
 
+
+        template = Template(open(os.path.join(os.path.dirname(__file__),
+                                            'templates/mime.html')).read())
+        res = Results(test=command.test, group = RESULT_GROUP.security, importance=2)
+        res.output_desc = unicode(_("MIME"))
+        if len(wrong_mime) > 3:
+            res.status = RESULT_STATUS.warning
+        else:
+            res.status = RESULT_STATUS.info
+        res.output_full = template.render(Context({'wrong_mime': wrong_mime}))
+        res.save()
         return STATUS.success
 
 
