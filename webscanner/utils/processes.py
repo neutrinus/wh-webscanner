@@ -258,13 +258,15 @@ def downloader_process():
                 try:
                     # catch specific error
                     try:
-                        if not os.path.exists(test.download_path):
-                            os.makedirs(test.download_path)
-                    except Exception:
-                        log.exception(u'Cannot create download-folder for {!r}'.format(test))
-                        # the exception is re-raised because we want to set
-                        # download status as exception
-                        raise
+                        os.makedirs(test.download_path)
+                    except OSError as error:
+                        if error.errno == 17:
+                            log.info(u'Directory already exists (%s). Why :)?'.format(test.download_path))
+                        else:
+                            log.exception(u'Cannot create download-folder for {!r}'.format(test))
+                            # the exception is re-raised because we want to set
+                            # download status as exception
+                            raise
 
                     try:
                         httrack_download_website(test.url, test.download_path)
