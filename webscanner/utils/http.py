@@ -86,3 +86,24 @@ def extract_root_domain(domain):
     else:
         registeredName = dnsParts[-2] + '.' + dnsParts[-1]
     return registeredName
+
+
+def extract_tld(domain):
+    """
+    returns TLD of domain (http://onet.com.pl -> com.pl)
+
+    :param domain: only domain without query, port or protocol
+
+    """
+    spl = domain.split('.')
+    for i in range(len(spl)):
+        maybe_tld = str('.'.join(spl[i:]))
+        exception_tld = str('!' + maybe_tld)
+        if exception_tld in EFFECTIVE_TLDS_CACHE:
+            return '.'.join(spl[i+1:])
+
+        wildcard_tld = str('*.' + '.'.join(spl[i+1:]))
+        if wildcard_tld in EFFECTIVE_TLDS_CACHE or maybe_tld in EFFECTIVE_TLDS_CACHE:
+            return maybe_tld
+
+    raise ValueError("Domain not in global list of TLDs")

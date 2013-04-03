@@ -10,6 +10,7 @@ import whois
 
 from scanner.models import STATUS, RESULT_STATUS, RESULT_GROUP
 from plugin import PluginMixin
+from utils.http import extract_tld
 
 
 class PluginDomainExpireDate(PluginMixin):
@@ -24,6 +25,10 @@ class PluginDomainExpireDate(PluginMixin):
 
         domain = command.test.domain()
         self.log.debug("Checking whois data for {}".format(domain))
+
+        if extract_tld(domain) not in  whois.TLD_RE.keys():
+            self.log.debug("Whois for this tld is not supported, aborting.")
+            return STATUS.exception
 
         # works also when subdomain is added
         data = whois.query(domain)

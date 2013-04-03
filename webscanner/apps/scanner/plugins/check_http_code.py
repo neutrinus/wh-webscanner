@@ -9,14 +9,11 @@ from time import sleep
 from urlparse import urlparse
 from plugin import PluginMixin
 
-#from scanner.models import UsersTest_Options
 from scanner.models import STATUS, RESULT_STATUS,RESULT_GROUP
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from urlparse import urlparse
 
-
-#http://wiki.openstreetmap.org/wiki/OpenLayers_Simple_Example
 
 class PluginCheckHTTPCode(PluginMixin):
 
