@@ -2,15 +2,15 @@
 {% load humanize %}
 <div>
 <p>{% trans "HTTP redirects produce additional requests to servers, while some SEO techniques require them, you should use redirects responsibly." %}</p>
+
+{% if redirects %}
 <ul>
 {% for request in redirects %}
     <li><a href="{{request.url}}">{{request.url}}</a> finished with <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>{{request.http_status_code}} {{request.http_status_code_txt}}</a> status code;</li>
-{% empty %}
-    <p>No redirects found: perfect!</p>
 {% endfor %}
 </ul>
-
-{% if redirects %}
 <p>You have <b>{{rnumber|apnumber}}</b> redirects on your website.</p>
+{% else %}
+    <p>No redirects found: perfect!</p>
 {% endif %}
 </div>
