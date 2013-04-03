@@ -7,7 +7,7 @@
 <p>{% trans "<a href='http://en.wikipedia.org/wiki/Internet_media_type>'>MIME</a> is an identifier of file format sent by webserver with file. It's meant to help application handle different media types. Having MIME set properly is important because of security reasons, improper MIME can cause also accessibility problems of your website." %}</p>
 <ul>
 {% for request in wrong_mime %}
-    <li><a href="{{request.url}}">{{request.url}}</a> has set the <i>{{request.httrack_mime}}</i> while we think that it should be <i>{{request.mime}}</i></li>
+    <li><a href="{{request.url}}">{{request.url}}</a> has set the <i>{{request.httrack_mime}}</i> but we think that it should be <i>{{request.mime}}</i></li>
 {% endfor %}
 </ul>
 <div class="alert" >{% trans "<strong>Warning!</strong> we use heuristics methods to guess what MIME have files on websites, this means that there is a little hance to guess wrongly. Please review those files manually to be sure." %}</div>
