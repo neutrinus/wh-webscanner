@@ -26,7 +26,6 @@ class PluginRequests(PluginMixin):
         redirects = []
         wrong_mime = []
         for request in command.test.requests:
-            print request
             http_status_code = int(request["http_status_code"])
             request["http_status_code_txt"] =  httplib.responses[http_status_code]
             if not (http_status_code > 199) & (http_status_code < 399) :
