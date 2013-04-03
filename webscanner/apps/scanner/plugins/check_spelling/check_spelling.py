@@ -99,7 +99,7 @@ class PluginCheckSpelling(PluginMixin):
     wait_for_download = True
     max_file_size = 1024 * 1024  # in bytes
 
-    not_supported_lang = ['xxx', 'tr', 'id', 'mt', 'ka', 'az']
+    not_supported_lang = ['xxx', 'tr', 'id', 'mt', 'ka', 'az', 'th', 'zh']
 
     #: how many occurences of bad word should be in DB to
     #: classify word as good word
