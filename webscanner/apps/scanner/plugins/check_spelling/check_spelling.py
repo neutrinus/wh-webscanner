@@ -46,6 +46,7 @@ import cchardet
 # was memory inefficient (used enchant dicts but did not free memory)
 # pip: chromium_compact_language_detector 0.1.1
 import cld
+# there is new player on the stage: pip -> langid
 
 # local imports
 
