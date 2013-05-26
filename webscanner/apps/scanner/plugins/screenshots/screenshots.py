@@ -117,7 +117,7 @@ You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictio
 
 				timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
-				if timing_data  and (browser["browseName"] != "internet explorer")::
+				if timing_data  and (browser["browseName"] != "internet explorer"):
 					timing[browsername] = []
 					for _time in ["navigationStart", "domainLookupStart", "domainLookupEnd", "connectStart", "requestStart", "domLoading", "domInteractive", "domComplete", "loadEventEnd"]:
 						timing[browsername].append((_time, timing_data[_time] - timing_data["navigationStart"]))
