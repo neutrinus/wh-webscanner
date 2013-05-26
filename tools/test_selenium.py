@@ -63,6 +63,20 @@ for browser in browsers:
 
 		dbrowser.get_screenshot_as_file("./shoot_%s.png" % browsername)
 
+                timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
+                
+                if timing_data and (browser["browseName"] != "internet explorer"):
+			timing[browsername] = []
+			for _time in ["navigationStart", "domainLookupStart", "domainLookupEnd", "connectStart", "requestStart", "domLoading", "domInteractive", "domComplete", "loadEventEnd"]:
+				timing[browsername].append((_time, timing_data[_time] - timing_data["navigationStart"]))
+			 
+			tmp_timing = timing_data["loadEventEnd"] - timing_data["navigationStart"]
+			
+			print("Loading took %s milisec" % tmp_timing)
+		else:
+			print("There was no timing_data for %s" % (browsername))
+		
+
 		dbrowser.quit()
 
 		print("Saved screenshot")

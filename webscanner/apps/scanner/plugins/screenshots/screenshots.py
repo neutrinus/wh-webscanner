@@ -73,7 +73,7 @@ You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictio
             signal.alarm(3 * 60)  # 3 minutes
 
             try:
-                if browser["browseName"] == "iexplore":
+				if browser["browseName"] == "internet explorer":
                     desired_capabilities = webdriver.DesiredCapabilities.INTERNETEXPLORER
                 elif browser["browseName"] == "firefox":
                     desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
@@ -117,7 +117,7 @@ You can do this by specifiying 'WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS' dictio
 
                 timing_data = dbrowser.execute_script("return (window.performance || window.webkitPerformance || window.mozPerformance || window.msPerformance || {}).timing;")
 
-                if timing_data:
+                if timing_data  and (browser["browseName"] != "internet explorer")::
                     timing[browsername] = []
                     for _time in ["navigationStart", "domainLookupStart", "domainLookupEnd", "connectStart", "requestStart", "domLoading", "domInteractive", "domComplete", "loadEventEnd"]:
                         timing[browsername].append((_time, timing_data[_time] - timing_data["navigationStart"]))

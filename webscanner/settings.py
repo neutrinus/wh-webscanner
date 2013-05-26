@@ -283,60 +283,47 @@ WEBSCANNER_TEST_PUBLIC_DATA_URL = os.path.join(MEDIA_URL, 'scan')
 WEBSCANNER_TEST_PRIVATE_DATA_PATH = WEBSCANNER_SHARED_STORAGE
 
 WEBSCANNER_SCREENSHOTS_SELENIUM_BROWSERS = [
-    {
-        "version": "",
-        "browseName": "opera",
-        "platform": "LINUX",
-    },
-    #{
-        #"version": "",
-        #"browseName": "opera",
-        #"platform": "WINDOWS",
-    #},
-    {
-        "version": "",
-        "browseName": "chrome",
-        "platform": "LINUX",
-    },
-    #{
-        #"version": "",
-        #"browseName": "chrome",
-        #"platform": "WINDOWS",
-    #},
-    #{
-        #"version": "4.0",
-        #"browseName": "firefox",
-        #"platform": "WINDOWS",
-    #},
-    {
-        "version": "4.0",
-        "browseName": "firefox",
-        "platform": "LINUX",
-    },
-    {
-        "version": "7.0",
-        "browseName": "firefox",
-        "platform": "LINUX",
-    },
-    #{
-        #"version": "7.0",
-        #"browseName": "firefox",
-        #"platform": "WINDOWS",
-    #},
-    {
-        "version": "10.0",
-        "browseName": "firefox",
-        "platform": "LINUX",
-    },
-    #{
-        #"version": "10.0",
-        #"browseName": "firefox",
-        #"platform": "WINDOWS",
-    #},
-    #{
-        #"version": "8",
-        #"browseName": "iexplore",
-    #},
+	{
+		"version": "",
+		"browseName": "opera",
+		"platform": "LINUX",
+	},
+	{
+		"version": "",
+		"browseName": "chrome",
+		"platform": "LINUX",
+	},
+	{
+		"version": "4.0",
+		"browseName": "firefox",
+		"platform": "LINUX",
+	},
+	{
+		"version": "7.0",
+		"browseName": "firefox",
+		"platform": "LINUX",
+	},
+	{
+		"version": "10.0",
+		"browseName": "firefox",
+		"platform": "LINUX",
+	},
+
+	{
+		"version": "",
+		"browseName": "internet explorer",
+		"platform": "VISTA",
+	},
+	{
+		"version": "",
+		"browseName": "chrome",
+		"platform": "VISTA",
+	},
+	{
+		"version": "",
+		"browseName": "firefox",
+		"platform": "VISTA",
+	},
 ]
 
 WEBSCANNER_EXTERNAL_APPS = dict(
