@@ -10,7 +10,7 @@
     <li><a href="{{request.url}}">{{request.url}}</a> has set the <i>{{request.httrack_mime}}</i> but we think that it should be <i>{{request.mime}}</i></li>
 {% endfor %}
 </ul>
-<div class="alert" >{% trans "<strong>Warning!</strong> we use heuristics methods to guess what MIME have files on websites, this means that there is a little hance to guess wrongly. Please review those files manually to be sure." %}</div>
+<div class="alert" >{% trans "<strong>Warning!</strong> we use heuristics methods to guess what MIME have files on websites, this means that there is a little chance to guess wrongly. Please review those files manually to be sure." %}</div>
 
 {% else %}
 <p>{% trans "All of your files have proper MIME, Good!" %}</p>
