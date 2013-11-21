@@ -35,7 +35,7 @@ LOGGING["loggers"]["registration"] =  log_conf
 LOGGING["loggers"]["paypal"] =  log_conf
 
 
-PAYPAL_CERT_ID = 'HD42YQ3MDRG54'
+PAYPAL_CERT_ID = 'TTYDBU3QQN8XC'
 PAYPAL_RECEIVER_EMAIL = "marek@whitehats.pl"
 
 WEBSCANNER_SHARED_STORAGE = '/home/webcheck/www/tmp/'
