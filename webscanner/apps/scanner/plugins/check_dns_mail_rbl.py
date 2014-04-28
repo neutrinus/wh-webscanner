@@ -115,7 +115,7 @@ class PluginDNSmailRBL(PluginMixin):
                 except dns.resolver.NXDOMAIN:
                     results += "%s <b>not listed</b><br>"%(ip)
                 except dns.resolver.Timeout:
-                    self.log.debug("DNSWL Timeout: %s while checking: %s"%(bl))
+                    self.log.debug("DNSWL Timeout: %s while checking: %s"%(bl, ip))
 
             res = Results(test=command.test, group = RESULT_GROUP.mail, importance=1)
             res.output_desc = unicode(_("Mailservers on DNSWL whitelist"))
