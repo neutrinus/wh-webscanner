@@ -64,7 +64,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGGING['loggers']['']={
     'handlers':['console', 'logfile-web-debug'],
-    'level':'ERROR',
+    'level':'DEBUG',
     'propagate':1,
 }
 LOGGING['loggers']['django.db.backends']={
