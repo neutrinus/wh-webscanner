@@ -1,5 +1,5 @@
 {% load i18n %}
-<p>{% blocktrans %}We measure how long it takes to load webpage in our test webbrowser. Below you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime bellow 4000 milisecs, very slow more than 12000 milisecs.{% endblocktrans %}</p>
+<p>{% blocktrans %}We measure how long it takes to load webpage in our test web browser. Below you can find measured timing of <a href='https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html'>events</a> for your webpage.  Fast webpages have loadtime below 4000 milisecs, very slow more than 12000 milisecs.{% endblocktrans %}</p>
 
 <div id='timing_plot' style='height:400px;width:580px;'></div>
 <p>Loading your website took <b>{{ max_loadtime }}</b> milisecs (at maximum).</p>

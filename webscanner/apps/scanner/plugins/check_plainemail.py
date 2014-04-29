@@ -46,17 +46,17 @@ class PluginPlainTextEmail(PluginMixin):
 
             from scanner.models import Results
             res = Results(test=command.test,group = RESULT_GROUP.mail, importance=5)
-            res.output_desc = unicode(_("Look for plain-text email addreses"))
-            res.output_full = unicode(_("<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/Email_address_harvesting'>email harvesters</a> to send SPAM to email addresses found on websites. To avoid being spammed you shoud not put your email as plaintext on your webpage. Use some of cloaking techniques instead.</p>"))
+            res.output_desc = unicode(_("Look for plain-text email addresses"))
+            res.output_full = unicode(_("<p>Spammers use automatic <a href='http://en.wikipedia.org/wiki/Email_address_harvesting'>email harvesters</a> to send SPAM to email addresses found on websites. To avoid being spammed you should not put your email as plaintext on your webpage. Use some of cloaking techniques instead.</p>"))
 
             #TODO: list possible techniques
 
             if efound:
                 res.status = RESULT_STATUS.warning
-                res.output_full += unicode(_("<p>We have found at least one email address on your website! Please review your website and remove email addreses or obfuscate them. </p>"))
+                res.output_full += unicode(_("<p>We have found at least one email address on your website! Please review your website and remove email addresses or obfuscate them. </p>"))
             else:
                 res.status = RESULT_STATUS.success
-                res.output_full += unicode(_("<p>OK, we did not found any plaintext e-mail addreses on your website.</p>"))
+                res.output_full += unicode(_("<p>OK, we did not found any plaintext e-mail addresses on your website.</p>"))
             res.save()
 
             #as plugin finished - its success
